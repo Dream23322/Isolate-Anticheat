@@ -988,7 +988,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 
 		
 			if([...checkGmc].length !== 0)
-				flag(player, "Reach", "A", "Combat", "entity", `${entity.typeId},distance=${distance}`);
+				flag(player, "Reach", "A", "Combat", "entity", `${entity.typeId},distance=${distance}`, false);
 		}
 	}
 
