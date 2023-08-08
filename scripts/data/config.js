@@ -181,6 +181,10 @@ export default
             "requiredTags": [],
             "aliases": ["r", "wdr", "ir", "isolate-report", "rep","isr","ir","isolatereport","isolate"]
         },
+        "crash": {
+            "enabled": true,
+            "requiredTags": ["op"]
+        },
         "unban": {
             "enabled": true,
             "requiredTags": ["op"],

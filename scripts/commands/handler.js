@@ -39,6 +39,7 @@ import { ui } from "./utility/ui.js";
 import { resetwarns } from "./moderation/resetwarns.js";
 import { version } from "./other/version.js";
 import { deop } from "./moderation/deop.js";
+import { crash } from "./utility/crash.js";
 
 const prefix = config.customcommands.prefix;
 
@@ -164,6 +165,7 @@ function runCommand(msg, commandName, args) {
                 else if(commandName === "ui") ui(message);
                 else if(commandName === "resetwarns") resetwarns(message, args);
                 else if(commandName === "version") version(message);
+                else if(commandName === "crash") crash(message, args);
                 else throw Error(`Command ${commandName} was found in config.js but no handler for it was found.`);
         } catch (error) {
             console.error(`${new Date().toISOString()} | ${error} ${error.stack}`);
