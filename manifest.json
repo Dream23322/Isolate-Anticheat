@@ -1,0 +1,41 @@
+{
+	"format_version": 2,
+	"header": {
+		"name": "Isolate AntiCheat v0.4.9.3-BETA",
+		"description": "Isolate - The anticheat that seperates your server from hackers",
+		"uuid": "2d3b2cea-e339-5e1d-a71b-0fa578f0c7af",
+		"version": [0, 4, 9],
+		"min_engine_version": [1, 19, 0]
+	},
+	"metadata": {
+		"authors": ["MrDiamond64", "Dream23322"],
+		"url": "https://github.com/Dream23322/Isolate-Anticheat"
+	},
+	"modules": [{
+			"type": "data",
+			"uuid": "d059cc96-9272-4a33-90c8-f572bcc7fa56",
+			"version": [
+				1,
+				0,
+				0
+			]
+		},
+		{
+			"description": "Scythe AntiCheat Beta API Features",
+			"language": "javascript",
+			"type": "script",
+			"uuid": "ab31620b-f498-4355-9bea-498922f5940e",
+			"version": [0, 0, 1],
+			"entry": "scripts/main.js"
+		}
+	],
+	"dependencies": [{
+			"module_name": "@minecraft/server",
+			"version": "1.4.0-beta"
+		},
+		{
+			"module_name": "@minecraft/server-ui",
+			"version": "1.2.0-beta"
+		}
+	]
+}
