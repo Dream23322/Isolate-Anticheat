@@ -506,8 +506,8 @@ export default
         "killauraC": {
             "enabled": true,
             "entities": 2,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
+            "punishment": "ban",
+            "minVlbeforePunishment": 5
         },
         "scaffoldB": {
             "enabled": true,

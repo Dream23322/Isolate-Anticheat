@@ -141,24 +141,24 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
             if(getScore(player, "autoban") <= 1) break;
 
             const punishmentLength = checkData.punishmentLength?.toLowerCase();
-            if(currentVl > checkData.minVlbeforePunishment)
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§§j[§uIsolate§j]§r ${player.name} has been banned by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
+           
+            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§§j[§uIsolate§j]§r ${player.name} has been banned by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
 
-                // this removes old ban stuff
-                player.getTags().forEach(t => {
-                    if(t.includes("reason:") || t.includes("by:") || t.includes("time:")) player.removeTag(t);
-                });
+            // this removes old ban stuff
+            player.getTags().forEach(t => {
+                if(t.includes("reason:") || t.includes("by:") || t.includes("time:")) player.removeTag(t);
+            });
 
-                let banLength;
+            let banLength;
 
-                if(!punishmentLength && isNaN(punishmentLength)) {
-                    banLength = parseTime(punishmentLength);
-                }
+            if(!punishmentLength && isNaN(punishmentLength)) {
+                banLength = parseTime(punishmentLength);
+            }
 
-                player.addTag("by:Isolate Anticheat");
-                player.addTag(`reason:Isolate Anticheat detected Unfair Advantage! Check: ${check}/${checkType}`);
-                if(typeof banLength === "number") player.addTag(`time:${Date.now() + banLength}`);
-                player.addTag("isBanned");
+            player.addTag("by:Isolate Anticheat");
+            player.addTag(`reason:Isolate Anticheat detected Unfair Advantage! Check: ${check}/${checkType}`);
+            if(typeof banLength === "number") player.addTag(`time:${Date.now() + banLength}`);
+            player.addTag("isBanned");
 
             break;
         }
