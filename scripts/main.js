@@ -21,7 +21,7 @@ world.beforeEvents.chatSend.subscribe((msg) => {
 	if(message.includes("the best minecraft bedrock utility mod") || message.includes("disepi/ambrosial")) {
 		msg.cancel = true;
 		if(config.clientSpam.punishment == "mute") player.runCommandAsync("tag @s add isMuted");
-		flag(player, "Client-Spammer", "A", "Misc", "message", message, false)
+		
 		if(config.clientSpam.punishment == "ban") {
 			player.addTag("by:§uIsolate §cAnticheat");
 			player.addTag(`reason:The use of a hacked client spammer was detected!`);
