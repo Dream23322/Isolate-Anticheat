@@ -667,7 +667,7 @@ export default
         "antiArmorStandCluster": {
             "enabled": true,
             "radius": 5,
-            "max_armor_stand_count": 50
+            "max_armor_stand_count": 10
         }
     },
     "itemLists": {
