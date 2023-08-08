@@ -130,10 +130,13 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
     switch (punishment) {
         case "kick": {
-            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§§j[§uIsolate§j]§r ${player.name} has been automatically kicked by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
-            player.runCommandAsync(`kick "${player.name}" §r§§j[§uIsolate§j]§r You have been kicked for unfair advantage. [${check}]`);
-            // incase /kick fails, we despawn them from the world
-            player.triggerEvent("scythe:kick");
+            try {
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically kicked by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
+                player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r You have been kicked for unfair advantage. [${check}]`);
+                // incase /kick fails, we despawn them from the world
+            } catch (error) {
+                player.triggerEvent("scythe:kick");
+            }    
             break;
         }
         case "ban": {
@@ -142,7 +145,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
             const punishmentLength = checkData.punishmentLength?.toLowerCase();
            
-            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§§j[§uIsolate§j]§r ${player.name} has been banned by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
+            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been banned by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
 
             // this removes old ban stuff
             player.getTags().forEach(t => {
@@ -164,12 +167,12 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
         }
         case "mute": {
             player.addTag("isMuted");
-            player.sendMessage(`§r§§j[§uIsolate§j]§r You have been muted by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}`);
+            player.sendMessage(`§r§j[§uIsolate§j]§r You have been muted by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}`);
 
             // remove chat ability
             player.runCommandAsync("ability @s mute true");
 
-            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§§j[§uIsolate§j]§r ${player.name} has been automatically muted by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
+            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically muted by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
             break;
         }
     }
@@ -192,7 +195,7 @@ export function banMessage(player) {
     if(data.unbanQueue.includes(player.name.toLowerCase().split(" ")[0])) {
         player.removeTag("isBanned");
 
-        player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§§j[§uIsolate§j]§r ${player.name} has been found in the unban queue and has been unbanned."}]}`);
+        player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been found in the unban queue and has been unbanned."}]}`);
 
         player.getTags().forEach(t => {
             if(t.includes("reason:") || t.includes("by:") || t.includes("time:")) player.removeTag(t);
@@ -221,7 +224,7 @@ export function banMessage(player) {
 
     if(time) {
         if(time < Date.now()) {
-            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§§j[§uIsolate§j]§r ${player.name}'s ban has expired and has now been unbanned."}]}`);
+            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name}'s ban has expired and has now been unbanned."}]}`);
 
             // ban expired, woo
             player.removeTag("isBanned");
@@ -235,7 +238,7 @@ export function banMessage(player) {
         time = `${time.w} weeks, ${time.d} days, ${time.h} hours, ${time.m} minutes, ${time.s} seconds`;
     }
 
-    player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§§j[§uIsolate§j]§r ${player.name} was kicked for being banned. Ban Reason: ${reason || "You are banned!"}."}]}`);
+    player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} was kicked for being banned. Ban Reason: ${reason || "You are banned!"}."}]}`);
 
     player.runCommandAsync(`kick "${player.name}" §r\n§l§cYOU ARE BANNED!\n§mBanned By:§r ${by || "N/A"}\n§bReason:§r ${reason || "N/A"}\n§aBan Length:§r ${time || "Permenant"}`);
     player.triggerEvent("scythe:kick");
