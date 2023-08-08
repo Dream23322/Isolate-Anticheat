@@ -104,6 +104,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     }
 
     const scoreboardObjective = check === "CommandBlockExploit" ? "cbevl" : `${check.toLowerCase()}vl`;
+    const scoreboardValue = player.getScore(player, scoreboardObjective)
 
     if(!world.scoreboard.getObjective(scoreboardObjective)) {
         world.scoreboard.addObjective(scoreboardObjective, scoreboardObjective);
@@ -112,11 +113,10 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     player.runCommandAsync(`scoreboard players add @s ${scoreboardObjective} 1`);
 
     if(debug) {
-    player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§9. VL= "},{"score":{"name":"@s","objective":"${scoreboardObjective}"}}]}`);
-    
-    }
-    else {
-        player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}. §9VL= "},{"score":{"name":"@s","objective":"${scoreboardObjective}"}}]}`);
+        player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h [§ax§9${scoreboardValue}§h]"}}]}`);
+        
+    } else {
+        player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}. §h [§ax§9${scoreboardValue}§h]"}}]}`);
         currentVL++;
     }
         if(typeof slot === "number") {
