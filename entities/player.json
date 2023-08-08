@@ -1,0 +1,827 @@
+{
+	"format_version": "1.18.20",
+	"minecraft:entity": {
+		"description": {
+			"identifier": "minecraft:player",
+			"is_spawnable": false,
+			"is_summonable": false,
+			"is_experimental": false,
+			"scripts": {
+				"animate": [
+					"onTick",
+					"onJoin",
+					"glide",
+					"levitate",
+					"ground",
+					"death",
+					"ride",
+					"left",
+					"right",
+					"sneak",
+					"jump",
+					// "illegals",
+					// "illegals2",
+					// "cbeitems",
+					"move",
+					"autototem",
+					"autoshield",
+					"sprint",
+					"noswing",
+					"invmove",
+					"swim",
+					"sleep",
+					"trident"
+					// "invalid_offhand"
+				]
+			},
+			"animations": {
+				"onTick": "animation.onTick",
+				"onJoin": "animation.onJoin",
+				"glide": "controller.animation.glide",
+				"levitate": "controller.animation.levitate",
+				"ground": "controller.animation.ground",
+				"death": "controller.animation.death",
+				"ride": "controller.animation.ride",
+				"left": "controller.animation.left",
+				"right": "controller.animation.right",
+				"sneak": "controller.animation.sneak",
+				"jump": "controller.animation.jump",
+				// "illegals": "controller.animation.illegals",
+				// "illegals2": "controller.animation.illegals2",
+				// "cbeitems": "controller.animation.cbeitems",
+				"move": "controller.animation.move",
+				"autototem": "controller.animation.autototem",
+				"autoshield": "controller.animation.autoshield",
+				"sprint": "controller.animation.sprint",
+				"noswing": "controller.animation.noswing",
+				"invmove": "controller.animation.invmove",
+				"swim": "controller.animation.swim",
+				"sleep": "controller.animation.sleep",
+				"trident": "controller.animation.trident"
+				// "invalid_offhand": "controller.animation.invalid_offhand"
+			}
+		},
+		"component_groups": {
+			"minecraft:add_bad_omen": {
+				"minecraft:spell_effects": {
+					"add_effects": [{
+						"effect": "bad_omen",
+						"duration": 6000,
+						"visible": false,
+						"display_on_screen_animation": true
+					}]
+				},
+				"minecraft:timer": {
+					"time": [
+						0,
+						0
+					],
+					"looping": false,
+					"time_down_event": {
+						"event": "minecraft:clear_add_bad_omen",
+						"target": "self"
+					}
+				}
+			},
+			"minecraft:clear_bad_omen_spell_effect": {
+				"minecraft:spell_effects": {}
+			},
+			"minecraft:raid_trigger": {
+				"minecraft:raid_trigger": {
+					"triggered_event": {
+						"event": "minecraft:remove_raid_trigger",
+						"target": "self"
+					}
+				},
+				"minecraft:spell_effects": {
+					"remove_effects": "bad_omen"
+				}
+			},
+			"scythe:reset_skinid": {
+				"minecraft:skin_id": {
+					"value": 0
+				}
+			},
+			"scythe:reset_variant": {
+				"minecraft:variant": {
+					"value": 0
+				}
+			},
+			"scythe:onAttack": {
+				"minecraft:skin_id": {
+					"value": 1
+				}
+			},
+			"scythe:gui": {
+				"minecraft:variant": {
+					"value": 1
+				}
+			},
+			"scythe:illegal": {
+				"minecraft:skin_id": {
+					"value": 2
+				}
+			},
+			"scythe:kick": {
+				// https://discord.com/channels/879970475483217940/933913999765024818/1022005158865031188
+				// new kick method by Tutinoko9900#1841
+				"minecraft:explode": {
+					"fuse_length": 0,
+					"fuse_lit": true,
+					"power": 0,
+					"causes_fire": false,
+					"breaks_blocks": false
+				}
+			},
+			"scythe:freeze": {
+				"minecraft:movement": {
+					"value": 0
+				},
+				"minecraft:pushable": {
+					"is_pushable": false,
+					"is_pushable_by_piston": false
+				}
+			},
+			"scythe:unfreeze": {
+				"minecraft:movement": {
+					"value": 0.1
+				},
+				"minecraft:pushable": {
+					"is_pushable": false,
+					"is_pushable_by_piston": false
+				}
+			}
+		},
+		"components": {
+			"minecraft:experience_reward": {
+				"on_death": "Math.Min(query.player_level * 7, 100)"
+			},
+			"minecraft:type_family": {
+				"family": [
+					"player"
+				]
+			},
+			"minecraft:is_hidden_when_invisible": {},
+			"minecraft:loot": {
+				"table": "loot_tables/empty.json"
+			},
+			"minecraft:collision_box": {
+				"width": 0.6,
+				"height": 1.8
+			},
+			"minecraft:can_climb": {},
+			"minecraft:movement": {
+				"value": 0.1
+			},
+			"minecraft:hurt_on_condition": {
+				"damage_conditions": [{
+					"filters": {
+						"test": "in_lava",
+						"subject": "self",
+						"operator": "==",
+						"value": true
+					},
+					"cause": "lava",
+					"damage_per_tick": 4
+				}]
+			},
+			"minecraft:attack": {
+				"damage": 1
+			},
+			"minecraft:exhaustion_values": {
+				"heal": 6,
+				"jump": 0.05,
+				"sprint_jump": 0.2,
+				"mine": 0.005,
+				"attack": 0.1,
+				"damage": 0.1,
+				"walk": 0.0,
+				"sprint": 0.01,
+				"swim": 0.01
+			},
+			"minecraft:player.saturation": {
+				"value": 5,
+				"max": 20
+			},
+			"minecraft:player.exhaustion": {
+				"value": 0,
+				"max": 4
+			},
+			"minecraft:player.level": {
+				"value": 0,
+				"max": 24791
+			},
+			"minecraft:player.experience": {
+				"value": 0,
+				"max": 1
+			},
+			"minecraft:breathable": {
+				"total_supply": 15,
+				"suffocate_time": -1,
+				"inhale_time": 3.75,
+				"generates_bubbles": false
+			},
+			"minecraft:nameable": {
+				"always_show": true,
+				"allow_name_tag_renaming": false
+			},
+			"minecraft:physics": {},
+			"minecraft:pushable": {
+				"is_pushable": false,
+				"is_pushable_by_piston": true
+			},
+			"minecraft:insomnia": {
+				"days_until_insomnia": 3
+			},
+			"minecraft:damage_sensor": {
+				"triggers": [{
+						"cause": "all",
+						"on_damage": {
+							"filters": {
+								"all_of": [{
+										"test": "has_tag",
+										"operator": "==",
+										"subject": "self",
+										"value": "flying"
+									},
+									{
+										"test": "has_ability",
+										"operator": "==",
+										"subject": "self",
+										"value": "mayfly"
+									}
+								]
+							}
+						},
+						"deals_damage": false
+					},
+					{
+						"cause": "all",
+						"on_damage": {
+							"filters": {
+								"any_of": [{
+										"test": "has_tag",
+										"operator": "==",
+										"subject": "self",
+										"value": "freeze"
+									},
+									{
+										"test": "has_tag",
+										"operator": "==",
+										"subject": "other",
+										"value": "freeze"
+									}
+								]
+							}
+						},
+						"deals_damage": false
+					},
+					{
+						"cause": "entity_attack",
+						"on_damage": {
+							"filters": {
+								"any_of": [{
+									"test": "is_family",
+									"subject": "other",
+									"value": "player"
+								}]
+							},
+							"event": "scythe:attacked",
+							"target": "other"
+						}
+					}
+				]
+			},
+			"minecraft:rideable": {
+				"seat_count": 2,
+				"family_types": [
+					"parrot_tame"
+				],
+				"pull_in_entities": true,
+				"seats": [{
+						"position": [0.4, -0.2, -0.1],
+						"min_rider_count": 0,
+						"max_rider_count": 0,
+						"lock_rider_rotation": 0
+					},
+					{
+						"position": [-0.4, -0.2, -0.1],
+						"min_rider_count": 1,
+						"max_rider_count": 2,
+						"lock_rider_rotation": 0
+					}
+				]
+			},
+			"minecraft:conditional_bandwidth_optimization": {},
+			"minecraft:block_climber": {},
+			"minecraft:environment_sensor": {
+				"triggers": [{
+						"filters": {
+							"all_of": [{
+									"test": "has_mob_effect",
+									"subject": "self",
+									"value": "bad_omen"
+								},
+								{
+									"test": "is_in_village",
+									"subject": "self",
+									"value": true
+
+								}
+							]
+						},
+						"event": "minecraft:trigger_raid"
+					},
+					{
+						"filters": {
+							"all_of": [{
+								"test": "has_container_open",
+								"operator": "==",
+								"subject": "self",
+								"value": true
+							}]
+						},
+						"event": "scythe:guiopen"
+					},
+					{
+						"filters": {
+							"all_of": [{
+								"test": "has_container_open",
+								"operator": "==",
+								"subject": "self",
+								"value": false
+							}]
+						},
+						"event": "scythe:reset_variant"
+					},
+					{
+						"filters": {
+							"any_of": [{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:invisiblebedrock"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:pistonarmcollision"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:stickypistonarmcollision"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:tripwire"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:brewingstandblock"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:real_double_stone_slab"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.acacia_door"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.bed"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.beetroot"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.birch_door"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.cake"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.camera"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.campfire"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.cauldron"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.chain"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.crimson_door"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.dark_oak_door"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.flower_pot"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.frame"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.glow_frame"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.hopper"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.iron_door"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.jungle_door"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.kelp"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.nether_sprouts"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.nether_wart"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.reeds"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.skull"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.soul_campfire"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.spruce_door"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.warped_door"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.wheat"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.wooden_door"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.brewing_stand"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:tnt:2"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:tnt:3"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:stonebrick:4"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:real_double_stone_slab3"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:real_double_stone_slab4"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:double_stone_slab:2"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:cave_vines"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:cave_vines_body_with_berries"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:cave_vines_head_with_berries"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:purpur_block:1"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:purpur_block:3"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:real_double_stone_slab2"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:arrow:1"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:arrow:2"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:arrow:3"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:arrow:4"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:arrow:5"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:item.mangrove_door"
+								},
+								{
+									"test": "has_equipment",
+									"domain": "any",
+									"operator": "==",
+									"value": "minecraft:double_stone_block_slab"
+								}
+							]
+						},
+						"event": "scythe:illegal"
+					}
+				]
+			}
+		},
+		"events": {
+			"scythe:attacked": {
+				"add": {
+					"component_groups": [
+						"scythe:onAttack"
+					]
+				},
+				"remove": {
+					"component_groups": [
+						"scythe:reset_skinid"
+					]
+				}
+			},
+			"scythe:guiopen": {
+				"add": {
+					"component_groups": [
+						"scythe:gui"
+					]
+				},
+				"remove": {
+					"component_groups": [
+						"scythe:reset_variant"
+					]
+				}
+			},
+			"scythe:illegal": {
+				"add": {
+					"component_groups": [
+						"scythe:illegal"
+					]
+				},
+				"remove": {
+					"component_groups": [
+						"scythe:reset_skinid"
+					]
+				}
+			},
+			"scythe:reset_skinid": {
+				"add": {
+					"component_groups": [
+						"scythe:reset_skinid"
+					]
+				},
+				"remove": {
+					"component_groups": [
+						"scythe:onAttack",
+						"scythe:illegal"
+					]
+				}
+			},
+			"scythe:reset_variant": {
+				"add": {
+					"component_groups": [
+						"scythe:reset_variant"
+					]
+				},
+				"remove": {
+					"component_groups": [
+						"scythe:gui"
+					]
+				}
+			},
+			"scythe:kick": {
+				"add": {
+					"component_groups": [
+						"scythe:kick"
+					]
+				}
+			},
+			"scythe:freeze": {
+				"add": {
+					"component_groups": [
+						"scythe:freeze"
+					]
+				},
+				"remove": {
+					"component_groups": [
+						"scythe:unfreeze"
+					]
+				}
+			},
+			"scythe:unfreeze": {
+				"add": {
+					"component_groups": [
+						"scythe:unfreeze"
+					]
+				},
+				"remove": {
+					"component_groups": [
+						"scythe:freeze"
+					]
+				}
+			},
+			"minecraft:entity_spawn": {
+				"add": {
+					"component_groups": [
+						"scythe:reset_variant",
+						"scythe:reset_skinid"
+					]
+				},
+				"remove": {
+					"component_groups": [
+						"scythe:onAttack",
+						"scythe:gui",
+						"scythe:illegal"
+					]
+				}
+			},
+			"minecraft:gain_bad_omen": {
+				"add": {
+					"component_groups": [
+						"minecraft:add_bad_omen"
+					]
+				}
+			},
+			"minecraft:clear_add_bad_omen": {
+				"remove": {
+					"component_groups": [
+						"minecraft:add_bad_omen"
+					]
+				},
+				"add": {
+					"component_groups": [
+						"minecraft:clear_bad_omen_spell_effect"
+					]
+				}
+			},
+			"minecraft:trigger_raid": {
+				"add": {
+					"component_groups": [
+						"minecraft:raid_trigger"
+					]
+				}
+			},
+			"minecraft:remove_raid_trigger": {
+				"remove": {
+					"component_groups": [
+						"minecraft:raid_trigger"
+					]
+				}
+			}
+		}
+	}
+}
