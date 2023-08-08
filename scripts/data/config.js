@@ -374,8 +374,8 @@ export default
             "speed": 2.4530837678752038235,
             "checkForSprint": false,
             "checkForJump": true,
-            "punishment": "freeze",
-            "minVlbeforePunishment": 50 
+            "punishment": "kick",
+            "minVlbeforePunishment": 20
         },     
         "speedB": {
             "enabled": true,
