@@ -1,0 +1,303 @@
+{
+	"format_version": "1.10.0",
+	"animation_controllers": {
+		"controller.animation.jump": {
+			"states": {
+				"default": {
+					"transitions": [{
+						"jump": "query.is_jumping"
+					}],
+					"on_entry": [
+						"/tag @s remove jump",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aJUMP§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+					]
+				},
+				"jump": {
+					"transitions": [{
+						"default": "!query.is_jumping"
+					}],
+					"on_entry": [
+						"/tag @s add jump",
+						"/tp @s[tag=freeze] ~~-0.5~",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aJUMP§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+					]
+				}
+			}
+		},
+		"controller.animation.glide": {
+			"states": {
+				"default": {
+					"transitions": [{
+						"glide": "query.is_gliding"
+					}],
+					"on_entry": [
+						"/tag @s remove gliding",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aGLIDE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+					]
+				},
+				"glide": {
+					"transitions": [{
+						"default": "!query.is_gliding"
+					}],
+					"on_entry": [
+						"/tag @s add gliding",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aGLIDE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+					]
+				}
+			}
+		},
+		"controller.animation.levitate": {
+			"states": {
+				"default": {
+					"transitions": [{
+						"levitate": "query.is_levitating"
+					}],
+					"on_entry": [
+						"/tag @s remove levitating",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aLEVITATE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+					]
+				},
+				"levitate": {
+					"transitions": [{
+						"default": "!query.is_levitating"
+					}],
+					"on_entry": [
+						"/tag @s add levitating",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aLEVITATE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+					]
+				}
+			}
+		},
+		"controller.animation.ground": {
+			"states": {
+				"default": {
+					"transitions": [{
+						"ground": "query.is_on_ground"
+					}],
+					"on_entry": [
+						"/tag @s remove ground",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aGROUND§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+					]
+				},
+				"ground": {
+					"transitions": [{
+						"default": "!query.is_on_ground"
+					}],
+					"on_entry": [
+						"/tag @s add ground",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aGROUND§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+					]
+				}
+			}
+		},
+		"controller.animation.death": {
+			"states": {
+				"default": {
+					"transitions": [{
+						"dead": "!query.is_alive"
+					}],
+					"on_entry": [
+						"/tag @s remove dead",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aDEATH§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+					]
+				},
+				"dead": {
+					"transitions": [{
+						"default": "query.is_alive"
+					}],
+					"on_entry": [
+						"/tag @s add dead",
+						"/tag @s remove right",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aDEATH§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+					]
+				}
+			}
+		},
+		"controller.animation.ride": {
+			"states": {
+				"default": {
+					"transitions": [{
+						"ride": "query.is_riding"
+					}],
+					"on_entry": [
+						"/tag @s remove riding",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aRIDE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+					]
+				},
+				"ride": {
+					"transitions": [{
+						"default": "!query.is_riding"
+					}],
+					"on_entry": [
+						"/tag @s add riding",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aRIDE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}",
+						"/tag @s remove moving"
+					]
+				}
+			}
+		},
+		"controller.animation.left": {
+			"states": {
+				"default": {
+					"transitions": [{
+						"left": "variable.attack_time"
+					}],
+					"on_entry": [
+						"/tag @s remove left",
+						"/scoreboard players set @s last_attack 0",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aLEFT§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+					]
+				},
+				"left": {
+					"transitions": [{
+						"default": "!variable.attack_time"
+					}],
+					"on_entry": [
+						"/tag @s add left",
+						"/scoreboard players set @s last_attack 0",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aLEFT§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+					]
+				}
+			}
+		},
+		"controller.animation.right": {
+			"states": {
+				"default": {
+					"transitions": [{
+					// wacky solution at fixing a false positive, but whatever
+						"right": "query.is_using_item && query.get_equipped_item_name != 'fishing_rod'"
+					}],
+					"on_entry": [
+						"/tag @s remove right",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aRIGHT§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop,ticks=\"},{\"score\":{\"name\":\"@s\",\"objective\":\"right\"}},{\"text\":\")\"}]}",
+						"/scoreboard players set @s right 0"
+					]
+				},
+				"right": {
+					"transitions": [{
+						"default": "!query.is_using_item"
+					}],
+					"on_entry": [
+						"/tag @s add right",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aRIGHT§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start,ticks=0)\"}]}",
+						"/execute @s[tag=hasGUIopen] ~~~ function checks/alerts/invmove"
+					]
+				}
+			}
+		},
+		"controller.animation.sneak": {
+			"states": {
+				"default": {
+					"transitions": [{
+						"sneak": "query.is_sneaking"
+					}],
+					"on_entry": [
+						"/tag @s remove sneak",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aSNEAK§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+					]
+				},
+				"sneak": {
+					"transitions": [{
+						"default": "!query.is_sneaking"
+					}],
+					"on_entry": [
+						"/tag @s add sneak",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aSNEAK§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+					]
+				}
+			}
+		},
+		"controller.animation.move": {
+			"states": {
+				"default": {
+					"transitions": [{
+						"move": "query.is_moving"
+					}],
+					"on_entry": [
+						"/tag @s remove moving",
+						"/execute @s[scores={worldborder=1..,gametestapi=1..}] ~~~ function checks/optional/worldborder",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aMOVE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+					]
+				},
+				"move": {
+					"transitions": [{
+						"default": "!query.is_moving"
+					}],
+					"on_entry": [
+						"/tag @s add moving",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aMOVE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}",
+						"/execute @s[scores={worldborder=1..,gametestapi=1..}] ~~~ function checks/optional/worldborder",
+						"/tp @s[tag=freeze] ~~~",
+						"/tp @s[y=-105,dy=-205] ~ -104 ~",
+						"/scoreboard players set @s last_move 0"
+					]
+				}
+			}
+		},
+		"controller.animation.swim": {
+			"states": {
+				"default": {
+					"transitions": [{
+						"swim": "query.is_swimming"
+					}],
+					"on_entry": [
+						"/tag @s remove swimming",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aSWIM§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+					]
+				},
+				"swim": {
+					"transitions": [{
+						"default": "!query.is_swimming"
+					}],
+					"on_entry": [
+						"/tag @s add swimming",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aSWIM§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+					]
+				}
+			}
+		},
+		"controller.animation.sleep": {
+			"states": {
+				"default": {
+					"transitions": [{
+						"sleeping": "query.is_sleeping"
+					}],
+					"on_entry": [
+						"/tag @s remove sleeping",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aSLEEP§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+					]
+				},
+				"sleeping": {
+					"transitions": [{
+						"default": "!query.is_sleeping"
+					}],
+					"on_entry": [
+						"/tag @s add sleeping",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bRecieved §aSLEEP§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+					]
+				}
+			}
+		},
+		"controller.animation.trident": {
+			"states": {
+				"default": {
+					"transitions": [{
+						"trident": "query.get_equipped_item_name == 'trident'"
+					}],
+					"on_entry": [
+						"/tag @s remove trident",
+						"/scoreboard players set @s last_attack 0"
+					]
+				},
+				"trident": {
+					"transitions": [{
+						"default": "query.get_equipped_item_name != 'trident'"
+					}],
+					"on_entry": [
+						"/tag @s add trident"
+					]
+				}
+			}
+		}
+	}
+}
