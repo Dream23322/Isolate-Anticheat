@@ -168,13 +168,17 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
                 let banLength;
 
-                if(!punishmentLength && isNaN(punishmentLength)) {
-                    banLength = parseTime(punishmentLength);
-                }
                 
-                player.addTag("by:§dIsolate Anticheat");
+                    
+                
+                
+                player.addTag("by:§d Isolate Anticheat");
                 player.addTag(`reason:§c Isolate Anticheat detected §6Unfair Advantage§c! §a [§c${check}§a]`);
-                if(typeof banLength === "number") player.addTag(`time:${Date.now() + banLength}`);
+                try {
+                    banLength = parseTime(punishmentLength);
+                    player.addTag(`time:${Date.now() + banLength}`);
+                } catch (error) {}
+                
                 player.addTag("isBanned");
             }
 
