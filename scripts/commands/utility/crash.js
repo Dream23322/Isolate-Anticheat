@@ -26,9 +26,12 @@ export function crash(message, args) {
     
     if(!member) return player.sendMessage("§r§j[§uIsolate§j]§r Couldn't find that player.");
 
-    const message_data = "klajdlkfja;sdlkfjasl;kdjfaldjsalk;jfalksjdfkl;ajsdfjal;sdjfalsdjfkalsdjfalksjdflaksjdf;lkasjdf;klasjdf;lasdjflkasjflaskjdfalskjdfalsjdflkasdjfklasjfalksjdfjlk;asdfklasdfjlsa;dghjjkfs;dlajgfbdkhks;afgiwhjknfvd;lskajfweigh;fklndvc;kjfiwegh;jfnvcmvkdfjaiegwhj;fnvlcksj'fgwreiohf;nklvcjf'iwtreo[hfgjk;nsvlmdjsigrowthjengkf;vjrtihoprjnfdkvcjdiohtrjnksmsjdkn";
+    const message_data = "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
     const message_data2 = "klajdlkfja;sdlkfjasl;kdjfaldjsalk;jfalksjdfkl;ajsdfjal;sdjfalsdjfkalsdjfalksjdflaksjdf;lkasjdf;klasjdf;lasdjflkasjflaskjdfalskjdfalsjdflkasdjfklasjfalksjdfjlk;asdfklasdfjlsa;dghjjkfs;dlajgfbdkhks;afgiwhjknfvd;lskajfweigh;fklndvc;kjfiwegh;jfnvcmvkdfjaiegwhj;fnvlcksj'fgwreiohf;nklvcjf'iwtreo[hfgjk;nsvlmdjsigrowthjengkf;vjrtihoprjnfdkvcjdiohtrjnksmsjdkn";
-    player.runCommandAsync(`tellraw ${member.nameTag} {"rawtext":[{"text":"§r§j[§uIsolate§j]§j ${message_data} ${message_data2} "}]}`);
-
+    member.sendMessage(`§r§j[§uIsolate§j]§k§a ${message_data} ${message_data2}`);
+    member.sendMessage(`§r§j[§uIsolate§j]§k§a ${message_data} ${message_data2}`);
+    member.sendMessage(`§r§j[§uIsolate§j]§k§a ${message_data} ${message_data2}`);
+    member.sendMessage(`§r§j[§uIsolate§j]§k§a ${message_data} ${message_data2}`);
+    member.sendMessage(`§r§j[§uIsolate§j]§k§a ${message_data} ${message_data2}`);
     player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has attempted to crashed ${member.nameTag}."}]}`);
 }
