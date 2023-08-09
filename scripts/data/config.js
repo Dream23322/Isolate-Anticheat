@@ -429,7 +429,7 @@ export default
             "enabled": true,
             "hVelocity": 0.512,
             "punishment": "ban",
-            "punishmentLength": "5m",
+            "punishmentLength": "5d",
             "minVlbeforePunishment": 10
         },        
         "flyF": {
@@ -517,7 +517,8 @@ export default
         "killauraC": {
             "enabled": true,
             "entities": 2,
-            "punishment": "kick",
+            "punishment": "ban",
+            "punishmentLength": "3m",
             "minVlbeforePunishment": 5
         },
         "scaffoldB": {
