@@ -145,6 +145,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
             try {
                 player.runCommandAsync("function tools/resetwarns")
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically kicked by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been removed from you game for using an unfair advantage!"}]}`);
                 player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r You have been kicked for §6Unfair Advantage.§a [§c${check}§a]`);
                 // incase /kick fails, we despawn them from the world
             } catch (error) {
@@ -171,8 +172,8 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     banLength = parseTime(punishmentLength);
                 }
                 
-                player.addTag("by:Isolate Anticheat");
-                player.addTag(`reason:Isolate Anticheat detected Unfair Advantage! Check: ${check}/${checkType}`);
+                player.addTag("by:§Isolate Anticheat");
+                player.addTag(`reason:§c Isolate Anticheat detected §6Unfair Advantage§c! §a [§c${check}§a]`);
                 if(typeof banLength === "number") player.addTag(`time:${Date.now() + banLength}`);
                 player.addTag("isBanned");
             }
@@ -180,7 +181,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
         }
         if (punishment === "mute") {
             player.addTag("isMuted");
-            player.sendMessage(`§r§j[§uIsolate§j]§r You have been muted by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}`);
+            player.sendMessage(`§r§j[§uIsolate§j]§r You have been muted by Isolate Anticheat for Unfair Advantage!`);
 
             // remove chat ability
             player.runCommandAsync("ability @s mute true");
