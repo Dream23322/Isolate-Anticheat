@@ -131,8 +131,9 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     switch (punishment) {
         case "kick": {
             try {
+                player.runCommandAsync("function tools/resetwarns")
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically kicked by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
-                player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r You have been kicked for unfair advantage. [${check}]`);
+                player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r You have been kicked for §6Unfair Advantage.§a [§c${check}§a]`);
                 // incase /kick fails, we despawn them from the world
             } catch (error) {
                 player.triggerEvent("scythe:kick");
