@@ -323,14 +323,14 @@ export default
                 "minecraft:ender_dragon",
                 "minecraft:ghast"
             ],
-            "punishment": "none",
-            "minVlbeforePunishment": 5
+            "punishment": "kick",
+            "minVlbeforePunishment": 20
         },
         "noslowA": {
             "enabled": true,
             "speed": 0.22,
             "maxSpeed": 0.36,
-            "punishment": "ban",
+            "punishment": "kick",
             "minVlbeforePunishment": 5
         },
         "noslowB": {
@@ -414,15 +414,16 @@ export default
             "enabled": true,
             "velocity": 0.5423,
             "hVelocity": 0.525,
-            "punishment": "kick",
-            "minVlbeforePunishment": 10
+            "punishment": "ban",
+            "punishmentLength": "1m",
+            "minVlbeforePunishment": 5
         },          
         "flyD": {
             "enabled": true,
             "Velocity": 0.6,
-            "punishment": "ban",
+            "punishment": "kick",
             "punishmentLength": "5m",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 7
         },    
         "flyE": {
             "enabled": true,
@@ -439,6 +440,12 @@ export default
             "punishmentLength": "3d",
             "minVlbeforePunishment": 10
         },   
+        "flyG": {
+            "enabled": true,
+            "punishment": "kick",
+            "fallDistance": 0,
+            "minVlbeforePunishment": 5
+        },
         "illegalitemsE": {
             "enabled": false,
             "punishment": "ban",
@@ -510,7 +517,7 @@ export default
         "killauraC": {
             "enabled": true,
             "entities": 2,
-            "punishment": "ban",
+            "punishment": "kick",
             "minVlbeforePunishment": 5
         },
         "scaffoldB": {
@@ -664,6 +671,13 @@ export default
             "enabled": true,
             "punishment": "kick",
             "minVlbeforePunishment": 0
+        },
+        "motionA": {
+            "enabled": true,
+            "speed": 10.5,
+            "punishment": "ban",
+            "punishmentLength": "1m",
+            "minVlbeforePunishment": 1
         }
 
     },

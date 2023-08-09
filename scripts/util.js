@@ -5,7 +5,19 @@ import config from "./data/config.js";
 import data from "./data/data.js";
 
 const world = Minecraft.world;
-
+// export function banAnimation(player) {
+//     player.runCommandAsync("tp @s @s");
+//     player.runCommandAsync("tp @s @s");
+//     player.runCommandAsync("tp @s @s");
+//     player.runCommandAsync("tp @s @s");
+//     player.runCommandAsync("tp @s @s");
+//     player.runCommandAsync("tp @s @s");
+//     player.runCommandAsync("tp @s @s");
+//     player.sendMessage("§4§klakjfdal;skdjfa;lskdjf;alskjdfa;lskjdfa;lksjdf;laskjdf;laskjdf;laskjdf;alskjdfa;lksjdf;alsjkfdla;skjdfa;lskdjfa;lsdjf;lasjdfl;aksjdfl;aksjdf;laksjdfl;kajsd;flkjaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+//     player.runCommandAsync("title @s title §4§kafdjfa;lskdjfal;skjdf;alksjdfk;aljsd;flkajsakldjfa;lsf");
+//     player.runCommandAsync("title @s subtit §4§kakl;fjasdlkjf;aslkdjfalk;sjdf;laksjdf;lakjsdfj;laksdf;lkasjfdlk;asjdf;lkajsdf");
+//     player.runCommandAsync("title @s actionbar §4§k89041709387123987412983741092837401923048127340912734098127340987123497123948712834")
+// }
 /**
  * @name flag
  * @param {object} player - The player object
@@ -128,24 +140,24 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
     if(currentVl < checkData.minVlbeforePunishment) return;
 
-    switch (punishment) {
-        case "kick": {
-            try {
-                player.runCommandAsync("function tools/resetwarns")
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically kicked by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
-                player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r You have been kicked for §6Unfair Advantage.§a [§c${check}§a]`);
-                // incase /kick fails, we despawn them from the world
-            } catch (error) {
-                player.triggerEvent("scythe:kick");
-            }    
-            break;
-        }
-        case "ban": {
-            // Check if auto-banning is disabled
-            if(getScore(player, "autoban") <= 1) break;
+
+    if (punishment === "kick") {
+        try {
+            player.runCommandAsync("function tools/resetwarns")
+            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically kicked by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
+            player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r You have been kicked for §6Unfair Advantage.§a [§c${check}§a]`);
+            // incase /kick fails, we despawn them from the world
+        } catch (error) {
+            player.triggerEvent("scythe:kick");
+        }    
+
+    };
+    if(punishment === "ban") {
+        // Check if auto-banning is disabled
+        if(getScore(player, "autoban") >= 0) {
 
             const punishmentLength = checkData.punishmentLength?.toLowerCase();
-           
+            
             player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been banned by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
 
             // this removes old ban stuff
@@ -158,26 +170,26 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
             if(!punishmentLength && isNaN(punishmentLength)) {
                 banLength = parseTime(punishmentLength);
             }
-
+            
             player.addTag("by:Isolate Anticheat");
             player.addTag(`reason:Isolate Anticheat detected Unfair Advantage! Check: ${check}/${checkType}`);
             if(typeof banLength === "number") player.addTag(`time:${Date.now() + banLength}`);
             player.addTag("isBanned");
-
-            break;
         }
-        case "mute": {
-            player.addTag("isMuted");
-            player.sendMessage(`§r§j[§uIsolate§j]§r You have been muted by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}`);
 
-            // remove chat ability
-            player.runCommandAsync("ability @s mute true");
+    }
+    if (punishment === "mute") {
+        player.addTag("isMuted");
+        player.sendMessage(`§r§j[§uIsolate§j]§r You have been muted by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}`);
 
-            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically muted by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
-            break;
-        }
+        // remove chat ability
+        player.runCommandAsync("ability @s mute true");
+
+        player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically muted by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
+      
     }
 }
+
 
 /**
  * @name banMessage
@@ -185,6 +197,8 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
  * @example banMessage(player);
  * @remarks Bans the player from the game.
  */
+
+
 export function banMessage(player) {
     // validate that required params are defined
     if(typeof player !== "object") throw TypeError(`Error: player is type of ${typeof player}. Expected "object"`);

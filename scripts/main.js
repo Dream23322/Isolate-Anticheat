@@ -477,11 +477,10 @@ Minecraft.system.runInterval(() => {
 					
 		}	
 
-		// Speed/B = Checks for messed up velocity while jumping
-		if(config.modules.speedB.enabled && player.isJumping && !player.isGliding && !player.isFlying) {
-			if (playerSpeed >= config.modules.speedB.speed && playerVelocity >= config.modules.speedB.velocity) {
-				
-				flag(player, "Speed", "B", "Movement", "velocity", playerVelocity, true)
+		// Motion/A = Checks for very high speed (stop fly bypass)
+		if(config.modules.motionA.enabled) {
+			if(playerSpeed > config.modules.motionA.speed) {
+				flag(player, "Motion", "A", "Movement", "speed", playerSpeed, false);
 			}
 		}
 
@@ -503,9 +502,25 @@ Minecraft.system.runInterval(() => {
 		}
 
 		//Scythe check :skull:
-		if(player.fallDistance < 0 && !player.hasTag("trident")) {
-
-			flag(player, "Fly", "G", "Movement", "fallDistance", player.fallDistance, true);
+		if(config.modules.flyG.enabled && player.fallDistance < config.modules.flyG.fallDistance && !player.hasTag("trident")) {
+			// Stopping false flags
+			if(!player.isJumping && !player.isGliding && !player.isFlying) {
+				let isSurroundedByAir = true;
+				for (let x = -1; x <= 1; x++) {
+					for (let y = -1; y <= 1; y++) {
+						for (let z = -1; z <= 1; z++) {
+							const block = player.dimension.getBlock({ x: player.location.x + x, y: player.location.y + y, z: player.location.z + z });
+							if (block.typeId !== "minecraft:air") {
+								isSurroundedByAir = false;
+								break;
+							}
+						}
+					}
+				}
+				if(isSurroundedByAir === true) {
+					flag(player, "Fly", "G", "Movement", "fallDistance", player.fallDistance, true);
+				}	
+			}
 		}
 		// THis is a mess, fix it lol, also add autoclicker/b because this one is for shitty players only (and doesnt work)
 		if (config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
