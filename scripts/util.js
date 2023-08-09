@@ -174,11 +174,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 
                 player.addTag("by:§d Isolate Anticheat");
                 player.addTag(`reason:§c Isolate Anticheat detected §6Unfair Advantage§c! §a [§c${check}§a]`);
-                try {
-                    banLength = parseTime(punishmentLength);
-                    player.addTag(`time:${Date.now() + banLength}`);
-                } catch (error) {}
-                
+                //TODO: Add banlength thing here but it works
                 player.addTag("isBanned");
             }
 
