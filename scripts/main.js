@@ -58,10 +58,7 @@ world.afterEvents.chatSend.subscribe((msg) => {
 
 	msg.sendToTargets = true;
 
-	/*
-	// BadPackets[2] = checks for invalid chat message length
-	if(config.modules.badpackets2.enabled && message.length > config.modules.badpackets2.maxlength || message.length < config.modules.badpackets2.minLength) flag(player, "BadPackets", "2", "Exploit", "messageLength", `${message.length}`, undefined, msg);
-	*/
+
 
 	// Spammer/A = checks if someone sends a message while moving and on ground
 	if(config.modules.spammerA.enabled && player.hasTag('moving') && player.hasTag('ground') && !player.hasTag('jump'))
@@ -480,7 +477,11 @@ Minecraft.system.runInterval(() => {
 		// Motion/A = Checks for very high speed (stop fly bypass)
 		if(config.modules.motionA.enabled) {
 			if(playerSpeed > config.modules.motionA.speed) {
-				flag(player, "Motion", "A", "Movement", "speed", playerSpeed, false);
+				if(player.hasTag("ground")) {
+					flag(player, "BadPackets", "2", "Movement", "speed", playerSpeed, false);
+				} else {
+					flag(player, "Motion", "A", "Movement", "speed", playerSpeed, true)
+				}	
 			}
 		}
 
@@ -653,11 +654,12 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 
 	if(config.modules.scaffoldB.enabled) {
 		// get block under player
+		const rotation = player.getRotation()
 		const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 		
 		// @ts-expect-error
 		if(!player.getEffect("speed") && player.getEffect("jumpboost") &&!player.hasTag("sprint") &&  !player.isFlying && player.isJumping && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {		
-			if(player.getRotation() > 300){
+			if(rotation.y > 180) {
 				if(block.location.y < player.location.y) {
 					flag(player, "Scaffold", "B", "Player", "headAngle", player.getRotation(), false);
 				}
