@@ -416,7 +416,7 @@ export default
             "hVelocity": 0.525,
             "punishment": "ban",
             "punishmentLength": "1m",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 20
         },          
         "flyD": {
             "enabled": true,
@@ -428,7 +428,7 @@ export default
         "flyE": {
             "enabled": true,
             "hVelocity": 0.512,
-            "punishment": "ban",
+            "punishment": "kick",
             "punishmentLength": "5d",
             "minVlbeforePunishment": 10
         },        
@@ -444,7 +444,7 @@ export default
             "enabled": true,
             "punishment": "kick",
             "fallDistance": 0,
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 10
         },
         "illegalitemsE": {
             "enabled": false,
@@ -517,9 +517,9 @@ export default
         "killauraC": {
             "enabled": true,
             "entities": 2,
-            "punishment": "ban",
+            "punishment": "kick",
             "punishmentLength": "3m",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 3
         },
         "scaffoldB": {
             "enabled": true,
@@ -676,7 +676,7 @@ export default
         "motionA": {
             "enabled": true,
             "speed": 10.5,
-            "punishment": "ban",
+            "punishment": "kick",
             "punishmentLength": "1m",
             "minVlbeforePunishment": 1
         }
