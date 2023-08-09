@@ -17,6 +17,7 @@ tellraw @s {"rawtext":[{"text":"§b!credits§r - Shows credits, that's it."}]}
 tellraw @s {"rawtext":[{"text":"§b!op <username>§r - Op's a player in Isolate Anticheat features."}]}
 tellraw @s {"rawtext":[{"text":"§b!unban <username> [reason]§r - Unbans the specified player."}]}
 
+
 tellraw @s {"rawtext":[{"text":"\n§l§aOptional Features"}]}
 
 # Gametest enabled
@@ -38,6 +39,7 @@ tellraw @s {"rawtext":[{"text":"§b!xray§r - Enables/disables anti-xray."}]}
 tellraw @s {"rawtext":[{"text":"\n§l§aTools and Utilites"}]}
 
 # Gametest enabled
+tellraw @s {"rawtext":[{"text":"§b!crash <username>§r - Tried to crash a player (If crash failed, it will kick them from the server)."}]}
 tellraw @s {"rawtext":[{"text":"§b!ecwipe <username>§r - Clears a player's ender chest."}]}
 tellraw @s {"rawtext":[{"text":"§b!fly [username]§r - Enables/disables the ability to fly in survival mode."}]}
 tellraw @s {"rawtext":[{"text":"§b!freeze <username>§r - Freeze a player and make it so they can't move."}]}

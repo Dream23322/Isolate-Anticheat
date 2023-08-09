@@ -679,6 +679,12 @@ export default
             "punishment": "kick",
             "punishmentLength": "1m",
             "minVlbeforePunishment": 1
+        },
+        "jumpA": {
+            "enabled": true,
+            "height": -1.7,
+            "punishment": "kick",
+            "minVlbeforePunishment": 1
         }
 
     },

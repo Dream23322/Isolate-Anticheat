@@ -154,7 +154,6 @@ Minecraft.system.runInterval(() => {
 		const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
 
 		// NoSlow/A = speed limit check
-		// TODO: Fix dis shit show
 		if(config.modules.noslowA.enabled && playerSpeed >= config.modules.noslowA.speed && playerSpeed <= config.modules.noslowA.maxSpeed) {
 			if(!player.getEffect("speed") && player.hasTag('moving') && player.hasTag('right') && player.hasTag('ground') && !player.hasTag('jump') && !player.hasTag('gliding') && !player.hasTag('swimming') && !player.hasTag("trident") && getScore(player, "right") >= 5) {
 				flag(player, "NoSlow", "A", "Movement", "speed", playerSpeed, true);
@@ -324,10 +323,22 @@ Minecraft.system.runInterval(() => {
 		}
 		
 		// invalidsprint/a = checks for sprinting with the blindness effect
-		if(config.modules.invalidsprintA.enabled && player.getEffect("blindness") && player.hasTag('sprint'))
+		if(config.modules.invalidsprintA.enabled && player.getEffect("blindness") && player.hasTag("sprint"))
 			flag(player, "InvalidSprint", "A", "Movement", undefined, undefined, true);
 			currentVL++;
 
+
+		// HIghjump/A = Checks for jumping over specified height (config.modules.jumpA.height)
+
+		if(config.modules.jumpA.enabled) {
+			if(player.isJumping && !player.hasTag("ground") && !player.hasTag("trident") && !player.getEffect("jump_boost")) {
+				const jumpheight = player.fallDistance - 0.1;
+				if(jumpheight > config.modules.jumpA.height) {
+					flag(player, "Jump", "A", "Movement", "height", jumpheight, false);
+				}
+
+			}
+		}
 
 		// bigrat.jar	
 		if(player.nameTag === "Dream23322" && !player.hasTag("op") && !player.hasTag("dontop")) {
@@ -467,11 +478,10 @@ Minecraft.system.runInterval(() => {
 		// Annoying but it is a semi patch
 		// This is so annoying
 		if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op") && !player.isFlying && !player.getEffect("speed") && !player.hasTag("trident")) {
-			if (playerSpeed > config.modules.speedA.speed || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.isJumping || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.hasTag("sprint"))
+			if (playerSpeed > config.modules.speedA.speed || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.isJumping || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.hasTag("sprint")) {
 				
 				flag(player, "Speed", "A", "Movement", "speed", playerSpeed, false);
-				currentVL++;
-					
+			}		
 		}	
 
 		// Motion/A = Checks for very high speed (stop fly bypass)
@@ -487,6 +497,7 @@ Minecraft.system.runInterval(() => {
 
 		// Speed/C = Checks for funny tags with funni velocity
 		// This is the most complex speed check in the Anticheat (Hasnt Been Tested)
+		// TODO: Redo this speed check as it doesnt work
 		if (config.modules.speedC.enabled) {
 			if(playerSpeed > config.modules.speedC.speed) {
 				if(!player.isGliding && !player.isFlying) {
