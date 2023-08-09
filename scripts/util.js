@@ -138,56 +138,57 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     if(typeof punishment !== "string") throw TypeError(`Error: punishment is type of ${typeof punishment}. Expected "string"`);
     if(punishment === "none" || punishment === "") return;
 
-    if(currentVl < checkData.minVlbeforePunishment) return;
+    if(currentVl > checkData.minVlbeforePunishment) {
 
 
-    if (punishment === "kick") {
-        try {
-            player.runCommandAsync("function tools/resetwarns")
-            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically kicked by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
-            player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r You have been kicked for §6Unfair Advantage.§a [§c${check}§a]`);
-            // incase /kick fails, we despawn them from the world
-        } catch (error) {
-            player.triggerEvent("scythe:kick");
-        }    
+        if (punishment === "kick") {
+            try {
+                player.runCommandAsync("function tools/resetwarns")
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically kicked by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
+                player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r You have been kicked for §6Unfair Advantage.§a [§c${check}§a]`);
+                // incase /kick fails, we despawn them from the world
+            } catch (error) {
+                player.triggerEvent("scythe:kick");
+            }    
 
-    };
-    if(punishment === "ban") {
-        // Check if auto-banning is disabled
-        if(getScore(player, "autoban") >= 0) {
+        };
+        if(punishment === "ban") {
+            // Check if auto-banning is disabled
+            if(getScore(player, "autoban") >= 0) {
 
-            const punishmentLength = checkData.punishmentLength?.toLowerCase();
-            
-            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been banned by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
+                const punishmentLength = checkData.punishmentLength?.toLowerCase();
+                
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been banned by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
 
-            // this removes old ban stuff
-            player.getTags().forEach(t => {
-                if(t.includes("reason:") || t.includes("by:") || t.includes("time:")) player.removeTag(t);
-            });
+                // this removes old ban stuff
+                player.getTags().forEach(t => {
+                    if(t.includes("reason:") || t.includes("by:") || t.includes("time:")) player.removeTag(t);
+                });
 
-            let banLength;
+                let banLength;
 
-            if(!punishmentLength && isNaN(punishmentLength)) {
-                banLength = parseTime(punishmentLength);
+                if(!punishmentLength && isNaN(punishmentLength)) {
+                    banLength = parseTime(punishmentLength);
+                }
+                
+                player.addTag("by:Isolate Anticheat");
+                player.addTag(`reason:Isolate Anticheat detected Unfair Advantage! Check: ${check}/${checkType}`);
+                if(typeof banLength === "number") player.addTag(`time:${Date.now() + banLength}`);
+                player.addTag("isBanned");
             }
-            
-            player.addTag("by:Isolate Anticheat");
-            player.addTag(`reason:Isolate Anticheat detected Unfair Advantage! Check: ${check}/${checkType}`);
-            if(typeof banLength === "number") player.addTag(`time:${Date.now() + banLength}`);
-            player.addTag("isBanned");
+
         }
+        if (punishment === "mute") {
+            player.addTag("isMuted");
+            player.sendMessage(`§r§j[§uIsolate§j]§r You have been muted by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}`);
 
-    }
-    if (punishment === "mute") {
-        player.addTag("isMuted");
-        player.sendMessage(`§r§j[§uIsolate§j]§r You have been muted by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}`);
+            // remove chat ability
+            player.runCommandAsync("ability @s mute true");
 
-        // remove chat ability
-        player.runCommandAsync("ability @s mute true");
-
-        player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically muted by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
-      
-    }
+            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically muted by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
+        
+        }
+    }    
 }
 
 

@@ -429,7 +429,7 @@ export default
             "enabled": true,
             "hVelocity": 0.512,
             "punishment": "ban",
-            "punishmentLength": "7d",
+            "punishmentLength": "5m",
             "minVlbeforePunishment": 10
         },        
         "flyF": {
