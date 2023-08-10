@@ -685,6 +685,12 @@ export default
             "height": -1.7,
             "punishment": "kick",
             "minVlbeforePunishment": 1
+        },
+        "killauraF": {
+            "enabled": true,
+            "angle": 100,
+            "punishment": "kick",
+            "minVlbeforePunishment": 1
         }
 
     },
