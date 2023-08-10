@@ -1020,9 +1020,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		}
 	}
 
-	//Killaura/F = Checks for hit angle
-	killauraF();
-
+	
 
 	// badpackets[3] = checks if a player attacks themselves
 	// some (bad) hacks use this to bypass anti-movement cheat checks
