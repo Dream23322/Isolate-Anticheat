@@ -1,5 +1,5 @@
-import * from "@minecraft/server";
-import { dynamicPropertyRegistry } from "../worldinitializeevent/registry";
+import * as from "@minecraft/server";
+
 import { flag } from "../../util";
 
 export function killauraF(obj) {
