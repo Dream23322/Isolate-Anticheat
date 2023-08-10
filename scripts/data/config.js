@@ -678,13 +678,13 @@ export default
             "speed": 10.5,
             "punishment": "kick",
             "punishmentLength": "1m",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 3
         },
         "motionB": {
             "enabled": true,
             "height": -1.1,
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 15
         },
         "killauraF": {
             "enabled": true,
