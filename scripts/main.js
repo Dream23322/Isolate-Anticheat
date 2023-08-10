@@ -7,6 +7,7 @@ import { banList } from "./data/globalban.js";
 import data from "./data/data.js";
 import { mainGui, playerSettingsMenuSelected } from "./features/ui.js";
 import { banplayer } from "./data/paradoxban.js";
+import { killauraF  } from "./features/external/killauraE.js";
 
 const world = Minecraft.world;
 
@@ -329,14 +330,13 @@ Minecraft.system.runInterval(() => {
 
 
 		// HIghjump/A = Checks for jumping over specified height (config.modules.jumpA.height)
-
+		// Experimental (Not tested)
 		if(config.modules.jumpA.enabled) {
 			if(player.isJumping && !player.hasTag("ground") && !player.hasTag("trident") && !player.getEffect("jump_boost")) {
 				const jumpheight = player.fallDistance - 0.1;
 				if(jumpheight > config.modules.jumpA.height) {
 					flag(player, "Jump", "A", "Movement", "height", jumpheight, false);
 				}
-
 			}
 		}
 
@@ -490,7 +490,7 @@ Minecraft.system.runInterval(() => {
 				if(player.hasTag("ground")) {
 					flag(player, "BadPackets", "2", "Movement", "speed", playerSpeed, false);
 				} else {
-					flag(player, "Motion", "A", "Movement", "speed", playerSpeed, true)
+					flag(player, "Motion", "A", "Movement", "speed", playerSpeed, true);
 				}	
 			}
 		}
@@ -1020,9 +1020,13 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		}
 	}
 
+	//Killaura/F = Checks for hit angle
+	killauraF();
+
+
 	// badpackets[3] = checks if a player attacks themselves
 	// some (bad) hacks use this to bypass anti-movement cheat checks
-	//if(config.modules.badpackets3.enabled && entity.id === player.id) flag(player, "BadPackets", "3", "Exploit");
+	if(config.modules.badpackets3.enabled && entity.id === player.id) flag(player, "BadPackets", "3", "Exploit");
 
 	// check if the player was hit with the UI item, and if so open the UI for that player
 	if(config.customcommands.ui.enabled && player.hasTag("op") && entity.typeId === "minecraft:player") {
