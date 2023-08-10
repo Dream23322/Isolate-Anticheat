@@ -960,20 +960,31 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 			}
 		}, 1);
 	}
-
-	if(config.misc_modules.antiArmorStandCluster.enabled && entity.typeId === "minecraft:armor_stand") {
+	
+	if(config.misc_modules.lag_machine.antiArmorStandCluster.enabled && entity.typeId === "minecraft:armor_stand") {
 		const entities = [...entity.dimension.getEntities({
 			location: {x: entity.location.x, y: entity.location.y, z: entity.location.z},
-			maxDistance: config.misc_modules.antiArmorStandCluster.radius,
+			maxDistance: config.misc_modules.lag_machine.antiArmorStandCluster.radius,
 			type: "armor_stand"
 		})];
 
-		if(entities.length > config.misc_modules.antiArmorStandCluster.max_armor_stand_count) {
-			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r Potential lag machine detected at X: ${entity.location.x}, Y: ${entity.location.y}, Z: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.antiArmorStandCluster.max_armor_stand_count} armor stands in this area. ${getClosestPlayer(entity)} may be involved in this"}]}`);
-
+		if(entities.length > config.misc_modules.lag_machine.antiArmorStandCluster.max_armor_stand_count) {
+			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§c Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiArmorStandCluster.max_armor_stand_count} armor stands in this area!"}]}`);
 			for(const entityLoop of entities) entityLoop.kill();
 		}
 	}
+	if(config.misc_modules.lag_machine.antiMinecartCluster.enabled && entity.typeId === "minecraft:minecart") {
+		const entities = [...entity.dimension.getEntities({
+			location: {x: entity.location.x, y: entity.location.y, z: entity.location.z},
+			maxDistance: config.misc_modules.lag_machine.antiMinecartCluster.radius,
+			type: "minecart"
+		})];
+
+		if(entities.length > config.misc_modules.lag_machine.antiMinecartCluster.max_count) {
+			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§c Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} armor stands in this area!"}]}`);
+			for(const entityLoop of entities) entityLoop.kill();
+		}
+	}	
 });
 
 world.afterEvents.entityHitEntity.subscribe((entityHit) => {

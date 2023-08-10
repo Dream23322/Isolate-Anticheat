@@ -695,11 +695,18 @@ export default
 
     },
     "misc_modules": {
-        "antiArmorStandCluster": {
-            "enabled": true,
-            "radius": 5,
-            "max_armor_stand_count": 10
-        }
+        "lag_machine": {
+            "antiArmorStandCluster": {
+                "enabled": true,
+                "radius": 5,
+                "max_armor_stand_count": 10
+            },
+            "antiMinecartCluster": {
+                "enabled": true,
+                "radius": 30,
+                "max_count": 10
+            }
+        }    
     },
     "itemLists": {
         "spawnEggs": {
