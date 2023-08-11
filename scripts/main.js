@@ -677,27 +677,11 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 	}
 
 
-	if(config.modules.scaffoldB.enabled) {
-		// get block under player
-		const rotation = player.getRotation()
-		//const headloc = player.headLocation()
-		const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
-		
-		// @ts-expect-error
-		if(!player.getEffect("speed") && !player.hasTag("sprint") && !player.isFlying && !player.isJumping && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {		
-			if(rotation.y > 0) {
-				if(block.location.y < player.location.y) {
-					flag(player, "Scaffold", "B", "Player", "headAngle", "over180", false);
-				}
-			}
-		}
-	}
-
 	if(config.modules.scaffoldC.enabled === true) {
 		const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 		if(!player.isFlying && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
 			// The actual check
-			if(!player.hasTag("right") && player.hasTag("left") && !player.hasTag("jump")) {
+			if(!player.hasTag("right") && !player.hasTag("jump") && !player.hasTag("trident")) {
 				flag(player, "Scaffold", "C", "Placement", "invalidKeypress", "!right", true);
 			}
 		}
