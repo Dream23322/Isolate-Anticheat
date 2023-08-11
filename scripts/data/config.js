@@ -542,7 +542,7 @@ export default
         */
         "autoclickerA": {
             "enabled": true,
-            "maxCPS": 12,
+            "maxCPS": 15,
             "checkCPSAfter": 1000,
             "punishment": "none",
             "minVlbeforePunishment": 0

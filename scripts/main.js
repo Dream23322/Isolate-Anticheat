@@ -534,26 +534,25 @@ Minecraft.system.runInterval(() => {
 				}	
 			}
 		}
-		// THis is a mess, fix it lol, also add autoclicker/b because this one is for shitty players only (and doesnt work)
+		// Autoclicker check
 		if (config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
 			player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
+			
 			// autoclicker/A = checks for high cps
 			if (player.cps > config.modules.autoclickerA.maxCPS) {
-				flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
-				currentVL++;
+			flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
+			currentVL++;
 			}
 			
 			// Notify players with the "seeCPS" tag about CPS values
 			if (player.hasTag("seeCPS")) {
-				const cpsMessage = `Player ${player.name} CPS: ${player.cps.toFixed(2)}`;
-				player.tell(cpsMessage);
+			const cpsMessage = `Player ${player.name} CPS: ${player.cps.toFixed(2)}`;
+			player.tell(cpsMessage);
 			}
 			
 			player.firstAttack = Date.now();
 			player.cps = 0;
 		}
-
-
 	}
 });
 
