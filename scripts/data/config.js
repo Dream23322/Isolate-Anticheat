@@ -525,6 +525,11 @@ export default
             "enabled": true,
             "punsihment": "none"
         },
+        "scaffoldC": {
+            "enabled": true,
+            "punishment": "kick", 
+            "minVlbeforePunishment": 3
+        },
         "illegalitemsF": {
             "enabled": false,
             "length": 33,
