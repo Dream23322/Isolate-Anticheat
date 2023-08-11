@@ -25,3 +25,4 @@ scoreboard players set @s[type=player,tag=!op,scores={towervl=1..}] towervl 0
 scoreboard players set @s[type=player,tag=!op,scores={gamemodevl=1..}] gamemodevl 0
 scoreboard players set @s[type=player,scores={speedvl=1..}] speedvl 0
 scoreboard players set @s[type=player,scores={motionvl=1..}] motionvl 0
+scoreboard players set @s[type=player,scores={scaffoldvl=1..}] scaffoldvl 0
