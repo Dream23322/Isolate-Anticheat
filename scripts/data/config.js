@@ -523,12 +523,13 @@ export default
         },
         "scaffoldB": {
             "enabled": true,
-            "punsihment": "none"
+            "punsihment": "none",
+            "minVlbeforePunishment": 10
         },
         "scaffoldC": {
             "enabled": true,
             "punishment": "kick", 
-            "minVlbeforePunishment": 3
+            "minVlbeforePunishment": 10
         },
         "illegalitemsF": {
             "enabled": false,

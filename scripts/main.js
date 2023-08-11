@@ -685,7 +685,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 		
 		// @ts-expect-error
 		if(!player.getEffect("speed") && !player.hasTag("sprint") && !player.isFlying && !player.isJumping && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {		
-			if(rotation.y > 180) {
+			if(rotation.y > 0) {
 				if(block.location.y < player.location.y) {
 					flag(player, "Scaffold", "B", "Player", "headAngle", "over180", false);
 				}
