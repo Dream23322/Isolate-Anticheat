@@ -553,6 +553,21 @@ Minecraft.system.runInterval(() => {
 			player.firstAttack = Date.now();
 			player.cps = 0;
 		}
+
+		// Autoclicker B check
+		if (config.modules.autoclickerB.enabled && player.cps > config.modules.autoclickerB.minCPS && Date.now() - player.firstAttack >= config.modules.autoclickerB.checkCPSAfter) {
+			player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
+			
+			// autoclicker/B = checks for consistent cps
+			if (Math.abs(player.cps - player.lastCps) <= config.modules.autoclickerB.maxDeviation) {
+			flag(player, "Autoclicker", "B", "Combat", "CPS", player.cps);
+			currentVL++;
+			}
+			
+			player.lastCps = player.cps;
+			player.firstAttack = Date.now();
+			player.cps = 0;
+		}		
 	}
 });
 
@@ -1047,7 +1062,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 
 	// badpackets[3] = checks if a player attacks themselves
 	// some (bad) hacks use this to bypass anti-movement cheat checks
-	if(config.modules.badpackets3.enabled && entity.id === player.id) flag(player, "BadPackets", "3", "Exploit");
+	//if(config.modules.badpackets3.enabled && entity.id === player.id) flag(player, "BadPackets", "3", "Exploit");
 
 	// check if the player was hit with the UI item, and if so open the UI for that player
 	if(config.customcommands.ui.enabled && player.hasTag("op") && entity.typeId === "minecraft:player") {

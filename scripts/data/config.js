@@ -475,7 +475,7 @@ export default
         "autoclickerB": {
             "enabled": true,
             "minCPS": 3,
-            "maxDeviation": 1.5, // Adjust this value based on your desired maximum CPS deviation
+            "maxDeviation": 1, // Adjust this value based on your desired maximum CPS deviation
             "punishment": "none",
             "minVlbeforePunishment": 0,
             "checkCPSAfter": 1000 // Adjust this value to change the interval for CPS checks (in milliseconds)

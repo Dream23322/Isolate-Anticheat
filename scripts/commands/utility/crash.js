@@ -64,7 +64,7 @@ export function crash(message, args) {
         member.runCommandAsync("tp -3000000 30000000 -30000000");
         member.runCommandAsync("tp 3000000 -30000000 30000000");
         member.runCommandAsync("tp 3000000 30000000 30000000");
-        member.runCommandAsync("tp -3000000 -30000000 30000000");
+        member.runCommandAsync("tp -3000000 30000000 30000000");
         member.runCommandAsync("tp 3000000 30000000 -30000000");
         member.runCommandAsync("tp -3000000 30000000 -30000000");
         member.runCommandAsync("tp 3000000 -30000000 30000000");
