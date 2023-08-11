@@ -482,31 +482,33 @@ Minecraft.system.runInterval(() => {
 			}		
 		}	
 
-		// Motion/A = Checks for very high speed (stop fly bypass)
-		if(config.modules.motionA.enabled) {
-			if(playerSpeed > config.modules.motionA.speed) {
-				if(player.hasTag("ground")) {
-					flag(player, "BadPackets", "2", "Movement", "speed", playerSpeed, false);
-				} else {
-					flag(player, "Motion", "A", "Movement", "speed", playerSpeed, true);
-				}	
+		// Motion/A = Checks for very high speed in air
+		if(config.modules.motionA.enabled && !player.hasTag("op")) {
+			if(playerSpeed > config.modules.motionA.speed && !player.hasTag("ground")) {
+				flag(player, "Motion", "A", "Movement", "speed", playerSpeed, true);
 			}
 		}
 
-		// Speed/C = Checks for funny tags with funni velocity
-		// This is the most complex speed check in the Anticheat (Hasnt Been Tested)
-		// TODO: Redo this speed check as it doesnt work
+		//Badpackets/2 = Checks for nopacket/blink movement
+		if(config.modules.badpackets2.enabled && !player.hasTag("op")) {
+			if(playerSpeed > config.modules.badpackets2.speed) {
+				if(player.hasTag("ground")) {
+					flag(player, "BadPackets", "2", "Movement", "speed", playerSpeed, true);
+				}
+			}
+		}
+
+		// Speed/C = Checks for BHOP
 		if (config.modules.speedC.enabled) {
 			if(playerSpeed > config.modules.speedC.speed) {
-				if(!player.isGliding && !player.isFlying) {
-					const vel1 = Math.abs(playerVelocity.toFixed(2) * (playerSpeed / (2 - playerVelocity.y - 3)));
-					const vel2 = Math.abs((playerVelocity.x + playerVelocity.z) / 2 * playerSpeed / vel1);
-					if (vel2 > config.modules.speedC.velocity && player.fallDistance < 0.001) {
-						flag(player, "Speed", "C", "Movement", "velocity", vel2, false);
+				if(!player.isGliding && !player.isFlying && !player.hasTag("trident")) {
+					if (!player.hasTag("ground") && playerVelocity > config.modules.speedC.velocity && playerSpeed > config.modules.speedC.speed) {
+						flag(player, "Speed", "C", "Movement", undefined, undefined, false);
 					}
 				}	
 			}
 		}
+
 		if(player.location.y < -104) {
 			player.teleport({x: player.location.x, y: -104, z: player.location.z});
 		}
@@ -981,10 +983,23 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 		})];
 
 		if(entities.length > config.misc_modules.lag_machine.antiMinecartCluster.max_count) {
-			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§c Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} armor stands in this area!"}]}`);
+			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§c Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area!"}]}`);
 			for(const entityLoop of entities) entityLoop.kill();
 		}
 	}	
+	if(config.misc_modules.lag_machine.antiMinecartCluster.enabled && entity.typeId === "minecraft:chest_minecart") {
+		const entities = [...entity.dimension.getEntities({
+			location: {x: entity.location.x, y: entity.location.y, z: entity.location.z},
+			maxDistance: config.misc_modules.lag_machine.antiMinecartCluster.radius,
+			type: "minecart"
+		})];
+
+		if(entities.length > config.misc_modules.lag_machine.antiMinecartCluster.max_count) {
+			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§c Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area!"}]}`);
+			for(const entityLoop of entities) entityLoop.kill();
+		}
+	}	
+
 });
 
 world.afterEvents.entityHitEntity.subscribe((entityHit) => {

@@ -678,19 +678,25 @@ export default
             "speed": 10.5,
             "punishment": "kick",
             "punishmentLength": "1m",
-            "minVlbeforePunishment": 3
+            "minVlbeforePunishment": 1
         },
         "motionB": {
             "enabled": true,
-            "height": -1.1,
+            "height": -1.01,
             "punishment": "kick",
-            "minVlbeforePunishment": 15
+            "minVlbeforePunishment": 100
         },
         "killauraF": {
             "enabled": true,
             "angle": 100,
             "punishment": "kick",
             "minVlbeforePunishment": 1
+        },
+        "badpackets2": {
+            "enabled": true,
+            "speed": 7.3,
+            "punishment": "kick",
+            "minVlbeforePunishment": 3
         }
 
     },
