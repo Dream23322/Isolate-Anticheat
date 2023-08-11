@@ -697,7 +697,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 		const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 		if(!player.isFlying && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
 			// The actual check
-			if(!player.hasTag("right") && player.hasTag("left") && !player.isJumping()) {
+			if(!player.hasTag("right") && player.hasTag("left") && !player.hasTag("jump")) {
 				flag(player, "Scaffold", "C", "Placement", "invalidKeypress", "!right", true);
 			}
 		}
