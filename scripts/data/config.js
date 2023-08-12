@@ -528,6 +528,7 @@ export default
         "scaffoldC": {
             "enabled": true,
             "punishment": "kick", 
+            "angle": 45,
             "minVlbeforePunishment": 10
         },
         "illegalitemsF": {
