@@ -514,7 +514,7 @@ Minecraft.system.runInterval(() => {
 		}
 
 		//Scythe check :skull:
-		if(config.modules.flyG.enabled && player.fallDistance < config.modules.flyG.fallDistance && !player.hasTag("trident")) {
+		if(config.modules.flyG.enabled && player.fallDistance < config.modules.flyG.fallDistance && !player.hasTag("trident") && !player.hasTag("ground")) {
 			// Stopping false flags
 			if(!player.isJumping && !player.isGliding && !player.isFlying) {
 				let isSurroundedByAir = true;
