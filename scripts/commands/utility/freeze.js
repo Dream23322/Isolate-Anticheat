@@ -1,5 +1,5 @@
 import * as Minecraft from "@minecraft/server";
-
+import { banAnimation } from "../../util";
 const world = Minecraft.world;
 
 /**
@@ -25,6 +25,6 @@ export function freeze(message, args) {
     }
     
     if(!member) return player.sendMessage("§r§j[§uIsolate§j]§r Couldn't find that player.");
-
+    banAnimation(member, "type4");
     member.runCommandAsync("function tools/freeze");
 }

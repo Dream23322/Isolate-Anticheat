@@ -1,5 +1,5 @@
 import * as Minecraft from "@minecraft/server";
-
+import { banAnimation  } from "../../util";
 const world = Minecraft.world;
 
 /**
@@ -37,5 +37,6 @@ export function mute(message, args) {
     // remove chat ability
     member.runCommandAsync("ability @s mute true");
 
+    banAnimation(player, "type1");
     player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has muted ${member.nameTag} for ${reason}"}]}`);
 }
