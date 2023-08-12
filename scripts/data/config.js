@@ -3,6 +3,8 @@ export default
     // This config is made for pvp servers so most of the illegal checks are turned off
     "debug": true,
     "flagWhitelist": [],
+    // Amount of anticheat kicks a player needs to get before getting perm banned
+    "kicksBeforeBan": 10,
     clientSpam: {
         // Change to mute if you want to mute the player who used the horion/zephyr spam message
         "punishment": "ban"
