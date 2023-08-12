@@ -683,8 +683,8 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 		if(!player.isFlying && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
 			// The actual check
 			
-			if(!player.hasTag("right") && !player.hasTag("jump") && !player.hasTag("trident") && player.hasTag("left") && rotation.x < 10) {
-				flag(player, "Scaffold", "C", "Placement", "invalidKeypress", "!right", false);
+			if(!player.hasTag("right") && !player.hasTag("jump") && !player.hasTag("trident") && player.hasTag("left") && rotation.x < config.modules.scaffoldC.angle) {
+				flag(player, "Scaffold", "C", "Placement", "invalidKeypress", `!right,angle=${rotation.x}`, false);
 			}
 		}
 	}

@@ -3,26 +3,26 @@ tellraw @s[tag=op] {"rawtext":[{"text":"To reset someone's warns please use this
 
 execute @s[type=!player] ~~~ tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §cA non player entity has tried to use the resetwarns command. §7("},{"selector":"@s"},{"text":")"}]}
 
-scoreboard players set @s[type=player,tag=!op,scores={autoclickervl=1..}] autoclickervl 0
-scoreboard players set @s[type=player,tag=!op,scores={autoshieldvl=1..}] autoshieldvl 0
-scoreboard players set @s[type=player,tag=!op,scores={autototemvl=1..}] autototemvl 0
-scoreboard players set @s[type=player,tag=!op,scores={badenchants=1..}] badenchants 0
-scoreboard players set @s[type=player,tag=!op,scores={badpacketsvl=1..}] badpacketsvl 0
-# scoreboard players set @s[type=player,tag=!op,scores={cbevl=1..}] cbevl 0
-scoreboard players set @s[type=player,tag=!op,scores={crashervl=1..}] crashervl 0
-scoreboard players set @s[type=player,tag=!op,scores={fastusevl=1..}] fastusevl 0
-scoreboard players set @s[type=player,tag=!op,scores={flyvl=1..}] flyvl 0
-scoreboard players set @s[type=player,tag=!op,scores={illegalitemsvl=1..}] illegalitemsvl 0
-scoreboard players set @s[type=player,tag=!op,scores={invalidsprintvl=1..}] invalidsprintvl 0
-scoreboard players set @s[type=player,tag=!op,scores={invmovevl=1..}] invmovevl 0
-scoreboard players set @s[type=player,tag=!op,scores={killauravl=1..}] killauravl 0
-scoreboard players set @s[type=player,tag=!op,scores={namespoofvl=1..}] namespoofvl 0
-scoreboard players set @s[type=player,tag=!op,scores={noslowvl=1..}] noslowvl 0
-scoreboard players set @s[type=player,tag=!op,scores={nukervl=1..}] nukervl 0
-scoreboard players set @s[type=player,tag=!op,scores={reachvl=1..}] reachvl 0
-scoreboard players set @s[type=player,tag=!op,scores={spammervl=1..}] spammervl 0
-scoreboard players set @s[type=player,tag=!op,scores={towervl=1..}] towervl 0
-scoreboard players set @s[type=player,tag=!op,scores={gamemodevl=1..}] gamemodevl 0
+scoreboard players set @s[type=player,scores={autoclickervl=1..}] autoclickervl 0
+scoreboard players set @s[type=player,scores={autoshieldvl=1..}] autoshieldvl 0
+scoreboard players set @s[type=player,scores={autototemvl=1..}] autototemvl 0
+scoreboard players set @s[type=player,scores={badenchants=1..}] badenchants 0
+scoreboard players set @s[type=player,scores={badpacketsvl=1..}] badpacketsvl 0
+# scoreboard players set @s[type=player,scores={cbevl=1..}] cbevl 0
+scoreboard players set @s[type=player,scores={crashervl=1..}] crashervl 0
+scoreboard players set @s[type=player,scores={fastusevl=1..}] fastusevl 0
+scoreboard players set @s[type=player,scores={flyvl=1..}] flyvl 0
+scoreboard players set @s[type=player,scores={illegalitemsvl=1..}] illegalitemsvl 0
+scoreboard players set @s[type=player,scores={invalidsprintvl=1..}] invalidsprintvl 0
+scoreboard players set @s[type=player,scores={invmovevl=1..}] invmovevl 0
+scoreboard players set @s[type=player,scores={killauravl=1..}] killauravl 0
+scoreboard players set @s[type=player,scores={namespoofvl=1..}] namespoofvl 0
+scoreboard players set @s[type=player,scores={noslowvl=1..}] noslowvl 0
+scoreboard players set @s[type=player,scores={nukervl=1..}] nukervl 0
+scoreboard players set @s[type=player,scores={reachvl=1..}] reachvl 0
+scoreboard players set @s[type=player,scores={spammervl=1..}] spammervl 0
+scoreboard players set @s[type=player,scores={towervl=1..}] towervl 0
+scoreboard players set @s[type=player,scores={gamemodevl=1..}] gamemodevl 0
 scoreboard players set @s[type=player,scores={speedvl=1..}] speedvl 0
 scoreboard players set @s[type=player,scores={motionvl=1..}] motionvl 0
 scoreboard players set @s[type=player,scores={scaffoldvl=1..}] scaffoldvl 0
