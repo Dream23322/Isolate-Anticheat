@@ -16,15 +16,15 @@ export function banAnimation(player, type) {
     const banParticleFrames = banParticles[type];
   
     // Clear existing particles around the player
-    player.executeCommand(`/execute as ${player.name} at ${player.name} run particle minecraft:cloud ~ ~ ~ 0 0 0 0 1 force`);
+    player.runCommandAsync(`/execute as ${player.name} at ${player.name} run particle minecraft:cloud ~ ~ ~ 0 0 0 0 1 force`);
   
     // Spawn animated particles around the player
     for (let i = 0; i < banParticleFrames.length; i++) {
       const particle = banParticleFrames[i];
       const delay = i * 10; // Adjust the delay between frames (in ticks)
   
-      player.executeCommand(`/execute as ${player.name} at ${player.name} run schedule function #banAnimation ${delay}t`);
-      player.executeCommand(`/execute as ${player.name} at ${player.name} run particle ${particle} ~ ~ ~ 0 0 0 0 1 force`);
+      player.runCommandAsync(`/execute as ${player.name} at ${player.name} run schedule function #banAnimation ${delay}t`);
+      player.runCommandAsync(`/execute as ${player.name} at ${player.name} run particle ${particle} ~ ~ ~ 0 0 0 0 1 force`);
     }
 }
 /**
