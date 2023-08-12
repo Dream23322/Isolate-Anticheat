@@ -678,11 +678,13 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 
 
 	if(config.modules.scaffoldC.enabled === true) {
+		const rotation = player.getRotation()
 		const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 		if(!player.isFlying && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
 			// The actual check
-			if(!player.hasTag("right") && !player.hasTag("jump") && !player.hasTag("trident")) {
-				flag(player, "Scaffold", "C", "Placement", "invalidKeypress", "!right", true);
+			
+			if(!player.hasTag("right") && !player.hasTag("jump") && !player.hasTag("trident") && player.hasTag("left") && rotation.x < 10) {
+				flag(player, "Scaffold", "C", "Placement", "invalidKeypress", "!right", false);
 			}
 		}
 	}
