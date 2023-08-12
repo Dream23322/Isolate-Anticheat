@@ -688,7 +688,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 			}
 		}
 	}
-
+	
 	if(config.modules.illegalitemsN.enabled && block.typeId.includes("shulker_box")) {
 		// @ts-expect-error
 		const container = block.getComponent("inventory").container;
