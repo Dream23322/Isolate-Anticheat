@@ -130,7 +130,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
     const checkData = config.modules[check.toLowerCase() + checkType.toUpperCase()];
     if(!checkData) throw Error(`No valid check data found for ${check}/${checkType}.`);
-    const kickvl = getScore(player, "kickv", 0);
+    const kickvl = getScore(player, "kickvl", 0);
     const kickvlValue = kickvl;
     if(!checkData.enabled) throw Error(`${check}/${checkType} was flagged but the module was disabled.`);
 
@@ -150,7 +150,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     player.addTag("isBanned");
                 }
                 player.runCommandAsync("function tools/resetwarns");
-                player.runCommandAsync(`scoreboard players add ${player} kickvl 1`);
+                setScore(player, "kickvl", kickvl + 1);
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically kicked by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been removed from you game for using an unfair advantage!"}]}`);
                 player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r You have been kicked for §6Unfair Advantage.§a [§c${check}§a]`);
