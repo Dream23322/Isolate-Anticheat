@@ -4,7 +4,45 @@ The most advanced minecraft bedrock edition anticheat for pvp style servers
 # What is Isolate?
 Isolate Anticheat is the most advanced minecraft bedrock edition anticheat, it has the best fly, killaura, speed, reach and exploit checks in an anticheat. It was made because there are issues in scythe that seem to not be getting fixed.
 
-# Check list for Isolate Anticheat
+
+# Main checks!
+__**Fly**__
+
+A - Checks for horion vanilla velocity
+
+B - Vertical fly
+
+C - Horizontal Fly
+
+D - Velocity
+
+E - Velocity (2)
+
+F - Fall 
+
+G - Fall
+
+
+
+**__Speed__**
+
+A - Unatural speed
+
+**Motion**
+
+A - Horizontal
+
+B - Jump
+
+**Scaffold**
+
+A - Tower
+
+B - Redone
+
+C - Invalid keypresses
+
+# Full Check list for Isolate Anticheat
 *\* indicates that the check requires Beta APIs to be enabled in world settings.*<br />
   AutoClicker -><br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(A) => Checks for high CPS.\*<br />

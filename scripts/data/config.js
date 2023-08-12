@@ -442,7 +442,6 @@ export default
         },   
         "flyG": {
             "enabled": true,
-            "punishment": "kick",
             "fallDistance": 0,
             "minVlbeforePunishment": 10
         },
