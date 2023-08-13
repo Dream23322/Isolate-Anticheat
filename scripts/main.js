@@ -573,9 +573,13 @@ Minecraft.system.runInterval(() => {
 
 world.afterEvents.blockPlace.subscribe((blockPlace) => {
 	const { block, player} = blockPlace;
+	const rotation = player.getRotation()
 	const playerVelocity = player.getVelocity();
-	if(config.debug) console.warn(`${player.nameTag} has placed ${block.typeId}. Player Tags: ${player.getTags()}`);
+	if(config.debug) console.warn(`${player.nameTag} has placed ${block.typeId}. Player Tags: ${player.getTags()} Player X Rotation: ${rotation.x}`);
 	const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
+
+	
+
 
 	// IllegalItems/H = checks for pistons that can break any block
 	if(config.modules.illegalitemsH.enabled && block.typeId === "minecraft:piston" || block.typeId === "minecraft:sticky_piston") {
@@ -651,7 +655,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 
 
 	// Scaffold/a = checks for upwards scaffold
-	// Need to improve this because its realy easy to false flag
+	// Need to improve this because its really easy to false flag
 	if(config.modules.towerA.enabled && playerSpeed < 0.2) {
 		// get block under player
 		const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
@@ -667,7 +671,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 				});
 
 				if([...checkGmc].length > 0 && yPosDiff < 0.49) {
-					flag(player, "Scaffold", "A", "World", "yPosDiff", yPosDiff, false);
+					flag(player, "Scaffold", "A", "Placement", "yPosDiff", yPosDiff, false);
 					block.setType(Minecraft.MinecraftBlockTypes.air);
 					blockPlace.cancel = true;
 					
@@ -676,9 +680,21 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 		}
 	}
 
+	// Scaffold/B = Checks for a certain head rotation that horion clients scaffold uses (with bypass mode on), the rotation bypasses scaffold/C so that is why this is here
+	if(config.modules.scaffoldB.enabled) {
+		const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
+		if(!player.isFlying && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
+			if(!player.hasTag("jump") && !player.hasTag("trident")) {
+				if(rotation.x === 60) {
+					flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);
+				}
+			}
+		}	
+	}
 
+	// Scaffold/C = Checks for not looking where you are placing, it has measures in place to not false with the dumb bedrock bridinging mechanics.
 	if(config.modules.scaffoldC.enabled === true) {
-		const rotation = player.getRotation()
+		
 		const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 		if(!player.isFlying && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
 			// The actual check
@@ -689,6 +705,20 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 		}
 	}
 	
+	// Scaffold/D = Checks for the item a player is holding not being the block the player placed
+	if(config.modules.scaffoldD.enabled) {
+		const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
+		if(!player.isFlying && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
+			// The actual check		
+			const container = player.getComponent('inventory').container;
+			const selectedSlot = player.selectedSlot;
+			const item = container.getItem(selectedSlot);
+
+			if(item.typeId !== block.typeId) {
+				flag(player, "Scaffold", "D", "Placement", "heldItem", `${item.typeId},blockId=${block.typeId}`, false);
+			}
+		}	
+	}
 	if(config.modules.illegalitemsN.enabled && block.typeId.includes("shulker_box")) {
 		// @ts-expect-error
 		const container = block.getComponent("inventory").container;

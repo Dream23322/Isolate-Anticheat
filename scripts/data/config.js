@@ -533,6 +533,11 @@ export default
             "angle": 45,
             "minVlbeforePunishment": 10
         },
+        "scaffoldD": {
+            "enabled": true,
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
+        },
         "illegalitemsF": {
             "enabled": false,
             "length": 33,
