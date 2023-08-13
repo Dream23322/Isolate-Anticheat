@@ -183,6 +183,10 @@ export default
             "requiredTags": [],
             "aliases": ["r", "wdr", "ir", "isolate-report", "rep","isr","ir","isolatereport","isolate"]
         },
+        "testban": {
+            "enabled": true,
+            "requiredTag": ["op"]
+        },
         "crash": {
             "enabled": true,
             "requiredTags": ["op"]
@@ -524,8 +528,8 @@ export default
         },
         "scaffoldB": {
             "enabled": true,
-            "punsihment": "none",
-            "minVlbeforePunishment": 10
+            "punsihment": "kick",
+            "minVlbeforePunishment": 3
         },
         "scaffoldC": {
             "enabled": true,

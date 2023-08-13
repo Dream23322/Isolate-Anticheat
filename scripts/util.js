@@ -5,28 +5,57 @@ import config from "./data/config.js";
 import data from "./data/data.js";
 
 const world = Minecraft.world;
+
 export function banAnimation(player, type) {
-    const banParticles = {
-      "type1": ["minecraft:cloud", "minecraft:smoke", "minecraft:flame"],
-      "type2": ["minecraft:enchant", "minecraft:spell", "minecraft:witch"],
-      "type3": ["minecraft:angry_villager", "minecraft:happy_villager", "minecraft:note"],
-      "type4": ["minecraft:water_splash", "minecraft:water_bubble", "minecraft:snowflake"]
+    const banMessages = {
+      "type1": {
+        title: "§4§k§l EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+        subtitle: "§4§k§lEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+        actionbar: "§4§k§l EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
+      },
+      "type2": {
+        title: "§c§k§l EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+        subtitle: "§c§k§l  EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+        actionbar: "§c§k§l EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
+      },
+      "type3": {
+        title: "§b§l§kEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+        subtitle: "§b§l§kEEEEEEEEEEEEEEEEEEEEEEEEE",
+        actionbar: "§b§l§kEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
+      }
     };
   
-    const banParticleFrames = banParticles[type];
+    const banMessage = banMessages[type];
   
-    // Clear existing particles around the player
-    player.runCommandAsync(`/execute as ${player.name} at ${player.name} run particle minecraft:cloud ~ ~ ~ 0 0 0 0 1 force`);
+    // Send title, subtitle, and EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEs to the player
+    player.runCommand(`title "${player.name}" title ${banMessage.title}`);
+    player.runCommand(`tp "${player.name}" "${player.name}"`);
+    player.runCommand(`title "${player.name}" subtitle ${banMessage.subtitle}`);
+    player.runCommand(`tp "${player.name}" "${player.name}"`);
+    player.runCommand(`title "${player.name}" actionbar ${banMessage.actionbar}`);
+    player.runCommand(`tp "${player.name}" "${player.name}"`);
+
+
+    player.sendMessage(banMessage.actionbar);
+    // player.runCommand(`tp ${player.name} ${player.name}`);
+    player.sendMessage(banMessage.actionbar);
+    // player.runCommand(`tp ${player.name} ${player.name}`);
+    player.sendMessage(banMessage.actionbar);
+    // player.runCommand(`tp ${player.name} ${player.name}`);
+    player.sendMessage(banMessage.actionbar);
+    player.sendMessage(banMessage.actionbar);
+    player.sendMessage(banMessage.actionbar);
+    player.sendMessage(banMessage.actionbar);
+    player.sendMessage(banMessage.actionbar);
+    player.sendMessage(banMessage.actionbar);
+    player.sendMessage(banMessage.actionbar);
+    player.sendMessage(banMessage.actionbar);
   
-    // Spawn animated particles around the player
-    for (let i = 0; i < banParticleFrames.length; i++) {
-      const particle = banParticleFrames[i];
-      const delay = i * 10; // Adjust the delay between frames (in ticks)
-  
-      player.runCommandAsync(`/execute as ${player.name} at ${player.name} run schedule function #banAnimation ${delay}t`);
-      player.runCommandAsync(`/execute as ${player.name} at ${player.name} run particle ${particle} ~ ~ ~ 0 0 0 0 1 force`);
-    }
+    // Delay before the function ends
 }
+
+
+
 /**
  * @name flag
  * @param {object} player - The player object
@@ -153,6 +182,8 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
         if (punishment === "kick") {
             try {
+                banAnimation(player, "type2");
+                setScore(player, "kickvl", kickvl + 1);
                 if(kickvl > config.kicksBeforeBan) {
                     player.addTag("by:§d Isolate Anticheat");
                     player.addTag(`reason:§c Isolate Anticheat caught you cheating!`);
@@ -162,11 +193,11 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 }
                 player.runCommandAsync("function tools/resetwarns");
                 
-                setScore(player, "kickvl", kickvl + 1);
+                
                 
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically kicked by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been removed from you game for using an unfair advantage!"}]}`);
-                player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r You have been kicked for §6Unfair Advantage.§a [§c${check}§a]`);
+                player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r You have been kicked for §6Unfair Advantage.§b [§s${check}§b]`);
                 // incase /kick fails, we despawn them from the world
             } catch (error) {
                 player.triggerEvent("scythe:kick");
@@ -192,7 +223,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 
                     
                 
-                
+                banAnimation(player, "type1");
                 player.addTag("by:§d Isolate Anticheat");
                 player.addTag(`reason:§c Isolate Anticheat detected §6Unfair Advantage§c! §a [§c${check}§a]`);
                 //TODO: Add banlength thing here but it works

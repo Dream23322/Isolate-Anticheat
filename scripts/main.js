@@ -684,7 +684,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 	if(config.modules.scaffoldB.enabled) {
 		const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 		if(!player.isFlying && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
-			if(!player.hasTag("jump") && !player.hasTag("trident")) {
+			if(!player.hasTag("trident")) {
 				if(rotation.x === 60) {
 					flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);
 				}
