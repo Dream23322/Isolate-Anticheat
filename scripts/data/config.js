@@ -528,7 +528,7 @@ export default
         },
         "scaffoldB": {
             "enabled": true,
-            "punsihment": "kick",
+            "punishment": "kick",
             "minVlbeforePunishment": 3
         },
         "scaffoldC": {
