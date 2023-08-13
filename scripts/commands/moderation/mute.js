@@ -37,6 +37,6 @@ export function mute(message, args) {
     // remove chat ability
     member.runCommandAsync("ability @s mute true");
 
-    banAnimation(player, "type1");
+    banAnimation(player, "type2");
     player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has muted ${member.nameTag} for ${reason}"}]}`);
 }
