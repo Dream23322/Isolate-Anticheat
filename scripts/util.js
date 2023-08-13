@@ -51,7 +51,9 @@ export function banAnimation(player, type) {
     player.sendMessage(banMessage.actionbar);
     player.sendMessage(banMessage.actionbar);
   
-    // Delay before the function ends
+    for (let i = 0; i < 10; i++) {
+        player.runCommandAsync(`tp "${player.name}" "${player.name}"`)
+    }
 }
 
 
@@ -182,12 +184,12 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
         if (punishment === "kick") {
             try {
-                banAnimation(player, "type2");
+                //banAnimation(player, "type2");
                 setScore(player, "kickvl", kickvl + 1);
                 if(kickvl > config.kicksBeforeBan) {
                     player.addTag("by:§d Isolate Anticheat");
                     player.addTag(`reason:§c Isolate Anticheat caught you cheating!`);
-                    player.addTag("time:86400000"); // 1 day ban
+                    //player.addTag("time:86400000"); // 1 day ban
                     player.addTag("isBanned");
                     setScore(player, "kickvl", 0);
                 }
@@ -408,7 +410,8 @@ export function banMessage(player) {
 
     player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} was kicked for being banned. Ban Reason: ${reason || "You are banned!"}."}]}`);
     try {
-    player.runCommandAsync(`kick "${player.name}" §r\n§l§cYOU ARE BANNED!\n§mBanned By:§r ${by || "N/A"}\n§bReason:§r ${reason || "N/A"}\n§aBan Length:§r ${time || "Permenant"}`);
+
+        player.runCommandAsync(`kick "${player.name}" §r\n§l§cYOU ARE BANNED!\n§mBanned By:§r ${by || "N/A"}\n§bReason:§r ${reason || "N/A"}\n§aBan Length:§r ${time || "Permenant"}`);
     } catch (error) {
         player.triggerEvent("scythe:kick");
     }    
