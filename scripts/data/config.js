@@ -548,15 +548,15 @@ export default
             "punishment": "none",
             "minVlbeforePunishment": 0
         },
-        /*
+        
         // This exploit has been entirely patched out.
         "badpackets3": {
             "enabled": true,
-            "punishment": "ban",
+            "punishment": "kick",
             "punishmentLength": "",
             "minVlbeforePunishment": 1
         },
-        */
+        
         "autoclickerA": {
             "enabled": true,
             "maxCPS": 15,
