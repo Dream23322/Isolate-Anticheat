@@ -404,12 +404,12 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 			if(playerSpeed > 0.1 && vertical_velo === 0 && !player.hasTag("ground") && playerSpeed > config.modules.speedA.speed - 0.1 && isSurroundedByAir === true && !player.getEffect("speed")) {
-				flag(player, "Fly", "C",	 "Movement", "vertical", vertical_velo, false)
+				flag(player, "Fly", "C", "Movement", "vertical", vertical_velo, false)
 				currentVL++;
 			}
 		}
 		//Fly/D = Checks for fly like velocity
-		if(config.modules.flyD.enabled && !player.hasTag("op") && !player.isJumping && !player.isFlying && !player.hasTag("nofly")) {
+		if(config.modules.flyD.enabled && !player.hasTag("op") && !player.isFlying && !player.hasTag("nofly")) {
 			let isSurroundedByAir = true;
 			for (let x = -1; x <= 1; x++) {
 				for (let y = -1; y <= 1; y++) {
@@ -425,11 +425,13 @@ Minecraft.system.runInterval(() => {
 			const makeYVelocity1 = Math.abs(playerVelocity.x + playerVelocity.z)
 			const yVelocity = Math.abs(makeYVelocity1 / 2)
 			if(playerVelocity.y > yVelocity && playerVelocity.x > config.modules.flyD.Velocity && isSurroundedByAir === true && !player.getEffect("speed")) {
-				flag(player, "Fly", "D", "Movement", "velocity", Math.abs(playerVelocity.y).toFixed(4), true);
+				if(!player.isJumping || player.isSneaking() && player.isJumping()) {
+					flag(player, "Fly", "D", "Movement", "velocity", Math.abs(playerVelocity.y).toFixed(4), false);
+				}
 			}
 		}
 		// Fly/E = Checks for being in air but not falling
-		if(config.modules.flyE.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.isJumping && !player.hasTag("ground")) {
+		if(config.modules.flyE.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("ground")) {
 			if(playerVelocity.y === 0) {
 				let isSurroundedByAir = true;
 				for (let x = -1; x <= 1; x++) {
@@ -446,7 +448,9 @@ Minecraft.system.runInterval(() => {
 				const findHVelocity = Math.abs((playerVelocity.x + playerVelocity.z) / 2);
 				
 				if(isSurroundedByAir === true && findHVelocity > config.modules.flyE.hVelocity && !player.getEffect("speed")) {
-					flag(player, "Fly", "E", "Movement", "yVelocity", Math.abs(player.velocityV).toFixed(4), true);
+					if(!player.isJumping || player.isSneaking() && player.isJumping()) {
+						flag(player, "Fly", "E", "Movement", "yVelocity", Math.abs(player.velocityV).toFixed(4), false);
+					}
 				}          
 			}
 		}
@@ -465,9 +469,11 @@ Minecraft.system.runInterval(() => {
 					}
 				}
 			}
-			if(player.isJumping && !player.getEffect("speed") && !player.hasTag("nofly") && !player.getEffect("jump_boost")) {
+			if(!player.getEffect("speed") && !player.hasTag("nofly") && !player.getEffect("jump_boost")) {
 				if(player.fallDistance > -1.5) {
-					flag(player, "Fly", "F", "Movement", "jumpHeight", player.fallDistance, false)
+					if(!player.isJumping || player.isSneaking() && player.isJumping()) {
+						flag(player, "Fly", "F", "Movement", "jumpHeight", player.fallDistance, false)
+					}
 				}
 			}
 		}	
@@ -517,7 +523,7 @@ Minecraft.system.runInterval(() => {
 		//Scythe check :skull:
 		if(config.modules.flyG.enabled && player.fallDistance < config.modules.flyG.fallDistance && !player.hasTag("trident") && !player.hasTag("ground")) {
 			// Stopping false flags
-			if(!player.isJumping && !player.isGliding && !player.isFlying) {
+			if(!player.isJumping && !player.isGliding && !player.isFlying && !player.hasTag("jump") && !player.hasTag("op")) {
 				let isSurroundedByAir = true;
 				for (let x = -1; x <= 1; x++) {
 					for (let y = -1; y <= 1; y++) {
@@ -531,7 +537,7 @@ Minecraft.system.runInterval(() => {
 					}
 				}
 				if(isSurroundedByAir === true) {
-					flag(player, "Fly", "G", "Movement", "fallDistance", player.fallDistance, true);
+					flag(player, "Fly", "G", "Movement", "fallDistance", player.fallDistance, false);
 				}	
 			}
 		}
@@ -867,6 +873,10 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	if(config.customcommands.report.enabled) player.reports = [];
 	if(config.modules.killauraC.enabled) player.entitiesHit = [];
 
+	let rotationLogX;
+	let rotationLogY;
+	
+
 	// fix a disabler method
 	player.nameTag = player.nameTag.replace(/[^A-Za-z0-9_\-() ]/gm, "").trim();
 
@@ -1113,21 +1123,40 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	if(config.modules.killauraD.enabled && !player.hasTag("sleeping")) {
 		const rotation = player.getRotation()
 		const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
-		if(rotation.x > 79 && distance < 2) {
+		if(rotation.x > 79 && distance > 2 || distance > 2 && rotation.x < -79) {
 			if(!player.hasTag("trident") && !player.hasTag("bow")) {
 				flag(player, "Killaura", "D", "Combat", "angle", `${rotation.x},distance=${distance}`, true);
 			}
 		}
-	}
-
-	// Killaura/F = Checks if a player attacks without needed tags
-	if(config.modules.killauraF.enabled) {
-		if(!player.hasTag("right") && !player.hasTag("left") && !player.hasTag("trident")) {
-			flag(player, "Killaura", "F", "Combat", "invalidKeypress", "tag=!left", true);
+	// Killaura/F --> Add rotation speed check
+	if (config.modules.killauraF.enabled && player.entitiesHit.includes(entity.id)) {
+		// Get the previous rotation difference for comparison
+		const prevDiffYaw = player.prevDiffYaw || 0;
+		const prevDiffPitch = player.prevDiffPitch || 0;
+		
+		// Get the current rotation values
+		const rotation = player.getRotation();
+		
+		// Calculate the current rotation difference in degrees
+		const curDiffYaw = rotation.x - player.prevRotation.x;
+		const curDiffPitch = rotation.y - player.prevRotation.y;
+	
+		// Check if the current rotation difference is the same as the previous difference
+		if (curDiffYaw === prevDiffYaw && curDiffPitch === prevDiffPitch) {
+			flag(player, "KillAura", "F", "Combat", "rotationSpeed", `Rotation difference: ${curDiffYaw}, ${curDiffPitch}`, true);
 		}
+	
+		// Update the previous rotation difference
+		player.prevDiffYaw = curDiffYaw;
+		player.prevDiffPitch = curDiffPitch;
 	}
+	
+	// Update the previous rotation values
+	player.prevRotation = player.getRotation();
+
+	
 	if(config.debug) console.warn(player.getTags());
-});
+};
 world.afterEvents.entityHitBlock.subscribe((entityHit) => {
 	const { damagingEntity: player} = entityHit;
 
@@ -1181,4 +1210,4 @@ if([...world.getPlayers()].length >= 1) {
 		if(config.modules.killauraC.enabled) player.entitiesHit = [];
 		if(config.customcommands.report.enabled) player.reports = [];
 	}
-}
+}});
