@@ -439,13 +439,14 @@ export default
             "minVlbeforePunishment": 10
         },        
         "flyF": {
-            "enabled": false,
+            "enabled": true,
             "punishment": "none", 
             "speed": 2.05248273,
             "alsoKick": false,
             "punishmentLength": "3d",
             "minVlbeforePunishment": 10
         },   
+        // This scythe check is so very fucking shit it annoys the piss out of me.
         "flyG": {
             "enabled": true,
             "fallDistance": 0,
