@@ -368,6 +368,7 @@ Minecraft.system.runInterval(() => {
 			}
 		}			
 		// Fly/B = Checks for vertical Fly
+		// Fly/G damn near renders this check usesless but I'm not removing it incase mojong become more useless and removes shit that it depends on
 		if(config.modules.flyB.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.getEffect("jump_boost")) {
 			let isSurroundedByAir = true;
 			for (let x = -1; x <= 1; x++) {
@@ -534,40 +535,32 @@ Minecraft.system.runInterval(() => {
 				}	
 			}
 		}
-		// Autoclicker check
-		if (config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
-			player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
-			
-			// autoclicker/A = checks for high cps
-			if (player.cps > config.modules.autoclickerA.maxCPS) {
-			flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
-			currentVL++;
-			}
-			
-			// Notify players with the "seeCPS" tag about CPS values
-			if (player.hasTag("seeCPS")) {
-			const cpsMessage = `Player ${player.name} CPS: ${player.cps.toFixed(2)}`;
-			player.tell(cpsMessage);
-			}
-			
-			player.firstAttack = Date.now();
-			player.cps = 0;
-		}
 
-		// Autoclicker B check
-		if (config.modules.autoclickerB.enabled && player.cps > config.modules.autoclickerB.minCPS && Date.now() - player.firstAttack >= config.modules.autoclickerB.checkCPSAfter) {
+		// Ensuring initial setup for player attributes
+		player.lastCps = player.lastCps || 0;
+		player.repeatCount = player.repeatCount || 0;
+
+		if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
 			player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
-			
-			// autoclicker/B = checks for consistent cps
-			if (Math.abs(player.cps - player.lastCps) <= config.modules.autoclickerB.maxDeviation) {
-			flag(player, "Autoclicker", "B", "Combat", "CPS", player.cps);
-			currentVL++;
+			//check if the current cps equals last cps
+			if(player.cps === player.lastCps){
+				player.repeatCount += 1;
+				// Potentially suspicious behavior if cps is the same for 10 checks in a row
+				if(player.repeatCount >= 10){
+					flag(player, "Autoclicker", "A", "Combat", "Repeated CPS", player.cps, false);
+					player.repeatCount = 0;
+				}
+			} else {
+				player.repeatCount = 0;
 			}
-			
+			// Autoclicker/A = checks for high cps
+			if(player.cps > config.modules.autoclickerA.maxCPS) {
+				flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps, false);
+			}
 			player.lastCps = player.cps;
 			player.firstAttack = Date.now();
 			player.cps = 0;
-		}		
+		}
 	}
 });
 
@@ -1090,7 +1083,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 
 	// badpackets[3] = checks if a player attacks themselves
 	// some (bad) hacks use this to bypass anti-movement cheat checks
-	//if(config.modules.badpackets3.enabled && entity.id === player.id) flag(player, "BadPackets", "3", "Exploit");
+	if(config.modules.badpackets3.enabled && entity.id === player.id) flag(player, "BadPackets", "3", "Exploit");
 
 	// check if the player was hit with the UI item, and if so open the UI for that player
 	if(config.customcommands.ui.enabled && player.hasTag("op") && entity.typeId === "minecraft:player") {
@@ -1107,7 +1100,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	if(config.modules.autoclickerA.enabled) {
 		// if anti-autoclicker is disabled in game then disable it in config.js
 		if(!data.checkedModules.autoclicker) {
-			if(getScore(player, "autoclicker", 1) <= 1) {
+			if(getScore(player, "autoclicker", 1) >= 1) {
 				config.modules.autoclickerA.enabled = false;
 			}
 			data.checkedModules.autoclicker = true;
@@ -1116,11 +1109,23 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		player.cps++;
 	}
 	
-	// Check if the player attacks an entity while sleeping
-	if(config.modules.killauraD.enabled && player.hasTag("sleeping")) {
-		flag(player, "Killaura", "D", "Combat");
+	// Check if the player attacks an entity while looking perfectly down
+	if(config.modules.killauraD.enabled && !player.hasTag("sleeping")) {
+		const rotation = player.getRotation()
+		const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
+		if(rotation.x > 79 && distance < 2) {
+			if(!player.hasTag("trident") && !player.hasTag("bow")) {
+				flag(player, "Killaura", "D", "Combat", "angle", `${rotation.x},distance=${distance}`, true);
+			}
+		}
 	}
 
+	// Killaura/F = Checks if a player attacks without needed tags
+	if(config.modules.killauraF.enabled) {
+		if(!player.hasTag("right") && !player.hasTag("left") && !player.hasTag("trident")) {
+			flag(player, "Killaura", "F", "Combat", "invalidKeypress", "tag=!left", true);
+		}
+	}
 	if(config.debug) console.warn(player.getTags());
 });
 world.afterEvents.entityHitBlock.subscribe((entityHit) => {
@@ -1166,9 +1171,9 @@ world.afterEvents.itemUse.subscribe((itemUse) => {
 // 	console.warn(`${new Date().toISOString()} | A Watchdog Exception has been detected and has been cancelled successfully. Reason: ${beforeWatchdogTerminate.terminateReason}`);
 // });
 
-// when using /reload, the variables defined in playerJoin dont persist
+// when using /reload, the variables defined in playerJoin don't persist
 if([...world.getPlayers()].length >= 1) {
-	for (const player of world.getPlayers()) {
+	for(const player of world.getPlayers()) {
 		if(config.modules.nukerA.enabled) player.blocksBroken = 0;
 		if(config.modules.autoclickerA.enabled) player.firstAttack = Date.now();
 		if(config.modules.fastuseA.enabled) player.lastThrow = Date.now() - 200;
@@ -1176,4 +1181,4 @@ if([...world.getPlayers()].length >= 1) {
 		if(config.modules.killauraC.enabled) player.entitiesHit = [];
 		if(config.customcommands.report.enabled) player.reports = [];
 	}
-};
+}
