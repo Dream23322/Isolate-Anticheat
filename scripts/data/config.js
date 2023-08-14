@@ -707,7 +707,7 @@ export default
             "enabled": true,
             "angle": 100,
             "punishment": "kick",
-            "minVlbeforePunishment": 1
+            "minVlbeforePunishment": 3
         },
         "badpackets2": {
             "enabled": true,
