@@ -425,7 +425,7 @@ Minecraft.system.runInterval(() => {
 			const makeYVelocity1 = Math.abs(playerVelocity.x + playerVelocity.z)
 			const yVelocity = Math.abs(makeYVelocity1 / 2)
 			if(playerVelocity.y > yVelocity && playerVelocity.x > config.modules.flyD.Velocity && isSurroundedByAir === true && !player.getEffect("speed")) {
-				if(!player.isJumping || player.isSneaking() && player.isJumping()) {
+				if(!player.isJumping || player.hasTag("sneak") || player.isSneaking) {
 					flag(player, "Fly", "D", "Movement", "velocity", Math.abs(playerVelocity.y).toFixed(4), false);
 				}
 			}
@@ -448,7 +448,7 @@ Minecraft.system.runInterval(() => {
 				const findHVelocity = Math.abs((playerVelocity.x + playerVelocity.z) / 2);
 				
 				if(isSurroundedByAir === true && findHVelocity > config.modules.flyE.hVelocity && !player.getEffect("speed")) {
-					if(!player.isJumping || player.isSneaking() && player.isJumping()) {
+					if(!player.isJumping || player.hasTag("sneak") || player.isSneaking) {
 						flag(player, "Fly", "E", "Movement", "yVelocity", Math.abs(player.velocityV).toFixed(4), false);
 					}
 				}          
@@ -471,7 +471,7 @@ Minecraft.system.runInterval(() => {
 			}
 			if(!player.getEffect("speed") && !player.hasTag("nofly") && !player.getEffect("jump_boost")) {
 				if(player.fallDistance > -1.5) {
-					if(!player.isJumping || player.isSneaking() && player.isJumping()) {
+					if(!player.isJumping || player.hasTag("sneak") || player.isSneaking) {
 						flag(player, "Fly", "F", "Movement", "jumpHeight", player.fallDistance, false)
 					}
 				}
