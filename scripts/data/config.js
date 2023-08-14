@@ -438,8 +438,10 @@ export default
             "punishmentLength": "5d",
             "minVlbeforePunishment": 10
         },        
+
+        // Do **NOT** enabled
         "flyF": {
-            "enabled": true,
+            "enabled": false,
             "punishment": "none", 
             "speed": 2.05248273,
             "alsoKick": false,
