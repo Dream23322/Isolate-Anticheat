@@ -1209,4 +1209,4 @@ if([...world.getPlayers()].length >= 1) {
 		if(config.modules.killauraC.enabled) player.entitiesHit = [];
 		if(config.customcommands.report.enabled) player.reports = [];
 	}
-}});
+};
