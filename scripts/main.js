@@ -10,6 +10,10 @@ import { banplayer } from "./data/paradoxban.js";
 
 const world = Minecraft.world;
 const playerRotations = new Map();
+const playerFlags = new Set();
+
+// The threshold can be adjusted based on your requirements
+const ROTATION_SPEED_THRESHOLD = config.modules.aimbotA.rotSpeed; 
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a ******* and this actually worked :sunglasses:`);
 let currentVL;
 world.beforeEvents.chatSend.subscribe((msg) => {
@@ -86,6 +90,26 @@ Minecraft.system.runInterval(() => {
 
 	// run as each player
 	for (const player of world.getPlayers()) {
+		const rotation = player.getRotation();
+        
+        const prevRotation = playerRotations.get(player);
+
+        // If there is a previous rotation stored
+        if (prevRotation) {
+            const deltaYaw = rotation.y - prevRotation.y;
+            const deltaPitch = rotation.x - prevRotation.x;
+            
+            // If the rotation speed exceeds the threshold
+            if (Math.abs(deltaYaw) > ROTATION_SPEED_THRESHOLD || Math.abs(deltaPitch) > ROTATION_SPEED_THRESHOLD) {
+                // Set the player flag as true
+                playerFlags.add(player);
+            } else {
+                playerFlags.delete(player);
+            }
+        }
+        
+        // Save the current rotation values for comparison in the next tick
+        playerRotations.set(player, rotation);
 		
 		const selectedSlot = player.selectedSlot;
 
@@ -1053,28 +1077,11 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
     if(player.typeId !== "minecraft:player") return;
 
     const rotation = player.getRotation();
-
-    // Be sure the module for the aimbot check is enabled
-    if(config.modules.aimbotA.enabled) {
-        const prevRotation = playerRotations.get(player.__identifier__) || {x: 0, y: 0};
-        // Customize the threshold as per your need
-        const ROTATION_SPEED_THRESHOLD = 100; 
-
-        const deltaYaw = rotation.y - prevRotation.y;
-        const deltaPitch = rotation.x - prevRotation.x;
-
-        // Detect the aimbot that changes the aim direction too quickly
-        if (
-            Math.abs(deltaYaw) > ROTATION_SPEED_THRESHOLD ||
-            Math.abs(deltaPitch) > ROTATION_SPEED_THRESHOLD
-        ) {
-            flag(player, "Aimbot", "A", "Combat", "rotationSpeed", `${deltaYaw}, ${deltaPitch}`, true);
-        }
-
-        // Save the current rotation values for comparing in the next tick
-        playerRotations.set(player.__identifier__, rotation);
+    // If the player flag is true, then report the player
+    if (playerFlags.has(player)) {
+        // Report the player
+		flag(player, "Aimbot", "A", "Combat", "rotation", `${rotation.x},${rotation.y}`, false);
     }
-
 	/*
 	So you see a blanked out criticals check, this is beacuse there is no way to see if a player gave a critical hit... the second mojang adds it we get a good criticals check.
 	*/

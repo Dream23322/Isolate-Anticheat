@@ -334,6 +334,7 @@ export default
         },
         "aimbotA": {
             "enabled": true,
+            "rotSpeed": 100,
             "punishment": "kick",
             "minVlbeforePunishment": 5
         },
