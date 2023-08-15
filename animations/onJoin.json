@@ -15,6 +15,7 @@
 					"/scoreboard objectives add motionvl dummy",
 					"/scoreboard objectives add kickvl dummy",
 					"/scoreboard players add kickvl 0",
+					"/scoreboard players add aimvl dummy",
 					"/scoreboard players add scythe:config gmc 0",
 					"/scoreboard objectives add commandblocks dummy",
 					"/scoreboard players add scythe:config commandblocks 0",

@@ -332,11 +332,16 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 20
         },
-        "aimbotA": {
+        "aimA": {
             "enabled": true,
             "rotSpeed": 100,
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 20
+        },
+        "aimB": {
+            "enabed": true,
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
         },
         "noslowA": {
             "enabled": true,
@@ -616,8 +621,8 @@ export default
         },
         "killauraD": {
             "enabled": true,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
+            "punishment": "kick",
+            "minVlbeforePunishment": 3
         },
         "illegalitemsJ": {
             "enabled": false,
