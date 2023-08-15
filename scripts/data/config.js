@@ -322,7 +322,7 @@ export default
         },
         "reachA": {
             "enabled": true,
-            "reach": 6.8,
+            "reach": 6.65,
             "entities_blacklist": [
                 "minecraft:enderman",
                 "minecraft:fireball",
@@ -331,6 +331,11 @@ export default
             ],
             "punishment": "kick",
             "minVlbeforePunishment": 20
+        },
+        "aimbotA": {
+            "enabled": true,
+            "punishment": "kick",
+            "minVlbeforePunishment": 5
         },
         "noslowA": {
             "enabled": true,
