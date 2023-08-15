@@ -29,6 +29,8 @@ execute @s[scores={scaffoldvl=1..}] ~~~ tellraw @a[tag=notify] {"rawtext":[{"tex
 execute @s[scores={gamemodevl=1..}] ~~~ tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r "},{"selector":"@s"},{"text":" has "},{"score":{"name":"@s","objective":"gamemodevl"}},{"text":" Gamemode change violations."}]}
 execute @s[scores={speedvl=1..}] ~~~ tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r "},{"selector":"@s"},{"text":" has "},{"score":{"name":"@s","objective":"speedvl"}},{"text":" Speed violations."}]}
 execute @s[scores={motionvl=1..}] ~~~ tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r "},{"selector":"@s"},{"text":" has "},{"score":{"name":"@s","objective":"motionvl"}},{"text":" Motion violations."}]}
+execute @s[scores={aimvl=1..}] ~~~ tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r "},{"selector":"@s"},{"text":" has "},{"score":{"name":"@s","objective":"aimvl"}},{"text":" aim violations."}]}
+
 
 execute @s[tag=freeze] ~~~ tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r "},{"selector":"@s"},{"text":" is currently frozen by a staff member."}]}
 execute @s[tag=vanish] ~~~ tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r "},{"selector":"@s"},{"text":" is currently in vanish."}]}

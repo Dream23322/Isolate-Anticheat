@@ -13,7 +13,10 @@ const playerRotations = new Map();
 const playerFlags = new Set();
 
 // The threshold can be adjusted based on your requirements
-const ROTATION_SPEED_THRESHOLD = config.modules.aimbotA.rotSpeed; 
+const ROTATION_SPEED_THRESHOLD = config.modules.aimA.rotSpeed; 
+
+let previousRotation = null;
+
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a ******* and this actually worked :sunglasses:`);
 let currentVL;
 world.beforeEvents.chatSend.subscribe((msg) => {
@@ -94,19 +97,42 @@ Minecraft.system.runInterval(() => {
         
         const prevRotation = playerRotations.get(player);
 
+		/*
+		aim check - Its bad but it kinda works, sometimes, it also falses easy but we in beta lave me alone
+		*/
+
         // If there is a previous rotation stored
         if (prevRotation) {
             const deltaYaw = rotation.y - prevRotation.y;
             const deltaPitch = rotation.x - prevRotation.x;
-            
-            // If the rotation speed exceeds the threshold
-            if (Math.abs(deltaYaw) > ROTATION_SPEED_THRESHOLD || Math.abs(deltaPitch) > ROTATION_SPEED_THRESHOLD) {
-                // Set the player flag as true
-                playerFlags.add(player);
-            } else {
-                playerFlags.delete(player);
-            }
+
+			// Aim/A = Checks for fast head snap movements
+			// This check is easy to false flag, so you need to have the tag strict on you for it to do anything
+            if(config.modules.aimA.enabled && player.hasTag("strict")) {
+            	// If the rotation speed exceeds the threshold
+				if (Math.abs(deltaYaw) > ROTATION_SPEED_THRESHOLD || Math.abs(deltaPitch) > ROTATION_SPEED_THRESHOLD) {
+					
+					// Set the player flag as true
+					playerFlags.add(player);
+					player.addTag("a");
+				} else {
+					playerFlags.delete(player);
+				}
+			}
+
+			if (config.modules.aimB.enabled) {
+
+				if (deltaYaw === deltaPitch) {
+					playerFlags.add(player);
+					player.addTag("b");
+				}	else {
+					playerFlags.delete(player);
+				}
+			}
         }
+
+
+		// aim/B is coming soon, it will take a long time to code though.
         
         // Save the current rotation values for comparison in the next tick
         playerRotations.set(player, rotation);
@@ -182,6 +208,7 @@ Minecraft.system.runInterval(() => {
 			if(!player.getEffect("speed") && player.hasTag('moving') && player.hasTag('right') && player.hasTag('ground') && !player.hasTag('jump') && !player.hasTag('gliding') && !player.hasTag('swimming') && !player.hasTag("trident") && getScore(player, "right") >= 5) {
 				flag(player, "NoSlow", "A", "Movement", "speed", playerSpeed, true);
 				currentVL++;
+				player.addTag("strict");
 			}
 		}
 		
@@ -474,6 +501,7 @@ Minecraft.system.runInterval(() => {
 				if(isSurroundedByAir === true && findHVelocity > config.modules.flyE.hVelocity && !player.getEffect("speed")) {
 					if(!player.isJumping || player.hasTag("sneak") || player.isSneaking) {
 						flag(player, "Fly", "E", "Movement", "yVelocity", Math.abs(player.velocityV).toFixed(4), false);
+						player.addTag("strict");
 					}
 				}          
 			}
@@ -517,6 +545,7 @@ Minecraft.system.runInterval(() => {
 		if(config.modules.motionA.enabled && !player.hasTag("op")) {
 			if(playerSpeed > config.modules.motionA.speed && !player.hasTag("ground")) {
 				flag(player, "Motion", "A", "Movement", "speed", playerSpeed, true);
+				player.addTag("strict");
 			}
 		}
 
@@ -525,6 +554,7 @@ Minecraft.system.runInterval(() => {
 			if(playerSpeed > config.modules.badpackets2.speed) {
 				if(player.hasTag("ground")) {
 					flag(player, "BadPackets", "2", "Movement", "speed", playerSpeed, true);
+					player.addTag("strict");
 				}
 			}
 		}
@@ -1077,11 +1107,19 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
     if(player.typeId !== "minecraft:player") return;
 
     const rotation = player.getRotation();
-    // If the player flag is true, then report the player
+    // If the player flag for aim checks is true, then report the player
     if (playerFlags.has(player)) {
         // Report the player
-		flag(player, "Aimbot", "A", "Combat", "rotation", `${rotation.x},${rotation.y}`, false);
+		if(player.hasTag("a")) {
+			flag(player, "Aim", "A", "Combat", "rotation", `${rotation.x},${rotation.y}`, false);
+			player.removeTag("a");
+		} 
+		if(player.hasTag("b")) {
+			flag(player, "Aim", "B", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
+			player.removeTag("b");
+		}
     }
+
 	/*
 	So you see a blanked out criticals check, this is beacuse there is no way to see if a player gave a critical hit... the second mojang adds it we get a good criticals check.
 	*/
@@ -1098,6 +1136,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		player.entitiesHit.push(entity.id);
 		if(player.entitiesHit.length >= config.modules.killauraC.entities) {
 			flag(player, "KillAura", "C", "Combat", "entitiesHit", player.entitiesHit.length, true);
+			player.addTag("strict");
 		}
 	
 
@@ -1116,6 +1155,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		
 			if([...checkGmc].length !== 0)
 				flag(player, "Reach", "A", "Combat", "entity", `${entity.typeId},distance=${distance}`, false);
+				player.addTag("strict");
 		}
 	}
 
