@@ -9,7 +9,7 @@ import { mainGui, playerSettingsMenuSelected } from "./features/ui.js";
 import { banplayer } from "./data/paradoxban.js";
 
 const world = Minecraft.world;
-
+const playerRotations = new Map();
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a ******* and this actually worked :sunglasses:`);
 let currentVL;
 world.beforeEvents.chatSend.subscribe((msg) => {
@@ -746,9 +746,10 @@ world.afterEvents.blockBreak.subscribe((blockBreak) => {
 	let revertBlock = false;
 
 	if(config.debug) console.warn(`${player.nameTag} has broken the block ${blockBreak.brokenBlockPermutation.type.id}`);
-	if(getScore(player, "xray", 1) <= 1 && blockBreak.brokenBlockPermutation === "minecraft:diamond_ore") {
+	
+	if(getScore(player, "xray", 1) <= 1 && blockBreak.brokenBlockPermutation.typeId === "minecraft:diamond_ore") {
 		player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §b[§cXray§b]§r ${player.nameTag} has found §g1x Diamond Ore."}]}`);
-	} else if (getScore(player, "xray", 1) <= 1 && blockBreak.brokenBlockPermutation === "minecraft:ancient_debirs") {
+	} else if (getScore(player, "xray", 1) <= 1 && blockBreak.brokenBlockPermutation.typeId === "minecraft:ancient_debirs") {
 		player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §b§c[Xray§b]§r ${player.nameTag} has found §g1x Ancient Debris."}]}`);
 	}
 
@@ -1048,9 +1049,31 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 });
 
 world.afterEvents.entityHitEntity.subscribe((entityHit) => {
-	const { hitEntity: entity, damagingEntity: player} = entityHit;
+    const { hitEntity: entity, damagingEntity: player} = entityHit;
+    if(player.typeId !== "minecraft:player") return;
 
-	if(player.typeId !== "minecraft:player") return;
+    const rotation = player.getRotation();
+
+    // Be sure the module for the aimbot check is enabled
+    if(config.modules.aimbotA.enabled) {
+        const prevRotation = playerRotations.get(player.__identifier__) || {x: 0, y: 0};
+        // Customize the threshold as per your need
+        const ROTATION_SPEED_THRESHOLD = 100; 
+
+        const deltaYaw = rotation.y - prevRotation.y;
+        const deltaPitch = rotation.x - prevRotation.x;
+
+        // Detect the aimbot that changes the aim direction too quickly
+        if (
+            Math.abs(deltaYaw) > ROTATION_SPEED_THRESHOLD ||
+            Math.abs(deltaPitch) > ROTATION_SPEED_THRESHOLD
+        ) {
+            flag(player, "Aimbot", "A", "Combat", "rotationSpeed", `${deltaYaw}, ${deltaPitch}`, true);
+        }
+
+        // Save the current rotation values for comparing in the next tick
+        playerRotations.set(player.__identifier__, rotation);
+    }
 
 	/*
 	So you see a blanked out criticals check, this is beacuse there is no way to see if a player gave a critical hit... the second mojang adds it we get a good criticals check.
@@ -1128,35 +1151,11 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 				flag(player, "Killaura", "D", "Combat", "angle", `${rotation.x},distance=${distance}`, true);
 			}
 		}
-	// Killaura/F --> Add rotation speed check
-	if (config.modules.killauraF.enabled && player.entitiesHit.includes(entity.id)) {
-		// Get the previous rotation difference for comparison
-		const prevDiffYaw = player.prevDiffYaw || 0;
-		const prevDiffPitch = player.prevDiffPitch || 0;
-		
-		// Get the current rotation values
-		const rotation = player.getRotation();
-		
-		// Calculate the current rotation difference in degrees
-		const curDiffYaw = rotation.x - player.prevRotation.x;
-		const curDiffPitch = rotation.y - player.prevRotation.y;
-	
-		// Check if the current rotation difference is the same as the previous difference
-		if (curDiffYaw === prevDiffYaw && curDiffPitch === prevDiffPitch) {
-			flag(player, "KillAura", "F", "Combat", "rotationSpeed", `Rotation difference: ${curDiffYaw}, ${curDiffPitch}`, true);
-		}
-	
-		// Update the previous rotation difference
-		player.prevDiffYaw = curDiffYaw;
-		player.prevDiffPitch = curDiffPitch;
 	}
-	
-	// Update the previous rotation values
-	player.prevRotation = player.getRotation();
 
 	
-	if(config.debug) console.warn(player.getTags());
-};
+	if(config.debug) console.warn(player.getTags(), rotation.x);
+});
 world.afterEvents.entityHitBlock.subscribe((entityHit) => {
 	const { damagingEntity: player} = entityHit;
 
