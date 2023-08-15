@@ -10,14 +10,16 @@ import { banplayer } from "./data/paradoxban.js";
 
 const world = Minecraft.world;
 const playerRotations = new Map();
+const playerDifferences = new Map();
 const playerFlags = new Set();
 
 // The threshold can be adjusted based on your requirements
 const ROTATION_SPEED_THRESHOLD = config.modules.aimA.rotSpeed; 
 
 let previousRotation = null;
+let previousDifference = null;
 
-if(config.debug) console.warn(`${new Date().toISOString()} | Im not a ******* and this actually worked :sunglasses:`);
+if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
 let currentVL;
 world.beforeEvents.chatSend.subscribe((msg) => {
 	const message = msg.message.toLowerCase();
@@ -89,61 +91,80 @@ world.afterEvents.chatSend.subscribe((msg) => {
 });
 
 Minecraft.system.runInterval(() => {
-	if(config.modules.itemSpawnRateLimit.enabled) data.entitiesSpawnedInLastTick = 0;
+  if (config.modules.itemSpawnRateLimit.enabled) data.entitiesSpawnedInLastTick = 0;
 
-	// run as each player
+	// Run the code for each player
 	for (const player of world.getPlayers()) {
 		const rotation = player.getRotation();
-        
-        const prevRotation = playerRotations.get(player);
+
+		const prevRotation = playerRotations.get(player);
+		const prevDiff = playerDifferences.get(player);
 
 		/*
 		aim check - Its bad but it kinda works, sometimes, it also falses easy but we in beta lave me alone
 		*/
 
-        // If there is a previous rotation stored
-        if (prevRotation) {
-            const deltaYaw = rotation.y - prevRotation.y;
-            const deltaPitch = rotation.x - prevRotation.x;
+		// If there is a previous rotation stored
+		if (prevRotation) {
+		const deltaYaw = rotation.y - prevRotation.y;
+		const deltaPitch = rotation.x - prevRotation.x;
+		const diffYaw = deltaYaw;
+		const diffPitch = deltaPitch;
 
-			// Aim/A = Checks for fast head snap movements
-			// This check is easy to false flag, so you need to have the tag strict on you for it to do anything
-            if(config.modules.aimA.enabled && player.hasTag("strict")) {
-            	// If the rotation speed exceeds the threshold
-				if (Math.abs(deltaYaw) > ROTATION_SPEED_THRESHOLD || Math.abs(deltaPitch) > ROTATION_SPEED_THRESHOLD) {
-					
-					// Set the player flag as true
-					playerFlags.add(player);
-					player.addTag("a");
-				} else {
-					playerFlags.delete(player);
-				}
+		// Aim/A = Checks for fast head snap movements
+		// This check is easy to false flag, so you need to have the tag strict on you for it to do anything
+		if (config.modules.aimA.enabled && player.hasTag("strict")) {
+			// If the rotation speed exceeds the threshold
+			if (Math.abs(deltaYaw) > ROTATION_SPEED_THRESHOLD || Math.abs(deltaPitch) > ROTATION_SPEED_THRESHOLD) {
+			// Set the player flag as true
+			playerFlags.add(player);
+			player.addTag("a");
+			} else {
+			playerFlags.delete(player);
 			}
+		}
 
-			// Aim/B = Checks for perfect mouse movements (Diag)
-			if (config.modules.aimB.enabled) {
-				if (deltaYaw === deltaPitch) {
-					playerFlags.add(player);
-					player.addTag("b");
-				}	else {
-					playerFlags.delete(player);
-				}
+		// Aim/B = Checks for perfect mouse movements (Diag)
+		if (config.modules.aimB.enabled) {
+			if (deltaYaw === deltaPitch && deltaPitch !== 0 && deltaYaw !== 0) {
+			playerFlags.add(player);
+			player.addTag("b");
+			} else {
+			playerFlags.delete(player);
 			}
+		}
+		}
 
-			// Aim/C = Checks for perfect mouse movements (horizontal and vertical)
-			if(config.modules.aimC.enabled) {
-				if (deltaYaw !== 0 && deltaPitch === 0 || deltaPitch !== 0 && deltaYaw === 0) {
-					playerFlags.add(player);
-					player.addTag("c");
-				} else {
-					playerFlags.delete(player);
-				}
+		if (prevDiff) {
+			const deltaYaw = rotation.y - prevRotation.y;
+			const deltaPitch = rotation.x - prevRotation.x;
+			const diffYaw = deltaYaw;
+			const diffPitch = deltaPitch;
+		  
+			if (config.modules.aimC.enabled) {
+				console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :Aim/C:`);
+			  // Define the tolerance for closeness
+			  const tolerance = 2.5;
+		  
+			  // Check if the absolute difference is close to the previous difference
+			  if (
+				Math.abs(prevDiff.diffYaw - diffYaw) <= tolerance &&
+				Math.abs(prevDiff.diffPitch - diffPitch) <= tolerance
+			  ) {
+				// Flag the player with tags
+				flag(player, "Aim", "C", "Combat", "diff", prevDiff, false);
+				playerFlags.add(player);
+			  } else {
+				playerFlags.delete(player);
+			  }
 			}
-        }
+		  
+			playerDifferences.set(player, { diffYaw, diffPitch });
+		}
 
-        
-        // Save the current rotation values for comparison in the next tick
-        playerRotations.set(player, rotation);
+		playerRotations.set(player, rotation);
+	
+		
 		
 		const selectedSlot = player.selectedSlot;
 
@@ -614,7 +635,7 @@ Minecraft.system.runInterval(() => {
 			if(player.cps === player.lastCps){
 				player.repeatCount += 1;
 				// Potentially suspicious behavior if cps is the same for 10 checks in a row
-				if(player.repeatCount >= 10){
+				if(player.repeatCount >= 3){
 					flag(player, "Autoclicker", "A", "Combat", "Repeated CPS", player.cps, false);
 					player.repeatCount = 0;
 				}
