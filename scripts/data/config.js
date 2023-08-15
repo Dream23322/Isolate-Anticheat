@@ -343,6 +343,11 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },
+        "aimC": {
+            "enabled": true,
+            "punishment": "kick",
+            "minVlbeforePunishment": 10,
+        },
         "noslowA": {
             "enabled": true,
             "speed": 0.22,

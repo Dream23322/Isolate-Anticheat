@@ -120,8 +120,8 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 
+			// Aim/B = Checks for perfect mouse movements (Diag)
 			if (config.modules.aimB.enabled) {
-
 				if (deltaYaw === deltaPitch) {
 					playerFlags.add(player);
 					player.addTag("b");
@@ -129,10 +129,18 @@ Minecraft.system.runInterval(() => {
 					playerFlags.delete(player);
 				}
 			}
+
+			// Aim/C = Checks for perfect mouse movements (horizontal and vertical)
+			if(config.modules.aimC.enabled) {
+				if (deltaYaw !== 0 && deltaPitch === 0 || deltaPitch !== 0 && deltaYaw === 0) {
+					playerFlags.add(player);
+					player.addTag("c");
+				} else {
+					playerFlags.delete(player);
+				}
+			}
         }
 
-
-		// aim/B is coming soon, it will take a long time to code though.
         
         // Save the current rotation values for comparison in the next tick
         playerRotations.set(player, rotation);
@@ -1117,6 +1125,10 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		if(player.hasTag("b")) {
 			flag(player, "Aim", "B", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
 			player.removeTag("b");
+		}
+		if(player.hasTag("c")) {
+			flag(player, "Aim", "C", "Combat", "perfectRot", "true", false);
+			player.removeTag("c");
 		}
     }
 
