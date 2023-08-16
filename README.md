@@ -7,6 +7,11 @@ Its also made with copious amounts of:
 **TEA**
 ![Alt text](image.png)
 
+
+# Dear mf's who think this is a pure copy of scythe
+its not, i added a bunch of checks and commands, im also making it run better and just be better in general so piss off
+
+
 # Main checks!
 __**Fly**__
 
