@@ -14,7 +14,7 @@ const playerDifferences = new Map();
 const playerFlags = new Set();
 
 // The threshold can be adjusted based on your requirements
-const ROTATION_SPEED_THRESHOLD = config.modules.aimA.rotSpeed; 
+const ROTATION_SPEED_THRESHOLD = config.modules.aimA.rotSpeed;
 
 let previousRotation = null;
 let previousDifference = null;
@@ -101,68 +101,43 @@ Minecraft.system.runInterval(() => {
 		const prevDiff = playerDifferences.get(player);
 
 		/*
-		aim check - Its bad but it kinda works, sometimes, it also falses easy but we in beta lave me alone
+			aim check - Its bad but it kinda works, sometimes, it also falses easy but we in beta lave me alone
 		*/
 
 		// If there is a previous rotation stored
 		if (prevRotation) {
-		const deltaYaw = rotation.y - prevRotation.y;
-		const deltaPitch = rotation.x - prevRotation.x;
-		const diffYaw = deltaYaw;
-		const diffPitch = deltaPitch;
-
-		// Aim/A = Checks for fast head snap movements
-		// This check is easy to false flag, so you need to have the tag strict on you for it to do anything
-		if (config.modules.aimA.enabled && player.hasTag("strict")) {
-			// If the rotation speed exceeds the threshold
-			if (Math.abs(deltaYaw) > ROTATION_SPEED_THRESHOLD || Math.abs(deltaPitch) > ROTATION_SPEED_THRESHOLD) {
-			// Set the player flag as true
-			playerFlags.add(player);
-			player.addTag("a");
-			} else {
-			playerFlags.delete(player);
-			}
-		}
-
-		// Aim/B = Checks for perfect mouse movements (Diag)
-		if (config.modules.aimB.enabled) {
-			if (deltaYaw === deltaPitch && deltaPitch !== 0 && deltaYaw !== 0) {
-			playerFlags.add(player);
-			player.addTag("b");
-			} else {
-			playerFlags.delete(player);
-			}
-		}
-		}
-
-		if (prevDiff) {
 			const deltaYaw = rotation.y - prevRotation.y;
 			const deltaPitch = rotation.x - prevRotation.x;
 			const diffYaw = deltaYaw;
 			const diffPitch = deltaPitch;
-		  
-			if (config.modules.aimC.enabled) {
-				console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :Aim/C:`);
-			  // Define the tolerance for closeness
-			  const tolerance = 2.5;
-		  
-			  // Check if the absolute difference is close to the previous difference
-			  if (
-				Math.abs(prevDiff.diffYaw - diffYaw) <= tolerance &&
-				Math.abs(prevDiff.diffPitch - diffPitch) <= tolerance
-			  ) {
-				// Flag the player with tags
-				flag(player, "Aim", "C", "Combat", "diff", prevDiff, false);
-				playerFlags.add(player);
-			  } else {
-				playerFlags.delete(player);
-			  }
+
+			// Aim/A = Checks for fast head snap movements
+			// This check is easy to false flag, so you need to have the tag strict on you for it to do anything
+			if (config.modules.aimA.enabled && player.hasTag("strict")) {
+				// If the rotation speed exceeds the threshold
+				if (Math.abs(deltaYaw) > ROTATION_SPEED_THRESHOLD || Math.abs(deltaPitch) > ROTATION_SPEED_THRESHOLD) {
+					// Set the player flag as true
+					playerFlags.add(player);
+					player.addTag("a");
+				} else {
+					playerFlags.delete(player);
+				}
 			}
-		  
-			playerDifferences.set(player, { diffYaw, diffPitch });
+
+			// Aim/B = Checks for perfect mouse movements (Diag)
+			if (config.modules.aimB.enabled) {
+				if (deltaYaw === deltaPitch && deltaPitch !== 0 && deltaYaw !== 0) {
+					playerFlags.add(player);
+					player.addTag("b");
+				} else {
+					playerFlags.delete(player);
+				}
+			}
 		}
+  
 
 		playerRotations.set(player, rotation);
+		
 	
 		
 		
@@ -184,12 +159,12 @@ Minecraft.system.runInterval(() => {
 			player.autotoolSwitchDelay = Date.now() - player.startBreakTime;
 		}
 
-		/*
+		
 		// Crasher/A = invalid pos check
 		if(config.modules.crasherA.enabled && Math.abs(player.location.x) > 30000000 ||
 			Math.abs(player.location.y) > 30000000 || Math.abs(player.location.z) > 30000000) 
 				flag(player, "Crasher", "A", "Exploit", "x_pos", `${player.location.x},y_pos=${player.location.y},z_pos=${player.location.z}`, true);
-		*/
+		
 
 		// anti-namespoof
 		// these values are set in the playerJoin event
@@ -252,7 +227,7 @@ Minecraft.system.runInterval(() => {
 			}
 		}
 		*/
-		if(player.hasTag("moving") && config.debug && !player.hasTag("nolog")) {
+		if(player.hasTag("moving") && config.debug && player.hasTag("log")) {
 			console.warn(`${player.nameTag} speed is ${playerSpeed} Velocity ${playerVelocity}`);
 		}
 		
@@ -415,6 +390,13 @@ Minecraft.system.runInterval(() => {
 				if(jumpheight < config.modules.motionB.height) {
 					flag(player, "Motion", "B", "Movement", "height", jumpheight, false);
 				}
+			}
+		}
+
+		// If player has the tag meme we do what alice anticheat cant
+		if(player.hasTag("meme")) {
+			if(player.hasTag("moving")) {
+				flag(player, "Autowalk", "A", "Movement", "maths", "e+0.1-coffee", false);
 			}
 		}
 
@@ -661,7 +643,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 	const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
 
 	
-
+	let undoPlace = false;
 
 	// IllegalItems/H = checks for pistons that can break any block
 	if(config.modules.illegalitemsH.enabled && block.typeId === "minecraft:piston" || block.typeId === "minecraft:sticky_piston") {
@@ -757,6 +739,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 					block.setType(Minecraft.MinecraftBlockTypes.air);
 					blockPlace.cancel = true;
 					
+					
 				}
 			}
 		}
@@ -769,6 +752,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 			if(!player.hasTag("trident")) {
 				if(rotation.x === 60) {
 					flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);
+					
 				}
 			}
 		}	
@@ -783,6 +767,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 			
 			if(!player.hasTag("right") && !player.hasTag("jump") && !player.hasTag("trident") && player.hasTag("left") && rotation.x < config.modules.scaffoldC.angle) {
 				flag(player, "Scaffold", "C", "Placement", "invalidKeypress", `!right,angle=${rotation.x}`, false);
+				
 			}
 		}
 	}
@@ -798,6 +783,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 
 			if(item.typeId !== block.typeId) {
 				flag(player, "Scaffold", "D", "Placement", "heldItem", `${item.typeId},blockId=${block.typeId}`, false);
+				
 			}
 		}	
 	}
@@ -819,6 +805,16 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 			block.setType(Minecraft.MinecraftBlockTypes.air);
 		}
 	} 
+
+	if(undoPlace === true) {
+		try {
+			block.setType(Minecraft.MinecraftBlockTypes.air);
+			console.warn(`${player.nameTag} had their placed block reverted!`);
+		} catch (error) {
+			console.warn(`${player.nameTag} had theur placed block reverted!`);
+			player.runCommandAsync(`fill ${block.location.x} ${block.location.y} ${block.location.z} ${block.location.x} ${block.location.y} ${block.location.z} air`)
+		}
+	}
 });
 
 world.afterEvents.blockBreak.subscribe((blockBreak) => {
@@ -1147,10 +1143,6 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			flag(player, "Aim", "B", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
 			player.removeTag("b");
 		}
-		if(player.hasTag("c")) {
-			flag(player, "Aim", "C", "Combat", "perfectRot", "true", false);
-			player.removeTag("c");
-		}
     }
 
 	/*
@@ -1179,7 +1171,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
 		//if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}`);
 
-		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId)) {
+		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && !player.hasTag("strict") || distance > 5.3 && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && player.hasTag("strict")) {
 			const checkGmc = world.getPlayers({
 				excludeGameModes: [Minecraft.GameMode.creative],
 				name: player.name

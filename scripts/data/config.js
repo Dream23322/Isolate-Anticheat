@@ -191,6 +191,10 @@ export default
             "enabled": true,
             "requiredTags": ["op"]
         },
+        "kickall": {
+            "enabled": true,
+            "requiredTags": ["op"]
+        },
         "unban": {
             "enabled": true,
             "requiredTags": ["op"],
@@ -293,7 +297,7 @@ export default
             "punishment": "mute",
             "minVlbeforePunishment": 5
         },
-        /*
+        
         // This exploit has been entirely patched out.
         "crasherA": {
             "enabled": false,
@@ -301,7 +305,6 @@ export default
             "punishmentLength": "",
             "minVlbeforePunishment": 1
         },
-        */
         "namespoofA": {
             "enabled": false,
             "minNameLength": 3,
