@@ -302,7 +302,7 @@ export default
         "crasherA": {
             "enabled": false,
             "punishment": "ban",
-            "punishmentLength": "",
+            "punishmentLength": "14d",
             "minVlbeforePunishment": 1
         },
         "namespoofA": {
@@ -332,7 +332,8 @@ export default
                 "minecraft:ender_dragon",
                 "minecraft:ghast"
             ],
-            "punishment": "kick",
+            "punishment": "ban",
+            "punishmentLength": "3m",
             "minVlbeforePunishment": 20
         },
         "aimA": {
@@ -440,7 +441,7 @@ export default
             "velocity": 0.5423,
             "hVelocity": 0.525,
             "punishment": "ban",
-            "punishmentLength": "1m",
+            "punishmentLength": "5m",
             "minVlbeforePunishment": 20
         },          
         "flyD": {
@@ -453,9 +454,9 @@ export default
         "flyE": {
             "enabled": true,
             "hVelocity": 0.512,
-            "punishment": "kick",
+            "punishment": "ban",
             "punishmentLength": "5d",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 15
         },        
 
         // Do **NOT** enabled
@@ -544,13 +545,14 @@ export default
         "killauraC": {
             "enabled": true,
             "entities": 2,
-            "punishment": "kick",
+            "punishment": "ban",
             "punishmentLength": "3m",
-            "minVlbeforePunishment": 3
+            "minVlbeforePunishment": 5
         },
         "scaffoldB": {
             "enabled": true,
-            "punishment": "kick",
+            "punishment": "ban",
+            "punishmentLength": "30m",
             "minVlbeforePunishment": 3
         },
         "scaffoldC": {
@@ -629,7 +631,7 @@ export default
         },
         "killauraD": {
             "enabled": true,
-            "punishment": "kick",
+            "punishment": "ban",
             "minVlbeforePunishment": 3
         },
         "illegalitemsJ": {
@@ -714,14 +716,14 @@ export default
         },
         "motionA": {
             "enabled": true,
-            "speed": 10.5,
-            "punishment": "kick",
-            "punishmentLength": "1m",
-            "minVlbeforePunishment": 1
+            "speed": 11.5,
+            "punishment": "ban",
+            "punishmentLength": "30d",
+            "minVlbeforePunishment": 2
         },
         "motionB": {
             "enabled": true,
-            "height": -1.01,
+            "height": -1.11,
             "punishment": "kick",
             "minVlbeforePunishment": 100
         },
@@ -734,7 +736,8 @@ export default
         "badpackets2": {
             "enabled": true,
             "speed": 7.3,
-            "punishment": "kick",
+            "punishment": "ban",
+            "punishmentLength": "1m",
             "minVlbeforePunishment": 3
         }
 
