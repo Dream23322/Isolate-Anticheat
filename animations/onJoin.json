@@ -28,8 +28,7 @@
 					"/scoreboard objectives add xray dummy",
 					"/scoreboard players add scythe:config xray 0",
 					"/scoreboard objectives add aura_timer dummy",
-					"/scoreboard objectives add scaffoldvl",
-					"/scoreboard objectives add aura_timer_2 dummy",			
+					"/scoreboard objectives add scaffoldvl",		
 					"/scoreboard objectives add autoclicker dummy",
 					"/scoreboard players add scythe:config autoclicker 0",
 					"/scoreboard objectives add gametestapi dummy",
@@ -56,6 +55,7 @@
 					"/scoreboard players operation @a invalidsprint = scythe:config invalidsprint",
 					"/scoreboard players operation @a antishulker = scythe:config antishulker",
 					// Anticheat Objectives
+					"/scoreboard objectives add banvl dummy",
 					"/scoreboard objectives add fastusevl dummy",
 					"/scoreboard objectives add autototemvl dummy",
 					"/scoreboard objectives add autoshieldvl dummy",
