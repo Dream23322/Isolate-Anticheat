@@ -261,7 +261,7 @@ export default
                 "minecraft:sponge"
             ]
         },
-        "filterUnicodeChat": false,
+        "filterUnicodeChat": true,
         /*
         // This exploit has been entirely patched out.
         "badpackets2": {
@@ -338,7 +338,7 @@ export default
         },
         "aimA": {
             "enabled": true,
-            "rotSpeed": 100,
+            "rotSpeed": 120,
             "punishment": "kick",
             "minVlbeforePunishment": 20
         },
@@ -472,6 +472,8 @@ export default
         "flyG": {
             "enabled": true,
             "fallDistance": 0,
+            "punishment": "ban",
+            "punishmentLength": "1m",
             "minVlbeforePunishment": 10
         },
         "illegalitemsE": {
