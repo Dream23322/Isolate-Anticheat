@@ -28,7 +28,7 @@ import config from "../../data/config.js";
     let didError = false;
 
     if(!itemType) {
-        console.error(`Unable to create item type, most likely the item name is invalid. Defautled to using wooden axe.`);
+        console.error(`Unable to create item type, most likely the item name is invalid. Defaulted to using wooden axe.`);
         
         didError = true;
         itemType = Minecraft.ItemTypes.get("minecraft:wooden_axe");

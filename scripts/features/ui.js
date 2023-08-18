@@ -134,7 +134,7 @@ function banPlayerMenu(player, playerSelected, lastMenu = 0) {
         .title("Ban Player Menu - " + playerSelected.name)
         .textField("Ban Reason:", "§o§7No Reason Provided")
         .slider("Ban Length (in days)", 0, 365, 1)
-        .toggle("Permenant Ban", true);
+        .toggle("Permanant Ban", true);
     menu.show(player).then((response) => {
         if(response.canceled) {
             if(lastMenu === 0) banMenuSelect(player, lastMenu);
