@@ -11,17 +11,20 @@ export async function banAnimation(player, type) {
       "type1": {
         title: "§4§k§l EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
         subtitle: "§4§k§lEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-        actionbar: "§4§k§l EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
+        actionbar: "§4§k§l EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+        particle: "huge_explosion_emitter"
       },
       "type2": {
         title: "§c§k§l EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
         subtitle: "§c§k§l  EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
-        actionbar: "§c§k§l EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
+        actionbar: "§c§k§l EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+        particle: "villager_angry"
       },
       "type3": {
         title: "§b§l§kEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
         subtitle: "§b§l§kEEEEEEEEEEEEEEEEEEEEEEEEE",
-        actionbar: "§b§l§kEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
+        actionbar: "§b§l§kEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
+        particle: "totem_particle"
       }
     };
   
@@ -39,28 +42,33 @@ export async function banAnimation(player, type) {
     player.sendMessage(banMessage.actionbar);
 
     player.sendMessage(banMessage.actionbar);
-    
-    // Radius of the explosion
-    const radius = 2;
 
-    // Number of particles to generate
-    const particleCount = 75;
-  // Calculating coordinates for particles
-    for(let i = 0; i < particleCount; i++) {
-        // Generate random angles
-        const theta = 2 * Math.PI * Math.random();
-        const phi = Math.acos(2 * Math.random() - 1);
+    // Type 2 is an animation explosion with angry villager
+    if(type === "type2") {
+        // Radius of the explosion
+        const radius = 2;
 
-        // Convert spherical coordinates to cartesian coordinates
-        const x = radius * Math.sin(phi) * Math.cos(theta);
-        const y = radius * Math.sin(phi) * Math.sin(theta);
-        const z = radius * Math.cos(phi);
+        // Number of particles to generate
+        const particleCount = 75;
+        // Calculating coordinates for particles
+        for(let i = 0; i < particleCount; i++) {
+            // Generate random angles
+            const theta = 2 * Math.PI * Math.random();
+            const phi = Math.acos(2 * Math.random() - 1);
 
-        // Generate the particle at the calculated position
-        const command = `particle minecraft:villager_angry ${player.position.x + x} ${player.position.y + y} ${player.position.z + z}`;
-        
-        // Run the command asynchronously
-        await player.runCommandAsync({ command });
+            // Convert spherical coordinates to cartesian coordinates
+            const x = radius * Math.sin(phi) * Math.cos(theta);
+            const y = radius * Math.sin(phi) * Math.sin(theta);
+            const z = radius * Math.cos(phi);
+
+            // Generate the particle at the calculated position
+            const command = `particle minecraft:${banMessage.particle} ${player.position.x + x} ${player.position.y + y} ${player.position.z + z}`;
+            
+            // Run the command asynchronously
+            await player.runCommandAsync({ command });
+        }
+    } else {
+        player.runCommandAsync(`particle minecraft:${banMessage.particle} ~ ~ ~`);
     }
 }
 

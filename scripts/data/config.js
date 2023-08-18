@@ -442,24 +442,25 @@ export default
             "hVelocity": 0.525,
             "punishment": "kick",
             "punishmentLength": "5m",
-            "minVlbeforePunishment": 20
+            "minVlbeforePunishment": 3
         },          
         "flyD": {
             "enabled": true,
             "Velocity": 0.6,
             "punishment": "kick",
             "punishmentLength": "5m",
-            "minVlbeforePunishment": 7
+            "minVlbeforePunishment": 5
         },    
         "flyE": {
             "enabled": true,
             "hVelocity": 0.512,
             "punishment": "kick",
             "punishmentLength": "5d",
-            "minVlbeforePunishment": 15
+            "minVlbeforePunishment": 10
         },        
 
         // Do **NOT** enabled
+        // The check is broken
         "flyF": {
             "enabled": false,
             "punishment": "none", 
@@ -574,7 +575,6 @@ export default
             "punishment": "none",
             "minVlbeforePunishment": 0
         },
-        
         // This exploit has been entirely patched out.
         "badpackets3": {
             "enabled": true,

@@ -32,6 +32,8 @@ export function testban(message, args) {
     }
 
     if(!member) return player.sendMessage("§r§j[§uIsolate§j]§r Couldn't find that player.");
+    banAnimation(member, "type1");
     banAnimation(member, "type2");
+    banAnimation(member, "type3");
     player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has banned ${member.nameTag} "}]}`);
 }
