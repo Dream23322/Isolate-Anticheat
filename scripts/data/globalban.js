@@ -28,6 +28,7 @@ export const banList = [
    "wieldyatol86717",
    "ctrlaltf44",
    "blazerloop",
+   "cis4209",
    // No it doesnt
    "scythesucks1396",
    "darkstalker8352",
