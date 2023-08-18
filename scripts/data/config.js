@@ -29,7 +29,7 @@ export default
         "help": {
             "enabled": true,
             "requiredTags": ["op"],
-            "aliases": ["support","commands"]
+            "aliases": ["support","commands","what"]
         },
         "op": {
             "enabled": true,
@@ -185,7 +185,7 @@ export default
         },
         "testban": {
             "enabled": true,
-            "requiredTag": ["op"]
+            "requiredTags": ["op"],
         },
         "crash": {
             "enabled": true,
@@ -229,7 +229,7 @@ export default
             "entitiesBeforeRateLimit": 45
         },
         /*
-        Enabling this module is higly discouraged, as it breaks items names, enchantments, durability
+        Enabling this module is highly discouraged, as it breaks items names, enchantments, durability
         and item data relating to it.
         These items can contain large nbt data which can cause the world file size to dramatically increase.
         In anarchy enviorments, this module can help greatly to prevent world corruption.
@@ -332,13 +332,13 @@ export default
                 "minecraft:ender_dragon",
                 "minecraft:ghast"
             ],
-            "punishment": "ban",
+            "punishment": "kick",
             "punishmentLength": "3m",
             "minVlbeforePunishment": 20
         },
         "aimA": {
             "enabled": true,
-            "rotSpeed": 120,
+            "rotSpeed": 100,
             "punishment": "kick",
             "minVlbeforePunishment": 20
         },
@@ -440,7 +440,7 @@ export default
             "enabled": true,
             "velocity": 0.5423,
             "hVelocity": 0.525,
-            "punishment": "ban",
+            "punishment": "kick",
             "punishmentLength": "5m",
             "minVlbeforePunishment": 20
         },          
@@ -454,7 +454,7 @@ export default
         "flyE": {
             "enabled": true,
             "hVelocity": 0.512,
-            "punishment": "ban",
+            "punishment": "kick",
             "punishmentLength": "5d",
             "minVlbeforePunishment": 15
         },        
@@ -472,9 +472,9 @@ export default
         "flyG": {
             "enabled": true,
             "fallDistance": 0,
-            "punishment": "ban",
+            "punishment": "kick",
             "punishmentLength": "1m",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 100
         },
         "illegalitemsE": {
             "enabled": false,
@@ -547,13 +547,13 @@ export default
         "killauraC": {
             "enabled": true,
             "entities": 2,
-            "punishment": "ban",
+            "punishment": "kick",
             "punishmentLength": "3m",
             "minVlbeforePunishment": 5
         },
         "scaffoldB": {
             "enabled": true,
-            "punishment": "ban",
+            "punishment": "kick",
             "punishmentLength": "30m",
             "minVlbeforePunishment": 3
         },
@@ -748,7 +748,7 @@ export default
         "lag_machine": {
             "antiArmorStandCluster": {
                 "enabled": true,
-                "radius": 5,
+                "radius": 10,
                 "max_armor_stand_count": 10
             },
             "antiMinecartCluster": {

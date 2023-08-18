@@ -6,7 +6,7 @@ import data from "./data/data.js";
 
 const world = Minecraft.world;
 
-export function banAnimation(player, type) {
+export async function banAnimation(player, type) {
     const banMessages = {
       "type1": {
         title: "§4§k§l EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
@@ -37,22 +37,30 @@ export function banAnimation(player, type) {
 
 
     player.sendMessage(banMessage.actionbar);
-    // player.runCommand(`tp ${player.name} ${player.name}`);
+
     player.sendMessage(banMessage.actionbar);
-    // player.runCommand(`tp ${player.name} ${player.name}`);
-    player.sendMessage(banMessage.actionbar);
-    // player.runCommand(`tp ${player.name} ${player.name}`);
-    player.sendMessage(banMessage.actionbar);
-    player.sendMessage(banMessage.actionbar);
-    player.sendMessage(banMessage.actionbar);
-    player.sendMessage(banMessage.actionbar);
-    player.sendMessage(banMessage.actionbar);
-    player.sendMessage(banMessage.actionbar);
-    player.sendMessage(banMessage.actionbar);
-    player.sendMessage(banMessage.actionbar);
-  
-    for (let i = 0; i < 10; i++) {
-        player.runCommandAsync(`tp "${player.name}" "${player.name}"`)
+    
+    // Radius of the explosion
+    const radius = 2;
+
+    // Number of particles to generate
+    const particleCount = 75;
+  // Calculating coordinates for particles
+    for(let i = 0; i < particleCount; i++) {
+        // Generate random angles
+        const theta = 2 * Math.PI * Math.random();
+        const phi = Math.acos(2 * Math.random() - 1);
+
+        // Convert spherical coordinates to cartesian coordinates
+        const x = radius * Math.sin(phi) * Math.cos(theta);
+        const y = radius * Math.sin(phi) * Math.sin(theta);
+        const z = radius * Math.cos(phi);
+
+        // Generate the particle at the calculated position
+        const command = `particle minecraft:villager_angry ${player.position.x + x} ${player.position.y + y} ${player.position.z + z}`;
+        
+        // Run the command asynchronously
+        await player.runCommandAsync({ command });
     }
 }
 
@@ -443,7 +451,7 @@ export function banMessage(player) {
             player.runCommandAsync(`tp "${player.name}" "${player.name}"`);
         }
         
-        player.runCommandAsync(`kick "${player.name}" §r\n§l§cYOU ARE BANNED!\n§mBanned By:§r ${by || "N/A"}\n§bReason:§r ${reason || "N/A"}\n§aBan Length:§r ${time || "Permenant"}`);
+        player.runCommandAsync(`kick "${player.name}" §r\n§l§cYOU ARE BANNED!\n§mBanned By:§r ${by || "N/A"}\n§bReason:§r ${reason || "N/A"}\n§aBan Length:§r ${time || "Permanant"}`);
     } catch (error) {
         player.triggerEvent("scythe:kick");
     }    

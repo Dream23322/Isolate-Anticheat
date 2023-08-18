@@ -9,6 +9,8 @@ import { mainGui, playerSettingsMenuSelected } from "./features/ui.js";
 import { banplayer } from "./data/paradoxban.js";
 
 const world = Minecraft.world;
+let playerRots = [];
+let playerSpeeds = [];
 const playerRotations = new Map();
 const playerDifferences = new Map();
 const playerFlags = new Set();
@@ -96,7 +98,11 @@ Minecraft.system.runInterval(() => {
 	// Run the code for each player
 	for (const player of world.getPlayers()) {
 		const rotation = player.getRotation();
+		const playerVelocity = player.getVelocity();
 
+		
+
+		const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
 		// To prevent false flags we do this
 		if(player.hasTag("a") || player.hasTag("b") || player.hasTag("c")) {
 			// Remove all tags
@@ -144,7 +150,7 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 		}
-  
+ 
 
 		playerRotations.set(player, rotation);
 		
@@ -211,11 +217,7 @@ Minecraft.system.runInterval(() => {
 			} else config.modules.bedrockValidate.enabled = false;
 		}
 
-		const playerVelocity = player.getVelocity();
 
-		
-
-		const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
 
 		// NoSlow/A = speed limit check
 		if(config.modules.noslowA.enabled && playerSpeed >= config.modules.noslowA.speed && playerSpeed <= config.modules.noslowA.maxSpeed) {
@@ -226,7 +228,7 @@ Minecraft.system.runInterval(() => {
 			}
 		}
 		
-		/*/ NoSlow/B = Checks for going normal speed even with shitty hunger
+		/*/ NoSlow/B = Checks for going normal speed even with low hunger
 		if(config.modules.noslowB.enabled && playerSpeed >= config.modules.noslowB.speed && playerSpeed <= config.modules.noslowB.maxSpeed) {
 			// This will probs get a rewrite if it doesnt work in the next test
 			if(!player.getEffect(Minecraft.MinecraftEffectTypes.speed) && player.hastag("moving") && player.hasTag('ground') && !player.hasTag('jump') && !player.hasTag('gliding') && !player.hasTag('swimming') && !player.hasTag("trident")) {
@@ -403,6 +405,17 @@ Minecraft.system.runInterval(() => {
 			}
 		}
 
+		// Im currently adding more management for the strict system, it wont be a full system it will just be there to help prevent false flags
+		if(getScore(player, "kickvl", 0) > config.ViolationsBeforeBan / 2 && !player.hasTag("strict")) {
+			//Try add the tag
+			try {
+				player.addTag("strict");
+			} catch (error) {
+				// If .addTag() fails we use commands
+				player.runCommandAsync(`tag "${player.name}" add strict`);
+			}
+		}
+
 		// If player has the tag meme we do what alice anticheat cant
 		if(player.hasTag("meme")) {
 			if(player.hasTag("moving")) {
@@ -558,13 +571,10 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 		}	
-		// Probs could redo, idk
-		//PATCH: For some reason there was some weird bug, where if you held a trident, when u threw it, if u jumpped u would get spammed for speed? idk why so thats why if u have a trident u bypass speed.
-		// This patch will need redoing as i know that a lot of server used tridents, but as I don't know what is causing it, I'm not able to
-		// Annoying but it is a semi patch
-		// This is so annoying
+		// Speed/A = Checks for abnormal speed
+		// There is a built in system where it is more tolorant if a player is trusted by the anticheat
 		if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op") && !player.isFlying && !player.getEffect("speed") && !player.hasTag("trident")) {
-			if (playerSpeed > config.modules.speedA.speed || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.isJumping || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.hasTag("sprint")) {
+			if (playerSpeed > config.modules.speedA.speed + 0.1 && !player.hasTag("strict") || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.isJumping || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.hasTag("sprint") || playerSpeed > config.modules.speedA.speed && player.hasTag("strict")) {
 				
 				flag(player, "Speed", "A", "Movement", "speed", playerSpeed, false);
 			}		
@@ -743,7 +753,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 		const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 		
 		// @ts-expect-error
-		if(player.hasTag("sprint") &&  !player.isFlying && player.isJumping && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
+		if(!player.isFlying && player.isJumping && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
 			const yPosDiff = player.location.y - Math.floor(Math.abs(player.location.y));
 			
 			if(yPosDiff > config.modules.towerA.max_y_pos_diff) {
@@ -765,8 +775,8 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 
 	// Scaffold/B = Checks for a certain head rotation that horion clients scaffold uses (with bypass mode on), the rotation bypasses scaffold/C so that is why this is here
 	if(config.modules.scaffoldB.enabled) {
-		const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
-		if(!player.isFlying && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
+		//const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
+		if(!player.isFlying) {
 			if(!player.hasTag("trident")) {
 				if(rotation.x === 60) {
 					flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);
@@ -918,7 +928,7 @@ world.afterEvents.beforeItemUseOn.subscribe((beforeItemUseOn) => {
 		thx drib or matrix_code for telling me lol
 	
 	if(config.modules.illegalitemsE.enabled) {
-		// items that are obtainble using commands
+		// items that are obtainable using commands
 		if(!player.hasTag("op")) {
 			let flagPlayer = false;
 
@@ -1129,6 +1139,30 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 
 		if(entities.length > config.misc_modules.lag_machine.antiMinecartCluster.max_count) {
 			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§n[§qTea-Protect§n]§rPotential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area! Possible Offender: ${getClosestPlayer(entity)}"}]}`);
+			for(const entityLoop of entities) entityLoop.kill();
+		}
+	}	
+	if(config.misc_modules.lag_machine.antiMinecartCluster.enabled && entity.typeId === "minecraft:hopper_minecart") {
+		const entities = [...entity.dimension.getEntities({
+			location: {x: entity.location.x, y: entity.location.y, z: entity.location.z},
+			maxDistance: config.misc_modules.lag_machine.antiMinecartCluster.radius,
+			type: "tnt_minecart"
+		})];
+
+		if(entities.length > config.misc_modules.lag_machine.antiMinecartCluster.max_count) {
+			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§n[§qTea-Protect§n]§r Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area! Possible Offender: ${getClosestPlayer(entity)}"}]}`);
+			for(const entityLoop of entities) entityLoop.kill();
+		}
+	}	
+	if(config.misc_modules.lag_machine.antiMinecartCluster.enabled && entity.typeId === "minecraft:tnt_minecart") {
+		const entities = [...entity.dimension.getEntities({
+			location: {x: entity.location.x, y: entity.location.y, z: entity.location.z},
+			maxDistance: config.misc_modules.lag_machine.antiMinecartCluster.radius,
+			type: "tnt_minecart"
+		})];
+
+		if(entities.length > config.misc_modules.lag_machine.antiMinecartCluster.max_count) {
+			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§n[§qTea-Protect§n]§r Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area! Possible Offender: ${getClosestPlayer(entity)}"}]}`);
 			for(const entityLoop of entities) entityLoop.kill();
 		}
 	}	

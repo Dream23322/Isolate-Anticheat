@@ -22,7 +22,6 @@ export function testban(message, args) {
 
     if(!time) args.splice(1, 1);
 
-    const reason = args.slice(1).join(" ").replace(/"|\\/g, "") || "No reason specified";
     
     // try to find the player requested
     let member;
@@ -33,6 +32,6 @@ export function testban(message, args) {
     }
 
     if(!member) return player.sendMessage("§r§j[§uIsolate§j]§r Couldn't find that player.");
-    banAnimation(member, "type1");
-    player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has banned ${member.nameTag} for ${reason}"}]}`);
+    banAnimation(member, "type2");
+    player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has banned ${member.nameTag} "}]}`);
 }
