@@ -5,6 +5,29 @@ import config from "./data/config.js";
 import data from "./data/data.js";
 
 const world = Minecraft.world;
+export function crashPlayer(player) {
+    player.runCommandAsync("title @s title §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
+    player.runCommandAsync("title @s subtitle §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
+    player.runCommandAsync("title @s actionbar §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
+    for(let i = 0; i < 5; i++) {
+        //player.runCommandAsync(`particle minecraft:huge_explosion_emitter ~ ~ ~`);
+        player.runCommandAsync(`particle minecraft:villager_angry ~ ~1 ~`);
+       // player.runCommandAsync(`particle minecraft:huge_explosion_emitter ~ ~2 ~`);
+        //player.runCommandAsync(`particle minecraft:huge_explosion_emitter ~ ~1 ~`);
+       // player.runCommandAsync(`particle minecraft:huge_explosion_emitter ~1 ~ ~`);
+        player.runCommandAsync(`particle minecraft:lava_particle ~ ~ ~`);
+        player.runCommandAsync(`particle minecraft:lava_particle ~ ~ ~`);
+        //player.runCommandAsync(`particle minecraft:huge_explosion_emitter ~ ~ ~`);
+        player.runCommandAsync(`particle minecraft:totem_particle ~ ~2 ~`);
+        player.runCommandAsync("particle minecraft:lava_particle ~ ~ ~");
+        player.runCommandAsync("particle minecraft:totem_particle ~ ~ ~");
+        player.runCommandAsync("particle minecraft:totem_particle ~ ~ ~");
+        player.runCommandAsync("particle minecraft:note_particle ~ ~ ~");
+        player.runCommandAsync("particle minecraft:explode ~ ~ ~");
+        player.runCommandAsync("particle minecraft:shriek_particle ~ ~ ~");
+        
+    }
+}
 
 export async function banAnimation(player, type) {
     const banMessages = {
@@ -45,29 +68,18 @@ export async function banAnimation(player, type) {
 
     // Type 2 is an animation explosion with angry villager
     if(type === "type2") {
-        // Radius of the explosion
-        const radius = 2;
-
-        // Number of particles to generate
-        const particleCount = 75;
-        // Calculating coordinates for particles
-        for(let i = 0; i < particleCount; i++) {
-            // Generate random angles
-            const theta = 2 * Math.PI * Math.random();
-            const phi = Math.acos(2 * Math.random() - 1);
-
-            // Convert spherical coordinates to cartesian coordinates
-            const x = radius * Math.sin(phi) * Math.cos(theta);
-            const y = radius * Math.sin(phi) * Math.sin(theta);
-            const z = radius * Math.cos(phi);
-
-            // Generate the particle at the calculated position
-            const command = `particle minecraft:${banMessage.particle} ${player.position.x + x} ${player.position.y + y} ${player.position.z + z}`;
-            
-            // Run the command asynchronously
-            await player.runCommandAsync({ command });
-        }
+        player.runCommandAsync(`particle minecraft:${banMessage.particle} ~1 ~1 ~1`);
+        player.runCommandAsync(`particle minecraft:${banMessage.particle} ~-1 ~-1 ~-1`);
+        player.runCommandAsync(`particle minecraft:${banMessage.particle} ~-1 ~1 ~1`);
+        player.runCommandAsync(`particle minecraft:${banMessage.particle} ~-1 ~1 ~`);
+        player.runCommandAsync(`particle minecraft:${banMessage.particle} ~1 ~ ~-1`);
+        
     } else {
+        player.runCommandAsync(`particle minecraft:${banMessage.particle} ~ ~ ~`);
+        player.runCommandAsync(`particle minecraft:${banMessage.particle} ~ ~ ~`);
+        player.runCommandAsync(`particle minecraft:${banMessage.particle} ~ ~ ~`);
+        player.runCommandAsync(`particle minecraft:${banMessage.particle} ~ ~ ~`);
+        player.runCommandAsync(`particle minecraft:${banMessage.particle} ~ ~ ~`);
         player.runCommandAsync(`particle minecraft:${banMessage.particle} ~ ~ ~`);
     }
 }
@@ -194,7 +206,11 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     const punishment = checkData.punishment?.toLowerCase();
     if(typeof punishment !== "string") throw TypeError(`Error: punishment is type of ${typeof punishment}. Expected "string"`);
     if(punishment === "none" || punishment === "") return;
-
+    if (currentVl > checkData.minVlbeforePunishment - 3) {
+        player.runCommandAsync("particle minecraft:totem_particle ~ ~ ~");
+        player.runCommandAsync("particle minecraft:totem_particle ~ ~ ~");
+        player.runCommandAsync("particle minecraft:totem_particle ~ ~ ~");
+    }
     if(currentVl > checkData.minVlbeforePunishment) {
 
 
@@ -215,22 +231,10 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     player.sendMessage("§4§klakjfdal;skdjfa;lskdjf;alskjdfa;lskjdfa;lksjdf;laskjdf;laskjdf;laskjdf;alskjdfa;lksjdf;alsjkfdla;skjdfa;lskdjfa;lsdjf;lasjdfl;aksjdfl;aksjdf;laksjdfl;kajsd;flkjaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
                 }
                 player.addTag("strict");
-                player.runCommandAsync("title @s title §4§kafdjfa;lskdjfal;skjdf;alksjdfk;aljsd;flkajsakldjfa;lsf");
-                player.runCommandAsync("title @s subtitle §4§kakl;fjasdlkjf;aslkdjfalk;sjdf;laksjdf;lakjsdfj;laksdf;lkasjfdlk;asjdf;lkajsdf");
-                player.runCommandAsync("title @s actionbar §4§k89041709387123987412983741092837401923048127340912734098127340987123497123948712834");     
-                function sleep(ms) {
-                    return new Promise(resolve => setTimeout(resolve, ms));
-                }
                 
-                async function demo() {
-                    for (let i = 0.5; i < 5; i++) {
-                        player.runCommandAsync(`tp "${player.name}" "${player.name}"`);
-                        await sleep(i * 1000);
-                    }
-                    console.log('Done');
-                }
                 
-                demo();
+                
+                
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically kicked by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been removed from you game for using an §6unfair advantage!"}]}`);
                 player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r >> §6Unfair Advantage.§b [§s${check}§b]`);
