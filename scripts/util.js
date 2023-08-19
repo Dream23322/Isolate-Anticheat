@@ -211,17 +211,24 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
         player.runCommandAsync("particle minecraft:totem_particle ~ ~ ~");
         player.runCommandAsync("particle minecraft:totem_particle ~ ~ ~");
     }
+    if(currentVl > checkData.minVlbeforePunishment - 2) {
+        player.runCommandAsync("title @s title §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
+        player.runCommandAsync("title @s subtitle §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
+        player.runCommandAsync("title @s actionbar §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");        
+    }
     if(currentVl > checkData.minVlbeforePunishment) {
 
 
         if (punishment === "kick") {
+            let banLength2;
             try {
                 //banAnimation(player, "type2");
                 setScore(player, "kickvl", kickvl + 1);
                 if(kickvl > config.kicksBeforeBan) {
                     player.addTag("by:§d Isolate Anticheat");
                     player.addTag(`reason:§c Isolate Anticheat caught you cheating!`);
-                    //player.addTag("time:86400000"); // 1 day ban
+                    banLength2 = parseTime("7d");
+                    player.addTag(`time:${Date.now() + banLength2}`);
                     player.addTag("isBanned");
                     setScore(player, "kickvl", 0);
                 }
