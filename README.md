@@ -51,9 +51,9 @@ C - Invalid keypresses
 
 
 # How to install Isolate Anticheat
-
+If you need to learn how to install isolate anticheat click [Here](https://github.com/Dream23322/Isolate-Anticheat/blob/main/hti.md)
 
 
 # Full Check list for Isolate Anticheat
-
+[Click Here](https://github.com/Dream23322/Isolate-Anticheat/blob/main/checklist.md)
 
