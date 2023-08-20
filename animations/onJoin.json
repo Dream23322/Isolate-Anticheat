@@ -76,6 +76,8 @@
 					"/scoreboard objectives add last_attack dummy",
 					"/scoreboard objectives add flyvl dummy",
 					"/scoreboard objectives add speedvl dummy",
+					"/scoreboard objectives add scaffoldAmount dummy",
+					"/scoreboard objectives add tickValue dummy",
 					// If enabled from previous login then activate
 					"/ability @s[tag=flying,m=!c] mayfly true"
 					// alert the user if Gametest Framework is not enabled
