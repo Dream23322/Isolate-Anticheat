@@ -1,6 +1,6 @@
 // @ts-check
 import * as Minecraft from "@minecraft/server";
-import { flag, banMessage, getClosestPlayer, getScore } from "./util.js";
+import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
 import { commandHandler } from "./commands/handler.js";
 import config from "./data/config.js";
 import { banList } from "./data/globalban.js";
@@ -17,7 +17,8 @@ const playerFlags = new Set();
 
 // The threshold can be adjusted based on your requirements
 const ROTATION_SPEED_THRESHOLD = config.modules.aimA.rotSpeed;
-
+// Create a map to store the number of blocks each player has placed in the current second
+const blocksPlaced = new Map();
 let previousRotation = null;
 let previousDifference = null;
 
@@ -104,7 +105,7 @@ Minecraft.system.runInterval(() => {
 		const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
 
 
-		// To prevent false flags we do this
+		// To reduce false flags we do this
 		if(player.hasTag("a") || player.hasTag("b") || player.hasTag("c")) {
 			// Remove all tags every tick
 			player.removeTag("a");
@@ -155,7 +156,22 @@ Minecraft.system.runInterval(() => {
 
 		playerRotations.set(player, rotation);
 		
-	
+		
+		// Scaffold/F = Checks for block place limit
+		if(config.modules.scaffoldF.enabled) {
+			const tickValue = getScore(player, "tickValue", 0);
+			const valueOfBlocks = getScore(player, "scaffoldAmount", 0);
+			if (tickValue > 19) {
+				if(valueOfBlocks > config.modules.scaffoldF.blocksPerSecond) {
+					flag(player, "Scaffold", "F", "Limit", "amount", valueOfBlocks, false);
+				}
+				setScore(player, "scaffoldAmount", 0);
+				setScore(player, "tickValue", 0);
+
+			} else {
+				setScore(player, "tickValue", tickValue + 1);
+			}
+		}
 		
 		
 		const selectedSlot = player.selectedSlot;
@@ -827,6 +843,10 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 	}
 
 	// Scaffold/F = Place limit check (coming soon!)
+	if(config.modules.scaffoldF.enabled) {
+		const valueOfBlocks = getScore(player, "scaffoldAmount", 0)
+		setScore(player, "scaffoldAmount", valueOfBlocks + 1);
+	}
 	if(config.modules.illegalitemsN.enabled && block.typeId.includes("shulker_box")) {
 		// @ts-expect-error
 		const container = block.getComponent("inventory").container;

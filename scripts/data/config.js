@@ -575,6 +575,12 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },
+        "scaffoldF": {
+            "enabled": true,
+            "blocksPerSecond": 10,
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
+        },
         "illegalitemsF": {
             "enabled": false,
             "length": 33,
