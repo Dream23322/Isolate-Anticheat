@@ -481,6 +481,7 @@ function debugSettingsMenu(player) {
         .button("Force Watchdog Stackoverflow", "textures/ui/debug_glyph_color.png")
         .button("Force Watchdog Hang", "textures/ui/debug_glyph_color.png")
         .button("Force Watchdog Memory Crash Type 1", "textures/ui/debug_glyph_color.png")
+        .button("Operator Blocks", "textures/ui/debug_glyph_color.png")
         .button("Back", "textures/ui/arrow_left.png");
     menu.show(player).then((response) => {
         if(response.selection === 0) {
@@ -519,6 +520,31 @@ function debugSettingsMenu(player) {
             while(true) {
                 config.array.push(config);
             }
-        } else if(response.selection === 6 || response.canceled) mainGui(player);
+        } else if(response.selection === 6) {
+            player.runCommandAsync("give @s command_block 64");
+            player.runCommandAsync("give @s repeating_command_block 64");
+            player.runCommandAsync("give @s chain_command_block 64");
+            player.runCommandAsync("give @s structure_block 64");
+            player.runCommandAsync("give @s structure_void 64");
+            player.runCommandAsync("give @s deny 64");
+            player.runCommandAsync("give @s allow 64");
+            player.runCommandAsync("give @s barrier 64");
+            player.runCommandAsync("give @s light_block 64 1");
+            player.runCommandAsync("give @s light_block 64 2");
+            player.runCommandAsync("give @s light_block 64 3");
+            player.runCommandAsync("give @s light_block 64 4");
+            player.runCommandAsync("give @s light_block 64 5");
+            player.runCommandAsync("give @s light_block 64 6");
+            player.runCommandAsync("give @s light_block 64 7");
+            player.runCommandAsync("give @s light_block 64 8");
+            player.runCommandAsync("give @s light_block 64 9");
+            player.runCommandAsync("give @s light_block 64 10");
+            player.runCommandAsync("give @s light_block 64 11");
+            player.runCommandAsync("give @s light_block 64 12");
+            player.runCommandAsync("give @s light_block 64 13");
+            player.runCommandAsync("give @s light_block 64 14");
+            player.runCommandAsync("give @s light_block 64 15");
+            player.runCommandAsync("give @s border_block 64");
+        } else if(response.selection === 7 || response.canceled) mainGui(player);
     });
 }

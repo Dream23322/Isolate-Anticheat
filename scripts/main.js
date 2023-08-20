@@ -97,15 +97,16 @@ Minecraft.system.runInterval(() => {
 
 	// Run the code for each player
 	for (const player of world.getPlayers()) {
+
+		// Gud calculations :fire:
 		const rotation = player.getRotation();
 		const playerVelocity = player.getVelocity();
-
-		
-
 		const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
+
+
 		// To prevent false flags we do this
 		if(player.hasTag("a") || player.hasTag("b") || player.hasTag("c")) {
-			// Remove all tags
+			// Remove all tags every tick
 			player.removeTag("a");
 			player.removeTag("b");
 			player.removeTag("c");
@@ -815,6 +816,17 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 			}
 		}	
 	}
+
+	// Scaffold/E = Speed limit check
+	if(config.modules.scaffoldE.enabled) {
+		if(!player.isFlying && !player.hasTag("op")) {
+			if(playerSpeed > config.modules.scaffoldE.speed && !player.hasTag("speed") || playerSpeed > config.modules.scaffoldE.speed - 0.1 && player.hasTag("strict")) {
+				flag(player, "Scaffold", "E", "Placement", "speed", playerSpeed, false);
+			}
+		}
+	}
+
+	// Scaffold/F = Place limit check (coming soon!)
 	if(config.modules.illegalitemsN.enabled && block.typeId.includes("shulker_box")) {
 		// @ts-expect-error
 		const container = block.getComponent("inventory").container;
@@ -1198,6 +1210,8 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			player.removeTag("b");
 		}
     }
+
+
 
 	/*
 	So you see a blanked out criticals check, this is beacuse there is no way to see if a player gave a critical hit... the second mojang adds it we get a good criticals check.
