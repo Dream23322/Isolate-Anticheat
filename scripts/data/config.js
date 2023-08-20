@@ -569,6 +569,12 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },
+        "scaffoldE": {
+            "enabled": true,
+            "speed": 2.5,
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
+        },
         "illegalitemsF": {
             "enabled": false,
             "length": 33,
@@ -634,6 +640,7 @@ export default
         "killauraD": {
             "enabled": true,
             "punishment": "ban",
+            "punishmentLength": "3d",
             "minVlbeforePunishment": 3
         },
         "illegalitemsJ": {

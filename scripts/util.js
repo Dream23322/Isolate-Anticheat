@@ -211,7 +211,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
         player.runCommandAsync("particle minecraft:totem_particle ~ ~ ~");
         player.runCommandAsync("particle minecraft:totem_particle ~ ~ ~");
     }
-    if(currentVl > checkData.minVlbeforePunishment - 2) {
+    if(currentVl > checkData.minVlbeforePunishment - 2 && currentVl < checkData.minVlbeforePunishment - 1) {
         player.runCommandAsync("title @s title §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
         player.runCommandAsync("title @s subtitle §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
         player.runCommandAsync("title @s actionbar §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");        
@@ -243,7 +243,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 
                 
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically kicked by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been removed from you game for using an §6unfair advantage!"}]}`);
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been removed from your game for using an §6unfair advantage!"}]}`);
                 player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r >> §6Unfair Advantage.§b [§s${check}§b]`);
                 // incase /kick fails, we despawn them from the world
             } catch (error) {
@@ -279,7 +279,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 } catch (error) {}
                 
                 player.addTag("isBanned");
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from you game for using an §6unfair advantage!"}]}`);
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage!"}]}`);
             }
 
         }

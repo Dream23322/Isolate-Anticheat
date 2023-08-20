@@ -1,7 +1,7 @@
 {
 	"format_version": 2,
 	"header": {
-		"name": "Isolate AntiCheat v0.5.1 - Beta",
+		"name": "Isolate AntiCheat v0.6 - Beta",
 		"description": "Isolate - The anticheat that seperates your server from hackers",
 		"uuid": "6cfeb67d-0e12-448e-82d7-aaf69b2aa64e",
 		"version": [0, 5, 0],
