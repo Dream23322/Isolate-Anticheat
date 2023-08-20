@@ -577,9 +577,9 @@ export default
         },
         "scaffoldF": {
             "enabled": true,
-            "blocksPerSecond": 10,
+            "blocksPerSecond": 7,
             "punishment": "kick",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 5
         },
         "illegalitemsF": {
             "enabled": false,

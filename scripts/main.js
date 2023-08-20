@@ -169,6 +169,9 @@ Minecraft.system.runInterval(() => {
 				setScore(player, "tickValue", 0);
 
 			} else {
+				if(valueOfBlocks > 0) {
+					if(config.debug) console.warn(`${new Date().toISOString()} | ${player.name} has placed ${valueOfBlocks} in ${tickValue} tick's`);
+				}
 				setScore(player, "tickValue", tickValue + 1);
 			}
 		}
@@ -844,8 +847,11 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 
 	// Scaffold/F = Place limit check (coming soon!)
 	if(config.modules.scaffoldF.enabled) {
-		const valueOfBlocks = getScore(player, "scaffoldAmount", 0)
-		setScore(player, "scaffoldAmount", valueOfBlocks + 1);
+		const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.y - player.location.y, 2) + Math.pow(block.location.z - player.location.z, 2));
+		if(distance < 2) {
+			const valueOfBlocks = getScore(player, "scaffoldAmount", 0)
+			setScore(player, "scaffoldAmount", valueOfBlocks + 1);
+		}
 	}
 	if(config.modules.illegalitemsN.enabled && block.typeId.includes("shulker_box")) {
 		// @ts-expect-error
