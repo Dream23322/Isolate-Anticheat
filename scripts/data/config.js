@@ -759,8 +759,12 @@ export default
             "enabled": true,
             "punishment": "kick",
             "minVlbeforePunishment": 15
+        },
+        "breakerA": {
+            "enabled": true,
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
         }
-
     },
     "misc_modules": {
         "lag_machine": {

@@ -687,6 +687,8 @@ Minecraft.system.runInterval(() => {
 				flag(player, "BadPackets", "7", "Packet", "actions", "Placement, Attacking", false);
 			}
 		}
+		player.removeTag("placing") 
+		player.removeTag("attacking")
 	}
 });
 
@@ -853,7 +855,6 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 	}
 
 	// Scaffold/F = Place limit check (Amount of blocks placed in a scaffold ish way per 20 ticks)
-
 	if(config.modules.scaffoldF.enabled) {
 		const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.y - player.location.y, 2) + Math.pow(block.location.z - player.location.z, 2));
 		if(distance < 2) {
@@ -900,15 +901,43 @@ world.afterEvents.blockBreak.subscribe((blockBreak) => {
 	const player = blockBreak.player;
 	const dimension = blockBreak.dimension;
 	const block = blockBreak.block;
+	const brokenBlockId = blockBreak.brokenBlockPermutation.type.id;
 
 	let revertBlock = false;
 
 	if(config.debug) console.warn(`${player.nameTag} has broken the block ${blockBreak.brokenBlockPermutation.type.id}`);
 	
-	if(getScore(player, "xray", 1) <= 1 && blockBreak.brokenBlockPermutation.typeId === "minecraft:diamond_ore") {
+	if(getScore(player, "xray", 1) <= 1 && brokenBlockId === "minecraft:diamond_ore") {
 		player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §b[§cXray§b]§r ${player.nameTag} has found §g1x Diamond Ore."}]}`);
-	} else if (getScore(player, "xray", 1) <= 1 && blockBreak.brokenBlockPermutation.typeId === "minecraft:ancient_debirs") {
+	} else if (getScore(player, "xray", 1) <= 1 && brokenBlockId === "minecraft:ancient_debirs") {
 		player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §b§c[Xray§b]§r ${player.nameTag} has found §g1x Ancient Debris."}]}`);
+	}
+
+	if(config.modules.breakerA.enabled) {
+    // Check if the block being broken is a bed
+		if(block.typeId.includes("minecraft:bed")) {
+			// Check the blocks around the player
+			let isBreakingThroughBlock = false;
+			for (let x = -1; x <= 1; x++) {
+				for (let y = -1; y <= 1; y++) {
+					for (let z = -1; z <= 1; z++) {
+						const blockAroundPlayer = dimension.getBlock({ x: player.location.x + x, y: player.location.y + y, z: player.location.z + z });
+						if (blockAroundPlayer.typeId !== "minecraft:air") {
+							isBreakingThroughBlock = true;
+							break;
+						}
+					}
+					if(isBreakingThroughBlock) break;
+				}
+				if(isBreakingThroughBlock) break;
+			}
+
+			if(isBreakingThroughBlock) {
+				// The player is breaking a bed through a block, flag for BedFucker
+				flag(player, "Breaker", "A", "Misc", "blocks between bed", "true", false);
+				revertBlock = true;
+			}
+		}
 	}
 
 	// nuker/a = checks if a player breaks more than 3 blocks in a tick
@@ -917,8 +946,8 @@ world.afterEvents.blockBreak.subscribe((blockBreak) => {
 
 		if(player.blocksBroken > config.modules.nukerA.maxBlocks) {
 			revertBlock = true;
-			flag(player, "Nuker", "A", "Misc", "blocksBroken", player.blocksBroken);
-			currentVL++;
+			flag(player, "Nuker", "A", "Misc", "blocksBroken", player.blocksBroken, true);
+			
 		}
 	}
 
@@ -942,7 +971,7 @@ world.afterEvents.blockBreak.subscribe((blockBreak) => {
 
 		if([...checkGmc].length !== 0) {
 			revertBlock = true;
-			flag(player, "InstaBreak", "A", "Exploit", "block", blockBreak.brokenBlockPermutation.type.id);
+			flag(player, "InstaBreak", "A", "Exploit", "block", blockBreak.brokenBlockPermutation.type.id, true);
 			currentVL++;
 		}
 	}
