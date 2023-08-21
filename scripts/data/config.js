@@ -751,9 +751,14 @@ export default
         "badpackets2": {
             "enabled": true,
             "speed": 7.3,
-            "punishment": "ban",
+            "punishment": "kick",
             "punishmentLength": "1m",
-            "minVlbeforePunishment": 3
+            "minVlbeforePunishment": 1
+        },
+        "badpackets7": {
+            "enabled": true,
+            "punishment": "kick",
+            "minVlbeforePunishment": 15
         }
 
     },

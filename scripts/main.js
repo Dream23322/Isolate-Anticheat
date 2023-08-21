@@ -680,6 +680,13 @@ Minecraft.system.runInterval(() => {
 			player.firstAttack = Date.now();
 			player.cps = 0;
 		}
+
+		// BadPackets/7 = Checks for placing and attacking
+		if(config.modules.badpackets7.enabled) {
+			if(player.hasTag("placing") && player.hasTag("attacking")) {
+				flag(player, "BadPackets", "7", "Swing", "actions", "Placement, Attacking", false);
+			}
+		}
 	}
 });
 
@@ -852,6 +859,10 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 			const valueOfBlocks = getScore(player, "scaffoldAmount", 0)
 			setScore(player, "scaffoldAmount", valueOfBlocks + 1);
 		}
+	}
+
+	if(!player.hasTag("placing")) {
+		player.addTag("placing");
 	}
 	if(config.modules.illegalitemsN.enabled && block.typeId.includes("shulker_box")) {
 		// @ts-expect-error
@@ -1257,7 +1268,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			flag(player, "KillAura", "C", "Combat", "entitiesHit", player.entitiesHit.length, true);
 			player.addTag("strict");
 		}
-	
+
 
 	// reach/A = check if a player hits an entity more then 5.1 blocks away
 	if(config.modules.reachA.enabled) {
@@ -1284,6 +1295,9 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	// some (bad) hacks use this to bypass anti-movement cheat checks
 	if(config.modules.badpackets3.enabled && entity.id === player.id) flag(player, "BadPackets", "3", "Exploit");
 
+	if(!player.hasTag("attacking")) {
+		player.addTag("attacking")
+	}
 	// check if the player was hit with the UI item, and if so open the UI for that player
 	if(config.customcommands.ui.enabled && player.hasTag("op") && entity.typeId === "minecraft:player") {
 		// @ts-expect-error
