@@ -157,7 +157,7 @@ Minecraft.system.runInterval(() => {
 		playerRotations.set(player, rotation);
 		
 		
-		// Scaffold/F = Checks for block place limit
+		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
 		if(config.modules.scaffoldF.enabled) {
 			const tickValue = getScore(player, "tickValue", 0);
 			const valueOfBlocks = getScore(player, "scaffoldAmount", 0);
@@ -167,7 +167,6 @@ Minecraft.system.runInterval(() => {
 				}
 				setScore(player, "scaffoldAmount", 0);
 				setScore(player, "tickValue", 0);
-
 			} else {
 				if(valueOfBlocks > 0) {
 					if(config.debug) console.warn(`${new Date().toISOString()} | ${player.name} has placed ${valueOfBlocks} in ${tickValue} tick's`);
@@ -634,6 +633,7 @@ Minecraft.system.runInterval(() => {
 		}
 
 		//Scythe check :skull:
+		// This is a hopeless piece of code and I might remove it
 		if(config.modules.flyG.enabled && player.fallDistance < config.modules.flyG.fallDistance && !player.hasTag("trident") && !player.hasTag("ground") && !player.hasTag("nofly") && player.hasTag("strict")) {
 			// Stopping false flags
 			if(!player.isJumping && !player.isGliding && !player.isFlying && !player.hasTag("jump") && !player.hasTag("op")) {
@@ -684,7 +684,7 @@ Minecraft.system.runInterval(() => {
 		// BadPackets/7 = Checks for placing and attacking
 		if(config.modules.badpackets7.enabled) {
 			if(player.hasTag("placing") && player.hasTag("attacking")) {
-				flag(player, "BadPackets", "7", "Swing", "actions", "Placement, Attacking", false);
+				flag(player, "BadPackets", "7", "Packet", "actions", "Placement, Attacking", false);
 			}
 		}
 	}
@@ -852,7 +852,8 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 		}
 	}
 
-	// Scaffold/F = Place limit check (coming soon!)
+	// Scaffold/F = Place limit check (Amount of blocks placed in a scaffold ish way per 20 ticks)
+
 	if(config.modules.scaffoldF.enabled) {
 		const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.y - player.location.y, 2) + Math.pow(block.location.z - player.location.z, 2));
 		if(distance < 2) {
@@ -861,6 +862,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 		}
 	}
 
+	// This is used for other checks
 	if(!player.hasTag("placing")) {
 		player.addTag("placing");
 	}
