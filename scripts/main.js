@@ -686,9 +686,26 @@ Minecraft.system.runInterval(() => {
 			if(player.hasTag("placing") && player.hasTag("attacking")) {
 				flag(player, "BadPackets", "7", "Packet", "actions", "Placement, Attacking", false);
 			}
+			if(player.hasTag("placing") && player.hasTag("breaking")) {
+				flag(player, "BadPackets", "7", "Packet", "actions", "Placement, Breaking", false);
+			}
+			if (player.hasTag("attacking") && !player.hasTag("breaking")) {
+				flag(player, "BadPackets", "7", "Packet", "actions", "Breaking, Attacking", false);
+			}
+			if(player.hasTag("usingItem") && player.hasTag("attacking")) {
+				flag(player, "BadPackets", "7", "Packet", "actions", "ItemUse, Attacking", false);
+			}
+			if(player.hasTag("usingItem") && player.hasTag("placing")) {
+				flag(player, "BadPackets", "7", "Packet", "actions", "ItemUse, Placement", false);
+			}
+			if(player.hasTag("usingItem") && player.hasTag("breaking")) {
+				flag(player, "BadPackets", "7", "Packet", "actions", "ItemUse, Breaking", false);
+			}
 		}
 		player.removeTag("placing") 
 		player.removeTag("attacking")
+		player.removeTag("usingItem")
+		player.removeTag("breaking")
 	}
 });
 
@@ -833,11 +850,12 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 	if(config.modules.scaffoldD.enabled) {
 		const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 		if(!player.isFlying && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
-			// The actual check		
+			// Get items and stuffs
 			const container = player.getComponent('inventory').container;
 			const selectedSlot = player.selectedSlot;
 			const item = container.getItem(selectedSlot);
 
+			// Check to see if the player doesnt place the held item
 			if(item.typeId !== block.typeId) {
 				flag(player, "Scaffold", "D", "Placement", "heldItem", `${item.typeId},blockId=${block.typeId}`, false);
 				undoPlace = true;
@@ -904,6 +922,9 @@ world.afterEvents.blockBreak.subscribe((blockBreak) => {
 	const brokenBlockId = blockBreak.brokenBlockPermutation.type.id;
 
 	let revertBlock = false;
+	if(!player.hasTag("breaking")) {
+		player.addTag("breaking");
+	}
 
 	if(config.debug) console.warn(`${player.nameTag} has broken the block ${blockBreak.brokenBlockPermutation.type.id}`);
 	
@@ -1385,6 +1406,10 @@ world.beforeEvents.itemUse.subscribe((itemUse) => {
 			itemUse.cancel = true;
 		}
 		player.lastThrow = Date.now();
+	}
+
+	if(!player.hasTag("usingItem")) {
+		player.addTag("usingItem")
 	}
 
 	// patch bypasses for the freeze system
