@@ -7,7 +7,7 @@ export default
     "kicksBeforeBan": 10,
     clientSpam: {
         // Change to mute if you want to mute the player who used the horion/zephyr spam message
-        "punishment": "ban"
+        "punishment": "mute"
     },
     "ViolationsBeforeBan": 30,
 
