@@ -32,15 +32,9 @@ world.beforeEvents.chatSend.subscribe((msg) => {
 
 	if(message.includes("the best minecraft bedrock utility mod") || message.includes("disepi/ambrosial")) {
 		msg.cancel = true;
-		if(config.clientSpam.punishment == "mute") player.runCommandAsync("tag @s add isMuted");
-		
-		if(config.clientSpam.punishment == "ban") {
-			player.addTag("by:§uIsolate §cAnticheat");
-			player.addTag(`reason:The use of a hacked client spammer was detected!`);
-			player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§§j[§uIsolate§j]§r ${player.name} has been banned by §uIsolate Anticheat§r for using a client Spammer!"}]}`);
-			player.runCommandAsync(`tellraw @a {"rawtext":[{"text":"§r§j[§uIsolate Anticheat§j]§r ${player.name} has been removed from your game by §uIsolate Anticheat§r for using an §6Unfair-Advantage§r!"}]}`);    
-	
-			player.addTag("isBanned");
+		if(config.clientSpam.punishment == "mute") {
+			player.runCommandAsync("tag @s add isMuted");
+			player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate Anticheat§j]§r ${player.name} had a message blocked because it had a hacked client involved"}]}`);    
 		}
 		
 	}
@@ -79,16 +73,16 @@ world.afterEvents.chatSend.subscribe((msg) => {
 
 	// Spammer/B = checks if someone sends a message while swinging their hand
 	if(config.modules.spammerB.enabled && player.hasTag('left') && !player.getEffect(Minecraft.MinecraftEffectTypes.miningFatigue))
-		return flag(player, "Spammer", "B", "Combat", undefined, undefined, undefined, msg);
+		return flag(player, "Spammer", "B", "Combat", undefined, undefined, true, msg);
 		currentVL++;
 
 	// Spammer/C = checks if someone sends a message while using an item
 	if(config.modules.spammerC.enabled && player.hasTag('right'))
-		return flag(player, "Spammer", "C", "Misc", undefined, undefined, undefined, msg);
+		return flag(player, "Spammer", "C", "Misc", undefined, undefined, true, msg);
 		currentVL++;
 	// Spammer/D = checks if someone sends a message while having a GUI open
 	if(config.modules.spammerD.enabled && player.hasTag('hasGUIopen'))
-		return flag(player, "Spammer", "D", "Misc", undefined, undefined, undefined, msg);
+		return flag(player, "Spammer", "D", "Misc", undefined, undefined, true, msg);
 		currentVL++;
 	// commandHandler(player, msg);
 });
@@ -689,7 +683,7 @@ Minecraft.system.runInterval(() => {
 			if(player.hasTag("placing") && player.hasTag("breaking")) {
 				flag(player, "BadPackets", "7", "Packet", "actions", "Placement, Breaking", false);
 			}
-			if (player.hasTag("attacking") && !player.hasTag("breaking")) {
+			if (player.hasTag("attacking") && player.hasTag("breaking")) {
 				flag(player, "BadPackets", "7", "Packet", "actions", "Breaking, Attacking", false);
 			}
 			if(player.hasTag("usingItem") && player.hasTag("attacking")) {
