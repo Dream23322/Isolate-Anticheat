@@ -3,7 +3,9 @@
 import * as Minecraft from "@minecraft/server";
 import config from "./data/config.js";
 import data from "./data/data.js";
-import lastGroundPositionLog from "./main.js";
+import { setParticle } from "./data/api/api.js";
+
+
 const world = Minecraft.world;
 export function crashPlayer(player) {
     player.runCommandAsync("title @s title §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
@@ -176,12 +178,12 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     if(cancelObject) cancelObject.cancel = true;
 
     if(shouldTP) player.teleport(check === "Crasher" ? {x: 30000000, y: 30000000, z: 30000000} : {x: player.location.x, y: player.location.y, z: player.location.z}, {dimension: player.dimension, rotation: {x: 0, y: 0}, keepVelocity: false});
-    if(shouldTP && check === "fly") {
-        const lastGroundPosition = lastGroundPositionLog.get(player);
-        if(lastGroundPosition) {
-            player.teleport(lastGroundPosition);
-        }
-    }
+    // if(shouldTP && check === "fly") {
+    //     const lastGroundPosition = lastGroundPositionLog.get(player);
+    //     if(lastGroundPosition) {
+    //         player.teleport(lastGroundPosition);
+    //     }
+    // }
     const scoreboardObjective = check === "CommandBlockExploit" ? "cbevl" : `${check.toLowerCase()}vl`;
 
     if(!world.scoreboard.getObjective(scoreboardObjective)) {
@@ -238,7 +240,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     setScore(player, "kickvl", 0);
                 }
                 player.runCommandAsync("function tools/resetwarns");
-                
+                setParticle(player, "explode");
                 for (let i = 0; i < 3; i++) {
                     player.sendMessage("§4§klakjfdal;skdjfa;lskdjf;alskjdfa;lskjdfa;lksjdf;laskjdf;laskjdf;laskjdf;alskjdfa;lksjdf;alsjkfdla;skjdfa;lskdjfa;lsdjf;lasjdfl;aksjdfl;aksjdf;laksjdfl;kajsd;flkjaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
                 }
