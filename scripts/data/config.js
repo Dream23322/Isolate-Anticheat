@@ -316,6 +316,11 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 0
         },
+        "exploitB": {
+            "enabled": true,
+            "punishment": "kick",
+            "minVlbeforePunishment": 0
+        },
         // This exploit has been entirely patched out.
         "crasherA": {
             "enabled": false,
@@ -790,6 +795,11 @@ export default
             "enabled": true,
             "pos_diff": 0.09,
             "time_int": 0.5
+        },
+        "badpackets8": {
+            "enabled": true,
+            "punishment": "kick",
+            "minVlbeforePunishment": 5
         }
     },
     "misc_modules": {
