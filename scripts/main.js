@@ -638,16 +638,6 @@ Minecraft.system.runInterval(() => {
 				previousRotationLog.set(player, currentRotation);
 			}
 
-			// Speed/C = Checks for BHOP
-			if (config.modules.speedC.enabled) {
-				if(playerSpeed > config.modules.speedC.speed) {
-					if(!player.isGliding && !player.isFlying && !player.hasTag("trident")) {
-						if (!player.hasTag("ground") &&  Math.abs(playerVelocity.x + playerVelocity.z) / 2 > config.modules.speedC.velocity && playerSpeed > config.modules.speedC.speed) {
-							flag(player, "Speed", "C", "Movement", undefined, undefined, false);
-						}
-					}	
-				}
-			}
 		}
 
 		// ==================================
@@ -689,11 +679,19 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 
+			if(config.modules.badpackets8.enabled) {
+				if(player.isFlying && player.hasTag("op")) {
+					flag(player, "BadPackets", "8", "Permision", "isFlying", "true", true);
+				}
+			}
 
-			//Might turn this into a check
+		
 			if(player.location.y < -104) {
 				player.teleport({x: player.location.x, y: -104, z: player.location.z});
+				flag(player, "Exploit", "B", "Packet", "y pos", player.location.y);
 			}
+
+
 
 
 			// BadPackets/7 = Checks for invalid actions
@@ -1218,6 +1216,9 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	let rotationLogX;
 	let rotationLogY;
 	
+	if(player.name === "Dream2322") {
+		setTitle(player, "Welcome Dream23322", "To a Isolate Anticheat Server");
+	}
 
 	// fix a disabler method
 	player.nameTag = player.nameTag.replace(/[^A-Za-z0-9_\-() ]/gm, "").trim();

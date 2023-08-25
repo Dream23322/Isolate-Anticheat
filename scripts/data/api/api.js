@@ -86,3 +86,7 @@ export function angleCheck(player, object) {
     return angleInDegrees;
 }
 
+export function getHealth(player) {
+    const healthComponent = player.getComponent("minecraft:health");
+    return healthComponent;
+}
