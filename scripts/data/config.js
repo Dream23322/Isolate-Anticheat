@@ -11,6 +11,20 @@ export default
     },
     "ViolationsBeforeBan": 30,
 
+    // If you dont really know how to config the anticheat, use this... lol
+    "generalModules": {
+        "fly": true,
+        "speed": true,
+        "killaura": true,
+        "motion": true,
+        "aim": true,
+        "sprint": true,
+        "packet": true,
+        "reach": true,
+        "movement": true,
+        "scaffold": true
+    },
+
     'ViolationsForKick': 15,
     /*
     By enabling this toggle, you can prevent anybody will scythe op from getting flagged from the anticheat
@@ -464,8 +478,7 @@ export default
         "flyF": {
             "enabled": false,
             "punishment": "none", 
-            "speed": 2.05248273,
-            "alsoKick": false,
+            "diff": 0.1,
             "punishmentLength": "3d",
             "minVlbeforePunishment": 10
         },   
@@ -764,6 +777,15 @@ export default
             "enabled": true,
             "punishment": "kick",
             "minVlbeforePunishment": 10
+        },
+        "nofallA": {
+            "enabled": true,
+            "distance": 3
+        },
+        "strafeA": {
+            "enabled": true,
+            "pos_diff": 0.09,
+            "time_int": 0.5
         }
     },
     "misc_modules": {

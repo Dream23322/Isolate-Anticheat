@@ -27,3 +27,4 @@ scoreboard players set @s[type=player,scores={speedvl=1..}] speedvl 0
 scoreboard players set @s[type=player,scores={motionvl=1..}] motionvl 0
 scoreboard players set @s[type=player,scores={scaffoldvl=1..}] scaffoldvl 0
 scoreboard players set @s[type=player,scores={aimvl=1..}] aimvl 0
+scoreboard players set @s[type=player,scores={strafevl=1..}] strafevl 0
