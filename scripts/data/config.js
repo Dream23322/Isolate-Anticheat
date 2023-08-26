@@ -235,6 +235,11 @@ export default
             "enabled": true,
             "requiredTags": ["op"],
             "aliases": ["ver","about"]
+        },
+        "about": {
+            "enabled": true,
+            "requiredTags": ["op"],
+            "aliases": ["what", "a", "info", "?", "define", "def"]
         }
     },
     "modules": {
@@ -313,17 +318,20 @@ export default
         },
         "exploitA": {
             "enabled": true,
+            "description": "Checks for lag machines",
             "punishment": "kick",
             "minVlbeforePunishment": 0
         },
         "exploitB": {
             "enabled": true,
+            "description": "Checks for being below world",
             "punishment": "kick",
             "minVlbeforePunishment": 0
         },
         // This exploit has been entirely patched out.
         "crasherA": {
             "enabled": false,
+            "description":"Checks for old horion crasher method, some clients may still use them",
             "punishment": "ban",
             "punishmentLength": "14d",
             "minVlbeforePunishment": 1
@@ -348,6 +356,7 @@ export default
         },
         "reachA": {
             "enabled": true,
+            "description": "Checks for invalid reach",
             "reach": 6.65,
             "entities_blacklist": [
                 "minecraft:enderman",
@@ -362,11 +371,13 @@ export default
         "aimA": {
             "enabled": true,
             "rotSpeed": 100,
+            "description":"Checks for fast head snaps",
             "punishment": "kick",
             "minVlbeforePunishment": 20
         },
         "aimB": {
             "enabed": true,
+            "description":"Checks for perfect x,y movement",
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },
@@ -377,6 +388,7 @@ export default
         },
         "noslowA": {
             "enabled": true,
+            "description": "Checks for going to fast while using an item, false flags with tridents",
             "speed": 0.22,
             "maxSpeed": 0.36,
             "punishment": "kick",
@@ -401,6 +413,7 @@ export default
         },
         "invalidsprintA": {
             "enabled": true,
+            "description": "Checks for sprinting with blindness",
             "punishment": "none",
             "minVlbeforePunishment": 0
         },
@@ -418,12 +431,14 @@ export default
         },
         "nukerA": {
             "enabled": false,
+            "description":"Checks for breaking too many blocks in a tick",
             "maxBlocks": 3,
             "punishment": "none",
             "minVlbeforePunishment": 0
         },
         "speedA": {
             "enabled": true,
+            "description":"Checks for impossible speeds",
             "speed": 2.45308376787520382350924578093478523094857280934723486583462938756498326523489572903485723890456283745623495632487562439855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459639855731187276097459609699706957960896757976086785974598608098765432123456789098765432345678876543456567678905720894752389047529034758324765723804634650384752389045342750234682346823468234682346823468578907560452368754674679548289546870846876575946058978594760586775685786756,
             "checkForSprint": false,
             "checkForJump": true,
@@ -432,6 +447,7 @@ export default
         },     
         "speedB": {
             "enabled": true,
+            "description": "Checks for keeping speed while turning",
             "speed": 2.45,
             "velocity": 0.412,
             "checkForSprint": false,
@@ -454,6 +470,7 @@ export default
         },    
         "flyB": {
             "enabled": true,
+            "description":"Checks for invalid vertical velocity",
             "minVelocity": 0.53234201,
             "punishment": "none",
             "MaxHVelocity": 0.5234,
@@ -462,6 +479,7 @@ export default
         "flyC": {
             "enabled": true,
             "velocity": 0.5423,
+            "description":"Checks for invalid speed and velocity in air",
             "hVelocity": 0.525,
             "punishment": "kick",
             "punishmentLength": "5m",
@@ -470,12 +488,14 @@ export default
         "flyD": {
             "enabled": true,
             "Velocity": 0.6,
+            "description":"Checks for invalid horizontal velocity in air",
             "punishment": "kick",
             "punishmentLength": "5m",
             "minVlbeforePunishment": 5
         },    
         "flyE": {
             "enabled": true,
+            "description":"Checks for invalid horizontal velocity in air",
             "hVelocity": 0.512,
             "punishment": "kick",
             "punishmentLength": "5d",
@@ -486,6 +506,7 @@ export default
         // The check is broken
         "flyF": {
             "enabled": false,
+            "description":"Checks for constant Y pos in air",
             "punishment": "none", 
             "diff": 0.1,
             "punishmentLength": "3d",
@@ -494,6 +515,7 @@ export default
         // This scythe check is so very fucking shit it annoys the piss out of me.
         "flyG": {
             "enabled": true,
+            "description": "Checks for invalid Y movements (Scythe Check So Bad)",
             "fallDistance": 0,
             "punishment": "kick",
             "punishmentLength": "1m",
@@ -569,6 +591,7 @@ export default
         },
         "killauraC": {
             "enabled": true,
+            "description": "Checks for hitting multiple entities at once",
             "entities": 2,
             "punishment": "kick",
             "punishmentLength": "3m",
@@ -576,29 +599,34 @@ export default
         },
         "scaffoldB": {
             "enabled": true,
+            "description": "Checks for 60 degree angle, which is a bypass on horion",
             "punishment": "kick",
             "punishmentLength": "30m",
             "minVlbeforePunishment": 3
         },
         "scaffoldC": {
             "enabled": true,
+            "description": "Checks for not looking where a player is placing",
             "punishment": "kick", 
             "angle": 45,
             "minVlbeforePunishment": 10
         },
         "scaffoldD": {
             "enabled": true,
+            "description":"Checks for invalid slots",
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },
         "scaffoldE": {
             "enabled": true,
+            "description": "Checks for going too fast while placing",
             "speed": 2.5,
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },
         "scaffoldF": {
             "enabled": true,
+            "description":"Checks for placing too many blocks in 20 ticks",
             "blocksPerSecond": 7,
             "punishment": "kick",
             "minVlbeforePunishment": 5
@@ -612,6 +640,7 @@ export default
         // This exploit has been entirely patched out.
         "badpackets3": {
             "enabled": true,
+            "description":"Checks for self-hit",
             "punishment": "kick",
             "punishmentLength": "",
             "minVlbeforePunishment": 1
@@ -620,6 +649,7 @@ export default
         "autoclickerA": {
             "enabled": true,
             "maxCPS": 15,
+            "description":"Checks for CPS over config amount",
             "checkCPSAfter": 1000,
             "punishment": "none",
             "minVlbeforePunishment": 0
@@ -641,6 +671,7 @@ export default
         },
         "autotoolA": {
             "enabled": true,
+            "description": "Checks for instant slot change after breaking of a block",
             "startBreakDelay": 90,
             "punishment": "none",
             "minVlbeforePunishment": 0
@@ -667,6 +698,7 @@ export default
         },
         "killauraD": {
             "enabled": true,
+            "description": "Checks for looking down when attacking something out of range",
             "punishment": "ban",
             "punishmentLength": "3d",
             "minVlbeforePunishment": 3
@@ -706,6 +738,7 @@ export default
         },
         "instabreakA": {
             "enabled": true,
+            "description": "Checks for breaking unbreakable blocks",
             "unbreakable_blocks": [
                 "minecraft:bedrock",
                 "minecraft:end_portal",
@@ -740,9 +773,6 @@ export default
         "killauraE": {
             "enabled": true
         },
-        "speedB": {
-            "enabled": true
-        },
         "jesusA": {
             "enabled": true
         },
@@ -754,12 +784,14 @@ export default
         "motionA": {
             "enabled": true,
             "speed": 11.5,
+            "description": "Checks for really high speed",
             "punishment": "ban",
             "punishmentLength": "30d",
             "minVlbeforePunishment": 2
         },
         "motionB": {
             "enabled": true,
+            "description": "Checks for invalid jumping",
             "height": -1.11,
             "punishment": "kick",
             "minVlbeforePunishment": 100
@@ -772,6 +804,7 @@ export default
         },
         "badpackets2": {
             "enabled": true,
+            "description": "Checks for TP like motion",
             "speed": 7.3,
             "punishment": "kick",
             "punishmentLength": "1m",
@@ -779,16 +812,19 @@ export default
         },
         "badpackets7": {
             "enabled": true,
+            "description": "Checks for invalid actions",
             "punishment": "kick",
             "minVlbeforePunishment": 15
         },
         "breakerA": {
             "enabled": true,
+            "description": "Checks for breaking bed through blocks",
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },
         "nofallA": {
             "enabled": true,
+            "description": "Checks for no fall damage when falling",
             "distance": 3
         },
         "strafeA": {
@@ -798,6 +834,7 @@ export default
         },
         "badpackets8": {
             "enabled": true,
+            "description": "Checks for flying without permissions",
             "punishment": "kick",
             "minVlbeforePunishment": 5
         }
