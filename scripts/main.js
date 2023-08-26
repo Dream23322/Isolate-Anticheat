@@ -13,6 +13,9 @@ const world = Minecraft.world;
 // Create a map to store the previous speed and rotation of each player
 const previousSpeedLog = new Map();
 const previousRotationLog = new Map();
+const oldOldSpeed = new Map();
+
+const oldOldDiff = new Map();
 const playerRotations = new Map();
 const playerDifferences = new Map();
 const playerFlags = new Set();
@@ -141,6 +144,8 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.aim) {
 			// If there is a previous rotation stored
 			if (prevRotation) {
+				//const currentDiff = prevRotation
+				//const oldDiff = prevDiff.get(player) || currentDiff
 
 				// Maths go brrrrrrrr
 				const deltaYaw = rotation.y - prevRotation.y;
@@ -170,9 +175,26 @@ Minecraft.system.runInterval(() => {
 						playerFlags.delete(player);
 					}
 				}
+
+				// Aim/C = Checks for smoothed rotation
+				if (config.modules.aimC.enabled) {
+					const oldDiff = oldOldDiff.get(player) || 0;
+					const currentDiff = Math.sqrt(deltaYaw**2 + deltaPitch**2);
+					const smoothRotation = Math.abs(currentDiff - oldDiff) <= 0.1 && Math.abs(currentDiff - oldDiff) >= 0;
+					
+					if (smoothRotation) {
+						playerFlags.add(player);
+						player.addTag("c");
+					} else {
+						playerFlags.delete(player);
+					}
+					
+					oldOldDiff.set(player, currentDiff);
+				}
+  
 			}
 	
-
+			
 			playerRotations.set(player, rotation);
 		}
 		
@@ -570,25 +592,6 @@ Minecraft.system.runInterval(() => {
 					}          
 				}
 			}
-			// Fly/F = Checks for constant Y position (1.81e-15 precision)
-			if(config.modules.flyF.enabled && !player.hasTag("op") && !player.isJumping && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.isFlying && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("damaged")) {
-			
-				// Get the player's current y-position
-				const currentYPos = player.location.y;
-
-				// Get the player's last y-position
-				const lastYPos = lastYPosLog.get(player);
-
-				// If the player's current y-position is the same or greater than their last y-position, flag for Fly
-				if(lastYPos !== undefined && (currentYPos === lastYPos || currentYPos > lastYPos + 1.81e-15) && aroundAir(player) === true) {
-					flag(player, "Fly", "F", "Movement", "yPosition", currentYPos, false);
-				}
-
-				// Update the player's last y-position
-				lastYPosLog.set(player, currentYPos);
-			
-			}	
-
 			// Fly/G
 			//Scythe check :skull:
 			// This is a hopeless piece of code and I might remove it
@@ -619,7 +622,7 @@ Minecraft.system.runInterval(() => {
 			}	
 
 			// Speed/B
-			if(config.modules.speedB.enabled) {
+			if(config.modules.speedB.enabled || config.modules.flyF.enabled) {
 				// Get the player's current speed and rotation
 				const currentSpeed = playerSpeed
 				const currentRotation = rotation.y;
@@ -627,15 +630,20 @@ Minecraft.system.runInterval(() => {
 				// Get the player's previous speed and rotation
 				const oldSpeed = previousSpeedLog.get(player) || currentSpeed;
 				const oldRotation = previousRotationLog.get(player) || currentRotation;
+				const oldSpeed2 = oldOldSpeed.get(player) || oldSpeed;
 	
 				// If the player's rotation has changed but their speed has not decreased, flag for Speed
 				if(Math.abs(currentRotation - oldRotation) > 30 && currentSpeed >= oldSpeed && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.4) {
 					flag(player, "Speed", "B", "Movement", "rotationDiff", `${Math.abs(currentRotation - oldRotation)},speed=${currentSpeed}`)
 				}
+
+
 	
 				// Update the player's previous speed and rotation
+				oldOldSpeed.set(player, oldSpeed);
 				previousSpeedLog.set(player, currentSpeed);
 				previousRotationLog.set(player, currentRotation);
+				
 			}
 
 		}
@@ -1444,6 +1452,10 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			if(player.hasTag("b")) {
 				flag(player, "Aim", "B", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
 				player.removeTag("b");
+			}
+			if(player.hasTag("c")) {
+				flag(player, "Aim", "C", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
+				player.removeTag("c");
 			}
 		}
 	}
