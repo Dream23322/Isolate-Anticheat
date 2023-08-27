@@ -21,16 +21,6 @@ const playerRotations = new Map();
 const playerDifferences = new Map();
 const playerFlags = new Set();
 
-// Create a map to store the last y-positions of each player
-const lastYPosLog = new Map();
-
-// Create a map to store the last ground positions of each player
-const lastGroundPositionLog = new Map();
-// Create a map to store the previous y-velocities of each player
-const previousYPosLog = new Map();
-// Create a map to store the expected positions and times of each player
-const expectedPositionLog = new Map();
-const expectedTimeLog = new Map();
 
 // Create a map to store the previous health of each player
 const previousHealth = new Map();
