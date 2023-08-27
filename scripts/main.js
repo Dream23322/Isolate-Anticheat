@@ -8,6 +8,7 @@ import { banList } from "./data/globalban.js";
 import data from "./data/data.js";
 import { mainGui, playerSettingsMenuSelected } from "./features/ui.js";
 import { banplayer } from "./data/paradoxban.js";
+const system = Minecraft.system;
 
 const world = Minecraft.world;
 // Create a map to store the previous speed and rotation of each player
@@ -35,8 +36,7 @@ const expectedTimeLog = new Map();
 const previousHealth = new Map();
 const previousFallDistance = new Map();
 
-// The threshold can be adjusted based on your requirements
-const ROTATION_SPEED_THRESHOLD = config.modules.aimA.rotSpeed;
+
 // Create a map to store the number of blocks each player has placed in the current second
 const blocksPlaced = new Map();
 let previousRotation = null;
@@ -52,10 +52,6 @@ world.beforeEvents.chatSend.subscribe((msg) => {
 
 	if(message.includes("the best minecraft bedrock utility mod") || message.includes("disepi/ambrosial")) {
 		msg.cancel = true;
-		if(config.clientSpam.punishment == "mute") {
-			player.runCommandAsync("tag @s add isMuted");
-			player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate Anticheat§j]§r ${player.name} had a message blocked because it had a hacked client involved"}]}`);    
-		}
 		
 	}
 
@@ -115,6 +111,19 @@ world.afterEvents.chatSend.subscribe((msg) => {
 	// commandHandler(player, msg);
 });
 
+world.afterEvents.entityHurt.subscribe((eventData) => {
+	const entity = eventData.entity;
+  
+	// Check if the entity is a player
+	if (entity.__identifier__ === "minecraft:player") {
+	  const player = entity.__identifier__;
+  
+	  // Add your desired actions when the player is hurt
+	  // For example, you can add a tag to the player or execute a command
+	  player.addTag("damaged");
+	  // Execute your custom code here
+	}
+});
 Minecraft.system.runInterval(() => {
   if (config.modules.itemSpawnRateLimit.enabled) data.entitiesSpawnedInLastTick = 0;
 
@@ -152,6 +161,8 @@ Minecraft.system.runInterval(() => {
 				const deltaPitch = rotation.x - prevRotation.x;
 				const diffYaw = deltaYaw;
 				const diffPitch = deltaPitch;
+				// The threshold can be adjusted based on your requirements
+				const ROTATION_SPEED_THRESHOLD = config.modules.aimA.rotSpeed;
 
 				// Aim/A = Checks for fast head snap movements
 				// This check is easy to false flag, so you need to have the tag strict on you for it to do anything
@@ -180,18 +191,22 @@ Minecraft.system.runInterval(() => {
 				if (config.modules.aimC.enabled) {
 					const oldDiff = oldOldDiff.get(player) || 0;
 					const currentDiff = Math.sqrt(deltaYaw**2 + deltaPitch**2);
-					const smoothRotation = Math.abs(currentDiff - oldDiff) <= 0.1 && Math.abs(currentDiff - oldDiff) >= 0;
-					
-					if (smoothRotation) {
-						playerFlags.add(player);
-						player.addTag("c");
-					} else {
-						playerFlags.delete(player);
+				
+					// Check if the player's rotation has changed
+					if (deltaYaw !== 0 || deltaPitch !== 0) {
+						const smoothRotation = Math.abs(currentDiff - oldDiff) <= 0.075 && Math.abs(currentDiff - oldDiff) >= 0;
+						
+						if (smoothRotation) {
+							//playerFlags.add(player);
+							player.addTag("c");
+						} else {
+							//playerFlags.delete(player);
+
+						}
+						
+						oldOldDiff.set(player, currentDiff);
 					}
-					
-					oldOldDiff.set(player, currentDiff);
 				}
-  
 			}
 	
 			
@@ -614,7 +629,7 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.speed) {
 			// Speed/A = Checks for abnormal speed
 			// There is a built in system where it is more tolorant if a player is trusted by the anticheat
-			if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op") && !player.isFlying && !player.getEffect("speed") && !player.hasTag("trident")) {
+			if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op") && !player.isFlying && !player.getEffect("speed") && !player.hasTag("trident") && !player.hasTag("damaged")) {
 				if (playerSpeed > config.modules.speedA.speed + 0.1 && !player.hasTag("strict") || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.isJumping || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.hasTag("sprint") || playerSpeed > config.modules.speedA.speed && player.hasTag("strict")) {
 					
 					flag(player, "Speed", "A", "Movement", "speed", playerSpeed, false);
@@ -633,7 +648,7 @@ Minecraft.system.runInterval(() => {
 				const oldSpeed2 = oldOldSpeed.get(player) || oldSpeed;
 	
 				// If the player's rotation has changed but their speed has not decreased, flag for Speed
-				if(Math.abs(currentRotation - oldRotation) > 30 && currentSpeed >= oldSpeed && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.4) {
+				if(Math.abs(currentRotation - oldRotation) > 35 + 1.2e-10 && currentSpeed >= oldSpeed && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.4 && !player.hasTag("damaged") && player.hasTag("strict")) {
 					flag(player, "Speed", "B", "Movement", "rotationDiff", `${Math.abs(currentRotation - oldRotation)},speed=${currentSpeed}`)
 				}
 
@@ -732,6 +747,8 @@ Minecraft.system.runInterval(() => {
 		// General movement
 		if(config.generalModules.movement) {
 
+			// Jesus/A will be here
+
 
 			// NoFall/A = Checks for falling with no damage
 			if(config.modules.nofallA.enabled) {
@@ -810,7 +827,7 @@ Minecraft.system.runInterval(() => {
 		if(config.modules.scaffoldF.enabled) {
 			const tickValue = getScore(player, "tickValue", 0);
 			const valueOfBlocks = getScore(player, "scaffoldAmount", 0);
-			if (tickValue > 19) {
+			if (tickValue > 20 - 2.67e-11) {
 				if(valueOfBlocks > config.modules.scaffoldF.blocksPerSecond) {
 					flag(player, "Scaffold", "F", "Limit", "amount", valueOfBlocks, false);
 				}
@@ -1453,10 +1470,11 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 				flag(player, "Aim", "B", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
 				player.removeTag("b");
 			}
-			if(player.hasTag("c")) {
-				flag(player, "Aim", "C", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
-				player.removeTag("c");
-			}
+
+		}
+		if(player.hasTag("c")) {
+			flag(player, "Aim", "C", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
+			player.removeTag("c");
 		}
 	}
 
