@@ -383,8 +383,9 @@ export default
         },
         "aimC": {
             "enabled": true,
+            "description": "Checks for smooth rotation",
             "punishment": "kick",
-            "minVlbeforePunishment": 10,
+            "minVlbeforePunishment": 15,
         },
         "noslowA": {
             "enabled": true,
