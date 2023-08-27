@@ -21,6 +21,10 @@ const playerRotations = new Map();
 const playerDifferences = new Map();
 const playerFlags = new Set();
 
+// Y position stuffs
+const oldYPos = new Map();
+const oldOldYPos = new Map();
+
 
 // Create a map to store the previous health of each player
 const previousHealth = new Map();
@@ -101,18 +105,13 @@ world.afterEvents.chatSend.subscribe((msg) => {
 	// commandHandler(player, msg);
 });
 
-world.afterEvents.entityHurt.subscribe((eventData) => {
-	const entity = eventData.entity;
-  
-	// Check if the entity is a player
-	if (entity.__identifier__ === "minecraft:player") {
-	  const player = entity.__identifier__;
-  
-	  // Add your desired actions when the player is hurt
-	  // For example, you can add a tag to the player or execute a command
-	  player.addTag("damaged");
-	  // Execute your custom code here
-	}
+world.afterEvents.entityHurt.subscribe((data) => {
+	const player = data.hurtEntity;
+
+	if(player.typeId !== "minecraft:player") return;
+	player.addTag("damaged");
+	if(config.debug) console.warn(`${new Date().toISOString()} |${player.name} was damaged!`);
+	
 });
 Minecraft.system.runInterval(() => {
   if (config.modules.itemSpawnRateLimit.enabled) data.entitiesSpawnedInLastTick = 0;
@@ -597,6 +596,24 @@ Minecraft.system.runInterval(() => {
 					}          
 				}
 			}
+
+			// Fly/F = checks for constant y pos while in air
+			if(config.modules.flyF.enabled) {
+				if(aroundAir(player) === true) {
+					const currentYPos = player.location.y;
+					const oldY = oldYPos.get(player) || currentYPos;
+					const oldOldY = oldOldYPos.get(player) || currentYPos;
+
+					if(player.hasTag("moving") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
+						const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
+						if(simYPos) {
+							flag(player, "Fly", "F", "Movement", "diff", Math.abs(currentVL - oldY), false);
+						}
+					}
+				}
+			}
+
+
 			// Fly/G
 			//Scythe check :skull:
 			// This is a hopeless piece of code and I might remove it
@@ -693,7 +710,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			if(config.modules.badpackets8.enabled) {
-				if(player.isFlying && player.hasTag("op")) {
+				if(player.isFlying && !player.hasTag("op")) {
 					flag(player, "BadPackets", "8", "Permision", "isFlying", "true", true);
 				}
 			}
