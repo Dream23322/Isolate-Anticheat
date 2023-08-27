@@ -768,8 +768,9 @@ export default
         },
         "velocityA": {
             "enabled": true,
+            "magnitude": -0.078,
             "punishment": "kick",
-            "minVlbeforePunishment": 0
+            "minVlbeforePunishment": 100
         },
         "killauraE": {
             "enabled": true
@@ -838,6 +839,12 @@ export default
             "description": "Checks for flying without permissions",
             "punishment": "kick",
             "minVlbeforePunishment": 5
+        },
+        "reachB": {
+            "enabled": true,
+            "reach": 6,
+            "punishment": "kick",
+            "minVlbeforePunishment": 2
         }
     },
     "misc_modules": {

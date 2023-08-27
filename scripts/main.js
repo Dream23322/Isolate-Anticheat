@@ -659,7 +659,6 @@ Minecraft.system.runInterval(() => {
 					flag(player, "Speed", "B", "Movement", "rotationDiff", `${Math.abs(currentRotation - oldRotation)},speed=${currentSpeed}`)
 				}
 
-
 	
 				// Update the player's previous speed and rotation
 				oldOldSpeed.set(player, oldSpeed);
@@ -712,6 +711,7 @@ Minecraft.system.runInterval(() => {
 			if(config.modules.badpackets8.enabled) {
 				if(player.isFlying && !player.hasTag("op")) {
 					flag(player, "BadPackets", "8", "Permision", "isFlying", "true", true);
+					player.ability()
 				}
 			}
 
@@ -756,6 +756,16 @@ Minecraft.system.runInterval(() => {
 
 			// Jesus/A will be here
 
+			// Velocity/A = Checks for funni velocity, Paradox Anticheat
+			if(config.modules.velocityA.enabled) {
+				const velocity = player.getVelocity();
+				const velocitySum = Math.abs(velocity.y) + Math.abs(velocity.x) + Math.abs(velocity.z);
+				if (velocitySum <= config.modules.velocityA.magnitude) {
+					if(!player.hasTag("dead")) {
+						flag(player, "Velocity", "A", "Combat", "magnitude", velocitySum, false);
+					}
+				}
+			}
 
 			// NoFall/A = Checks for falling with no damage
 			if(config.modules.nofallA.enabled) {
@@ -1039,6 +1049,15 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 				const valueOfBlocks = getScore(player, "scaffoldAmount", 0)
 				setScore(player, "scaffoldAmount", valueOfBlocks + 1);
 			}
+		}
+	}
+
+	// Reach/B = checks for placing blocks too far away
+	if(config.modules.reachB.enabled) {
+		const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.y - player.location.y, 2) + Math.pow(block.location.z - player.location.z, 2));
+		if(distance > config.modules.reachB.reach) {
+			flag(player, "Reach", "B", "Placement", "distance", distance, false);
+			undoPlace = true;
 		}
 	}
 
