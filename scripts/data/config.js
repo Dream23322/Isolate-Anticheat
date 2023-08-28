@@ -663,7 +663,7 @@ export default
         "badpacketsD": {
             "enabled": true,
             "punishment": "kick",
-            "minVlbeforePunishment": 1
+            "minVlbeforePunishment": 100
         },
         "illegalitemsH": {
             "enabled": false,
