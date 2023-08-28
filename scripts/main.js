@@ -16,11 +16,16 @@ const previousSpeedLog = new Map();
 const previousRotationLog = new Map();
 const oldOldSpeed = new Map();
 
+const oldPlayerRot = new Map();
+const oldOldPlayerRot = new Map();
+
 const oldOldDiff = new Map();
 const playerRotations = new Map();
 const playerDifferences = new Map();
 const playerFlags = new Set();
 
+
+let playerRotations2 = new Map();
 // Y position stuffs
 const oldYPos = new Map();
 const oldOldYPos = new Map();
@@ -182,7 +187,7 @@ Minecraft.system.runInterval(() => {
 					const currentDiff = Math.sqrt(deltaYaw**2 + deltaPitch**2);
 				
 					// Check if the player's rotation has changed
-					if (deltaYaw !== 0 || deltaPitch !== 0) {
+					if (deltaYaw > 2 || deltaPitch > 2) {
 						const smoothRotation = Math.abs(currentDiff - oldDiff) <= 0.075 && Math.abs(currentDiff - oldDiff) >= 0;
 						
 						if (smoothRotation) {
@@ -700,23 +705,49 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.packet) {
 
 
-			//Badpackets/2 = Checks for nopacket/blink movement
-			if(config.modules.badpackets2.enabled && !player.hasTag("op")) {
-				if(playerSpeed > config.modules.badpackets2.speed) {
+			//Badpackets/B = Checks for nopacket/blink movement
+			if(config.modules.badpacketsB.enabled && !player.hasTag("op")) {
+				if(playerSpeed > config.modules.badpacketsB.speed) {
 					if(player.hasTag("ground")) {
-						flag(player, "BadPackets", "2", "Movement", "speed", playerSpeed, true);
+						flag(player, "BadPackets", "B", "Movement", "speed", playerSpeed, true);
 						player.addTag("strict");
 					}
 				}
 			}
 
+			if(config.modules.badpacketsD.enabled) {
+				let currentRotation = Math.floor(player.getRotation());
+
+				if (!playerRotations2.has(player)) {
+					playerRotations2.set(player, []);
+				}
+		
+				let lastRotations = playerRotations2.get(player);
+		
+				lastRotations.push(currentRotation);
+		
+				// If we have more than 2 rotations stored, remove the oldest one
+				if (lastRotations.length > 2) {
+					lastRotations.shift();
+				}
+		
+				if (lastRotations.length === 2) {
+					let rotationDifference = Math.abs(lastRotations[1] - lastRotations[0]);
+		
+					if (rotationDifference > 10) {
+						flag(player, "BadPackets", "D", "Rotation", "diff", rotationDifference, false);
+						// Handle flag event here
+					}
+				}
+				
+			}
 
 			// Permission Spoof, so if someone is flying but doesnt have permission to fly
-			if(config.modules.badpackets8.enabled ) {
+			if(config.modules.badpacketsH.enabled ) {
 				if(player.isFlying && (!player.hasTag("op") || player.EntityCanFly)) {
-					flag(player, "BadPackets", "8", "Permision", "isFlying", "true", true);
+					flag(player, "BadPackets", "H", "Permision", "isFlying", "true", true);
 					player.runCommandAsync(`ability "${player.name}" mayfly false`);
-					player.runCommandAsync(`kick "${player.name}" No Permission`);
+					
 				}
 			}
 
@@ -729,33 +760,32 @@ Minecraft.system.runInterval(() => {
 
 			// Impossible Rotations
 			// Having your pitch over 90 isnt possible! Horion client might be able to do it
-			if(Math.abs(rotation.x) > config.modules.badpackets2.angle && config.modules.badpackets2.enabled) {
-				flag(player, "BadPackets", "2", "Rotation", "angle", rotation.x, true);
+			if(Math.abs(rotation.x) > config.modules.badpacketsI.angle && config.modules.badpacketsI.enabled) {
+				flag(player, "BadPackets", "I", "Rotation", "angle", rotation.x, true);
 			}
 
-
+			
 			// BadPackets/7 = Checks for invalid actions
-
 			// So like if someone attacks while placing a block, or if someone breaks and places a block, not possible!
 			
-			if(config.modules.badpackets7.enabled) {
+			if(config.modules.badpacketsG.enabled) {
 				if(player.hasTag("placing") && player.hasTag("attacking")) {
-					flag(player, "BadPackets", "7", "Packet", "actions", "Placement, Attacking", false);
+					flag(player, "BadPackets", "G", "Packet", "actions", "Placement, Attacking", false);
 				}
 				if(player.hasTag("placing") && player.hasTag("breaking")) {
-					flag(player, "BadPackets", "7", "Packet", "actions", "Placement, Breaking", false);
+					flag(player, "BadPackets", "G", "Packet", "actions", "Placement, Breaking", false);
 				}
 				if (player.hasTag("attacking") && player.hasTag("breaking")) {
-					flag(player, "BadPackets", "7", "Packet", "actions", "Breaking, Attacking", false);
+					flag(player, "BadPackets", "G", "Packet", "actions", "Breaking, Attacking", false);
 				}
 				if(player.hasTag("usingItem") && player.hasTag("attacking")) {
-					flag(player, "BadPackets", "7", "Packet", "actions", "ItemUse, Attacking", false);
+					flag(player, "BadPackets", "G", "Packet", "actions", "ItemUse, Attacking", false);
 				}
 				if(player.hasTag("usingItem") && player.hasTag("placing")) {
-					flag(player, "BadPackets", "7", "Packet", "actions", "ItemUse, Placement", false);
+					flag(player, "BadPackets", "G", "Packet", "actions", "ItemUse, Placement", false);
 				}
 				if(player.hasTag("usingItem") && player.hasTag("breaking")) {
-					flag(player, "BadPackets", "7", "Packet", "actions", "ItemUse, Breaking", false);
+					flag(player, "BadPackets", "G", "Packet", "actions", "ItemUse, Breaking", false);
 				}
 			}
 
@@ -860,7 +890,7 @@ Minecraft.system.runInterval(() => {
 				if(clicksPerSecond > config.modules.autoclickerA.maxCPS) {
 					flag(player, "Autoclicker", "A", "Combat", "cps", clicksPerSecond, false);
 				}
-				if(config.modules.autoclickerB.enabled) {
+				if(config.modules.autoclickerB.enabled && clicksPerSecond !== 0) {
 					if(lastCPS) {
 						const lastClicks = lastCPS.get(player) || 0;
 						const differ = Math.abs(lastClicks - clicksPerSecond) <= 0.75;
@@ -1566,7 +1596,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 
 
 		if(config.modules.killauraF.enabled) {
-			if(isAttackingFromOutsideView(player, entity, 90) && !player.hasTag("pc") || isAttackingFromOutsideView(player, entity, 5) && player.hasTag("pc")) {
+			if(isAttackingFromOutsideView(player, entity, 90)) {
 				flag(player, "Killaura", "F", "Combat", "angle", "> 90", false);
 			}
 			
@@ -1598,7 +1628,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 
 	// badpackets[3] = checks if a player attacks themselves
 	// some (bad) hacks use this to bypass anti-movement cheat checks
-	if(config.modules.badpackets3.enabled && entity.id === player.id) flag(player, "BadPackets", "3", "Exploit");
+	if(config.modules.badpacketsC.enabled && entity.id === player.id) flag(player, "BadPackets", "C", "Exploit");
 
 	if(!player.hasTag("attacking")) {
 		player.addTag("attacking")
