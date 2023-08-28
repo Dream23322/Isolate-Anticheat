@@ -698,6 +698,8 @@ Minecraft.system.runInterval(() => {
 		// ==================================
 
 		if(config.generalModules.packet) {
+
+
 			//Badpackets/2 = Checks for nopacket/blink movement
 			if(config.modules.badpackets2.enabled && !player.hasTag("op")) {
 				if(playerSpeed > config.modules.badpackets2.speed) {
@@ -708,23 +710,34 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 
-			if(config.modules.badpackets8.enabled) {
-				if(player.isFlying && !player.hasTag("op")) {
+
+			// Permission Spoof, so if someone is flying but doesnt have permission to fly
+			if(config.modules.badpackets8.enabled ) {
+				if(player.isFlying && (!player.hasTag("op") || player.EntityCanFly)) {
 					flag(player, "BadPackets", "8", "Permision", "isFlying", "true", true);
-					player.ability()
+					player.runCommandAsync(`ability "${player.name}" mayfly false`);
+					player.runCommandAsync(`kick "${player.name}" No Permission`);
 				}
 			}
 
-		
-			if(player.location.y < -104) {
+			// Impossible Locations
+			if(player.location.y < -104 && config.modules.exploitB.enabled) {
 				player.teleport({x: player.location.x, y: -104, z: player.location.z});
 				flag(player, "Exploit", "B", "Packet", "y pos", player.location.y);
 			}
 
 
+			// Impossible Rotations
+			// Having your pitch over 90 isnt possible! Horion client might be able to do it
+			if(Math.abs(rotation.x) > config.modules.badpackets2.angle && config.modules.badpackets2.enabled) {
+				flag(player, "BadPackets", "2", "Rotation", "angle", rotation.x, true);
+			}
 
 
 			// BadPackets/7 = Checks for invalid actions
+
+			// So like if someone attacks while placing a block, or if someone breaks and places a block, not possible!
+			
 			if(config.modules.badpackets7.enabled) {
 				if(player.hasTag("placing") && player.hasTag("attacking")) {
 					flag(player, "BadPackets", "7", "Packet", "actions", "Placement, Attacking", false);
@@ -1114,6 +1127,15 @@ world.afterEvents.blockBreak.subscribe((blockBreak) => {
 		player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §b[§cXray§b]§r ${player.nameTag} has found §g1x Diamond Ore."}]}`);
 	} else if (getScore(player, "xray", 1) <= 1 && brokenBlockId === "minecraft:ancient_debirs") {
 		player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §b§c[Xray§b]§r ${player.nameTag} has found §g1x Ancient Debris."}]}`);
+	}
+
+	// Reach/B = checks for breaking blocks too far away
+	if(config.modules.reachB.enabled) {
+		const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.y - player.location.y, 2) + Math.pow(block.location.z - player.location.z, 2));
+		if(distance > config.modules.reachB.reach) {
+			flag(player, "Reach", "B", "Breaking", "distance", distance, false);
+			revertBlock = true;
+		}
 	}
 
 	if(config.modules.breakerA.enabled) {

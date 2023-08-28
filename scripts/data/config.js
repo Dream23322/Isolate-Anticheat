@@ -845,6 +845,12 @@ export default
             "reach": 6,
             "punishment": "kick",
             "minVlbeforePunishment": 2
+        },
+        "badpackets2": {
+            "enabled": true,
+            "angle": 90,
+            "punishment": "kick",
+            "minVlbeforePunishment": 3
         }
     },
     "misc_modules": {
