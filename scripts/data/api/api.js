@@ -49,42 +49,45 @@ export function playerTellraw(player, message) {
     player.runCommandAsync(`tellraw "${player.name}" {"rawtext":[{"text":"${message}"}]}`);
 }
 
-// Gets the angle between the player's line of sight and the direction towards the object
-export function angleCheck(player, object) {
-    // Get the player's rotation
-    const rotation = player.getRotation();
-    const yaw = rotation.x; // Horizontal rotation (yaw) in radians
-    const pitch = rotation.y; // Vertical rotation (pitch) in radians
+export function isAttackingFromOutsideView(player1, player2, angle) {
+    if (!player1 || !player2) {
+        return false; // Invalid player objects
+    }
 
-    // Calculate the player's line of sight
-    const playerSight = {
-        x: Math.cos(pitch) * Math.sin(-yaw),
-        y: Math.sin(pitch),
-        z: -Math.cos(pitch) * Math.cos(-yaw)
-    };
+    // Calculate the distance between the two players
+    const distance = Math.sqrt(Math.pow(player2.location.x - player1.location.x, 2) + Math.pow(player2.location.y - player1.location.y, 2) + Math.pow(player2.location.z - player1.location.z, 2));
 
-    // Calculate the direction towards the object
-    const directionToObject = {
-        x: object.location.x - player.location.x,
-        y: object.location.y - player.location.y,
-        z: object.location.z - player.location.z
-    };
+    // Check if the distance is greater than or equal to 2 blocks
+    if (distance >= 2) {
+        // Get the view direction vector of player1
+        const player1ViewDir = player1.getViewDirection();
 
-    // Normalize the direction vectors
-    const playerSightNorm = Math.sqrt(playerSight.x**2 + playerSight.y**2 + playerSight.z**2);
-    const directionToObjectNorm = Math.sqrt(directionToObject.x**2 + directionToObject.y**2 + directionToObject.z**2);
+        // Calculate the vector from player1 to player2
+        const player1ToPlayer2 = {
+            x: player2.location.x - player1.location.x,
+            y: player2.location.y - player1.location.y,
+            z: player2.location.z - player1.location.z,
+        };
 
-    // Calculate the dot product of the direction vectors
-    const dotProduct = playerSight.x * directionToObject.x + playerSight.y * directionToObject.y + playerSight.z * directionToObject.z;
+        // Calculate the dot product
+        const dotProduct2 = player1ViewDir.x * player1ToPlayer2.x + player1ViewDir.y * player1ToPlayer2.y + player1ViewDir.z * player1ToPlayer2.z;
 
-    // Calculate the angle between the direction vectors
-    const angle = Math.acos(dotProduct / (playerSightNorm * directionToObjectNorm));
+        // Calculate the magnitude of the vector
+        const player1ToPlayer2Magnitude = Math.sqrt(player1ToPlayer2.x * player1ToPlayer2.x + player1ToPlayer2.y * player1ToPlayer2.y + player1ToPlayer2.z * player1ToPlayer2.z);
 
-    // Convert the angle to degrees
-    const angleInDegrees = angle * (180 / Math.PI);
+        // Normalize the dot product
+        const normalizedDotProduct2 = dotProduct2 / (player1ToPlayer2Magnitude * Math.sqrt(player1ViewDir.x * player1ViewDir.x + player1ViewDir.y * player1ViewDir.y + player1ViewDir.z * player1ViewDir.z));
 
-    return angleInDegrees;
+        // Convert dot product to angle in degrees
+        const angle2 = Math.acos(normalizedDotProduct2) * (180 / Math.PI);
+
+        // Check if angle2 is greater than 90 degrees
+        return angle2 > angle;
+    }
+
+    return false;
 }
+
 
 export function getHealth(player) {
     const healthComponent = player.getComponent("minecraft:health");

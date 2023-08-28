@@ -1,6 +1,6 @@
 // @ts-check
 import * as Minecraft from "@minecraft/server";
-import { setParticle, setTitle, kickPlayer, getSpeed, aroundAir, angleCheck } from "./data/api/api.js";
+import { setParticle, setTitle, kickPlayer, getSpeed, aroundAir, isAttackingFromOutsideView } from "./data/api/api.js";
 import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
 import { commandHandler } from "./commands/handler.js";
 import config from "./data/config.js";
@@ -30,7 +30,7 @@ const oldOldYPos = new Map();
 const previousHealth = new Map();
 const previousFallDistance = new Map();
 
-
+const lastCPS = new Map();
 // Create a map to store the number of blocks each player has placed in the current second
 const blocksPlaced = new Map();
 let previousRotation = null;
@@ -826,31 +826,7 @@ Minecraft.system.runInterval(() => {
 		//               Other Checks
 		// ==================================
 
-		// Ensuring initial setup for player attributes
-		player.lastCps = player.lastCps || 0;
-		player.repeatCount = player.repeatCount || 0;
 
-		if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
-			player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
-			//check if the current cps equals last cps
-			if(player.cps === player.lastCps){
-				player.repeatCount += 1;
-				// Potentially suspicious behavior if cps is the same for 10 checks in a row
-				if(player.repeatCount >= 3){
-					flag(player, "Autoclicker", "A", "Combat", "Repeated CPS", player.cps, false);
-					player.repeatCount = 0;
-				}
-			} else {
-				player.repeatCount = 0;
-			}
-			// Autoclicker/A = checks for high cps
-			if(player.cps > config.modules.autoclickerA.maxCPS) {
-				flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps, false);
-			}
-			player.lastCps = player.cps;
-			player.firstAttack = Date.now();
-			player.cps = 0;
-		}
 
 
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
@@ -879,6 +855,25 @@ Minecraft.system.runInterval(() => {
 		const tickValue = getScore(player, "tickValue", 0);
 		if(tickValue > 19) {
 			player.removeTag("damaged");
+			if(config.modules.autoclickerA.enabled) {
+				const clicksPerSecond = getScore(player, "clicks", 0);
+				if(clicksPerSecond > config.modules.autoclickerA.maxCPS) {
+					flag(player, "Autoclicker", "A", "Combat", "cps", clicksPerSecond, false);
+				}
+				if(config.modules.autoclickerB.enabled) {
+					if(lastCPS) {
+						const lastClicks = lastCPS.get(player) || 0;
+						const differ = Math.abs(lastClicks - clicksPerSecond) <= 0.75;
+						if(differ) {
+							flag(player, "Autoclicker", "B", "Combat", "diff", Math.abs(lastClicks - clicksPerSecond), false);
+						}
+					}
+					lastCPS.set(player, clicksPerSecond);
+					
+				}
+				setScore(player, "clicks", 0);
+			}
+			
 		}
 		
 
@@ -1495,6 +1490,12 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 
 });
 
+
+const MAX_CONSECUTIVE_HITS = config.modules.killauraF.hits; // number of consecutive fast hits to trigger the KillAura check
+
+let lastHitTime = new Map();
+let consecutiveHits = new Map();
+
 world.afterEvents.entityHitEntity.subscribe((entityHit) => {
     const { hitEntity: entity, damagingEntity: player} = entityHit;
     if(player.typeId !== "minecraft:player") return;
@@ -1503,7 +1504,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 
 
 	// ==================================
-	//                    Utilities
+	//                   Aim Flags
 	// ==================================
 
 	if(config.generalModules.aim) {
@@ -1540,7 +1541,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	*/
 
 	// ==================================
-	//                    Utilities
+	//                    Killaura
 	// ==================================
 	if(config.generalModules.killaura) {
 		// killaura/C = checks for multi-aura
@@ -1561,6 +1562,14 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 					flag(player, "Killaura", "D", "Combat", "angle", `${rotation.x},distance=${distance}`, true);
 				}
 			}
+		}
+
+
+		if(config.modules.killauraF.enabled) {
+			if(isAttackingFromOutsideView(player, entity, 90) && !player.hasTag("pc") || isAttackingFromOutsideView(player, entity, 5) && player.hasTag("pc")) {
+				flag(player, "Killaura", "F", "Combat", "angle", "> 90", false);
+			}
+			
 		}
 
 	}
@@ -1615,7 +1624,8 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			data.checkedModules.autoclicker = true;
 		}
 
-		player.cps++;
+		const clicks = getScore(player, "clicks", 0);
+		setScore(player, "clicks", clicks + 1);
 	}
 	
 
