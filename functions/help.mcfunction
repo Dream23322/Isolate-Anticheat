@@ -40,6 +40,7 @@ tellraw @s {"rawtext":[{"text":"§u!xray§r - Enables/disables anti-xray."}]}
 tellraw @s {"rawtext":[{"text":"\n§l§dTools and Utilites"}]}
 
 # Gametest enabled
+tellraw @s {"rawtext":[{"text":"§u!about <module>§r - Gives info on a modules (!about scaffoldA !about killauraF)."}]}
 tellraw @s {"rawtext":[{"text":"§u!crash <username>§r - Tried to crash a player (If crash failed, it will kick them from the server)."}]}
 tellraw @s {"rawtext":[{"text":"§u!ecwipe <username>§r - Clears a player's ender chest."}]}
 tellraw @s {"rawtext":[{"text":"§u!fly [username]§r - Enables/disables the ability to fly in survival mode."}]}

@@ -28,6 +28,13 @@ export function setParticle(player, particleName) {
 }
 
 // Check is a player is surrounded by air
+
+/**
+ * @name aroundAir - Returns true if a player is surround by air
+ * @param {object} player - The player that you are checking
+ * @example if(aroundAir(player)) flag(player, "Movement', "A")
+ * @remarks Flags for Movement/A if a player is surrounded by air
+ */
 export function aroundAir(player) {
     let isSurroundedByAir = true;
     for (let x = -1; x <= 1; x++) {
@@ -45,10 +52,25 @@ export function aroundAir(player) {
 }
 
 // tellraw things
+
+/**
+ * @name playerTellraw - easy tellraw command
+ * @param {object} player - The player you want to use the tellraw message on
+ * @param {string} message - The message the player will be told
+ */
 export function playerTellraw(player, message) {
     player.runCommandAsync(`tellraw "${player.name}" {"rawtext":[{"text":"${message}"}]}`);
 }
 
+
+/**
+ * @name isAttackingFromOutsideView - Returns true if a player attacks outside of a specified angle
+ * @param {object} player1  - The attacking player
+ * @param {object} player2  - The entity that was attacked
+ * @param {int} angle - The angle that the function is looking for
+ * @example isAttackingFromOutsideView(player, entity, 90)
+ * @remarks returns true if the attacked entity isnt inside of a 90 degree range on the attacking entities screen
+ */
 export function isAttackingFromOutsideView(player1, player2, angle) {
     if (!player1 || !player2) {
         return false; // Invalid player objects

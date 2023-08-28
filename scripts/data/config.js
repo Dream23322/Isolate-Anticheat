@@ -639,7 +639,7 @@ export default
             "minVlbeforePunishment": 0
         },
         // This exploit has been entirely patched out.
-        "badpackets3": {
+        "badpacketsC": {
             "enabled": true,
             "description":"Checks for self-hit",
             "punishment": "kick",
@@ -660,7 +660,7 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 1
         },
-        "badpackets4": {
+        "badpacketsD": {
             "enabled": true,
             "punishment": "kick",
             "minVlbeforePunishment": 1
@@ -806,7 +806,7 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 15
         },
-        "badpackets2": {
+        "badpacketsB": {
             "enabled": true,
             "description": "Checks for TP like motion",
             "speed": 7.3,
@@ -814,7 +814,7 @@ export default
             "punishmentLength": "1m",
             "minVlbeforePunishment": 1
         },
-        "badpackets7": {
+        "badpacketsG": {
             "enabled": true,
             "description": "Checks for invalid actions",
             "punishment": "kick",
@@ -836,11 +836,11 @@ export default
             "pos_diff": 0.09,
             "time_int": 0.5
         },
-        "badpackets8": {
+        "badpacketsH": {
             "enabled": true,
             "description": "Checks for flying without permissions",
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 50
         },
         "reachB": {
             "enabled": true,
@@ -848,8 +848,9 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 2
         },
-        "badpackets2": {
+        "badpacketsI": {
             "enabled": true,
+            "description": "Checks for head rotation over 90 ",
             "angle": 90,
             "punishment": "kick",
             "minVlbeforePunishment": 3
