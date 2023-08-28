@@ -800,9 +800,11 @@ export default
         },
         "killauraF": {
             "enabled": true,
-            "angle": 100,
+            "angleMobile": 90,
+            "anglePC": 10,
+            "hits": 15,
             "punishment": "kick",
-            "minVlbeforePunishment": 3
+            "minVlbeforePunishment": 15
         },
         "badpackets2": {
             "enabled": true,

@@ -78,8 +78,9 @@
 					"/scoreboard objectives add speedvl dummy",
 					"/scoreboard objectives add scaffoldAmount dummy",
 					"/scoreboard objectives add tickValue dummy",
-					"/scoreboard objectives add nofallvl",
-					"/scoreboard objectives add breakervl",
+					"/scoreboard objectives add nofallvl dummy",
+					"/scoreboard objectives add breakervl dummy",
+					"/scoreboard objectives add clicks dummy",
 					"/scoreboard objectives add strafevl dummy",
 					// If enabled from previous login then activate
 					"/ability @s[tag=flying,m=!c] mayfly true"
