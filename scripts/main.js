@@ -23,13 +23,14 @@ const oldOldDiff = new Map();
 const playerRotations = new Map();
 const playerDifferences = new Map();
 const playerFlags = new Set();
-
+let playerRotationsTime = new Map();  // map to store rotation time for each player
 
 let playerRotations2 = new Map();
 // Y position stuffs
 const oldYPos = new Map();
 const oldOldYPos = new Map();
 
+let lastPlayerYawRotations = new Map();
 
 // Create a map to store the previous health of each player
 const previousHealth = new Map();
@@ -716,29 +717,23 @@ Minecraft.system.runInterval(() => {
 			}
 
 			if(config.modules.badpacketsD.enabled) {
-				let currentRotation = Math.floor(player.getRotation());
+				const currentRotation = player.getRotation();
 
-				if (!playerRotations2.has(player)) {
-					playerRotations2.set(player, []);
+				if (!lastPlayerYawRotations.has(player)) {
+					lastPlayerYawRotations.set(player, currentRotation.y);
+					continue;
 				}
 		
-				let lastRotations = playerRotations2.get(player);
+				const yawDiff = Math.abs(currentRotation.y - lastPlayerYawRotations.get(player));
 		
-				lastRotations.push(currentRotation);
-		
-				// If we have more than 2 rotations stored, remove the oldest one
-				if (lastRotations.length > 2) {
-					lastRotations.shift();
+				// Check for the condition
+				if (yawDiff === 1 || yawDiff === 359) {
+					flag(player, "BadPackets", "D", "Rotation", "yawdiff", yawDiff, false)
+					// Handle flag event here
 				}
 		
-				if (lastRotations.length === 2) {
-					let rotationDifference = Math.abs(lastRotations[1] - lastRotations[0]);
-		
-					if (rotationDifference > 10) {
-						flag(player, "BadPackets", "D", "Rotation", "diff", rotationDifference, false);
-						// Handle flag event here
-					}
-				}
+				// Update stored rotations
+				lastPlayerYawRotations.set(player, currentRotation.y);
 				
 			}
 
