@@ -11,7 +11,7 @@ export function logs(message) {
     const player = message.sender;
     
     let logs = data.recentLogs;          
-    playerTellraw(player, "------------\nIsolate Logs\n------------")
+    playerTellraw(player, "---------------\nIsolate Logs\n---------------")
     for (let i = 0; i < logs.length; i++) {
         playerTellraw(player, logs[i]);
     }
