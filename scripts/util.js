@@ -195,9 +195,13 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
     currentVl++;
 
-    if(debug) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§jx§9${currentVl}§h]"}]}`);
-        else player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}§h. [§jx§9${currentVl}§h]"}]}`);
+    player.runCommandAsync(`tellraw @a[tag=notify,tag=debug,tag=theme2] {"rawtext":[{"text":"§r§j[§uIsolate§j] §g ${player.nameTag}§r §jhas failed §a[§2${hackType}§a] §p${check}§r/§n${checkType.toUpperCase()} §3(${debugName}=${debug}§r§7)§j. [§2x§n${currentVl}§j]"}]}`);
+    player.runCommandAsync(`tellraw @a[tag=notify,tag=!debug,tag=theme2] {"rawtext":[{"text":"§r§j[§uIsolate§j] §g ${player.nameTag}§r §jhas failed §a[§2${hackType}§a] §p${check}§r/§n${checkType.toUpperCase()}§j. [§2x§n${currentVl}§j]"}]}`);
+    player.runCommandAsync(`tellraw @a[tag=notify,tag=debug,tag=!theme2] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§jx§9${currentVl}§h]"}]}`);
+    player.runCommandAsync(`tellraw @a[tag=notify,tag=!debug,tag=!theme2] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}§h. [§jx§9${currentVl}§h]"}]}`);
 
+   
+    
     if(typeof slot === "number") {
 		const container = player.getComponent("inventory").container;
 		container.setItem(slot, undefined);
@@ -208,6 +212,10 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     const kickvl = getScore(player, "kickvl", 0);
     const kickvlValue = kickvl;
     if(!checkData.enabled) throw Error(`${check}/${checkType} was flagged but the module was disabled.`);
+    const message = `${player.name} §jwas flagged for §p${check}§r/§n${checkType}`;
+    
+    data.recentLogs.push(message)
+    
 
     // punishment stuff
     const punishment = checkData.punishment?.toLowerCase();
@@ -238,6 +246,9 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     player.addTag(`time:${Date.now() + banLength2}`);
                     player.addTag("isBanned");
                     setScore(player, "kickvl", 0);
+                    const message = `${player.name} §jwas §pbanned§j by §nIsolate Anticheat`;
+    
+                    data.recentLogs.push(message)
                 }
                 player.runCommandAsync("function tools/resetwarns");
                 setParticle(player, "explode");
@@ -246,7 +257,9 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 }
                 player.addTag("strict");
                 
-                
+                const message = `${player.name} §jwas §pkicked §jby §nIsolate Anticheat`;
+    
+                data.recentLogs.push(message)
                 
                 
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically kicked by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
@@ -275,7 +288,9 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 let banLength;
 
                 
-                    
+                const message = `${player.name} §jwas §pbanned§j by §nIsolate Anticheat`;
+    
+                data.recentLogs.push(message)
                 
                 
                 player.addTag("by:§d Isolate Anticheat");

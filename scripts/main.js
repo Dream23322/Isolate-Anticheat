@@ -42,6 +42,8 @@ const blocksPlaced = new Map();
 let previousRotation = null;
 let previousDifference = null;
 
+
+const lastYawDiff = new Map();
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
 let currentVL;
 world.beforeEvents.chatSend.subscribe((msg) => {
@@ -233,6 +235,7 @@ Minecraft.system.runInterval(() => {
 		if(config.modules.crasherA.enabled && Math.abs(player.location.x) > 30000000 ||
 			Math.abs(player.location.y) > 30000000 || Math.abs(player.location.z) > 30000000) 
 				flag(player, "Crasher", "A", "Exploit", "x_pos", `${player.location.x},y_pos=${player.location.y},z_pos=${player.location.z}`, true);
+				
 		
 
 		// anti-namespoof
@@ -716,6 +719,8 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 
+
+			// Checks for derp rotation (Really fast)
 			if(config.modules.badpacketsD.enabled) {
 				const currentRotation = player.getRotation();
 
@@ -725,15 +730,24 @@ Minecraft.system.runInterval(() => {
 				}
 		
 				const yawDiff = Math.abs(currentRotation.y - lastPlayerYawRotations.get(player));
-		
-				// Check for the condition
-				if (yawDiff === 1 || yawDiff === 359) {
-					flag(player, "BadPackets", "D", "Rotation", "yawdiff", yawDiff, false)
-					// Handle flag event here
+				if(player.hasTag("logDiff")) {
+					console.warn(`${new Date().toISOString()} |${player.name} rot diff = ${yawDiff}!`)
 				}
+				// Check for the condition
+				if (yawDiff === 2 && lastYawDiff.get(player) === 4 || yawDiff === 4 && lastYawDiff.get(player) === 2 || yawDiff === 2 && lastYawDiff.get(player) === 2) {
+					flag(player, "BadPackets", "D", "Rotation", "yawdiff", yawDiff, true)
+					
+				}
+
+				// if(config.modules.badpacketsJ.enabled) {
+				// 	if(player.hasTag("hasGUIopen") && yawDiff > 2.67e-11) {
+				// 		flag(player, "BadPackets", "J", "Rotation", "tag=", "gui", false);
+				// 	}
+				// }
 		
 				// Update stored rotations
 				lastPlayerYawRotations.set(player, currentRotation.y);
+				lastYawDiff.set(player, yawDiff);
 				
 			}
 
@@ -742,7 +756,7 @@ Minecraft.system.runInterval(() => {
 				if(player.isFlying && (!player.hasTag("op") || player.EntityCanFly)) {
 					flag(player, "BadPackets", "H", "Permision", "isFlying", "true", true);
 					player.runCommandAsync(`ability "${player.name}" mayfly false`);
-					
+					setTitle(player, "Flying is not enabled", "Please turn off fly");
 				}
 			}
 

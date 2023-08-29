@@ -240,6 +240,11 @@ export default
             "enabled": true,
             "requiredTags": ["op"],
             "aliases": ["what", "a", "info", "?", "define", "def"]
+        },
+        "logs": {
+            "enabled": true,
+            "requiredTags": ["op"],
+            "aliases": ["log", "data", "recent", "rl", "recentlogs"]
         }
     },
     "modules": {
@@ -663,7 +668,7 @@ export default
         "badpacketsD": {
             "enabled": true,
             "punishment": "kick",
-            "minVlbeforePunishment": 100
+            "minVlbeforePunishment": 15
         },
         "illegalitemsH": {
             "enabled": false,
@@ -808,7 +813,7 @@ export default
         },
         "badpacketsB": {
             "enabled": true,
-            "description": "Checks for TP like motion",
+            "description": "Checks for moving to far in a tick",
             "speed": 7.3,
             "punishment": "kick",
             "punishmentLength": "1m",
@@ -854,6 +859,16 @@ export default
             "angle": 90,
             "punishment": "kick",
             "minVlbeforePunishment": 3
+        },
+        "badpacketsJ": {
+            "enabled": true,
+            "tags": [
+                "dead",
+                "death",
+                "hasGUIopen"
+            ],
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
         }
     },
     "misc_modules": {
