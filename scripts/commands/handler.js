@@ -43,6 +43,7 @@ import { crash } from "./utility/crash.js";
 import { kickall } from "./moderation/kickall.js";
 import { testban } from "./other/testban.js";
 import { about } from "./utility/about.js";
+import { logs } from "./utility/logs.js";
 
 const prefix = config.customcommands.prefix;
 
@@ -172,6 +173,7 @@ function runCommand(msg, commandName, args) {
                 else if(commandName === "kickall") kickall(message);
                 else if(commandName === "testban") testban(message, args);
                 else if(commandName === "about") about(message, args);
+                else if(commandName === "logs") logs(message);
                 else throw Error(`Command ${commandName} was found in config.js but no handler for it was found.`);
         } catch (error) {
             console.error(`${new Date().toISOString()} | ${error} ${error.stack}`);
