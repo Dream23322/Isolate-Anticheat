@@ -191,7 +191,7 @@ Minecraft.system.runInterval(() => {
 				
 					// Check if the player's rotation has changed
 					if (deltaYaw > 2 || deltaPitch > 2) {
-						const smoothRotation = Math.abs(currentDiff - oldDiff) <= 0.075 && Math.abs(currentDiff - oldDiff) >= 0;
+						const smoothRotation = Math.abs(currentDiff - oldDiff) <= 0.06 && Math.abs(currentDiff - oldDiff) >= 0;
 						
 						if (smoothRotation) {
 							//playerFlags.add(player);
@@ -736,17 +736,17 @@ Minecraft.system.runInterval(() => {
 				}
 				// Check for the condition
 				if (yawDiff === 2 && lastYawDiff.get(player) === 4 || yawDiff === 4 && lastYawDiff.get(player) === 2 || yawDiff === 2 && lastYawDiff.get(player) === 2) {
-					flag(player, "BadPackets", "D", "Rotation", "yawdiff", yawDiff, true)
+					flag(player, "BadPackets", "D", "Rotation", "yawdiff", yawDiff, false)
 					
 				}
 
 
 				// Me and USSR/MrDiamond64 worked on this together dont bully me
-				if(config.modules.badpacketsJ.enabled) {
-					if(Number.isInteger(rotation.x) || Number.isInteger(rotation.y) && rotation.x !== 0 && rotation.x !== 0 && !player.hasTag("op") && !player.hasTag("trident")) {
-						flag(player, "BadPackets", "J", "Rotation", "integer", "true", false);
-					}
-				}
+				// if(config.modules.badpacketsJ.enabled) {
+				// 	if(Number.isInteger(rotation.x) || Number.isInteger(rotation.y) && rotation.x !== 0 && rotation.x !== 0 && !player.hasTag("op") && !player.hasTag("trident")) {
+				// 		flag(player, "BadPackets", "J", "Rotation", "integer", "true", false);
+				// 	}
+				// }
 	
 				// Update stored rotations
 				lastPlayerYawRotations.set(player, currentRotation.y);
@@ -897,27 +897,26 @@ Minecraft.system.runInterval(() => {
 		const tickValue = getScore(player, "tickValue", 0);
 		if(tickValue > 19) {
 			player.removeTag("damaged");
-			if(config.modules.autoclickerA.enabled) {
-				const clicksPerSecond = getScore(player, "clicks", 0);
-				if(clicksPerSecond > config.modules.autoclickerA.maxCPS) {
-					flag(player, "Autoclicker", "A", "Combat", "cps", clicksPerSecond, false);
-				}
-				if(config.modules.autoclickerB.enabled && clicksPerSecond !== 0) {
-					if(lastCPS) {
-						const lastClicks = lastCPS.get(player) || 0;
-						const differ = Math.abs(lastClicks - clicksPerSecond) <= 0.75;
-						if(differ) {
-							flag(player, "Autoclicker", "B", "Combat", "diff", Math.abs(lastClicks - clicksPerSecond), false);
-						}
-					}
-					lastCPS.set(player, clicksPerSecond);
-					
-				}
-				setScore(player, "clicks", 0);
-			}
-			
+			// Remove tags for checks :D
+			player.removeTag("placing");
+			player.removeTag("attacking");
+			player.removeTag("usingItem");
+			player.removeTag("breaking");
 		}
-		
+		if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
+			player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
+			// autoclicker/A = checks for high cps
+			const prvCps = lastCPS.get(player) || 0;
+			if(player.cps > config.modules.autoclickerA.maxCPS) flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
+			lastCPS.set(player, player.cps);
+
+			const cpsDiff = Math.abs(prvCps - player.cps) <= config.modules.autoclickerB.maxDeviation;
+			if(config.modules.autoclickerB.enabled && cpsDiff) {
+				flag(player, "Autoclicker", "B", "Combat", "cpsDiff", Math.abs(prvCps - player.cps))
+			}
+			player.firstAttack = Date.now();
+			player.cps = 0;
+		}
 
 	}
 
@@ -1349,6 +1348,9 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	player.removeTag("moving");
 	player.removeTag("sleeping");
 
+	const message = `${player.name} §jhas §pjoined§j the server`;
+    
+	data.recentLogs.push(message)
 	// load custom nametag
 	const { mainColor, borderColor, playerNameColor } = config.customcommands.tag;
 
@@ -1666,8 +1668,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			data.checkedModules.autoclicker = true;
 		}
 
-		const clicks = getScore(player, "clicks", 0);
-		setScore(player, "clicks", clicks + 1);
+		player.cps++;
 	}
 	
 
