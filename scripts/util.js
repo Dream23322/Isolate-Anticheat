@@ -195,10 +195,12 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
     currentVl++;
 
-    player.runCommandAsync(`tellraw @a[tag=notify,tag=debug,tag=theme2] {"rawtext":[{"text":"§r§j[§uIsolate§j] §g ${player.nameTag}§r §jhas failed §a[§2${hackType}§a] §p${check}§r/§n${checkType.toUpperCase()} §3(${debugName}=${debug}§r§7)§j. [§2x§n${currentVl}§j]"}]}`);
-    player.runCommandAsync(`tellraw @a[tag=notify,tag=!debug,tag=theme2] {"rawtext":[{"text":"§r§j[§uIsolate§j] §g ${player.nameTag}§r §jhas failed §a[§2${hackType}§a] §p${check}§r/§n${checkType.toUpperCase()}§j. [§2x§n${currentVl}§j]"}]}`);
-    player.runCommandAsync(`tellraw @a[tag=notify,tag=debug,tag=!theme2] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§jx§9${currentVl}§h]"}]}`);
-    player.runCommandAsync(`tellraw @a[tag=notify,tag=!debug,tag=!theme2] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}§h. [§jx§9${currentVl}§h]"}]}`);
+    player.runCommandAsync(`tellraw @a[tag=notify,tag=debug,tag=theme2,tag=!theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j] §g ${player.nameTag}§r §jhas failed §a[§2${hackType}§a] §p${check}§r/§n${checkType.toUpperCase()} §3(${debugName}=${debug}§r§7)§j. [§2x§n${currentVl}§j]"}]}`);
+    player.runCommandAsync(`tellraw @a[tag=notify,tag=!debug,tag=theme2,tag=!theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j] §g ${player.nameTag}§r §jhas failed §a[§2${hackType}§a] §p${check}§r/§n${checkType.toUpperCase()}§j. [§2x§n${currentVl}§j]"}]}`);
+    player.runCommandAsync(`tellraw @a[tag=notify,tag=debug,tag=!theme2,tag=!theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§jx§9${currentVl}§h]"}]}`);
+    player.runCommandAsync(`tellraw @a[tag=notify,tag=!debug,tag=!theme2,tag=!theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}§h. [§jx§9${currentVl}§h]"}]}`);
+    player.runCommandAsync(`tellraw @a[tag=notify,tag=debug,tag=!theme2,tag=theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §2has failed §3[§a${hackType}§3] §n${check}§r/§q${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§j. [§2x§n${currentVl}§j]"}]}`);
+    player.runCommandAsync(`tellraw @a[tag=notify,tag=!debug,tag=!theme2,tag=theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §2nhas failed §3[§a${hackType}§3] §n${check}§r/§q${checkType.toUpperCase()}§j. [§2x§n${currentVl}§j]"}]}`);
 
    
     
@@ -210,9 +212,9 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     const checkData = config.modules[check.toLowerCase() + checkType.toUpperCase()];
     if(!checkData) throw Error(`No valid check data found for ${check}/${checkType}.`);
     const kickvl = getScore(player, "kickvl", 0);
-    const kickvlValue = kickvl;
+    const kickvlValue = kickvl; 
     if(!checkData.enabled) throw Error(`${check}/${checkType} was flagged but the module was disabled.`);
-    const message = `${player.name} §jwas flagged for §p${check}§r/§n${checkType}§j [§2x§n${currentVl}§j]]`;
+    const message = `${player.name} §jwas flagged for §p${check}§r/§n${checkType}§j [§2x§n${currentVl}§j]`;
 
     // Check if the last message in recentLogs is the same as the new one (excluding the violation level)
     if (data.recentLogs.length > 0) {
@@ -227,6 +229,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     }
     
     // Push the new message
+    // @ts-ignore
     data.recentLogs.push(message);
     
 

@@ -665,7 +665,7 @@ Minecraft.system.runInterval(() => {
 				const oldSpeed2 = oldOldSpeed.get(player) || oldSpeed;
 	
 				// If the player's rotation has changed but their speed has not decreased, flag for Speed
-				if(Math.abs(currentRotation - oldRotation) > 35 + 1.2e-10 && currentSpeed >= oldSpeed && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.4 && !player.hasTag("damaged") && player.hasTag("strict")) {
+				if(Math.abs(currentRotation - oldRotation) > 35 + 1.2e-10 && currentSpeed >= oldSpeed && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.4 && !player.hasTag("damaged") && player.hasTag("strict") && !player.getEffect("speed")) {
 					flag(player, "Speed", "B", "Movement", "rotationDiff", `${Math.abs(currentRotation - oldRotation)},speed=${currentSpeed}`)
 				}
 
