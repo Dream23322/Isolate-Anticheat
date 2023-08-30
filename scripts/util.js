@@ -212,9 +212,22 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     const kickvl = getScore(player, "kickvl", 0);
     const kickvlValue = kickvl;
     if(!checkData.enabled) throw Error(`${check}/${checkType} was flagged but the module was disabled.`);
-    const message = `${player.name} §jwas flagged for §p${check}§r/§n${checkType}`;
+    const message = `${player.name} §jwas flagged for §p${check}§r/§n${checkType}§j [§2x§n${currentVl}§j]]`;
+
+    // Check if the last message in recentLogs is the same as the new one (excluding the violation level)
+    if (data.recentLogs.length > 0) {
+        const lastMessage = data.recentLogs[data.recentLogs.length - 1];
+        const lastMessageWithoutVl = lastMessage.substring(0, lastMessage.lastIndexOf("x") + 1);
+        const newMessageWithoutVl = message.substring(0, message.lastIndexOf("x") + 1);
     
-    data.recentLogs.push(message)
+        if (lastMessageWithoutVl === newMessageWithoutVl) {
+            // If the last message is the same as the new one, remove the last message
+            data.recentLogs.pop();
+        }
+    }
+    
+    // Push the new message
+    data.recentLogs.push(message);
     
 
     // punishment stuff
