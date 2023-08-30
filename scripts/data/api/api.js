@@ -3,6 +3,8 @@ import * as Minecraft from "@minecraft/server";
 // API sponsered by elon musk
 // This uses 1.81e-15 precision
 
+// ©️ Isolate Anticheat - API system
+
 // setTitle 
 export function setTitle(player, title, subtitle) {
     player.runCommandAsync(`title "${player.name}" title ${title}`);
@@ -30,7 +32,7 @@ export function setParticle(player, particleName) {
 // Check is a player is surrounded by air
 
 /**
- * @name aroundAir - Returns true if a player is surround by air
+ * @name aroundAir - Returns true if a player is surround by air (Paradox Anticheat Code)
  * @param {object} player - The player that you are checking
  * @example if(aroundAir(player)) flag(player, "Movement', "A")
  * @remarks Flags for Movement/A if a player is surrounded by air
