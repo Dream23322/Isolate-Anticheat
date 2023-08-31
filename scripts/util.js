@@ -177,13 +177,12 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     // cancel the message
     if(cancelObject) cancelObject.cancel = true;
 
-    if(shouldTP) player.teleport(check === "Crasher" ? {x: 30000000, y: 30000000, z: 30000000} : player.lastGoodPosition, {dimension: player.dimension, rotation: {x: 0, y: 0}, keepVelocity: false});
-    // if(shouldTP && check === "fly") {
-    //     const lastGroundPosition = lastGroundPositionLog.get(player);
-    //     if(lastGroundPosition) {
-    //         player.teleport(lastGroundPosition);
-    //     }
-    // }
+
+
+    if(shouldTP) player.teleport(check === "Crasher" ? {x: 30000000, y: 30000000, z: 30000000} : player.lastGoodPosition, {dimension: player.dimension, rotation: {x: rotation.x, y: rotation.y}, keepVelocity: false});
+
+   
+
     const scoreboardObjective = check === "CommandBlockExploit" ? "cbevl" : `${check.toLowerCase()}vl`;
 
     if(!world.scoreboard.getObjective(scoreboardObjective)) {
@@ -200,7 +199,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     player.runCommandAsync(`tellraw @a[tag=notify,tag=debug,tag=!theme2,tag=!theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§jx§9${currentVl}§h]"}]}`);
     player.runCommandAsync(`tellraw @a[tag=notify,tag=!debug,tag=!theme2,tag=!theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}§h. [§jx§9${currentVl}§h]"}]}`);
     player.runCommandAsync(`tellraw @a[tag=notify,tag=debug,tag=!theme2,tag=theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §2has failed §3[§a${hackType}§3] §n${check}§r/§q${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§j. [§2x§n${currentVl}§j]"}]}`);
-    player.runCommandAsync(`tellraw @a[tag=notify,tag=!debug,tag=!theme2,tag=theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §2nhas failed §3[§a${hackType}§3] §n${check}§r/§q${checkType.toUpperCase()}§j. [§2x§n${currentVl}§j]"}]}`);
+    player.runCommandAsync(`tellraw @a[tag=notify,tag=!debug,tag=!theme2,tag=theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §2has failed §3[§a${hackType}§3] §n${check}§r/§q${checkType.toUpperCase()}§j. [§2x§n${currentVl}§j]"}]}`);
 
    
     
@@ -262,7 +261,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     player.addTag(`time:${Date.now() + banLength2}`);
                     player.addTag("isBanned");
                     setScore(player, "kickvl", 0);
-                    const message = `${player.name} §jwas §pbanned§j by §nIsolate Anticheat`;
+                    const message = `${player.name} §jwas §pbanned§j by §nIsolate Anticheat §j[§n${check}§j]`;
     
                     data.recentLogs.push(message)
                 }
@@ -273,14 +272,14 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 }
                 player.addTag("strict");
                 
-                const message = `${player.name} §jwas §pkicked §jby §nIsolate Anticheat`;
+                const message = `${player.name} §jwas §pkicked §jby §nIsolate Anticheat §j[§n${check}§j]`;
     
                 data.recentLogs.push(message)
                 
                 
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically kicked by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been removed from your game for using an §6unfair advantage!"}]}`);
-                player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r >> §6Unfair Advantage.§b [§s${check}§b]`);
+                player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r >> §6Unfair Advantage.§b §j[§n${check}§j]`);
                 // incase /kick fails, we despawn them from the world
             } catch (error) {
                 player.triggerEvent("scythe:kick");
