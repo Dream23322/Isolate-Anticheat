@@ -177,7 +177,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     // cancel the message
     if(cancelObject) cancelObject.cancel = true;
 
-    if(shouldTP) player.teleport(check === "Crasher" ? {x: 30000000, y: 30000000, z: 30000000} : {x: player.location.x, y: player.location.y, z: player.location.z}, {dimension: player.dimension, rotation: {x: 0, y: 0}, keepVelocity: false});
+    if(shouldTP) player.teleport(check === "Crasher" ? {x: 30000000, y: 30000000, z: 30000000} : player.lastGoodPosition, {dimension: player.dimension, rotation: {x: 0, y: 0}, keepVelocity: false});
     // if(shouldTP && check === "fly") {
     //     const lastGroundPosition = lastGroundPositionLog.get(player);
     //     if(lastGroundPosition) {

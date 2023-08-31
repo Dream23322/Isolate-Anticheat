@@ -667,6 +667,7 @@ export default
         },
         "badpacketsD": {
             "enabled": true,
+            "description": "Checks for derp hacks",
             "punishment": "kick",
             "minVlbeforePunishment": 15
         },
@@ -805,6 +806,7 @@ export default
         },
         "killauraF": {
             "enabled": true,
+            "description": "Checks for hitting a player off screen",
             "angleMobile": 90,
             "anglePC": 10,
             "hits": 15,
@@ -849,6 +851,7 @@ export default
         },
         "reachB": {
             "enabled": true,
+            "description": "Checks for placing or breaking to far away",
             "reach": 6,
             "punishment": "kick",
             "minVlbeforePunishment": 2

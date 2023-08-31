@@ -53,6 +53,26 @@ export function aroundAir(player) {
     return isSurroundedByAir
 }
 
+
+/**
+ * @name inAir - Returns true if a player is in air (Paradox Anticheat Code)
+ * @param {object} player - The player that you are checking
+ * @example if(inAir(player)) flag(player, "Movement', "A")
+ * @remarks Flags for Movement/A if a player is in air
+ */
+export function inAir(player) {
+    let isInAir = true;
+    for (let y = 0; y < 1.8; y += 0.1) {
+        const block = player.dimension.getBlock({ x: player.location.x, y: player.location.y + y, z: player.location.z });
+        if (block.typeId !== "minecraft:air") {
+            isInAir = false;
+            break;
+        }
+    }
+    return isInAir;
+}
+
+
 // tellraw things
 
 /**
