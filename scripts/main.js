@@ -1,6 +1,6 @@
 // @ts-check
 import * as Minecraft from "@minecraft/server";
-import { setParticle, setTitle, kickPlayer, getSpeed, aroundAir, isAttackingFromOutsideView, inAir } from "./data/api/api.js";
+import { setParticle, setTitle, kickPlayer, getSpeed, aroundAir, isAttackingFromOutsideView, inAir, isAttackingFromAboveOrBelow } from "./data/api/api.js";
 import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
 import { commandHandler } from "./commands/handler.js";
 import config from "./data/config.js";
@@ -148,6 +148,8 @@ Minecraft.system.runInterval(() => {
 		//                   Aim Checks
 		// ==================================
 		if(config.generalModules.aim) {
+
+
 			// If there is a previous rotation stored
 			if (prevRotation) {
 				//const currentDiff = prevRotation
@@ -494,7 +496,7 @@ Minecraft.system.runInterval(() => {
 		// Store the players last good position
 		// When a movement-related check flags the player, they will be teleported to this position
 		// xRot and yRot being 0 means the player position was modified from player.teleport, which we should ignore
-		if(rotation.x !== 0 && rotation.y !== 0 && player.hasTag("ground")) player.lastGoodPosition = player.location;
+		if(rotation.x !== 0 && rotation.y !== 0 && player.isOnGround) player.lastGoodPosition = player.location;
 
 
 		// ==================================
@@ -557,7 +559,7 @@ Minecraft.system.runInterval(() => {
 					}
 				}
 				if(playerSpeed > 0.1 && vertical_velo === 0 && !player.hasTag("ground") && playerSpeed > config.modules.speedA.speed - 0.1 && isSurroundedByAir === true && !player.getEffect("speed")) {
-					flag(player, "Fly", "C", "Movement", "vertical", vertical_velo, false)
+					flag(player, "Fly", "C", "Movement", "vertical", vertical_velo, true)
 					currentVL++;
 				}
 			}
@@ -579,7 +581,7 @@ Minecraft.system.runInterval(() => {
 				const yVelocity = Math.abs(makeYVelocity1 / 2)
 				if(playerVelocity.y > yVelocity && playerVelocity.x > config.modules.flyD.Velocity && isSurroundedByAir === true && !player.getEffect("speed")) {
 					if(!player.isJumping || player.hasTag("sneak") || player.isSneaking) {
-						flag(player, "Fly", "D", "Movement", "velocity", Math.abs(playerVelocity.y).toFixed(4), false);
+						flag(player, "Fly", "D", "Movement", "velocity", Math.abs(playerVelocity.y).toFixed(4), true);
 					}
 				}
 			}
@@ -602,7 +604,7 @@ Minecraft.system.runInterval(() => {
 					
 					if(isSurroundedByAir === true && findHVelocity > config.modules.flyE.hVelocity && !player.getEffect("speed")) {
 						if(!player.isJumping || player.hasTag("sneak") || player.isSneaking) {
-							flag(player, "Fly", "E", "Movement", "yVelocity", Math.abs(player.velocityV).toFixed(4), false);
+							flag(player, "Fly", "E", "Movement", "yVelocity", Math.abs(player.velocityV).toFixed(4), true);
 							player.addTag("strict");
 						}
 					}          
@@ -648,10 +650,10 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.speed) {
 			// Speed/A = Checks for abnormal speed
 			// There is a built in system where it is more tolorant if a player is trusted by the anticheat
-			if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op") && !player.isFlying && !player.getEffect("speed") && !player.hasTag("trident") && !player.hasTag("damaged") && player.effe) {
+			if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op") && !player.isFlying && !player.getEffect("speed") && !player.hasTag("trident") && !player.hasTag("damaged")) {
 				if (playerSpeed > config.modules.speedA.speed + 0.1 && !player.hasTag("strict") || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.isJumping || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.hasTag("sprint") || playerSpeed > config.modules.speedA.speed && player.hasTag("strict")) {
-					
-					flag(player, "Speed", "A", "Movement", "speed", playerSpeed, false);
+
+					flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
 				}		
 			}	
 
@@ -667,7 +669,7 @@ Minecraft.system.runInterval(() => {
 				const oldSpeed2 = oldOldSpeed.get(player) || oldSpeed;
 	
 				// If the player's rotation has changed but their speed has not decreased, flag for Speed
-				if(Math.abs(currentRotation - oldRotation) > 35 + 1.2e-10 && currentSpeed >= oldSpeed && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.4 && !player.hasTag("damaged") && player.hasTag("strict") && !player.getEffect("speed")) {
+				if(Math.abs(currentRotation - oldRotation) > 40 + 1.2e-10 && currentSpeed >= oldSpeed && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.47 && !player.hasTag("damaged") && player.hasTag("strict") && !player.getEffect("speed")) {
 					flag(player, "Speed", "B", "Movement", "rotationDiff", `${Math.abs(currentRotation - oldRotation)},speed=${currentSpeed}`)
 				}
 
@@ -722,6 +724,16 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 
+
+
+			// BadPackets/E = Checks for full rotations (Exact angle)
+			if(config.modules.badpacketsE.enabed) {
+				if(rotation.x !== 0 && rotation.y !== 0) {
+					if(Number.isInteger(rotation.x) || Number.isInteger(rotation.y)) {
+						flag(player, "BadPackets", "E", "Rotation", "x", `${rotation.x},y=${rotation.y}`, false);
+					}
+				}
+			}
 
 			// Checks for derp rotation (Really fast)
 			if(config.modules.badpacketsD.enabled) {
@@ -1323,7 +1335,7 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	if(config.modules.autoclickerA.enabled) player.cps = 0;
 	if(config.customcommands.report.enabled) player.reports = [];
 	if(config.modules.killauraC.enabled) player.entitiesHit = [];
-
+	player.lastGoodPosition = player.location;
 	let rotationLogX;
 	let rotationLogY;
 	
@@ -1558,8 +1570,11 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		if (playerFlags.has(player)) {
 			// Report the player
 			if(player.hasTag("a")) {
-				flag(player, "Aim", "A", "Combat", "rotation", `${rotation.x},${rotation.y}`, false);
-				player.removeTag("a");
+				const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
+				if(distance > 2) {
+					flag(player, "Aim", "A", "Combat", "rotation", `${rotation.x},${rotation.y}`, false);
+					player.removeTag("a");
+				}
 			} 
 			if(player.hasTag("b")) {
 				flag(player, "Aim", "B", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
@@ -1605,18 +1620,30 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
 			if(rotation.x > 79 && distance > 2 || distance > 2 && rotation.x < -79) {
 				if(!player.hasTag("trident") && !player.hasTag("bow")) {
-					flag(player, "Killaura", "D", "Combat", "angle", `${rotation.x},distance=${distance}`, true);
+					flag(player, "Killaura", "D", "Combat", "angle", `${rotation.x},distance=${distance}`, false);
+					
 				}
 			}
 		}
 
 
+		// Killaura/F = Paradox check that looks for not having the attacked entity on screen
+		// This can cause some issues on laggy servers so im gonna have to try fix that
 		if(config.modules.killauraF.enabled) {
 			if(isAttackingFromOutsideView(player, entity, 90)) {
 				flag(player, "Killaura", "F", "Combat", "angle", "> 90", false);
 			}
-			
 		}
+
+
+		// Killaura/G = Checks for looking at the exact centre of the attaked entities hitbox
+		if(config.modules.killauraE.enabled) {
+			if(isAttackingFromOutsideView(player, entity, 1e-10) === false && !player.hasTag("noKillaura") && isAttackingFromAboveOrBelow(player, entity, 0.1)) {
+				flag(player, "Killaura", "E", "Combat", "angle to hitbox", "0.1-e2", false);
+			}
+		}
+
+
 
 	}
 
@@ -1697,7 +1724,7 @@ world.beforeEvents.itemUse.subscribe((itemUse) => {
 	}
 
 	if(!player.hasTag("usingItem")) {
-		player.addTag("usingItem")
+		player.addTag("usingItem");
 	}
 
 	// patch bypasses for the freeze system

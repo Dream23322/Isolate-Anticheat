@@ -710,6 +710,12 @@ export default
             "punishmentLength": "3d",
             "minVlbeforePunishment": 3
         },
+        "killauraE": {
+            "enabled": true,
+            "description": "Checks for perfect Aim (if the players looking at exact centre of hitbox",
+            "punishment": "kick",
+            "minVlbeforePunishment": 5
+        },
         "illegalitemsJ": {
             "enabled": false,
             "exclude_scythe_op": true,
@@ -826,6 +832,11 @@ export default
             "description": "Checks for invalid actions",
             "punishment": "kick",
             "minVlbeforePunishment": 15
+        },
+        "badpacketsE": {
+            "enabled": true,
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
         },
         "breakerA": {
             "enabled": true,

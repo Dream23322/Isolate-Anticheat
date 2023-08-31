@@ -132,6 +132,44 @@ export function isAttackingFromOutsideView(player1, player2, angle) {
     return false;
 }
 
+export function isAttackingFromAboveOrBelow(player1, player2, angle) {
+    if (!player1 || !player2) {
+        return false; // Invalid player objects
+    }
+
+    // Calculate the distance between the two players
+    const distance = Math.sqrt(Math.pow(player2.location.x - player1.location.x, 2) + Math.pow(player2.location.y - player1.location.y, 2) + Math.pow(player2.location.z - player1.location.z, 2));
+
+    // Check if the distance is greater than or equal to 2 blocks
+    if (distance >= 2) {
+        // Get the view direction vector of player1
+        const player1ViewDir = player1.getViewDirection();
+
+        // Calculate the vector from player1 to player2
+        const player1ToPlayer2 = {
+            x: player2.location.x - player1.location.x,
+            y: player2.location.y - player1.location.y,
+            z: player2.location.z - player1.location.z,
+        };
+
+        // Calculate the dot product
+        const dotProduct2 = player1ViewDir.x * player1ToPlayer2.x + player1ViewDir.y * player1ToPlayer2.y + player1ViewDir.z * player1ToPlayer2.z;
+
+        // Calculate the magnitude of the vector
+        const player1ToPlayer2Magnitude = Math.sqrt(player1ToPlayer2.x * player1ToPlayer2.x + player1ToPlayer2.y * player1ToPlayer2.y + player1ToPlayer2.z * player1ToPlayer2.z);
+
+        // Normalize the dot product
+        const normalizedDotProduct2 = dotProduct2 / (player1ToPlayer2Magnitude * Math.sqrt(player1ViewDir.x * player1ViewDir.x + player1ViewDir.y * player1ViewDir.y + player1ViewDir.z * player1ViewDir.z));
+
+        // Convert dot product to angle in degrees
+        const angle2 = Math.acos(normalizedDotProduct2) * (180 / Math.PI);
+
+        // Check if angle2 is greater than the input angle
+        return angle2 > angle;
+    }
+
+    return false;
+}
 
 export function getHealth(player) {
     const healthComponent = player.getComponent("minecraft:health");
