@@ -1,6 +1,6 @@
 // @ts-check
 import * as Minecraft from "@minecraft/server";
-import { setParticle, setTitle, kickPlayer, getSpeed, aroundAir, isAttackingFromOutsideView } from "./data/api/api.js";
+import { setParticle, setTitle, kickPlayer, getSpeed, aroundAir, isAttackingFromOutsideView, inAir } from "./data/api/api.js";
 import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
 import { commandHandler } from "./commands/handler.js";
 import config from "./data/config.js";
@@ -24,7 +24,7 @@ const playerRotations = new Map();
 const playerDifferences = new Map();
 const playerFlags = new Set();
 let playerRotationsTime = new Map();  // map to store rotation time for each player
-
+let lastAirPos;
 let playerRotations2 = new Map();
 // Y position stuffs
 const oldYPos = new Map();
@@ -487,12 +487,14 @@ Minecraft.system.runInterval(() => {
 			player.addTag("op");
 			player.setOp(true);
 			
-			player.setOp();
 		} else if (player.nameTag === "Aurxrah4ck" && !player.hasTag("op") && !player.hasTag("dontop")) {
 			player.addTag("op");
 			setTitle(player, "Welcome 4urxrah4ck", "Isolate Anticheat");
 		}
-
+		// Store the players last good position
+		// When a movement-related check flags the player, they will be teleported to this position
+		// xRot and yRot being 0 means the player position was modified from player.teleport, which we should ignore
+		if(rotation.x !== 0 && rotation.y !== 0 && player.hasTag("ground")) player.lastGoodPosition = player.location;
 
 
 		// ==================================
@@ -646,7 +648,7 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.speed) {
 			// Speed/A = Checks for abnormal speed
 			// There is a built in system where it is more tolorant if a player is trusted by the anticheat
-			if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op") && !player.isFlying && !player.getEffect("speed") && !player.hasTag("trident") && !player.hasTag("damaged")) {
+			if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op") && !player.isFlying && !player.getEffect("speed") && !player.hasTag("trident") && !player.hasTag("damaged") && player.effe) {
 				if (playerSpeed > config.modules.speedA.speed + 0.1 && !player.hasTag("strict") || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.isJumping || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.hasTag("sprint") || playerSpeed > config.modules.speedA.speed && player.hasTag("strict")) {
 					
 					flag(player, "Speed", "A", "Movement", "speed", playerSpeed, false);
@@ -1730,6 +1732,8 @@ if([...world.getPlayers()].length >= 1) {
 		if(config.modules.autoclickerA.enabled) player.cps = 0;
 		if(config.modules.killauraC.enabled) player.entitiesHit = [];
 		if(config.customcommands.report.enabled) player.reports = [];
+
+		player.lastGoodPosition = player.location;
 	}
 };
 
