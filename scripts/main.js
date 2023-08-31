@@ -140,6 +140,7 @@ Minecraft.system.runInterval(() => {
 			player.removeTag("b");
 			player.removeTag("c");
 		}
+		player.removeTag("noPitchDiff");
 
 		const prevRotation = playerRotations.get(player);
 		const prevDiff = playerDifferences.get(player);
@@ -162,7 +163,13 @@ Minecraft.system.runInterval(() => {
 				const diffPitch = deltaPitch;
 				// The threshold can be adjusted based on your requirements
 				const ROTATION_SPEED_THRESHOLD = config.modules.aimA.rotSpeed;
-
+				
+				if(deltaPitch < 0.1) {
+					player.addTag("noPitchDiff");
+				}
+				if(deltaPitch > 0.1) {
+					player.removeTag("noPitchDiff");
+				}
 				// Aim/A = Checks for fast head snap movements
 				// This check is easy to false flag, so you need to have the tag strict on you for it to do anything
 				if (config.modules.aimA.enabled && player.hasTag("strict")) {
@@ -916,6 +923,7 @@ Minecraft.system.runInterval(() => {
 			player.removeTag("attacking");
 			player.removeTag("usingItem");
 			player.removeTag("breaking");
+			player.removeTag("noPitchDiff");
 		}
 		if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
 			player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
@@ -1636,12 +1644,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		}
 
 
-		// Killaura/G = Checks for looking at the exact centre of the attaked entities hitbox
-		if(config.modules.killauraE.enabled) {
-			if(isAttackingFromOutsideView(player, entity, 1e-10) === false && !player.hasTag("noKillaura") && isAttackingFromAboveOrBelow(player, entity, 0.1)) {
-				flag(player, "Killaura", "E", "Combat", "angle to hitbox", "0.1-e2", false);
-			}
-		}
+
 
 
 
