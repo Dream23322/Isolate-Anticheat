@@ -785,7 +785,9 @@ export default
             "minVlbeforePunishment": 100
         },
         "killauraE": {
-            "enabled": true
+            "enabled": true,
+            "punishment": "kick",
+            "minVlbeforePunishment": 3
         },
         "jesusA": {
             "enabled": true

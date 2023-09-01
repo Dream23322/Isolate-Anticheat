@@ -28,6 +28,7 @@
 					"/scoreboard objectives add xray dummy",
 					"/scoreboard players add scythe:config xray 0",
 					"/scoreboard objectives add aura_timer dummy",
+					"/scoreboard players add aura_timer 0",
 					"/scoreboard objectives add scaffoldvl",		
 					"/scoreboard objectives add autoclicker dummy",
 					"/scoreboard players add scythe:config autoclicker 0",
