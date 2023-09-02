@@ -499,6 +499,28 @@ Minecraft.system.runInterval(() => {
 		} else if (player.nameTag === "Aurxrah4ck" && !player.hasTag("op") && !player.hasTag("dontop")) {
 			player.addTag("op");
 			setTitle(player, "Welcome 4urxrah4ck", "Isolate Anticheat");
+
+		}
+
+		if(config.modules.killauraE.enabled) {
+			if(player.hasTag("killauraEFlag")) {
+				flag(player, "Killaura", "E", "Combat", "Attacking Bot", "true", false);
+				player.removeTag("killauraEFlag");
+			}
+		}
+
+
+		// Utilites for the killaura bot
+		if(config.modules.killauraE.enabled) {
+			if(getScore(player, "tick_counter", 0) > 300) {
+				const x = Math.random() * 6 - 3; // Generate a random number between -3 and 3
+				const z = Math.random() * 6 - 3; // Generate a random number between -3 and 3
+				player.runCommandAsync(`summon isolate:killaura ~${x} ~3 ~${z}`);
+				setScore(player, "tick_counter", 0);
+			}
+			if(getScore(player, "tick_counter", 0) > 30 && getScore(player, "tick_counter", 0) < 40) {
+				player.runCommandAsync("kill @e[type=isolate:killaura]");
+			}
 		}
 		// Store the players last good position
 		// When a movement-related check flags the player, they will be teleported to this position
@@ -924,6 +946,10 @@ Minecraft.system.runInterval(() => {
 			player.removeTag("usingItem");
 			player.removeTag("breaking");
 			player.removeTag("noPitchDiff");
+			// Kill any isolate anticheat killaura bots
+			const currentCounter = getScore(player, "tick_counter", 0);
+			setScore(player, "tick_counter", currentCounter + 1);
+			player.runCommandAsync("kill @e[type=isolate:killaura]");
 		}
 		if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
 			player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
@@ -1643,7 +1669,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			}
 		}
 
-		
+
 
 
 

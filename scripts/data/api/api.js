@@ -175,3 +175,7 @@ export function getHealth(player) {
     const healthComponent = player.getComponent("minecraft:health");
     return healthComponent;
 }
+
+// Notepad
+
+ //"/tellraw @a[tag=notify] {\"rawtext\":[{\"text\":\"§r§j[§uIsolate§j]§r \"},{\"selector\":\"@p\"},{\"text\":\" §nhas failed §3[Combat] §uKillAura§b/§jE. - Hit Killaura Bot - §9VL= \"},{\"score\":{\"name\":\"@p\",\"objective\":\"killauravl\"}}]}",
