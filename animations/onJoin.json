@@ -83,6 +83,7 @@
 					"/scoreboard objectives add breakervl dummy",
 					"/scoreboard objectives add clicks dummy",
 					"/scoreboard objectives add strafevl dummy",
+					"/scoreboard objectives add tick_counter dummy",
 					// If enabled from previous login then activate
 					"/ability @s[tag=flying,m=!c] mayfly true"
 					// alert the user if Gametest Framework is not enabled
