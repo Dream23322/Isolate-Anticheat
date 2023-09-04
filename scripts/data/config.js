@@ -899,6 +899,12 @@ export default
             "description": "Checks if a players rotation is flat",
             "punishment": "kick",
             "minVlbeforePunishment": 15
+        },
+        "motionD": {
+            "enabled": true,
+            "description": "Checks for invalid movements",
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
         }
     },
     "misc_modules": {
