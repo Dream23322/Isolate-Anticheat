@@ -1,6 +1,6 @@
 // @ts-check
 import * as Minecraft from "@minecraft/server";
-import { setParticle, setTitle, kickPlayer, getSpeed, aroundAir, isAttackingFromOutsideView, inAir, isAttackingFromAboveOrBelow } from "./data/api/api.js";
+import { setParticle, setTitle, kickPlayer, getSpeed, aroundAir, isAttackingFromOutsideView, inAir, isAttackingFromAboveOrBelow, getBlocksBetween } from "./data/api/api.js";
 import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
 import { commandHandler } from "./commands/handler.js";
 import config from "./data/config.js";
@@ -744,6 +744,17 @@ Minecraft.system.runInterval(() => {
 						flag(player, "Motion", "B", "Movement", "height", jumpheight, false);
 					}
 				}
+			}
+			// Motion/C
+			if(config.modules.motion.enabled && Math.abs(playerVelocity.y).toFixed(4) === "0.1552" && !player.isJumping && !player.isGliding && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
+				const pos1 = {x: player.location.x + 2, y: player.location.y + 2, z: player.location.z + 2};
+				const pos2 = {x: player.location.x - 2, y: player.location.y - 1, z: player.location.z - 2};
+
+				
+				const isInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
+
+				if(isInAir && aroundAir(player)) flag(player, "Motion", "C", "Movement", "vertical_speed", Math.abs(playerVelocity.y).toFixed(4), true);
+					else if(config.debug) console.warn(`${new Date().toISOString()} | ${player.name} was detected with Motion/C but was found near solid blocks.`);
 			}
 		}
 
