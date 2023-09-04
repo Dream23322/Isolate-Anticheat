@@ -892,6 +892,12 @@ export default
             "description": "Checks for fly or bhop like motion",
             "punishment": "kick",
             "minVlbeforePunishment": 5
+        },
+        "badpacketsF": {
+            "enabled": true,
+            "description": "Checks if a players rotation is flat",
+            "punishment": "kick",
+            "minVlbeforePunishment": 15
         }
     },
     "misc_modules": {

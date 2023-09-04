@@ -192,8 +192,7 @@ Minecraft.system.runInterval(() => {
 						playerFlags.delete(player);
 					}
 				}
-				if((Number.isInteger(rotation.x) || Number.isInteger(rotation.y)) && rotation.x !== 0 && rotation.y !== 0) flag(player, "Aim", "B", "Combat", "xRot",`${rotation.x},yRot=${rotation.y}`, true);
-
+				
 				// Aim/C = Checks for smoothed rotation
 				if (config.modules.aimC.enabled) {
 					const oldDiff = oldOldDiff.get(player) || 0;
@@ -836,6 +835,7 @@ Minecraft.system.runInterval(() => {
 				flag(player, "Exploit", "B", "Packet", "y pos", player.location.y);
 			}
 
+			if((Number.isInteger(rotation.x) || Number.isInteger(rotation.y)) && rotation.x !== 0 && rotation.y !== 0) flag(player, "BadPackets", "F", "Rotation", "xRot",`${rotation.x},yRot=${rotation.y}`, true);
 
 			// Impossible Rotations
 			// Having your pitch over 90 isnt possible! Horion client might be able to do it
