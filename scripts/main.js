@@ -499,11 +499,11 @@ Minecraft.system.runInterval(() => {
 				) {
 					flag(player, "Fly", "A", "Movement", "y-position", oldYPosition, false);
 				}
-
 				if (!player.onGround && !player.isJumping) {
 					playerOldOldYPosition.set(player, oldYPosition);
 					playerOldYPosition.set(player, currentYPosition);
 				}
+
 			}
 
 			// Fly/B = Checks for vertical Fly
@@ -597,17 +597,19 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 
-			// Fly/F = checks for not falling down while flying
+			// Fly/F = Goofy prediction checks all thrown into one because im lazy
 			if(config.modules.flyF.enabled) {
 				if(aroundAir(player) === true) {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
-					const oldOldY = oldOldYPos.get(player) || currentYPos;
+					const oldOldY = oldOldYPos.get(player) || 0;
+					const yDiff = Math.abs(oldY - currentYPos);
+					
 
 					if(player.hasTag("moving") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
 						const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
-						//const prediction = oldOldY < currentYPos && !currentYPos > oldOldY
-						if(simYPos) {
+						const prediction = Math.abs(currentYPos - oldY) > player.fallDistance && player.fallDistance > 3 && yDiff > 5;
+						if(simYPos || yDiff > 10 || prediction) {
 							flag(player, "Fly", "F", "Movement", "diff", Math.abs(currentVL - oldY), false);
 						}
 					}
@@ -692,6 +694,17 @@ Minecraft.system.runInterval(() => {
 				const isInAir = !getBlocksBetween(pos1, pos2).some((block) => player.dimension.getBlock(block)?.typeId !== "minecraft:air");
 				if(isInAir && aroundAir(player)) flag(player, "Motion", "C", "Movement", "vertical_speed", Math.abs(playerVelocity.y).toFixed(4), true);
 					else if(config.debug) console.warn(`${new Date().toISOString()} | ${player.name} was detected with Motion/C but was found near solid blocks.`);
+			}
+
+			// Motion/D = Checks for invalid movements
+			if(config.modules.motionD.enabled) {
+				if(player.fallDistance === 0 && player.hasTag("jumping") && player.isJumping) {
+					flag(player, "Motion", "D", "Movement", "fallDistance", player.fallDistance, false);
+				}
+				if(player.fallDistance === 0 && player.isOnGround && player.isJumping) {
+					flag(player, "Motion", "D", "Movement", "onGround", "while Jumping", false);
+				}
+				
 			}
 		}
 
@@ -872,6 +885,7 @@ Minecraft.system.runInterval(() => {
 			setScore(player, "tick_counter", currentCounter + 1);
 			//player.runCommandAsync("kill @e[type=isolate:killaura]");
 		}
+		
 
 		if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
 			player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
