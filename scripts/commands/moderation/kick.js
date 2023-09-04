@@ -30,14 +30,11 @@ export function kick(message, args) {
     }
 
     if(!member) return player.sendMessage("§r§j[§uIsolate§j]§r Couldn't find that player.");
-    const message = `${member.nameTag} §jwas §pkicked§j by §n${player.nameTag} §j[§n${reason}§j]`;
-    
-    data.recentLogs.push(message)
+
     // make sure they dont kick themselves
     if(member.id === player.id) return player.sendMessage("§r§j[§uIsolate§j]§r You cannot kick yourself.");
 
     if(!isSilent) player.runCommandAsync(`kick "${member.name}" ${reason}`);
     member.triggerEvent("scythe:kick");
-    
     player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has kicked ${member.name} ${isSilent ? "(Silent) ": ""}for ${reason}"}]}`);
 }
