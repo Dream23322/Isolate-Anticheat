@@ -22,6 +22,8 @@ export function unban(message, args) {
     if(data.unbanQueue.includes(member)) return player.sendMessage(`§r§j[§uIsolate§j]§r ${member} is already queued for an unban.`);
 
     data.unbanQueue.push(member.toLowerCase());
+    const message = `${member.nameTag} §jwas §punbanned§j by §n${player.nameTag} §j[§n${reason}§j]`;
     
+    data.recentLogs.push(message)
     player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has added ${member} to the unban queue. Reason: ${reason}"}]}`);
 }
