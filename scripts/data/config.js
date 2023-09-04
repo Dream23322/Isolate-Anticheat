@@ -12,6 +12,7 @@ export default
     "ViolationsBeforeBan": 30,
 
     // If you dont really know how to config the anticheat, use this... lol
+    "silent": true,
     "generalModules": {
         "fly": true,
         "speed": true,
@@ -712,7 +713,7 @@ export default
         },
         "killauraE": {
             "enabled": true,
-            "description": "Checks for perfect Aim (if the players looking at exact centre of hitbox",
+            "description": "Killaura Bot check (Spawns a fake player and if gets attacked it flags)",
             "punishment": "kick",
             "minVlbeforePunishment": 5
         },

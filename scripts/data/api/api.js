@@ -176,6 +176,18 @@ export function getHealth(player) {
     return healthComponent;
 }
 
+
+/**
+ * @name setSound - Plays a sound for the world to hear
+ * @param {object} player - The player running the sound function
+ * @param {string} id - The id of the played sound
+ * @example setSound(player, "mob.goat.death.screamer");
+ * @remarks That sound will play for everyone
+ */
+export function setSound(player, id) {
+    player.runCommandAsync(`playsound ${id} @a`);
+}
+
 // Notepad
 
  //"/tellraw @a[tag=notify] {\"rawtext\":[{\"text\":\"§r§j[§uIsolate§j]§r \"},{\"selector\":\"@p\"},{\"text\":\" §nhas failed §3[Combat] §uKillAura§b/§jE. - Hit Killaura Bot - §9VL= \"},{\"score\":{\"name\":\"@p\",\"objective\":\"killauravl\"}}]}",
