@@ -471,7 +471,7 @@ export default
         },
         "flyA": {
             "enabled": true,
-            "punishment": "ban",
+            "punishment": "kick",
             "punishmentLength": "5m",
             "minVlbeforePunishment": 10
         },    
@@ -603,6 +603,13 @@ export default
             "punishment": "kick",
             "punishmentLength": "3m",
             "minVlbeforePunishment": 5
+        },
+        "scaffoldA": {
+            "enabled": true,
+            "description": "Checks for goofy velocity while scaffolding",
+            "max_y_pos_diff": 0.35,
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
         },
         "scaffoldB": {
             "enabled": true,
@@ -770,8 +777,7 @@ export default
         // Flags as scaffold/a because it can detect scaffold :D
         "towerA": {
             "enabled": true,
-            "max_y_pos_diff": 0.35,
-            "punishment": "ban",
+            "punishment": "kick",
             "minVlbeforePunishment": 15
         },
         "illegalitemsN": {
@@ -784,11 +790,6 @@ export default
             "magnitude": -0.078,
             "punishment": "kick",
             "minVlbeforePunishment": 100
-        },
-        "killauraE": {
-            "enabled": true,
-            "punishment": "kick",
-            "minVlbeforePunishment": 3
         },
         "jesusA": {
             "enabled": true
