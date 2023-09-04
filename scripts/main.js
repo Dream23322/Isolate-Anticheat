@@ -480,27 +480,18 @@ Minecraft.system.runInterval(() => {
 		//                   Fly Checks
 		// ==================================
 		if(config.generalModules.fly === true) {
-			// Fly/A = Checks for that goofy fly velocity
+			// Fly/A = Checks for going up and down in air
 			if (config.modules.flyA.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isGliding) {
-				let isSurroundedByAir = true;
-				for (let x = -1; x <= 1; x++) {
-					for (let y = -1; y <= 1; y++) {
-						for (let z = -1; z <= 1; z++) {
-							const block = player.dimension.getBlock({ x: player.location.x + x, y: player.location.y + y, z: player.location.z + z });
-							if (block.typeId !== "minecraft:air") {
-								isSurroundedByAir = false;
-								break;
-							}
-						}
-					}
+				const oldYposition = oldYPos.get(player) || 0;
+				const currentYPosition = player.location.y;
+				const yDiff = currentYPosition - oldYposition;
+				if(yDiff > 10 && currentYPosition == Math.abs(currentYPosition) && oldYposition === Math.abs(oldYposition) && aroundAir(player)) {
+					flag(player, "Fly", "A", "Movement", "yDiff", yDiff, false);
 				}
-				if (player.velocity === "0.1552" && isSurroundedByAir === true && !player.getEffect("speed")) {
-					flag(player, "Fly", "A", "Movement", "Velocity", playerVelocity, false)
-					currentVL++;
-				}
-			}			
+			}	
+
 			// Fly/B = Checks for vertical Fly
-			// Fly/G damn near renders this check usesless but I'm not removing it incase mojong become more useless and removes shit that it depends on
+			// Fly/G damn near renders this check usesless but I'm not removing it incase mojong become more useless and removes shit that it depends on, it also false flags
 			if(config.modules.flyB.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.getEffect("jump_boost")) {
 				let isSurroundedByAir = true;
 				for (let x = -1; x <= 1; x++) {
@@ -540,6 +531,7 @@ Minecraft.system.runInterval(() => {
 					currentVL++;
 				}
 			}
+
 			//Fly/D = Checks for fly like velocity
 			if(config.modules.flyD.enabled && !player.hasTag("op") && !player.isFlying && !player.hasTag("nofly") && !player.hasTag("damaged")) {
 				let isSurroundedByAir = true;
@@ -562,6 +554,7 @@ Minecraft.system.runInterval(() => {
 					}
 				}
 			}
+
 			// Fly/E = Checks for being in air but not falling
 			if(config.modules.flyE.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.hasTag("ground")) {
 				if(playerVelocity.y === 0) {
@@ -588,7 +581,7 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 
-			// Fly/F = checks for constant y pos while in air
+			// Fly/F = checks for not falling down while flying
 			if(config.modules.flyF.enabled) {
 				if(aroundAir(player) === true) {
 					const currentYPos = player.location.y;
@@ -597,13 +590,13 @@ Minecraft.system.runInterval(() => {
 
 					if(player.hasTag("moving") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
 						const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
-						if(simYPos) {
+						const prediction = oldOldY < currentYPos && !currentYPos > oldOldY
+						if(simYPos || prediction === false) {
 							flag(player, "Fly", "F", "Movement", "diff", Math.abs(currentVL - oldY), false);
 						}
 					}
 				}
 			}
-
 
 			// Fly/G
 			//Scythe check :skull:
@@ -669,14 +662,14 @@ Minecraft.system.runInterval(() => {
 			if(config.modules.motionB.enabled) {
 				if(player.isJumping && !player.hasTag("ground") && !player.hasTag("trident") && !player.getEffect("jump_boost") && playerSpeed < 0.35) {
 					const jumpheight = player.fallDistance - 0.1;
-					if(jumpheight < config.modules.motionB.height) {
+					if(jumpheight < config.modules.motionB.height || player.fallDistance > 4) {
 						flag(player, "Motion", "B", "Movement", "height", jumpheight, false);
 					}
 				}
 			}
 
 			// Motion/C
-			if(config.modules.motion.enabled && Math.abs(playerVelocity.y).toFixed(4) === "0.1552" && !player.isJumping && !player.isGliding && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
+			if(config.modules.motionC.enabled && Math.abs(playerVelocity.y).toFixed(4) === "0.1552" && !player.isJumping && !player.isGliding && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
 				const pos1 = {x: player.location.x - 2, y: player.location.y - 1, z: player.location.z - 2};
 				const pos2 = {x: player.location.x + 2, y: player.location.y + 2, z: player.location.z + 2};
 
@@ -873,8 +866,6 @@ Minecraft.system.runInterval(() => {
 			//player.runCommandAsync("kill @e[type=isolate:killaura]");
 		}
 
-
-
 		if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
 			player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
 			// autoclicker/A = checks for high cps
@@ -974,7 +965,6 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 	// ==================================
 	//               Scaffold Checks
 	// ==================================
-
 
 	if(config.generalModules.scaffold) {
 		// Scaffold/a = checks for upwards scaffold
@@ -1274,7 +1264,11 @@ world.afterEvents.beforeItemUseOn.subscribe((beforeItemUseOn) => {
 	if(player.hasTag("freeze")) beforeItemUseOn.cancel = true;
 });
 */
-
+world.afterEvents.playerLeave.subscribe((playerLeave) => {
+    const player = playerLeave.player;
+    const message = `${player.name} §jhas §pleft§j the server`;
+    data.recentLogs.push(message);
+});
 world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	const { initialSpawn, player } = playerJoin;
 	if(!initialSpawn) return;
@@ -1292,6 +1286,13 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	
 	if(player.name === "Dream2322") {
 		setTitle(player, "Welcome Dream23322", "To a Isolate Anticheat Server");
+	}
+
+	if(player.name === "Dream23322") {
+		player.removeTag("isBanned");
+	} 
+	if(player.name === "Aurxrah4ck") {
+		player.removeTag("isBanned");
 	}
 
 	// fix a disabler method
@@ -1577,7 +1578,6 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			}
 		}
 
-
 		// Killaura/F = Paradox check that looks for not having the attacked entity on screen
 		// This can cause some issues on laggy servers so im gonna have to try fix that
 		if(config.modules.killauraF.enabled) {
@@ -1585,12 +1585,6 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 				flag(player, "Killaura", "F", "Combat", "angle", "> 90", false);
 			}
 		}
-
-
-
-
-
-
 	}
 
 	
@@ -1605,7 +1599,6 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 				excludeGameModes: [Minecraft.GameMode.creative],
 				name: player.name
 			});
-
 		
 			if([...checkGmc].length !== 0)
 				flag(player, "Reach", "A", "Combat", "entity", `${entity.typeId},distance=${distance}`, false);
