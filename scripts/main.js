@@ -132,7 +132,6 @@ Minecraft.system.runInterval(() => {
 		const playerVelocity = player.getVelocity();
 		const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
 
-
 		// To reduce false flags we do this
 		if(player.hasTag("a") || player.hasTag("b") || player.hasTag("c")) {
 			// Remove all tags every tick
@@ -150,12 +149,8 @@ Minecraft.system.runInterval(() => {
 		// ==================================
 		if(config.generalModules.aim) {
 
-
 			// If there is a previous rotation stored
 			if (prevRotation) {
-				//const currentDiff = prevRotation
-				//const oldDiff = prevDiff.get(player) || currentDiff
-
 				// Maths go brrrrrrrr
 				const deltaYaw = rotation.y - prevRotation.y;
 				const deltaPitch = rotation.x - prevRotation.x;
@@ -214,12 +209,9 @@ Minecraft.system.runInterval(() => {
 					}
 				}
 			}
-	
-			
 			playerRotations.set(player, rotation);
 		}
-		
-		
+				
 		const selectedSlot = player.selectedSlot;
 
 		if(player.isGlobalBanned || player.nameTag in banplayer) {
@@ -238,14 +230,11 @@ Minecraft.system.runInterval(() => {
 			player.flagAutotoolA = true;
 			player.autotoolSwitchDelay = Date.now() - player.startBreakTime;
 		}
-
 		
 		// Crasher/A = invalid pos check
 		if(config.modules.crasherA.enabled && Math.abs(player.location.x) > 30000000 ||
 			Math.abs(player.location.y) > 30000000 || Math.abs(player.location.z) > 30000000) 
 				flag(player, "Crasher", "A", "Exploit", "x_pos", `${player.location.x},y_pos=${player.location.y},z_pos=${player.location.z}`, true);
-				
-		
 
 		// anti-namespoof
 		// these values are set in the playerJoin event
@@ -281,9 +270,6 @@ Minecraft.system.runInterval(() => {
 				}
 			} else config.modules.bedrockValidate.enabled = false;
 		}
-
-
-
 
 		// ==================================
 		//                 Item Checks
@@ -445,21 +431,9 @@ Minecraft.system.runInterval(() => {
 				currentVL++;
 		}
 
-
-		
-
-
 		// ==================================
 		//                    Utilities
 		// ==================================
-
-
-		// // If the player is on the ground, store their position
-		// if(player.hasTag("ground")) {
-		// 	const currentPosition = { x: player.position.x, y: player.position.y, z: player.position.z };
-		// 	lastGroundPositionLog.set(player, currentPosition);
-		// }
-
 
 		// Im currently adding more management for the strict system, it wont be a full system it will just be there to help prevent false flags
 		if(getScore(player, "kickvl", 0) > config.ViolationsBeforeBan / 2 && !player.hasTag("strict")) {
@@ -475,7 +449,6 @@ Minecraft.system.runInterval(() => {
 		if(player.hasTag("moving") && config.debug && player.hasTag("log")) {
 			console.warn(`${player.nameTag} speed is ${playerSpeed} Velocity ${playerVelocity}`);
 		}
-
 
 		// If player has the tag meme we do what alice anticheat cant
 		if(player.hasTag("meme")) {
@@ -501,13 +474,9 @@ Minecraft.system.runInterval(() => {
 			setTitle(player, "Welcome 4urxrah4ck", "Isolate Anticheat");
 
 		}
-
-
-
-
-		
+		// ---------------------------------
 		// Utilites for the killaura bot
-		
+		// ---------------------------------
 
 		// The flag system and the counter and summon system
 		if(config.modules.killauraE.enabled) {
@@ -517,7 +486,6 @@ Minecraft.system.runInterval(() => {
 				setScore(player, "tick_counter", 190);
 			}
 		}
-
 
 		if(config.modules.killauraE.enabled) {
 			if(getScore(player, "tick_counter", 0) > 200) {
@@ -531,14 +499,10 @@ Minecraft.system.runInterval(() => {
 			}
 		}
 
-
-
-
 		// Store the players last good position
 		// When a movement-related check flags the player, they will be teleported to this position
 		// xRot and yRot being 0 means the player position was modified from player.teleport, which we should ignore
 		if(rotation.x !== 0 && rotation.y !== 0 && player.isOnGround) player.lastGoodPosition = player.location;
-
 
 		// ==================================
 		//                   Fly Checks
@@ -683,7 +647,6 @@ Minecraft.system.runInterval(() => {
 			}
 		}
 
-
 		// ==================================
 		//                 Speed Checks
 		// ==================================
@@ -703,31 +666,24 @@ Minecraft.system.runInterval(() => {
 				// Get the player's current speed and rotation
 				const currentSpeed = playerSpeed
 				const currentRotation = rotation.y;
-	
 				// Get the player's previous speed and rotation
 				const oldSpeed = previousSpeedLog.get(player) || currentSpeed;
 				const oldRotation = previousRotationLog.get(player) || currentRotation;
 				const oldSpeed2 = oldOldSpeed.get(player) || oldSpeed;
-	
 				// If the player's rotation has changed but their speed has not decreased, flag for Speed
-				if(Math.abs(currentRotation - oldRotation) > 40 + 1.2e-10 && currentSpeed >= oldSpeed && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.47 && !player.hasTag("damaged") && player.hasTag("strict") && !player.getEffect("speed")) {
+				if(Math.abs(currentRotation - oldRotation) > 40 + 1.2e-10 && currentSpeed >= oldSpeed + 0.1 && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.48 && !player.hasTag("damaged") && player.hasTag("strict") && !player.getEffect("speed") && !player.hasTag("nospeed")) {
 					flag(player, "Speed", "B", "Movement", "rotationDiff", `${Math.abs(currentRotation - oldRotation)},speed=${currentSpeed}`)
 				}
-
-	
 				// Update the player's previous speed and rotation
 				oldOldSpeed.set(player, oldSpeed);
 				previousSpeedLog.set(player, currentSpeed);
 				previousRotationLog.set(player, currentRotation);
-				
 			}
-
 		}
 
 		// ==================================
 		//                 Motion Checks
 		// ==================================
-		
 		if(config.generalModules.motion) {
 			// Motion/A = Checks for very high speed in air
 			if(config.modules.motionA.enabled && !player.hasTag("op")) {
@@ -736,6 +692,7 @@ Minecraft.system.runInterval(() => {
 					player.addTag("strict");
 				}
 			}
+
 			// Motion/B = checks for invalid vertical motion
 			if(config.modules.motionB.enabled) {
 				if(player.isJumping && !player.hasTag("ground") && !player.hasTag("trident") && !player.getEffect("jump_boost") && playerSpeed < 0.35) {
@@ -745,27 +702,23 @@ Minecraft.system.runInterval(() => {
 					}
 				}
 			}
+
 			// Motion/C
 			if(config.modules.motion.enabled && Math.abs(playerVelocity.y).toFixed(4) === "0.1552" && !player.isJumping && !player.isGliding && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
 				const pos1 = {x: player.location.x - 2, y: player.location.y - 1, z: player.location.z - 2};
 				const pos2 = {x: player.location.x + 2, y: player.location.y + 2, z: player.location.z + 2};
 
 				const isInAir = !getBlocksBetween(pos1, pos2).some((block) => player.dimension.getBlock(block)?.typeId !== "minecraft:air");
-
-
 				if(isInAir && aroundAir(player)) flag(player, "Motion", "C", "Movement", "vertical_speed", Math.abs(playerVelocity.y).toFixed(4), true);
 					else if(config.debug) console.warn(`${new Date().toISOString()} | ${player.name} was detected with Motion/C but was found near solid blocks.`);
 			}
 		}
-
 
 		// ==================================
 		//                 Packet Checks
 		// ==================================
 
 		if(config.generalModules.packet) {
-
-
 			//Badpackets/B = Checks for nopacket/blink movement
 			if(config.modules.badpacketsB.enabled && !player.hasTag("op")) {
 				if(playerSpeed > config.modules.badpacketsB.speed) {
@@ -775,8 +728,6 @@ Minecraft.system.runInterval(() => {
 					}
 				}
 			}
-
-
 
 			// BadPackets/E = Checks for full rotations (Exact angle)
 			if(config.modules.badpacketsE.enabed) {
@@ -806,14 +757,6 @@ Minecraft.system.runInterval(() => {
 					
 				}
 
-
-				// Me and USSR/MrDiamond64 worked on this together dont bully me
-				// if(config.modules.badpacketsJ.enabled) {
-				// 	if(Number.isInteger(rotation.x) || Number.isInteger(rotation.y) && rotation.x !== 0 && rotation.x !== 0 && !player.hasTag("op") && !player.hasTag("trident")) {
-				// 		flag(player, "BadPackets", "J", "Rotation", "integer", "true", false);
-				// 	}
-				// }
-	
 				// Update stored rotations
 				lastPlayerYawRotations.set(player, currentRotation.y);
 				lastYawDiff.set(player, yawDiff);
@@ -835,6 +778,7 @@ Minecraft.system.runInterval(() => {
 				flag(player, "Exploit", "B", "Packet", "y pos", player.location.y);
 			}
 
+			// Checks for a players rotation being a flat number
 			if((Number.isInteger(rotation.x) || Number.isInteger(rotation.y)) && rotation.x !== 0 && rotation.y !== 0) flag(player, "BadPackets", "F", "Rotation", "xRot",`${rotation.x},yRot=${rotation.y}`, true);
 
 			// Impossible Rotations
@@ -842,11 +786,9 @@ Minecraft.system.runInterval(() => {
 			if(Math.abs(rotation.x) > config.modules.badpacketsI.angle && config.modules.badpacketsI.enabled) {
 				flag(player, "BadPackets", "I", "Rotation", "angle", rotation.x, true);
 			}
-
-			
+		
 			// BadPackets/7 = Checks for invalid actions
 			// So like if someone attacks while placing a block, or if someone breaks and places a block, not possible!
-			
 			if(config.modules.badpacketsG.enabled) {
 				if(player.hasTag("placing") && player.hasTag("attacking")) {
 					flag(player, "BadPackets", "G", "Packet", "actions", "Placement, Attacking", false);
@@ -869,9 +811,6 @@ Minecraft.system.runInterval(() => {
 			}
 
 		}
-
-
-
 
 		// General movement
 		if(config.generalModules.movement) {
@@ -923,9 +862,6 @@ Minecraft.system.runInterval(() => {
 		// ==================================
 		//               Other Checks
 		// ==================================
-
-
-
 
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
 		if(config.modules.scaffoldF.enabled) {
