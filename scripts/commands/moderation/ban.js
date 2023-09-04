@@ -38,9 +38,7 @@ export function ban(message, args) {
 
     // cannot ban staff members
     if(member.hasTag("op")) return player.sendMessage("§r§j[§uIsolate§j]§r You cannot ban other staff members.");
-    const message = `${member.nameTag} §jwas §pbanned§j by §n${player.nameTag} §j[§n${reason}§j]`;
-    
-    data.recentLogs.push(message)
+
     // removes old ban data
     member.getTags().forEach(t => {
         if(t.includes("reason:") || t.includes("by:") || t.includes("time:")) member.removeTag(t);
