@@ -512,8 +512,8 @@ export default
         // Do **NOT** enabled
         // The check is broken
         "flyF": {
-            "enabled": false,
-            "description":"Checks for constant Y pos in air",
+            "enabled": true,
+            "description": "Prediction Check",
             "punishment": "none", 
             "diff": 0.1,
             "punishmentLength": "3d",

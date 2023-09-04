@@ -609,6 +609,10 @@ Minecraft.system.runInterval(() => {
 					if(player.hasTag("moving") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
 						const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
 						const prediction = Math.abs(currentYPos - oldY) > player.fallDistance && player.fallDistance > 3 && yDiff > 5;
+
+						// Ill think about using this, if other fail
+						const prediction2 = Math.abs(currentYPos - oldY) > 5;
+					
 						if(simYPos || yDiff > 10 || prediction) {
 							flag(player, "Fly", "F", "Movement", "diff", Math.abs(currentVL - oldY), false);
 						}
@@ -704,7 +708,7 @@ Minecraft.system.runInterval(() => {
 				if(player.fallDistance === 0 && player.isOnGround && player.isJumping) {
 					flag(player, "Motion", "D", "Movement", "onGround", "while Jumping", false);
 				}
-				
+
 			}
 		}
 
