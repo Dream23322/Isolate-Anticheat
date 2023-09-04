@@ -8,40 +8,20 @@ import { banList } from "./data/globalban.js";
 import data from "./data/data.js";
 import { mainGui, playerSettingsMenuSelected } from "./features/ui.js";
 import { banplayer } from "./data/paradoxban.js";
-const system = Minecraft.system;
 
 const world = Minecraft.world;
-// Create a map to store the previous speed and rotation of each player
+
+// Maps for logging data that we use in checks
 const previousSpeedLog = new Map();
 const previousRotationLog = new Map();
 const oldOldSpeed = new Map();
-
-const oldPlayerRot = new Map();
-const oldOldPlayerRot = new Map();
-
 const oldOldDiff = new Map();
 const playerRotations = new Map();
 const playerDifferences = new Map();
 const playerFlags = new Set();
-let playerRotationsTime = new Map();  // map to store rotation time for each player
-let lastAirPos;
-let playerRotations2 = new Map();
-// Y position stuffs
 const oldYPos = new Map();
 const oldOldYPos = new Map();
-
 let lastPlayerYawRotations = new Map();
-
-// Create a map to store the previous health of each player
-const previousHealth = new Map();
-const previousFallDistance = new Map();
-
-const lastCPS = new Map();
-// Create a map to store the number of blocks each player has placed in the current second
-const blocksPlaced = new Map();
-let previousRotation = null;
-let previousDifference = null;
-
 
 const lastYawDiff = new Map();
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
@@ -76,14 +56,6 @@ world.beforeEvents.chatSend.subscribe((msg) => {
 		}
 	}
 });
-// Listen for the entity hurt event
-// Minecraft.system.listenForEvent("minecraft:entity_hurt", (eventData) => {
-//     // If the entity that got hurt is a player, add the "damaged" tag
-//     if(eventData.data.entity.__identifier__ === "minecraft:player") {
-//         const player = eventData.data.entity;
-//         player.addTag("damaged");
-//     }
-// });
 
 world.afterEvents.chatSend.subscribe((msg) => {
 	const player = msg.sender;
