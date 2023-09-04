@@ -502,17 +502,25 @@ Minecraft.system.runInterval(() => {
 
 		}
 
+
+
+
+		
+		// Utilites for the killaura bot
+		
+
+		// The flag system and the counter and summon system
 		if(config.modules.killauraE.enabled) {
 			if(player.hasTag("killauraEFlag")) {
 				flag(player, "Killaura", "E", "Combat", "Attacking Bot", "true", false);
 				player.removeTag("killauraEFlag");
+				setScore(player, "tick_counter", 190);
 			}
 		}
 
 
-		// Utilites for the killaura bot
 		if(config.modules.killauraE.enabled) {
-			if(getScore(player, "tick_counter", 0) > 300) {
+			if(getScore(player, "tick_counter", 0) > 200) {
 				const x = Math.random() * 6 - 3; // Generate a random number between -3 and 3
 				const z = Math.random() * 6 - 3; // Generate a random number between -3 and 3
 				player.runCommandAsync(`summon isolate:killaura ~${x} ~3 ~${z}`);
@@ -522,6 +530,10 @@ Minecraft.system.runInterval(() => {
 				player.runCommandAsync("kill @e[type=isolate:killaura]");
 			}
 		}
+
+
+
+
 		// Store the players last good position
 		// When a movement-related check flags the player, they will be teleported to this position
 		// xRot and yRot being 0 means the player position was modified from player.teleport, which we should ignore
@@ -867,21 +879,10 @@ Minecraft.system.runInterval(() => {
 
 			// NoFall/A = Checks for falling with no damage
 			if(config.modules.nofallA.enabled) {
-				// Get the player's health component
-				const healthComponent = player.getComponent("minecraft:health");
-
-				// Get the player's previous health and fall distance
-				const oldHealth = previousHealth.get(player) || healthComponent.value;
-				const oldFallDistance = previousFallDistance.get(player) || player.fallDistance;
-
-				// If the player was falling and is now on the ground, but their health has not decreased, flag for NoFall
-				if(oldFallDistance > config.modules.nofallA.distance && player.isOnGround && healthComponent.value >= oldHealth) {
-					flag(player, "NoFall", "A", "Exploit", "distance", player.fallDistance, false);
+				//  The actual check
+				if(player.isOnGround && !player.hasTag("damaged") && player.fallDistance > 3) {
+					flag(player, "NoFall", "A", "Movement", "fallDistance", player.fallDistance, true);
 				}
-
-				// Update the player's previous health and fall distance
-				previousHealth.set(player, healthComponent.value);
-				previousFallDistance.set(player, player.fallDistance);
 			}
 
 			// NoSlow/A = speed limit check
@@ -949,16 +950,22 @@ Minecraft.system.runInterval(() => {
 			// Kill any isolate anticheat killaura bots
 			const currentCounter = getScore(player, "tick_counter", 0);
 			setScore(player, "tick_counter", currentCounter + 1);
-			player.runCommandAsync("kill @e[type=isolate:killaura]");
+			//player.runCommandAsync("kill @e[type=isolate:killaura]");
 		}
+
+
+
 		if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
 			player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
+			if(player.cps !== 0) {
+				player.runCommand(`tell @a[tag=notify,tag=seeCPS] my current cps is ${player.cps}`);
+			}
 			// autoclicker/A = checks for high cps
 			const prvCps = lastCPS.get(player) || 0;
 			if(player.cps > config.modules.autoclickerA.maxCPS) flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
 			lastCPS.set(player, player.cps);
 
-			const cpsDiff = Math.abs(prvCps - player.cps) <= config.modules.autoclickerB.maxDeviation;
+			const cpsDiff = Math.abs(prvCps - player.cps) <= config.modules.autoclickerB.maxDeviation && player.cps > 10;
 			if(config.modules.autoclickerB.enabled && cpsDiff) {
 				flag(player, "Autoclicker", "B", "Combat", "cpsDiff", Math.abs(prvCps - player.cps))
 			}
@@ -1092,8 +1099,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 			if(!player.isFlying) {
 				if(!player.hasTag("trident")) {
 					if(rotation.x === 60) {
-						flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);
-						
+						flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);	
 					}
 				}
 			}	
@@ -1704,6 +1710,11 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 
 	if(!player.hasTag("attacking")) {
 		player.addTag("attacking")
+	}
+
+
+	if(config.modules.killauraE.enabled) {
+		setScore(player, "tick_counter", getScore(player, "tick_counter", 0) + 2);
 	}
 	// check if the player was hit with the UI item, and if so open the UI for that player
 	if(config.customcommands.ui.enabled && player.hasTag("op") && entity.typeId === "minecraft:player") {

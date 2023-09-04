@@ -3,7 +3,7 @@
 import * as Minecraft from "@minecraft/server";
 import config from "./data/config.js";
 import data from "./data/data.js";
-import { setParticle } from "./data/api/api.js";
+import { setParticle, setSound } from "./data/api/api.js";
 
 
 const world = Minecraft.world;
@@ -179,7 +179,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
 
 
-    if(shouldTP) player.teleport(check === "Crasher" ? {x: 30000000, y: 30000000, z: 30000000} : player.lastGoodPosition, {dimension: player.dimension, rotation: {x: rotation.x, y: rotation.y}, keepVelocity: false});
+    if(shouldTP && config.silent === false) player.teleport(check === "Crasher" ? {x: 30000000, y: 30000000, z: 30000000} : player.lastGoodPosition, {dimension: player.dimension, rotation: {x: rotation.x, y: rotation.y}, keepVelocity: false});
 
    
 
@@ -261,9 +261,12 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     player.addTag(`time:${Date.now() + banLength2}`);
                     player.addTag("isBanned");
                     setScore(player, "kickvl", 0);
+                    setSound(player, "raid:horn");
+                    console.warn(`${new Date().toISOString()} |${player.name} was banned by Isolate Anticheat for ${check}/${checkType}`);
                     const message = `${player.name} §jwas §pbanned§j by §nIsolate Anticheat §j[§n${check}§j]`;
     
                     data.recentLogs.push(message)
+                    
                 }
                 player.runCommandAsync("function tools/resetwarns");
                 setParticle(player, "explode");
@@ -271,7 +274,8 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     player.sendMessage("§4§klakjfdal;skdjfa;lskdjf;alskjdfa;lskjdfa;lksjdf;laskjdf;laskjdf;laskjdf;alskjdfa;lksjdf;alsjkfdla;skjdfa;lskdjfa;lsdjf;lasjdfl;aksjdfl;aksjdf;laksjdfl;kajsd;flkjaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
                 }
                 player.addTag("strict");
-                
+                setSound(player, "mob.endermen.death");
+                console.warn(`${new Date().toISOString()} |${player.name} was kicked by Isolate Anticheat for ${check}/${checkType}`);
                 const message = `${player.name} §jwas §pkicked §jby §nIsolate Anticheat §j[§n${check}§j]`;
     
                 data.recentLogs.push(message)
@@ -292,7 +296,8 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
             if(getScore(player, "autoban") >= 0) {
 
                 const punishmentLength = checkData.punishmentLength?.toLowerCase();
-                
+                setSound(player, "mob.enderdragon.death");
+                console.warn(`${new Date().toISOString()} |${player.name} was banned by Isolate Anticheat for ${check}/${checkType}`);
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been banned by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
 
                 // this removes old ban stuff
