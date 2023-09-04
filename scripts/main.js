@@ -192,6 +192,7 @@ Minecraft.system.runInterval(() => {
 						playerFlags.delete(player);
 					}
 				}
+				if((Number.isInteger(rotation.x) || Number.isInteger(rotation.y)) && rotation.x !== 0 && rotation.y !== 0) flag(player, "Aim", "B", "Combat", "xRot",`${rotation.x},yRot=${rotation.y}`, true);
 
 				// Aim/C = Checks for smoothed rotation
 				if (config.modules.aimC.enabled) {
@@ -747,11 +748,11 @@ Minecraft.system.runInterval(() => {
 			}
 			// Motion/C
 			if(config.modules.motion.enabled && Math.abs(playerVelocity.y).toFixed(4) === "0.1552" && !player.isJumping && !player.isGliding && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
-				const pos1 = {x: player.location.x + 2, y: player.location.y + 2, z: player.location.z + 2};
-				const pos2 = {x: player.location.x - 2, y: player.location.y - 1, z: player.location.z - 2};
+				const pos1 = {x: player.location.x - 2, y: player.location.y - 1, z: player.location.z - 2};
+				const pos2 = {x: player.location.x + 2, y: player.location.y + 2, z: player.location.z + 2};
 
-				
-				const isInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
+				const isInAir = !getBlocksBetween(pos1, pos2).some((block) => player.dimension.getBlock(block)?.typeId !== "minecraft:air");
+
 
 				if(isInAir && aroundAir(player)) flag(player, "Motion", "C", "Movement", "vertical_speed", Math.abs(playerVelocity.y).toFixed(4), true);
 					else if(config.debug) console.warn(`${new Date().toISOString()} | ${player.name} was detected with Motion/C but was found near solid blocks.`);
@@ -968,18 +969,9 @@ Minecraft.system.runInterval(() => {
 
 		if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
 			player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
-			if(player.cps !== 0) {
-				player.runCommand(`tell @a[tag=notify,tag=seeCPS] my current cps is ${player.cps}`);
-			}
 			// autoclicker/A = checks for high cps
-			const prvCps = lastCPS.get(player) || 0;
 			if(player.cps > config.modules.autoclickerA.maxCPS) flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
-			lastCPS.set(player, player.cps);
 
-			const cpsDiff = Math.abs(prvCps - player.cps) <= config.modules.autoclickerB.maxDeviation && player.cps > 10;
-			if(config.modules.autoclickerB.enabled && cpsDiff) {
-				flag(player, "Autoclicker", "B", "Combat", "cpsDiff", Math.abs(prvCps - player.cps))
-			}
 			player.firstAttack = Date.now();
 			player.cps = 0;
 		}
