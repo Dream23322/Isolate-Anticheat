@@ -22,7 +22,9 @@ const playerFlags = new Set();
 const oldYPos = new Map();
 const oldOldYPos = new Map();
 let lastPlayerYawRotations = new Map();
-
+const oldFallDistance = new Map();
+const playerOldOldYPosition = new Map(); // Stores the player's least recent y position
+const playerOldYPosition = new Map(); // Stores the player's middle y position
 const lastYawDiff = new Map();
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
 let currentVL;
@@ -482,13 +484,27 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.fly === true) {
 			// Fly/A = Checks for going up and down in air
 			if (config.modules.flyA.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isGliding) {
-				const oldYposition = oldYPos.get(player) || 0;
+
+				// Add the flying detection check here
+				const oldOldYPosition = playerOldOldYPosition.get(player);
+				const oldYPosition = playerOldYPosition.get(player);
 				const currentYPosition = player.location.y;
-				const yDiff = currentYPosition - oldYposition;
-				if(yDiff > 10 && currentYPosition == Math.abs(currentYPosition) && oldYposition === Math.abs(oldYposition) && aroundAir(player)) {
-					flag(player, "Fly", "A", "Movement", "yDiff", yDiff, false);
+
+				// If the conditions are met, flag the player
+				if (
+					oldOldYPosition !== undefined &&
+					oldYPosition !== undefined &&
+					currentYPosition === oldOldYPosition &&
+					currentYPosition < oldYPosition
+				) {
+					flag(player, "Fly", "A", "Movement", "y-position", oldYPosition, false);
 				}
-			}	
+
+				if (!player.onGround && !player.isJumping) {
+					playerOldOldYPosition.set(player, oldYPosition);
+					playerOldYPosition.set(player, currentYPosition);
+				}
+			}
 
 			// Fly/B = Checks for vertical Fly
 			// Fly/G damn near renders this check usesless but I'm not removing it incase mojong become more useless and removes shit that it depends on, it also false flags
@@ -590,8 +606,8 @@ Minecraft.system.runInterval(() => {
 
 					if(player.hasTag("moving") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
 						const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
-						const prediction = oldOldY < currentYPos && !currentYPos > oldOldY
-						if(simYPos || prediction === false) {
+						//const prediction = oldOldY < currentYPos && !currentYPos > oldOldY
+						if(simYPos) {
 							flag(player, "Fly", "F", "Movement", "diff", Math.abs(currentVL - oldY), false);
 						}
 					}
@@ -694,15 +710,6 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 
-			// BadPackets/E = Checks for full rotations (Exact angle)
-			if(config.modules.badpacketsE.enabed) {
-				if(rotation.x !== 0 && rotation.y !== 0) {
-					if(Number.isInteger(rotation.x) || Number.isInteger(rotation.y)) {
-						flag(player, "BadPackets", "E", "Rotation", "x", `${rotation.x},y=${rotation.y}`, false);
-					}
-				}
-			}
-
 			// Checks for derp rotation (Really fast)
 			if(config.modules.badpacketsD.enabled) {
 				const currentRotation = player.getRotation();
@@ -744,7 +751,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// Checks for a players rotation being a flat number
-			if((Number.isInteger(rotation.x) || Number.isInteger(rotation.y)) && rotation.x !== 0 && rotation.y !== 0) flag(player, "BadPackets", "F", "Rotation", "xRot",`${rotation.x},yRot=${rotation.y}`, true);
+			if((Number.isInteger(rotation.x) || Number.isInteger(rotation.y)) && rotation.x !== 0 && rotation.y !== 0 && rotation.x !== 90 && rotation.x !== 60) flag(player, "BadPackets", "F", "Rotation", "xRot",`${rotation.x},yRot=${rotation.y}`, true);
 
 			// Impossible Rotations
 			// Having your pitch over 90 isnt possible! Horion client might be able to do it
@@ -969,7 +976,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 	if(config.generalModules.scaffold) {
 		// Scaffold/a = checks for upwards scaffold
 		// Need to improve this because its really easy to false flag
-		if(config.modules.towerA.enabled && playerSpeed < 0.2) {
+		if(config.modules.scaffoldA.enabled && playerSpeed < 0.2) {
 			// get block under player
 			const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 			
@@ -977,7 +984,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 			if(!player.isFlying && player.isJumping && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
 				const yPosDiff = player.location.y - Math.floor(Math.abs(player.location.y));
 				
-				if(yPosDiff > config.modules.towerA.max_y_pos_diff) {
+				if(yPosDiff > config.modules.scaffoldA.max_y_pos_diff) {
 					const checkGmc = world.getPlayers({
 						excludeGameModes: [Minecraft.GameMode.creative],
 						name: player.name
@@ -1052,6 +1059,16 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 			if(distance < 2) {
 				const valueOfBlocks = getScore(player, "scaffoldAmount", 0)
 				setScore(player, "scaffoldAmount", valueOfBlocks + 1);
+			}
+		}
+
+		// Tower/A = Checks for 90 degree rotation
+		if(config.modules.towerA.enabled) {
+			// get block under player
+			const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
+			if(rotation.x === 90 && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
+				flag(player, "Tower", "A", "Placement", "xRot", "90", true);
+				undoPlace = true
 			}
 		}
 	}
@@ -1266,7 +1283,7 @@ world.afterEvents.beforeItemUseOn.subscribe((beforeItemUseOn) => {
 */
 world.afterEvents.playerLeave.subscribe((playerLeave) => {
     const player = playerLeave.player;
-    const message = `${player.name} §jhas §pleft§j the server`;
+    const message = `${player} §jhas §pleft§j the server`;
     data.recentLogs.push(message);
 });
 world.afterEvents.playerSpawn.subscribe((playerJoin) => {
@@ -1292,6 +1309,9 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 		player.removeTag("isBanned");
 	} 
 	if(player.name === "Aurxrah4ck") {
+		player.removeTag("isBanned");
+	}
+	if(player.name === "CoySugar1636776") {
 		player.removeTag("isBanned");
 	}
 
@@ -1594,7 +1614,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
 		//if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}`);
 
-		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && !player.hasTag("strict") || distance > 5.3 && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && player.hasTag("strict")) {
+		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && !player.hasTag("strict") || distance > config.modules.reachA.reach - 0.1 && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && player.hasTag("strict")) {
 			const checkGmc = world.getPlayers({
 				excludeGameModes: [Minecraft.GameMode.creative],
 				name: player.name
