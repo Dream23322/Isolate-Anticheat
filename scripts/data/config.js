@@ -886,6 +886,12 @@ export default
             ],
             "punishment": "kick",
             "minVlbeforePunishment": 10
+        },
+        "motionC": {
+            "enabled": true,
+            "description": "Checks for fly or bhop like motion",
+            "punishment": "kick",
+            "minVlbeforePunishment": 5
         }
     },
     "misc_modules": {
