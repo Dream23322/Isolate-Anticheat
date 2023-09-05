@@ -727,10 +727,6 @@ Minecraft.system.runInterval(() => {
 				if(player.fallDistance === 0 && player.isOnGround && player.isJumping) {
 					flag(player, "Motion", "D", "Movement", "onGround", "while Jumping", false);
 				}
-				if(player.fallDistance < -1.1 && player.isOnGround && !player.isJumping) {
-					flag(player, "Motion", "D", "Movement", "onground", "inAir", false);
-				}
-
 			}
 		}
 
