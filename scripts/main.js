@@ -684,7 +684,10 @@ Minecraft.system.runInterval(() => {
 			if(config.modules.motionB.enabled) {
 				if(player.isJumping && !player.hasTag("ground") && !player.hasTag("trident") && !player.getEffect("jump_boost") && playerSpeed < 0.35) {
 					const jumpheight = player.fallDistance - 0.1;
-					if(jumpheight < config.modules.motionB.height) {
+					const oldFall = oldFallDistance.get(player) || 0;
+					const currentFall = player.fallDistance;
+					const prediction = oldFallDistance !== currentFall && !aroundAir(player) && jumpheight < config.modules.motionB.height;
+					if(prediction === false) {
 						flag(player, "Motion", "B", "Movement", "height", jumpheight, false);
 					}
 				}
