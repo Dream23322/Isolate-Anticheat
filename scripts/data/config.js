@@ -803,7 +803,7 @@ export default
             "enabled": true,
             "speed": 11.5,
             "description": "Checks for really high speed",
-            "punishment": "ban",
+            "punishment": "kick",
             "punishmentLength": "30d",
             "minVlbeforePunishment": 2
         },
@@ -890,7 +890,7 @@ export default
         },
         "motionC": {
             "enabled": true,
-            "description": "Checks for fly or bhop like motion",
+            "description": "Checks for fly or bhop like velocity",
             "punishment": "kick",
             "minVlbeforePunishment": 5
         },

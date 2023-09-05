@@ -613,7 +613,7 @@ Minecraft.system.runInterval(() => {
 						// Ill think about using this, if other fail
 						const prediction2 = Math.abs(currentYPos - oldY) > 5;
 					
-						if(simYPos || yDiff > 10 || prediction) {
+						if(simYPos || yDiff > 10 || prediction === false || prediction2 === false) {
 							flag(player, "Fly", "F", "Movement", "diff", Math.abs(currentVL - oldY), false);
 						}
 					}
@@ -684,7 +684,7 @@ Minecraft.system.runInterval(() => {
 			if(config.modules.motionB.enabled) {
 				if(player.isJumping && !player.hasTag("ground") && !player.hasTag("trident") && !player.getEffect("jump_boost") && playerSpeed < 0.35) {
 					const jumpheight = player.fallDistance - 0.1;
-					if(jumpheight < config.modules.motionB.height || player.fallDistance > 4) {
+					if(jumpheight < config.modules.motionB.height) {
 						flag(player, "Motion", "B", "Movement", "height", jumpheight, false);
 					}
 				}
