@@ -905,6 +905,12 @@ export default
             "description": "Checks for invalid movements",
             "punishment": "kick",
             "minVlbeforePunishment": 10
+        },
+        "predictionA": {
+            "enabled": true,
+            "description": "Checks for faststop",
+            "punishment": "kick",
+            "minVlbeforePunishment": 100
         }
     },
     "misc_modules": {

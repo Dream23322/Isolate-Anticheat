@@ -14,6 +14,7 @@ const world = Minecraft.world;
 // Maps for logging data that we use in checks
 const previousSpeedLog = new Map();
 const previousRotationLog = new Map();
+const fastStopLog = new Map();
 const oldOldSpeed = new Map();
 const oldOldDiff = new Map();
 const playerRotations = new Map();
@@ -26,6 +27,8 @@ const oldFallDistance = new Map();
 const playerOldOldYPosition = new Map(); // Stores the player's least recent y position
 const playerOldYPosition = new Map(); // Stores the player's middle y position
 const lastYawDiff = new Map();
+const predictionOldSpeed = new Map();
+
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
 let currentVL;
 world.beforeEvents.chatSend.subscribe((msg) => {
@@ -549,6 +552,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			//Fly/D = Checks for fly like velocity
+			// This check is really scuffed because when I made it (in my old anticheat) I had no idea what I was talking about, but it works for some reason...
 			if(config.modules.flyD.enabled && !player.hasTag("op") && !player.isFlying && !player.hasTag("nofly") && !player.hasTag("damaged")) {
 				let isSurroundedByAir = true;
 				for (let x = -1; x <= 1; x++) {
@@ -607,17 +611,32 @@ Minecraft.system.runInterval(() => {
 					
 
 					if(player.hasTag("moving") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
-						const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
+						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
 						const prediction = Math.abs(currentYPos - oldY) > player.fallDistance && player.fallDistance > 3 && yDiff > 5;
 
 						// Ill think about using this, if other fail
 						const prediction2 = Math.abs(currentYPos - oldY) > 5;
+						// Calculate if the player is moving upwards by more than 4 units
+						let goingUp = currentYPos > oldY && currentYPos - oldY > 4;
+						if(goingUp) {
+							// If the player is moving upwards by more than 3 units, flag
+							flag(player, "Fly", "F", "Movement", "y-position", oldY, false);
+						}
 					
-						if(simYPos || yDiff > 10 || prediction === false || prediction2 === false) {
-							flag(player, "Fly", "F", "Movement", "diff", Math.abs(currentVL - oldY), false);
+						if(yDiff > 10) {
+							flag(player, "Fly", "F", "Movement", "YDIff", "true", false);
+						}
+						if(prediction) {
+							flag(player, "Fly", "F", "Movement", "prediction1", "true", false);
+						}
+						if(prediction2) {
+							flag(player, "Fly", "F", "Movement", "prediction2", "true", false);
 						}
 					}
+					oldOldYPos.set(player, oldY);
+					oldYPos.set(player, currentYPos);
 				}
+
 			}
 
 			// Fly/G
@@ -684,10 +703,7 @@ Minecraft.system.runInterval(() => {
 			if(config.modules.motionB.enabled) {
 				if(player.isJumping && !player.hasTag("ground") && !player.hasTag("trident") && !player.getEffect("jump_boost") && playerSpeed < 0.35) {
 					const jumpheight = player.fallDistance - 0.1;
-					const oldFall = oldFallDistance.get(player) || 0;
-					const currentFall = player.fallDistance;
-					const prediction = oldFallDistance !== currentFall && !aroundAir(player) && jumpheight < config.modules.motionB.height;
-					if(prediction === false) {
+					if(jumpheight < config.modules.motionB.height) {
 						flag(player, "Motion", "B", "Movement", "height", jumpheight, false);
 					}
 				}
@@ -710,6 +726,9 @@ Minecraft.system.runInterval(() => {
 				}
 				if(player.fallDistance === 0 && player.isOnGround && player.isJumping) {
 					flag(player, "Motion", "D", "Movement", "onGround", "while Jumping", false);
+				}
+				if(player.fallDistance < -1.1 && player.isOnGround && !player.isJumping) {
+					flag(player, "Motion", "D", "Movement", "onground", "inAir", false);
 				}
 
 			}
@@ -836,6 +855,25 @@ Minecraft.system.runInterval(() => {
 					flag(player, "NoSlow", "A", "Movement", "speed", playerSpeed, true);
 					currentVL++;
 					player.addTag("strict");
+				}
+			}
+
+			// Prediction/A = Checks for fast stop
+			if(config.modules.predictionA.enabled) {
+				if(playerSpeed === 0) {
+					const lastSpeed = fastStopLog.get(player) || 0;
+					const currentSpeed = getSpeed(player);
+					if(currentSpeed === 0 && lastSpeed > 0.22) {
+						const pos1 = {x: player.location.x - 2, y: player.location.y, z: player.location.z - 2};
+						const pos2 = {x: player.location.x + 2, y: player.location.y + 2, z: player.location.z + 2};
+		
+						const isInAir = !getBlocksBetween(pos1, pos2).some((block) => player.dimension.getBlock(block)?.typeId !== "minecraft:air");
+						if(isInAir && playerSpeed === 0) {
+							if(!player.isJumping && !player.hasTag("moving")) {
+								flag(player, "Prediction", "A", "Movement", "lastSpeed", lastSpeed, false);
+							}
+						}
+					}
 				}
 			}
 			
