@@ -498,7 +498,8 @@ Minecraft.system.runInterval(() => {
 					oldOldYPosition !== undefined &&
 					oldYPosition !== undefined &&
 					currentYPosition === oldOldYPosition &&
-					currentYPosition < oldYPosition
+					currentYPosition < oldYPosition + 5 &&
+					
 				) {
 					flag(player, "Fly", "A", "Movement", "y-position", oldYPosition, false);
 				}
@@ -617,13 +618,13 @@ Minecraft.system.runInterval(() => {
 						// Ill think about using this, if other fail
 						const prediction2 = Math.abs(currentYPos - oldY) > 5;
 						// Calculate if the player is moving upwards by more than 4 units
-						let goingUp = currentYPos > oldY && currentYPos - oldY > 4;
+						let goingUp = currentYPos > oldY && currentYPos - oldY > 80;
 						if(goingUp) {
 							// If the player is moving upwards by more than 3 units, flag
 							flag(player, "Fly", "F", "Movement", "y-position", oldY, false);
 						}
 					
-						if(yDiff > 10) {
+						if(yDiff > 20) {
 							flag(player, "Fly", "F", "Movement", "YDIff", "true", false);
 						}
 						if(prediction) {
