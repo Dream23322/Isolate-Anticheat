@@ -28,6 +28,11 @@ const playerOldOldYPosition = new Map(); // Stores the player's least recent y p
 const playerOldYPosition = new Map(); // Stores the player's middle y position
 const lastYawDiff = new Map();
 const predictionOldSpeed = new Map();
+const oldx = new Map();
+const oldz = new Map();
+const oldoldx = new Map();
+const oldoldz = new Map();
+
 
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
 let currentVL;
@@ -485,30 +490,52 @@ Minecraft.system.runInterval(() => {
 		//                   Fly Checks
 		// ==================================
 		if(config.generalModules.fly === true) {
-			// Fly/A = Checks for going up and down in air
+			// Fly/A = Checks for consistant airspeed
 			if (config.modules.flyA.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isGliding) {
+				// Check for invalid downwards accelerations
+				const oldxp = oldx.get(player) || 0;
+				const oldzp = oldz.get(player) || 0;
+				const oldoldxp = oldoldx.get(player) || 0;
+				const oldoldzp = oldoldz.get(player) || 0;
 
-				// Add the flying detection check here
-				const oldOldYPosition = playerOldOldYPosition.get(player);
-				const oldYPosition = playerOldYPosition.get(player);
-				const currentYPosition = player.location.y;
+				const diffx = Math.abs(player.location.x - oldxp);
+				const diffy = Math.abs(player.location.y - oldzp);
+				const diffx2 = Math.abs(player.location.x - oldoldxp);
+				const diffy2 = Math.abs(player.location.y - oldoldzp);
+				// Calculate the the differences from the last 3 ticks
+				// oldoldxp is the x position from the last 3 ticks
+				// oldoldyp is the z position from the last 3 ticks
+				// oldxp is the x position from the last tick
+				// oldyp is the z position from the last tick
 
-				// If the conditions are met, flag the player
-				if (
-					oldOldYPosition !== undefined &&
-					oldYPosition !== undefined &&
-					currentYPosition === oldOldYPosition &&
-					currentYPosition < oldYPosition + 5 &&
-					
-				) {
-					flag(player, "Fly", "A", "Movement", "y-position", oldYPosition, false);
+				// We calculate 2 diffferences so that we can compare the 2
+				const diff1 = Math.abs(oldoldxp - oldxp);
+				const diff2 = Math.abs(oldoldzp - oldzp);
+				const diff3 = Math.abs(oldxp - player.location.x);
+				const diff4 = Math.abs(oldzp - player.location.z);
+
+				// Calculate the final differences
+				const final1 = Math.abs(diff1 - diff2) / 2;
+				const final2 = Math.abs(diff3 - diff4) / 2;
+
+				// If the differences are the same, flag for fly/A
+				if (final1 === 0 && final2 === 0) {
+					// if the player is in Air, continue to flag
+					if(aroundAir(player)) {
+						flag(player, "Fly", "A", "Movement", "difference", final1, false);
+					}
 				}
-				if (!player.onGround && !player.isJumping) {
-					playerOldOldYPosition.set(player, oldYPosition);
-					playerOldYPosition.set(player, currentYPosition);
-				}
 
+				// Update all maps if the player is in air
+				if(aroundAir(player) && !player.isOnGround) {
+					oldx.set(player, player.location.x);
+					oldz.set(player, player.location.z);
+					oldoldx.set(player, oldxp);
+					oldoldz.set(player, oldzp);
+				}
 			}
+
+			
 
 			// Fly/B = Checks for vertical Fly
 			// Fly/G damn near renders this check usesless but I'm not removing it incase mojong become more useless and removes shit that it depends on, it also false flags
@@ -526,7 +553,8 @@ Minecraft.system.runInterval(() => {
 					}
 				}
 				const hVelocity = Math.abs((playerVelocity.x + playerVelocity.z) / 2);
-				if(isSurroundedByAir === true && playerVelocity.y > config.modules.flyB.minVelocity && hVelocity < config.modules.flyB.MaxHVelocity && !player.hasTag("op") && !player.isJumping && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.getEffect("speed")) {
+				const yVelocity = playerVelocity.y;
+				if(isSurroundedByAir === true && playerVelocity.y > config.modules.flyB.minVelocity && hVelocity < config.modules.flyB.MaxHVelocity && !player.hasTag("op") && !player.isJumping && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.getEffect("speed") && yVelocity > 1.0) {
 					flag(player, "Fly", "B", "Movement", "yVelocity", Math.abs(playerVelocity.y), false);
 				} 
 			}
@@ -607,32 +635,20 @@ Minecraft.system.runInterval(() => {
 				if(aroundAir(player) === true) {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
-					const oldOldY = oldOldYPos.get(player) || 0;
+					const currentSpeed = playerSpeed;
 					const yDiff = Math.abs(oldY - currentYPos);
-					
+
 
 					if(player.hasTag("moving") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
 						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
 						const prediction = Math.abs(currentYPos - oldY) > player.fallDistance && player.fallDistance > 3 && yDiff > 5;
+						// IF the player fails the prediction, flag them
 
-						// Ill think about using this, if other fail
-						const prediction2 = Math.abs(currentYPos - oldY) > 5;
-						// Calculate if the player is moving upwards by more than 4 units
-						let goingUp = currentYPos > oldY && currentYPos - oldY > 80;
-						if(goingUp) {
-							// If the player is moving upwards by more than 3 units, flag
-							flag(player, "Fly", "F", "Movement", "y-position", oldY, false);
-						}
-					
-						if(yDiff > 20) {
-							flag(player, "Fly", "F", "Movement", "YDIff", "true", false);
-						}
-						if(prediction) {
+						
+						if(prediction && currentSpeed > config.modules.flyF.speed) {
 							flag(player, "Fly", "F", "Movement", "prediction1", "true", false);
 						}
-						if(prediction2) {
-							flag(player, "Fly", "F", "Movement", "prediction2", "true", false);
-						}
+
 					}
 					oldOldYPos.set(player, oldY);
 					oldYPos.set(player, currentYPos);
@@ -709,6 +725,7 @@ Minecraft.system.runInterval(() => {
 					}
 				}
 			}
+			
 
 			// Motion/C
 			if(config.modules.motionC.enabled && Math.abs(playerVelocity.y).toFixed(4) === "0.1552" && !player.isJumping && !player.isGliding && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
@@ -724,9 +741,6 @@ Minecraft.system.runInterval(() => {
 			if(config.modules.motionD.enabled) {
 				if(player.fallDistance === 0 && player.hasTag("jumping") && player.isJumping) {
 					flag(player, "Motion", "D", "Movement", "fallDistance", player.fallDistance, false);
-				}
-				if(player.fallDistance === 0 && player.isOnGround && player.isJumping) {
-					flag(player, "Motion", "D", "Movement", "onGround", "while Jumping", false);
 				}
 			}
 		}
@@ -797,7 +811,7 @@ Minecraft.system.runInterval(() => {
 				flag(player, "BadPackets", "I", "Rotation", "angle", rotation.x, true);
 			}
 		
-			// BadPackets/7 = Checks for invalid actions
+			// BadPackets/G = Checks for invalid actions
 			// So like if someone attacks while placing a block, or if someone breaks and places a block, not possible!
 			if(config.modules.badpacketsG.enabled) {
 				if(player.hasTag("placing") && player.hasTag("attacking")) {
@@ -848,7 +862,7 @@ Minecraft.system.runInterval(() => {
 
 			// NoSlow/A = speed limit check
 			if(config.modules.noslowA.enabled && playerSpeed >= config.modules.noslowA.speed && playerSpeed <= config.modules.noslowA.maxSpeed) {
-				if(!player.getEffect("speed") && player.hasTag('moving') && player.hasTag('right') && player.hasTag('ground') && !player.hasTag('jump') && !player.hasTag('gliding') && !player.hasTag('swimming') && !player.hasTag("trident") && getScore(player, "right") >= 5) {
+				if(!player.getEffect("speed") && player.hasTag('moving') && player.hasTag('right') && player.hasTag('ground') && !player.hasTag('jump') && !player.hasTag('gliding') && !player.hasTag('swimming') && !player.hasTag("trident") && getScore(player, "right") >= 5 && !player.hasTag("damaged")) {
 					flag(player, "NoSlow", "A", "Movement", "speed", playerSpeed, true);
 					currentVL++;
 					player.addTag("strict");
