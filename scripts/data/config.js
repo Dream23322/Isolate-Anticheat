@@ -246,6 +246,11 @@ export default
             "enabled": true,
             "requiredTags": ["op"],
             "aliases": ["log", "data", "recent", "rl", "recentlogs"]
+        },
+        "module": {
+            "enabled": true,
+            "requiredTags": ["op"],
+            "aliases": ["m", "settings"]
         }
     },
     "modules": {
@@ -399,7 +404,7 @@ export default
             "speed": 0.22,
             "maxSpeed": 0.36,
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 15
         },
         "noslowB": {
             "enabled": true,
@@ -516,6 +521,7 @@ export default
             "description": "Prediction Check",
             "punishment": "none", 
             "diff": 0.1,
+            "speed": 2.45,
             "punishmentLength": "3d",
             "minVlbeforePunishment": 10
         },   
@@ -677,7 +683,7 @@ export default
             "enabled": true,
             "description": "Checks for derp hacks",
             "punishment": "kick",
-            "minVlbeforePunishment": 15
+            "minVlbeforePunishment": 30
         },
         "illegalitemsH": {
             "enabled": false,

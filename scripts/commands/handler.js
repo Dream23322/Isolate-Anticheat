@@ -44,9 +44,21 @@ import { kickall } from "./moderation/kickall.js";
 import { testban } from "./other/testban.js";
 import { about } from "./utility/about.js";
 import { logs } from "./utility/logs.js";
+import { module } from "./settings/module.js"
 
 const prefix = config.customcommands.prefix;
+export function registerCommand(data) {
+    const { name, execute } = data;
 
+    if(typeof name !== "string") throw TypeError(`data.name is type of ${typeof name}. Expected "string"`);
+    if(typeof execute !== "function") throw TypeError(`data.execute is type of ${typeof execute}. Expected "function"`);
+
+    if(commands[name]) throw Error(`Command "${name}" has already been registered`);
+
+    if(!config.customcommands[name]) throw Error(`No valid config found for ${name}`);
+
+    commands[name] = data;
+}
 /**
  * @name commandHandler
  * @param {object} message - Message data
