@@ -97,12 +97,11 @@ const prefix = config.customcommands.prefix;
  * @param {object} message - Message data
  */
 export function commandHandler(message) {
-export function commandHandler(message) {
     // validate that required params are defined
     if(typeof message !== "object") throw TypeError(`message is type of ${typeof message}. Expected "object"`);
     if(typeof message !== "object") throw TypeError(`message is type of ${typeof message}. Expected "object"`);
 
-    const player = message.sender;
+    
     const player = message.sender;
 
     if(config.debug) console.warn(`${new Date().toISOString()} | did run command handler`);
@@ -111,26 +110,25 @@ export function commandHandler(message) {
     if(!message.message.startsWith(prefix)) return;
     if(!message.message.startsWith(prefix)) return;
 
-    const args = message.message.slice(prefix.length).split(/ +/);
+   
     const args = message.message.slice(prefix.length).split(/ +/);
 
     const command = args.shift().toLowerCase().trim();
 
     if(config.debug) console.warn(`${new Date().toISOString()} | ${player.name} used the command: ${prefix}${command} ${args.join(" ")}`);
 
-    let commandData;
-    let commandName;
+
     let commandData;
     let commandName;
 
-    try {
+    
     try {
         if(typeof config.customcommands[command] === "object") {
             commandData = config.customcommands[command];
             commandName = command;
         } else {
             // check if the command is an alias
-            for (const cmd of Object.keys(config.customcommands)) {
+            
             for (const cmd of Object.keys(config.customcommands)) {
                 const data = config.customcommands[cmd];
                 if(typeof data !== "object" || !data.aliases || !data.aliases.includes(command)) continue;
@@ -146,18 +144,17 @@ export function commandHandler(message) {
                 if(config.customcommands.sendInvalidCommandMsg) {
                     player.sendMessage(`§r§j[§uIsolate§j]§c The command: ${command} was not found. Please make sure it exists.`);
                     message.cancel = true;
-                    player.sendMessage(`§r§j[§uIsolate§j]§c The command: ${command} was not found. Please make sure it exists.`);
-                    message.cancel = true;
+                    
+
                 }
                 return;
             }
         }
 
-        message.cancel = true;
+        
         message.cancel = true;
 
         if(commandData.requiredTags.length >= 1 && commandData.requiredTags.some(tag => !player.hasTag(tag))) {
-            player.sendMessage("§r§j[§uIsolate§j]§r You need to be Isolate-Opped to use this command. To gain Isolate-op please run: /function op");
             player.sendMessage("§r§j[§uIsolate§j]§r You need to be Isolate-Opped to use this command. To gain Isolate-op please run: /function op");
             return;
         }
@@ -167,12 +164,12 @@ export function commandHandler(message) {
             return;
         }
 
-        runCommand(message, commandName, args);
+        
         runCommand(message, commandName, args);
     } catch (error) {
         console.error(`${new Date().toISOString()} | ${error} ${error.stack}`);
         player.sendMessage(`§r§j[§uIsolate§j]§r There was an error while trying to run this command. Please forward this message to https://discord.gg/9m9TbgJ973.\n-------------------------\nCommand: ${String(message.message)}\n${String(error)}\n${error.stack || "\n"}-------------------------`);
-        player.sendMessage(`§r§j[§uIsolate§j]§r There was an error while trying to run this command. Please forward this message to https://discord.gg/9m9TbgJ973.\n-------------------------\nCommand: ${String(message.message)}\n${String(error)}\n${error.stack || "\n"}-------------------------`);
+        
     }
 }
 
@@ -189,16 +186,12 @@ function runCommand(msg, commandName, args) {
 	for(const item in msg) {
 		message[item] = msg[item];
 	}
-    const message = {};
-	for(const item in msg) {
-		message[item] = msg[item];
-	}
 
     message.sender = world.getPlayers({
         name: msg.sender.name
     })[0];
 
-    system.run(() => {
+    
     system.run(() => {
         try {
             if(commandName === "kick") kick(message, args);
@@ -247,7 +240,6 @@ function runCommand(msg, commandName, args) {
                 else throw Error(`Command ${commandName} was found in config.js but no handler for it was found.`);
         } catch (error) {
             console.error(`${new Date().toISOString()} | ${error} ${error.stack}`);
-            message.sender.sendMessage(`§r§j[§uIsolate§j]§r There was an error while trying to run this command. Please forward this message to Dream23322 (aka:4urxra).\n-------------------------\nCommand: ${String(message.message)}\n${String(error)}\n${error.stack || "\n"}-------------------------`);
             message.sender.sendMessage(`§r§j[§uIsolate§j]§r There was an error while trying to run this command. Please forward this message to Dream23322 (aka:4urxra).\n-------------------------\nCommand: ${String(message.message)}\n${String(error)}\n${error.stack || "\n"}-------------------------`);
         }
     });
