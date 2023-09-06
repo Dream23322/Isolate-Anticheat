@@ -1,4 +1,5 @@
 // @ts-check
+// @ts-ignore
 import * as Minecraft from "@minecraft/server";
 import { setParticle, setTitle, kickPlayer, getSpeed, aroundAir, isAttackingFromOutsideView, inAir, isAttackingFromAboveOrBelow, getBlocksBetween } from "./data/api/api.js";
 import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
