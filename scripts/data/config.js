@@ -250,7 +250,7 @@ export default
         "module": {
             "enabled": true,
             "requiredTags": ["op"],
-            "aliases": ["m", "settings"]
+            "aliases": ["m", "settings", "setting"]
         }
     },
     "modules": {
