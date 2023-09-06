@@ -534,6 +534,12 @@ export default
             "punishmentLength": "1m",
             "minVlbeforePunishment": 100
         },
+        "flyH": {
+            "enabled": true,
+            "description": "Checks for consistant vertical velocity",
+            "punishment": "kick",
+            "minVlbeforePunishment": 20
+        },
         "illegalitemsE": {
             "enabled": false,
             "punishment": "ban",
@@ -820,15 +826,6 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 100
         },
-        "killauraF": {
-            "enabled": true,
-            "description": "Checks for hitting a player off screen",
-            "angleMobile": 90,
-            "anglePC": 10,
-            "hits": 15,
-            "punishment": "kick",
-            "minVlbeforePunishment": 15
-        },
         "badpacketsB": {
             "enabled": true,
             "description": "Checks for moving to far in a tick",
@@ -917,6 +914,15 @@ export default
             "description": "Checks for faststop",
             "punishment": "kick",
             "minVlbeforePunishment": 100
+        },
+        "hitboxA": {
+            "enabled": true,
+            "description": "Checks for hitting a player off screen",
+            "angleMobile": 90,
+            "anglePC": 10,
+            "hits": 15,
+            "punishment": "kick",
+            "minVlbeforePunishment": 15
         }
     },
     "misc_modules": {

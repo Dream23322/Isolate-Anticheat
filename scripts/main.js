@@ -33,6 +33,8 @@ const oldx = new Map();
 const oldz = new Map();
 const oldoldx = new Map();
 const oldoldz = new Map();
+const oldYvelocity = new Map();
+const oldoldYvelocity = new Map();
 
 
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
@@ -428,9 +430,9 @@ Minecraft.system.runInterval(() => {
 				player.runCommandAsync(`tag "${player.name}" add strict`);
 			}
 		}
-
+		
 		if(player.hasTag("moving") && config.debug && player.hasTag("log")) {
-			console.warn(`${player.nameTag} speed is ${playerSpeed} Velocity ${playerVelocity}`);
+			console.warn(`${player.nameTag} speed is ${playerSpeed} Velocity.X ${playerVelocity.x}, Y ${playerVelocity.y}, Z ${playerVelocity.z}`);
 		}
 
 		// If player has the tag meme we do what alice anticheat cant
@@ -667,6 +669,19 @@ Minecraft.system.runInterval(() => {
 					if(aroundAir(player) === true) {
 						flag(player, "Fly", "G", "Movement", "fallDistance", player.fallDistance, false);
 					}	
+				}
+			}
+
+			// Fly/H = Checks for consistant vertical velocity
+			if(config.modules.flyH.enabled && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.hasTag("ground")) {
+				if(aroundAir(player)) {
+					const oldYv = oldYvelocity.get(player) || 0;
+					const oldoldYv = oldoldYvelocity.get(player) || 0;
+					const currentY = playerVelocity.y;
+					const calculation = oldYv === oldoldYv === currentY;
+					if(calculation) {
+						flag(player, "Fly", "H", "Movement", "yVelocity", Math.abs(playerVelocity.y).toFixed(4), true);
+					}
 				}
 			}
 		}
@@ -1672,9 +1687,9 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 
 		// Killaura/F = Paradox check that looks for not having the attacked entity on screen
 		// This can cause some issues on laggy servers so im gonna have to try fix that
-		if(config.modules.killauraF.enabled) {
+		if(config.modules.hitboxA.enabled) {
 			if(isAttackingFromOutsideView(player, entity, 90)) {
-				flag(player, "Killaura", "F", "Combat", "angle", "> 90", false);
+				flag(player, "Hitbox", "A", "Combat", "angle", "> 90", false);
 			}
 		}
 	}
