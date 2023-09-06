@@ -675,13 +675,19 @@ Minecraft.system.runInterval(() => {
 			// Fly/H = Checks for consistant vertical velocity
 			if(config.modules.flyH.enabled && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.hasTag("ground")) {
 				if(aroundAir(player)) {
+					// Get the players last coupe of Y velocities.
 					const oldYv = oldYvelocity.get(player) || 0;
 					const oldoldYv = oldoldYvelocity.get(player) || 0;
 					const currentY = playerVelocity.y;
 					const calculation = oldYv === oldoldYv === currentY;
+					// If everything adds up, flag for fly/H
 					if(calculation) {
 						flag(player, "Fly", "H", "Movement", "yVelocity", Math.abs(playerVelocity.y).toFixed(4), true);
 					}
+					// Log data
+					oldoldYvelocity.set(player, oldYv);
+					oldYvelocity.set(player, currentY);
+
 				}
 			}
 		}
