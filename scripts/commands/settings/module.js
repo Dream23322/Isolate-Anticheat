@@ -1,10 +1,20 @@
 // @ts-check
-
+import { registerCommand } from "../handler.js";
 import config from "../../data/config.js";
 
+registerCommand({
+    name: "module",
+	usage: "<module name> <setting> [value]",
+    execute: execute
+});
 
+registerCommand({
+    name: "misc_module",
+	usage: "<module name> <setting> [value]",
+    execute: execute
+});
 
-export function module(message, args, commandName) {
+function execute(message, args, commandName) {
 	const player = message.sender;
 	const category = commandName === "module" ? "modules" : "misc_modules";
     const module = args[0];
