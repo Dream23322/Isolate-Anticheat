@@ -519,7 +519,7 @@ Minecraft.system.runInterval(() => {
 				const final2 = Math.abs(diff3 - diff4) / 2;
 
 				// If the differences are the same, flag for fly/A
-				if (final1 === 0 && final2 === 0) {
+				if (final1 === final2 && final2 !== 0) {
 					// if the player is in Air, continue to flag
 					if(aroundAir(player)) {
 						flag(player, "Fly", "A", "Movement", "difference", final1, false);
@@ -725,9 +725,8 @@ Minecraft.system.runInterval(() => {
 					}
 				}
 			}
-			
 
-			// Motion/C
+			// Motion/C = Checks for fly / glide / bhop like velocity
 			if(config.modules.motionC.enabled && Math.abs(playerVelocity.y).toFixed(4) === "0.1552" && !player.isJumping && !player.isGliding && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
 				const pos1 = {x: player.location.x - 2, y: player.location.y - 1, z: player.location.z - 2};
 				const pos2 = {x: player.location.x + 2, y: player.location.y + 2, z: player.location.z + 2};
@@ -792,7 +791,7 @@ Minecraft.system.runInterval(() => {
 				if(player.isFlying && (!player.hasTag("op") || player.EntityCanFly)) {
 					flag(player, "BadPackets", "H", "Permision", "isFlying", "true", true);
 					player.runCommandAsync(`ability "${player.name}" mayfly false`);
-					setTitle(player, "Flying is not enabled", "Please turn off fly");
+					setTitle(player, "Flying is not enabled", "Please turn it off");
 				}
 			}
 
