@@ -36,7 +36,7 @@ const oldoldz = new Map();
 const oldYvelocity = new Map();
 const oldoldYvelocity = new Map();
 const oldDifference = new Map();
-
+let attackTimes = new Map();
 
 
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
@@ -651,10 +651,10 @@ Minecraft.system.runInterval(() => {
 					if(player.hasTag("moving") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
 						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
 						const prediction = Math.abs(currentYPos - oldY) > player.fallDistance && player.fallDistance > 3 && yDiff > 5;
-						const prediction2 = Math.abs(player.fallDistance) === 0 || Math.abs(player.fallDistance) < 0.3;
+						//const prediction2 = Math.abs(player.fallDistance) === 0 || Math.abs(player.fallDistance) < 0.0001;
 
-						if(prediction || prediction2) {
-							flag(player, "Fly", "F", "Movement", "prediction1", "true", false);
+						if(prediction) {
+							flag(player, "Fly", "F", "Movement", "fallDistance", player.fallDistance, false);
 						}
 					}
 					oldOldYPos.set(player, oldY);
@@ -711,7 +711,7 @@ Minecraft.system.runInterval(() => {
 			}	
 
 			// Speed/B = 1.2e-10
-			if(config.modules.speedB.enabled || config.modules.flyF.enabled) {
+			if(config.modules.speedB.enabled || config.modules.speedC.enabled) {
 				// Get the player's current speed and rotation
 				const currentSpeed = playerSpeed
 				const currentRotation = rotation.y;
@@ -723,11 +723,18 @@ Minecraft.system.runInterval(() => {
 				if(Math.abs(currentRotation - oldRotation) > 40 + 1.2e-10 && currentSpeed >= oldSpeed + 0.1 && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.48 && !player.hasTag("damaged") && player.hasTag("strict") && !player.getEffect("speed") && !player.hasTag("nospeed")) {
 					flag(player, "Speed", "B", "Movement", "rotationDiff", `${Math.abs(currentRotation - oldRotation)},speed=${currentSpeed}`)
 				}
+				// Acceleration Prediction
+				const speedPrediction = oldSpeed2 === 0 && currentSpeed === oldSpeed && currentSpeed !== 0 && oldSpeed !== 0;
+				if(speedPrediction) {
+					flag(player, "Speed", "C", "Movement", "speedPrediction", "true", false);
+				}
 				// Update the player's previous speed and rotation
 				oldOldSpeed.set(player, oldSpeed);
 				previousSpeedLog.set(player, currentSpeed);
 				previousRotationLog.set(player, currentRotation);
 			}
+
+			
 		}
 
 		// ==================================
@@ -1731,7 +1738,28 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			}
 		}
 	}
+	if(config.modules.autoclickerB.enabled) {
+		const currentTime = Date.now();
 
+		if (!attackTimes.has(player.id)) {
+			attackTimes.set(player.id, []);
+		}
+	
+		attackTimes.get(player.id).push(currentTime);
+	
+		if (attackTimes.get(player.id).length > 3) {
+			attackTimes.get(player.id).shift(); // Remove the oldest time
+		}
+	
+		if (attackTimes.get(player.id).length === 3) {
+			const timeDiff1 = attackTimes.get(player.id)[1] - attackTimes.get(player.id)[0];
+			const timeDiff2 = attackTimes.get(player.id)[2] - attackTimes.get(player.id)[1];
+	
+			if (Math.abs(timeDiff1 - timeDiff2) <= 300) {
+				flag(player, "AutoClicker", "B", "Combat", "difference", timeDiff1, false);
+			}
+		}
+	}
 	
 
 	// badpackets[3] = checks if a player attacks themselves
