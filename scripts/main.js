@@ -495,9 +495,6 @@ Minecraft.system.runInterval(() => {
 			if (config.modules.flyA.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isGliding) {
 				// Checks for invalid downwards accelerations
 
-
-
-
 				/*
 					This is a mix of a bunch o different stuffs because too much random stuff spread out is
 					1. Annoying to understand and handle
@@ -528,12 +525,6 @@ Minecraft.system.runInterval(() => {
 				const oldzp = oldz.get(player) || 0;
 				const oldoldxp = oldoldx.get(player) || 0;
 				const oldoldzp = oldoldz.get(player) || 0;
-
-				// Difference Calculations
-				const diffx = Math.abs(player.location.x - oldxp);
-				const diffy = Math.abs(player.location.y - oldzp);
-				const diffx2 = Math.abs(player.location.x - oldoldxp);
-				const diffy2 = Math.abs(player.location.y - oldoldzp);
 
 				// We calculate 2 diffferences so that we can compare the 2
 				const diff1 = Math.abs(oldoldxp - oldxp);
@@ -568,26 +559,14 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 
-			
 
 			// Fly/B = Checks for vertical Fly
 			// Fly/G damn near renders this check usesless but I'm not removing it incase mojong become more useless and removes shit that it depends on, it also false flags
 			if(config.modules.flyB.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.getEffect("jump_boost")) {
-				let isSurroundedByAir = true;
-				for (let x = -1; x <= 1; x++) {
-					for (let y = -1; y <= 1; y++) {
-						for (let z = -1; z <= 1; z++) {
-							const block = player.dimension.getBlock({ x: player.location.x + x, y: player.location.y + y, z: player.location.z + z });
-							if (block.typeId !== "minecraft:air") {
-								isSurroundedByAir = false;
-								break;
-							}
-						}
-					}
-				}
+
 				const hVelocity = Math.abs((playerVelocity.x + playerVelocity.z) / 2);
 				const yVelocity = playerVelocity.y;
-				if(isSurroundedByAir === true && playerVelocity.y > config.modules.flyB.minVelocity && hVelocity < config.modules.flyB.MaxHVelocity && !player.hasTag("op") && !player.isJumping && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.getEffect("speed") && yVelocity > 1.0) {
+				if(aroundAir(player) === true && playerVelocity.y > config.modules.flyB.minVelocity && hVelocity < config.modules.flyB.MaxHVelocity && !player.hasTag("op") && !player.isJumping && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.getEffect("speed") && yVelocity > 1.0) {
 					flag(player, "Fly", "B", "Movement", "yVelocity", Math.abs(playerVelocity.y), false);
 				} 
 			}
@@ -595,19 +574,7 @@ Minecraft.system.runInterval(() => {
 			// Fly C = Checks for having invalid velocity while in the air
 			if (config.modules.flyC.enabled && !player.hasTag("op") && !player.isFlying && !player.hasTag("ground") && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged")) {
 				const vertical_velo = playerVelocity.y;
-				let isSurroundedByAir = true;
-				for (let x = -1; x <= 1; x++) {
-					for (let y = -1; y <= 1; y++) {
-						for (let z = -1; z <= 1; z++) {
-							const block = player.dimension.getBlock({ x: player.location.x + x, y: player.location.y + y, z: player.location.z + z });
-							if (block.typeId !== "minecraft:air") {
-								isSurroundedByAir = false;
-								break;
-							}
-						}
-					}
-				}
-				if(playerSpeed > 0.1 && vertical_velo === 0 && !player.hasTag("ground") && playerSpeed > config.modules.speedA.speed - 0.1 && isSurroundedByAir === true && !player.getEffect("speed")) {
+				if(playerSpeed > 0.1 && vertical_velo === 0 && !player.hasTag("ground") && playerSpeed > config.modules.speedA.speed - 0.1 && aroundAir(player) && !player.getEffect("speed")) {
 					flag(player, "Fly", "C", "Movement", "vertical", vertical_velo, true)
 					currentVL++;
 				}
@@ -616,21 +583,9 @@ Minecraft.system.runInterval(() => {
 			//Fly/D = Checks for fly like velocity
 			// This check is really scuffed because when I made it (in my old anticheat) I had no idea what I was talking about, but it works for some reason...
 			if(config.modules.flyD.enabled && !player.hasTag("op") && !player.isFlying && !player.hasTag("nofly") && !player.hasTag("damaged")) {
-				let isSurroundedByAir = true;
-				for (let x = -1; x <= 1; x++) {
-					for (let y = -1; y <= 1; y++) {
-						for (let z = -1; z <= 1; z++) {
-							const block = player.dimension.getBlock({ x: player.location.x + x, y: player.location.y + y, z: player.location.z + z });
-							if (block.typeId !== "minecraft:air") {
-								isSurroundedByAir = false;
-								break;
-							}
-						}
-					}
-				}
 				const makeYVelocity1 = Math.abs(playerVelocity.x + playerVelocity.z)
 				const yVelocity = Math.abs(makeYVelocity1 / 2)
-				if(playerVelocity.y > yVelocity && playerVelocity.x > config.modules.flyD.Velocity && isSurroundedByAir === true && !player.getEffect("speed")) {
+				if(playerVelocity.y > yVelocity && playerVelocity.x > config.modules.flyD.Velocity && aroundAir(player) && !player.getEffect("speed")) {
 					if(!player.isJumping || player.hasTag("sneak") || player.isSneaking) {
 						flag(player, "Fly", "D", "Movement", "velocity", Math.abs(playerVelocity.y).toFixed(4), true);
 					}
@@ -640,21 +595,9 @@ Minecraft.system.runInterval(() => {
 			// Fly/E = Checks for being in air but not falling
 			if(config.modules.flyE.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.hasTag("ground")) {
 				if(playerVelocity.y === 0) {
-					let isSurroundedByAir = true;
-					for (let x = -1; x <= 1; x++) {
-						for (let y = -1; y <= 1; y++) {
-							for (let z = -1; z <= 1; z++) {
-								const block = player.dimension.getBlock({ x: player.location.x + x, y: player.location.y + y, z: player.location.z + z });
-								if (block.typeId !== "minecraft:air") {
-									isSurroundedByAir = false;
-									break;
-								}
-							}
-						}
-					}
 					const findHVelocity = Math.abs((playerVelocity.x + playerVelocity.z) / 2);
 					
-					if(isSurroundedByAir === true && findHVelocity > config.modules.flyE.hVelocity && !player.getEffect("speed")) {
+					if(aroundAir(player) === true && findHVelocity > config.modules.flyE.hVelocity && !player.getEffect("speed")) {
 						if(!player.isJumping || player.hasTag("sneak") || player.isSneaking) {
 							flag(player, "Fly", "E", "Movement", "yVelocity", Math.abs(player.velocityV).toFixed(4), true);
 							player.addTag("strict");
@@ -668,13 +611,8 @@ Minecraft.system.runInterval(() => {
 				if(aroundAir(player) === true) {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
-					const yDiff = Math.abs(oldY - currentYPos);
-
 					if(player.hasTag("moving") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
-						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
-						
 						const prediction = playerVelocity.y > 0.37 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true;
-
 						if(prediction === true) {
 							flag(player, "Fly", "F", "Movement", "y-velocity", playerVelocity.y, false);
 						}
