@@ -641,7 +641,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// Fly/F = Goofy prediction checks all thrown into one because im lazy
-			if(config.modules.flyF.enabled) {
+			if(config.modules.flyF.enabled && !player.getEffect("jump_boost")) {
 				if(aroundAir(player) === true) {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
@@ -649,13 +649,10 @@ Minecraft.system.runInterval(() => {
 
 					if(player.hasTag("moving") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
 						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
-						const prediction = Math.abs(currentYPos - oldY) > player.fallDistance && player.fallDistance > 3 && yDiff > 5;
-						const prediction2 = playerVelocity.y > 0.37 && aroundAir(player) === true;
+						
+						const prediction = playerVelocity.y > 0.37 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true;
 
-						if(prediction) {
-							flag(player, "Fly", "F", "Movement", "fallDistance", player.fallDistance, false);
-						}
-						if(prediction2) {
+						if(prediction === true) {
 							flag(player, "Fly", "F", "Movement", "y-velocity", playerVelocity.y, false);
 						}
 					}
@@ -686,8 +683,12 @@ Minecraft.system.runInterval(() => {
 					const oldoldYv = oldoldYvelocity.get(player) || 0;
 					const currentY = playerVelocity.y;
 					const calculation = oldYv === oldoldYv === currentY;
+					const currentYPos = player.location.y;
+					const oldY = oldYPos.get(player) || currentYPos;
+					const yDiff = Math.abs(oldY - currentYPos);
+					const prediction = Math.abs(currentYPos - oldY) > player.fallDistance && player.fallDistance > 3 && yDiff > 5;
 					// If everything adds up, flag for fly/H
-					if(calculation) {
+					if(calculation || prediction === true) {
 						flag(player, "Fly", "H", "Movement", "yVelocity", Math.abs(playerVelocity.y).toFixed(4), true);
 					}
 					// Log data
@@ -717,7 +718,7 @@ Minecraft.system.runInterval(() => {
 			}	
 
 			// Speed/B = 1.2e-10
-			if(config.modules.speedB.enabled || config.modules.speedC.enabled) {
+			if(config.modules.speedB.enabled && player.hasTag("strict")) {
 				// Get the player's current speed and rotation
 				const currentSpeed = playerSpeed
 				const currentRotation = rotation.y;
@@ -729,20 +730,21 @@ Minecraft.system.runInterval(() => {
 				if(Math.abs(currentRotation - oldRotation) > 40 + 1.2e-10 && currentSpeed >= oldSpeed + 0.1 && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.48 && !player.hasTag("damaged") && player.hasTag("strict") && !player.getEffect("speed") && !player.hasTag("nospeed")) {
 					flag(player, "Speed", "B", "Movement", "rotationDiff", `${Math.abs(currentRotation - oldRotation)},speed=${currentSpeed}`)
 				}
-				// BHop check
-				if(config.modules.speedC.enabled) {
-					if(playerSpeed > 0.2) {
-						if(Math.abs(playerVelocity.y).toFixed(4) === "0.4000") {
-							flag(player, "Speed", "C", "Movement", "y-Velocity")
-						}
-					}
-				}
+
 				// Update the player's previous speed and rotation
 				oldOldSpeed.set(player, oldSpeed);
 				previousSpeedLog.set(player, currentSpeed);
 				previousRotationLog.set(player, currentRotation);
 			}
 
+			// Speed/C = Checks for BHop velocity
+			if(playerSpeed > 0.2) {
+				const yV = Math.abs(playerVelocity.y).toFixed(4);
+				const prediction = yV === "0.2000" || yV === "0.1000" || yV === "0.3000" || yV === "0.4000" || yV === "0.5000" || yV === "0.6000" || yV === "0.7000" || yV === "0.8000" || yV === "0.9000";
+				if(prediction === true) {
+					flag(player, "Speed", "C", "Movement", "y-Velocity", yV, true);
+				}
+			}
 			
 		}
 
@@ -1648,7 +1650,7 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 });
 
 
-const MAX_CONSECUTIVE_HITS = config.modules.killauraF.hits; // number of consecutive fast hits to trigger the KillAura check
+
 
 let lastHitTime = new Map();
 let consecutiveHits = new Map();
@@ -1756,28 +1758,6 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			if([...checkGmc].length !== 0) {
 				entityHit.cancel;
 				flag(player, "Reach", "A", "Combat", "entity", `${entity.typeId},distance=${distance}`, false);
-			}
-		}
-	}
-	if(config.modules.autoclickerB.enabled) {
-		const currentTime = Date.now();
-
-		if (!attackTimes.has(player.id)) {
-			attackTimes.set(player.id, []);
-		}
-	
-		attackTimes.get(player.id).push(currentTime);
-	
-		if (attackTimes.get(player.id).length > 3) {
-			attackTimes.get(player.id).shift(); // Remove the oldest time
-		}
-	
-		if (attackTimes.get(player.id).length === 3) {
-			const timeDiff1 = attackTimes.get(player.id)[1] - attackTimes.get(player.id)[0];
-			const timeDiff2 = attackTimes.get(player.id)[2] - attackTimes.get(player.id)[1];
-	
-			if (Math.abs(timeDiff1 - timeDiff2) <= 300) {
-				flag(player, "AutoClicker", "B", "Combat", "difference", timeDiff1, false);
 			}
 		}
 	}
