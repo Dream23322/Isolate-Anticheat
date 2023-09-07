@@ -740,7 +740,7 @@ Minecraft.system.runInterval(() => {
 			// Speed/C = Checks for BHop velocity
 			if(playerSpeed > 0.2) {
 				const yV = Math.abs(playerVelocity.y).toFixed(4);
-				const prediction = yV === "0.2000" || yV === "0.1000" || yV === "0.3000" || yV === "0.4000" || yV === "0.5000" || yV === "0.6000" || yV === "0.7000" || yV === "0.8000" || yV === "0.9000";
+				const prediction = yV === "0.2000" || yV === "0.1000" || yV === "0.3000" || yV === "0.4000" || yV === "0.5000" || yV === "0.6000" || yV === "0.7000" || yV === "0.8000" || yV === "0.9000" || yV === "0.030";
 				if(prediction === true) {
 					flag(player, "Speed", "C", "Movement", "y-Velocity", yV, true);
 				}
