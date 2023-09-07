@@ -519,7 +519,7 @@ export default
         "flyF": {
             "enabled": true,
             "description": "Prediction Check",
-            "punishment": "none", 
+            "punishment": "kick", 
             "diff": 0.1,
             "speed": 2.45,
             "punishmentLength": "3d",
