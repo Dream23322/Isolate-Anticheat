@@ -24,19 +24,14 @@ const playerFlags = new Set();
 const oldYPos = new Map();
 const oldOldYPos = new Map();
 let lastPlayerYawRotations = new Map();
-const oldFallDistance = new Map();
-const playerOldOldYPosition = new Map(); // Stores the player's least recent y position
-const playerOldYPosition = new Map(); // Stores the player's middle y position
 const lastYawDiff = new Map();
-const predictionOldSpeed = new Map();
 const oldx = new Map();
 const oldz = new Map();
 const oldoldx = new Map();
 const oldoldz = new Map();
 const oldYvelocity = new Map();
 const oldoldYvelocity = new Map();
-const oldDifference = new Map();
-let attackTimes = new Map();
+
 
 
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
@@ -500,6 +495,34 @@ Minecraft.system.runInterval(() => {
 			if (config.modules.flyA.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isGliding) {
 				// Checks for invalid downwards accelerations
 
+
+
+
+				/*
+					This is a mix of a bunch o different stuffs because too much random stuff spread out is
+					1. Annoying to understand and handle
+					2. Can cause performance issues with the server
+				*/
+
+
+				// Y velocity Checks
+
+				const oldOldyVel = oldoldYvelocity.get(player) || 0;
+				const oldyVel = oldYvelocity.get(player) || 0;
+				const currentyVelo = playerVelocity.y;
+
+				if(
+					oldOldyVel === oldyVel &&
+					oldyVel === currentyVelo &&
+					currentyVelo !== 0
+				) {
+					flag(player, "Fly", "A", "Movement", "y Velocity", currentyVelo, false);
+				}
+
+
+				// Y position checks
+
+
 				// Get all data
 				const oldxp = oldx.get(player) || 0;
 				const oldzp = oldz.get(player) || 0;
@@ -641,7 +664,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// Fly/F = Goofy prediction checks all thrown into one because im lazy
-			if(config.modules.flyF.enabled && !player.getEffect("jump_boost")) {
+			if(config.modules.flyF.enabled && !player.getEffect("jump_boost") && !player.isFlying) {
 				if(aroundAir(player) === true) {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
@@ -738,10 +761,10 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// Speed/C = Checks for BHop velocity
-			if(playerSpeed > 0.2) {
+			if(playerSpeed > 0.2 && !player.hasTag("damaged")) {
 				const yV = Math.abs(playerVelocity.y).toFixed(4);
-				const prediction = yV === "0.2000" || yV === "0.1000" || yV === "0.3000" || yV === "0.4000" || yV === "0.5000" || yV === "0.6000" || yV === "0.7000" || yV === "0.8000" || yV === "0.9000" || yV === "0.030";
-				if(prediction === true) {
+				const prediction = yV === "0.1000" || yV === "0.4000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302";
+				if(prediction) {
 					flag(player, "Speed", "C", "Movement", "y-Velocity", yV, true);
 				}
 			}
@@ -917,6 +940,7 @@ Minecraft.system.runInterval(() => {
 				if(playerSpeed === 0) {
 					const lastSpeed = fastStopLog.get(player) || 0;
 					const currentSpeed = getSpeed(player);
+					const prediction1 = playerVelocity.y === -0.9657211303710938 || playerVelocity.y === -0.078399658203125;
 					if(currentSpeed === 0 && lastSpeed > 0.22) {
 						const pos1 = {x: player.location.x - 2, y: player.location.y, z: player.location.z - 2};
 						const pos2 = {x: player.location.x + 2, y: player.location.y + 2, z: player.location.z + 2};
@@ -927,6 +951,10 @@ Minecraft.system.runInterval(() => {
 								flag(player, "Prediction", "A", "Movement", "lastSpeed", lastSpeed, false);
 							}
 						}
+					}
+					// Simple glide check (-0.01)
+					if(prediction1) {
+						flag(player, "Prediction", "A", "Movement", "yVelocity", playerVelocity.y, false);
 					}
 				}
 			}
