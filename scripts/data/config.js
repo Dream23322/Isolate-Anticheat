@@ -639,7 +639,7 @@ export default
         },
         "scaffoldD": {
             "enabled": true,
-            "description":"Checks for invalid slots",
+            "description":"Checks for invalid slot selection / Invalid placement locations",
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },
