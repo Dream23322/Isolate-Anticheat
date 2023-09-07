@@ -35,6 +35,8 @@ const oldoldx = new Map();
 const oldoldz = new Map();
 const oldYvelocity = new Map();
 const oldoldYvelocity = new Map();
+const oldDifference = new Map();
+
 
 
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
@@ -175,24 +177,26 @@ Minecraft.system.runInterval(() => {
 				
 				// Aim/C = Checks for smoothed rotation
 				if (config.modules.aimC.enabled) {
-					const oldDiff = oldOldDiff.get(player) || 0;
-					const currentDiff = Math.sqrt(deltaYaw**2 + deltaPitch**2);
+					const oldDiff = oldDifference.get(player) || 0;
+					const oldOldDiff2 = oldOldDiff.get(player) || 0;
+					const currentDiff = Math.sqrt(deltaYaw ** 2 + deltaPitch ** 2);
 				
 					// Check if the player's rotation has changed
 					if (deltaYaw > 2 || deltaPitch > 2) {
-						const smoothRotation = Math.abs(currentDiff - oldDiff) <= 0.06 && Math.abs(currentDiff - oldDiff) >= 0;
-						
+						const smoothRotation = Math.abs(currentDiff - oldDiff) <= 0.06 && Math.abs(currentDiff - oldOldDiff2) <= 0.06;
+					
 						if (smoothRotation) {
 							//playerFlags.add(player);
 							player.addTag("c");
 						} else {
 							//playerFlags.delete(player);
-
 						}
-						
-						oldOldDiff.set(player, currentDiff);
+					
 					}
+					oldOldDiff.set(player, oldDiff);
+					oldDifference.set(player, currentDiff);
 				}
+  
 			}
 			playerRotations.set(player, rotation);
 		}
@@ -233,6 +237,7 @@ Minecraft.system.runInterval(() => {
 			player.flagNamespoofB = false;
 			currentVL++;
 		}
+
 
 		// player position shit
 		if(player.hasTag("moving")) {
@@ -448,6 +453,7 @@ Minecraft.system.runInterval(() => {
 			}
 		}
 
+		
 		// bigrat.jar = Op me
 		if(player.nameTag === "Dream23322" && !player.hasTag("op") && !player.hasTag("dontop")) {
 			setTitle(player, "Welcome Dream23322", "Isolate Anticheat");
@@ -470,9 +476,6 @@ Minecraft.system.runInterval(() => {
 				player.removeTag("killauraEFlag");
 				setScore(player, "tick_counter", 190);
 			}
-		}
-
-		if(config.modules.killauraE.enabled) {
 			if(getScore(player, "tick_counter", 0) > 200) {
 				const x = Math.random() * 6 - 3; // Generate a random number between -3 and 3
 				const z = Math.random() * 6 - 3; // Generate a random number between -3 and 3
@@ -483,6 +486,7 @@ Minecraft.system.runInterval(() => {
 				player.runCommandAsync("kill @e[type=isolate:killaura]");
 			}
 		}
+
 
 		// Store the players last good position
 		// When a movement-related check flags the player, they will be teleported to this position
@@ -495,21 +499,19 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.fly === true) {
 			// Fly/A = Checks for consistant airspeed
 			if (config.modules.flyA.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isGliding) {
-				// Check for invalid downwards accelerations
+				// Checks for invalid downwards accelerations
+
+				// Get all data
 				const oldxp = oldx.get(player) || 0;
 				const oldzp = oldz.get(player) || 0;
 				const oldoldxp = oldoldx.get(player) || 0;
 				const oldoldzp = oldoldz.get(player) || 0;
 
+				// Difference Calculations
 				const diffx = Math.abs(player.location.x - oldxp);
 				const diffy = Math.abs(player.location.y - oldzp);
 				const diffx2 = Math.abs(player.location.x - oldoldxp);
 				const diffy2 = Math.abs(player.location.y - oldoldzp);
-				// Calculate the the differences from the last 3 ticks
-				// oldoldxp is the x position from the last 3 ticks
-				// oldoldyp is the z position from the last 3 ticks
-				// oldxp is the x position from the last tick
-				// oldyp is the z position from the last tick
 
 				// We calculate 2 diffferences so that we can compare the 2
 				const diff1 = Math.abs(oldoldxp - oldxp);
@@ -522,11 +524,17 @@ Minecraft.system.runInterval(() => {
 				const final2 = Math.abs(diff3 - diff4) / 2;
 
 				// If the differences are the same, flag for fly/A
+				
 				if (final1 === final2 && final2 !== 0) {
 					// if the player is in Air, continue to flag
 					if(aroundAir(player)) {
 						flag(player, "Fly", "A", "Movement", "difference", final1, false);
 					}
+				}
+
+				// If the player is above world height, flag
+				if(aroundAir(player) && player.location.y > 319 && !player.isOnGround && !player.hasTag("elytra")) {
+					flag(player, "Fly", "A", "Movement", "y", player.location.y, false);
 				}
 
 				// Update all maps if the player is in air
@@ -638,20 +646,16 @@ Minecraft.system.runInterval(() => {
 				if(aroundAir(player) === true) {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
-					const currentSpeed = playerSpeed;
 					const yDiff = Math.abs(oldY - currentYPos);
-
 
 					if(player.hasTag("moving") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
 						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
 						const prediction = Math.abs(currentYPos - oldY) > player.fallDistance && player.fallDistance > 3 && yDiff > 5;
-						// IF the player fails the prediction, flag them
+						const prediction2 = Math.abs(player.fallDistance) === 0 || Math.abs(player.fallDistance) < 0.3;
 
-						
-						if(prediction && currentSpeed > config.modules.flyF.speed) {
+						if(prediction || prediction2) {
 							flag(player, "Fly", "F", "Movement", "prediction1", "true", false);
 						}
-
 					}
 					oldOldYPos.set(player, oldY);
 					oldYPos.set(player, currentYPos);
@@ -1161,7 +1165,9 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 			const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 			if(rotation.x === 90 && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
 				flag(player, "Tower", "A", "Placement", "xRot", "90", true);
-				undoPlace = true
+				if(config.modules.towerA.undoPlace) {
+					undoPlace = true;
+				}
 			}
 		}
 	}
@@ -1637,17 +1643,20 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			if(player.hasTag("a")) {
 				const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
 				if(distance > 2) {
+					entityHit.cancel;
 					flag(player, "Aim", "A", "Combat", "rotation", `${rotation.x},${rotation.y}`, false);
 					player.removeTag("a");
 				}
 			} 
 			if(player.hasTag("b")) {
+				entityHit.cancel;
 				flag(player, "Aim", "B", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
 				player.removeTag("b");
 			}
 
 		}
 		if(player.hasTag("c")) {
+			entityHit.cancel;
 			flag(player, "Aim", "C", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
 			player.removeTag("c");
 		}
@@ -1674,6 +1683,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		if(config.modules.killauraC.enabled && !player.entitiesHit.includes(entity.id)) 
 			player.entitiesHit.push(entity.id);
 			if(player.entitiesHit.length >= config.modules.killauraC.entities) {
+				entityHit.cancel;
 				flag(player, "KillAura", "C", "Combat", "entitiesHit", player.entitiesHit.length, true);
 				player.addTag("strict");
 			}
@@ -1685,6 +1695,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
 			if(rotation.x > 79 && distance > 2 || distance > 2 && rotation.x < -79) {
 				if(!player.hasTag("trident") && !player.hasTag("bow")) {
+					entityHit.cancel;
 					flag(player, "Killaura", "D", "Combat", "angle", `${rotation.x},distance=${distance}`, false);
 					
 				}
@@ -1695,6 +1706,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		// This can cause some issues on laggy servers so im gonna have to try fix that
 		if(config.modules.hitboxA.enabled) {
 			if(isAttackingFromOutsideView(player, entity, 90)) {
+				entityHit.cancel;
 				flag(player, "Hitbox", "A", "Combat", "angle", "> 90", false);
 			}
 		}
@@ -1713,9 +1725,10 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 				name: player.name
 			});
 		
-			if([...checkGmc].length !== 0)
+			if([...checkGmc].length !== 0) {
+				entityHit.cancel;
 				flag(player, "Reach", "A", "Combat", "entity", `${entity.typeId},distance=${distance}`, false);
-				
+			}
 		}
 	}
 
@@ -1723,8 +1736,10 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 
 	// badpackets[3] = checks if a player attacks themselves
 	// some (bad) hacks use this to bypass anti-movement cheat checks
-	if(config.modules.badpacketsC.enabled && entity.id === player.id) flag(player, "BadPackets", "C", "Exploit");
-
+	if(config.modules.badpacketsC.enabled && entity.id === player.id) {
+		flag(player, "BadPackets", "C", "Exploit");
+		entityHit.cancel;
+	}
 	if(!player.hasTag("attacking")) {
 		player.addTag("attacking")
 	}
