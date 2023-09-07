@@ -789,6 +789,8 @@ export default
         // Flags as scaffold/a because it can detect scaffold :D
         "towerA": {
             "enabled": true,
+            "description": "Checks for towering up with a x rotation of 90",
+            "undoPlace": false,
             "punishment": "kick",
             "minVlbeforePunishment": 15
         },
