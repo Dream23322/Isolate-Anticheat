@@ -176,25 +176,24 @@ Minecraft.system.runInterval(() => {
 				}
 				
 				// Aim/C = Checks for smoothed rotation
-				if (config.modules.aimC.enabled) {
-					const oldDiff = oldDifference.get(player) || 0;
-					const oldOldDiff2 = oldOldDiff.get(player) || 0;
-					const currentDiff = Math.sqrt(deltaYaw ** 2 + deltaPitch ** 2);
+				if (config.modules.aimC.enabled && player.hasTag("strict")) {
+					const oldDiff = oldOldDiff.get(player) || 0;
+					const currentDiff = Math.sqrt(deltaYaw**2 + deltaPitch**2);
 				
 					// Check if the player's rotation has changed
 					if (deltaYaw > 2 || deltaPitch > 2) {
-						const smoothRotation = Math.abs(currentDiff - oldDiff) <= 0.06 && Math.abs(currentDiff - oldOldDiff2) <= 0.06;
-					
+						const smoothRotation = Math.abs(currentDiff - oldDiff) <= 0.06 && Math.abs(currentDiff - oldDiff) >= 0;
+						
 						if (smoothRotation) {
 							//playerFlags.add(player);
 							player.addTag("c");
 						} else {
 							//playerFlags.delete(player);
+
 						}
-					
+						
+						oldOldDiff.set(player, currentDiff);
 					}
-					oldOldDiff.set(player, oldDiff);
-					oldDifference.set(player, currentDiff);
 				}
   
 			}
