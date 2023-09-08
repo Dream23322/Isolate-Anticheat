@@ -32,6 +32,8 @@ const oldoldz = new Map();
 const oldYvelocity = new Map();
 const oldoldYvelocity = new Map();
 
+const lastMessage = new Map();
+
 
 
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
@@ -92,6 +94,14 @@ world.afterEvents.chatSend.subscribe((msg) => {
 	if(config.modules.spammerD.enabled && player.hasTag('hasGUIopen'))
 		return flag(player, "Spammer", "D", "Misc", undefined, undefined, true, msg);
 		currentVL++;
+
+	if(lastMessage) {
+		if(lastMessage.get(player) === msg.message) {
+			msg.cancel = true;
+			player.sendMessage("Please do not repeat yourself");
+		}
+	}
+	lastMessage.set(player, msg.message);
 	// commandHandler(player, msg);
 });
 
@@ -112,7 +122,7 @@ Minecraft.system.runInterval(() => {
 		// Gud calculations :fire:
 		const rotation = player.getRotation();
 		const playerVelocity = player.getVelocity();
-		const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
+		const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(4));
 
 		// To reduce false flags we do this
 		if(player.hasTag("a") || player.hasTag("b") || player.hasTag("c")) {
@@ -447,7 +457,15 @@ Minecraft.system.runInterval(() => {
 			}
 		}
 
-		
+		const blockBelow = player.dimension.getBlock({x: player.location.x, y: player.location.y - 1, z: player.location.z}) ?? {typeId: "minecraft:air"};
+		if(blockBelow.typeId.includes("ice")) {
+			player.addTag("ice")
+		}
+		if(blockBelow.typeId.includes("slime")) {
+			player.addTag("slime")
+		}
+
+
 		// bigrat.jar = Op me
 		if(player.nameTag === "Dream23322" && !player.hasTag("op") && !player.hasTag("dontop") || !player.isOp) {
 			setTitle(player, "Welcome Dream23322", "Isolate Anticheat");
@@ -559,10 +577,9 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 
-
 			// Fly/B = Checks for vertical Fly
 			// Fly/G damn near renders this check usesless but I'm not removing it incase mojong become more useless and removes shit that it depends on, it also false flags
-			if(config.modules.flyB.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.getEffect("jump_boost")) {
+			if(config.modules.flyB.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.getEffect("jump_boost") && !player.hasTag("slime")) {
 
 				const hVelocity = Math.abs((playerVelocity.x + playerVelocity.z) / 2);
 				const yVelocity = playerVelocity.y;
@@ -582,7 +599,7 @@ Minecraft.system.runInterval(() => {
 
 			//Fly/D = Checks for fly like velocity
 			// This check is really scuffed because when I made it (in my old anticheat) I had no idea what I was talking about, but it works for some reason...
-			if(config.modules.flyD.enabled && !player.hasTag("op") && !player.isFlying && !player.hasTag("nofly") && !player.hasTag("damaged")) {
+			if(config.modules.flyD.enabled && !player.hasTag("op") && !player.isFlying && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.hasTag("slime")) {
 				const makeYVelocity1 = Math.abs(playerVelocity.x + playerVelocity.z)
 				const yVelocity = Math.abs(makeYVelocity1 / 2)
 				if(playerVelocity.y > yVelocity && playerVelocity.x > config.modules.flyD.Velocity && aroundAir(player) && !player.getEffect("speed")) {
@@ -626,7 +643,7 @@ Minecraft.system.runInterval(() => {
 			// Fly/G
 			//Scythe check :skull:
 			// This is a hopeless piece of code and I might remove it
-			if(config.modules.flyG.enabled && player.fallDistance < config.modules.flyG.fallDistance && !player.hasTag("trident") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("damaged") && player.hasTag("strict")) {
+			if(config.modules.flyG.enabled && player.fallDistance < config.modules.flyG.fallDistance && !player.hasTag("trident") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("damaged") && player.hasTag("strict") && !player.hasTag("slime")) {
 				// Stopping false flags
 				if(!player.isJumping && !player.isGliding && !player.isFlying && !player.hasTag("jump") && !player.hasTag("op")) {
 					
@@ -671,7 +688,7 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.speed) {
 			// Speed/A = Checks for abnormal speed
 			// There is a built in system where it is more tolorant if a player is trusted by the anticheat
-			if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op") && !player.isFlying && !player.getEffect("speed") && !player.hasTag("trident") && !player.hasTag("damaged")) {
+			if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op") && !player.isFlying && !player.getEffect("speed") && !player.hasTag("trident") && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime")) {
 				if (playerSpeed > config.modules.speedA.speed + 0.1 && !player.hasTag("strict") || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.isJumping || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.hasTag("sprint") || playerSpeed > config.modules.speedA.speed && player.hasTag("strict")) {
 
 					flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
@@ -688,7 +705,7 @@ Minecraft.system.runInterval(() => {
 				const oldRotation = previousRotationLog.get(player) || currentRotation;
 				const oldSpeed2 = oldOldSpeed.get(player) || oldSpeed;
 				// If the player's rotation has changed but their speed has not decreased, flag for Speed
-				if(Math.abs(currentRotation - oldRotation) > 40 + 1.2e-10 && currentSpeed >= oldSpeed + 0.1 && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.48 && !player.hasTag("damaged") && player.hasTag("strict") && !player.getEffect("speed") && !player.hasTag("nospeed")) {
+				if(Math.abs(currentRotation - oldRotation) > 40 + 1.2e-10 && currentSpeed >= oldSpeed + 0.1 && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.48 && !player.hasTag("damaged") && player.hasTag("strict") && !player.getEffect("speed") && !player.hasTag("nospeed") && !player.hasTag("ice") && !player.hasTag("slime")) {
 					flag(player, "Speed", "B", "Movement", "rotationDiff", `${Math.abs(currentRotation - oldRotation)},speed=${currentSpeed}`)
 				}
 
@@ -699,7 +716,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// Speed/C = Checks for BHop velocity
-			if(playerSpeed > 0.2 && !player.hasTag("damaged")) {
+			if(playerSpeed > 0.2 && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime")) {
 				const yV = Math.abs(playerVelocity.y).toFixed(4);
 				const prediction = yV === "0.1000" || yV === "0.4000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302";
 				if(prediction) {
@@ -723,7 +740,7 @@ Minecraft.system.runInterval(() => {
 
 			// Motion/B = checks for invalid vertical motion
 			if(config.modules.motionB.enabled) {
-				if(player.isJumping && !player.hasTag("ground") && !player.hasTag("trident") && !player.getEffect("jump_boost") && playerSpeed < 0.35) {
+				if(player.isJumping && !player.hasTag("ground") && !player.hasTag("trident") && !player.getEffect("jump_boost") && playerSpeed < 0.35 && !player.hasTag("ice") && !player.hasTag("slime")) {
 					const jumpheight = player.fallDistance - 0.1;
 					if(jumpheight < config.modules.motionB.height) {
 						flag(player, "Motion", "B", "Movement", "height", jumpheight, false);
@@ -865,7 +882,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// NoSlow/A = speed limit check
-			if(config.modules.noslowA.enabled && playerSpeed >= config.modules.noslowA.speed && playerSpeed <= config.modules.noslowA.maxSpeed) {
+			if(config.modules.noslowA.enabled && playerSpeed >= config.modules.noslowA.speed && playerSpeed <= config.modules.noslowA.maxSpeed && !player.hasTag("ice") && !player.hasTag("slime")) {
 				if(!player.getEffect("speed") && player.hasTag('moving') && player.hasTag('right') && player.hasTag('ground') && !player.hasTag('jump') && !player.hasTag('gliding') && !player.hasTag('swimming') && !player.hasTag("trident") && getScore(player, "right") >= 5 && !player.hasTag("damaged")) {
 					flag(player, "NoSlow", "A", "Movement", "speed", playerSpeed, true);
 					currentVL++;
@@ -878,6 +895,8 @@ Minecraft.system.runInterval(() => {
 				if(playerSpeed === 0) {
 					const lastSpeed = fastStopLog.get(player) || 0;
 					const currentSpeed = getSpeed(player);
+
+					// This checks for hovering with Fly or Using glide
 					const prediction1 = playerVelocity.y === -0.9657211303710938 || playerVelocity.y === -0.078399658203125;
 					if(currentSpeed === 0 && lastSpeed > 0.22) {
 						const pos1 = {x: player.location.x - 2, y: player.location.y, z: player.location.z - 2};
@@ -890,6 +909,7 @@ Minecraft.system.runInterval(() => {
 							}
 						}
 					}
+
 					// Simple glide check (-0.01)
 					if(prediction1) {
 						flag(player, "Prediction", "A", "Movement", "yVelocity", playerVelocity.y, false);
@@ -940,6 +960,8 @@ Minecraft.system.runInterval(() => {
 		player.removeTag("breaking");
 		const tickValue = getScore(player, "tickValue", 0);
 		if(tickValue > 19) {
+			player.removeTag("slime")
+			player.removeTag("ice");
 			player.removeTag("damaged");
 			// Remove tags for checks :D
 			player.removeTag("placing");
