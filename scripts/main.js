@@ -1109,7 +1109,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 			//const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 			if(!player.isFlying) {
 				if(!player.hasTag("trident")) {
-					if(rotation.x === 60) {
+					if(rotation.x === 60 || rotation.x < 80 && player.isJumping && playerSpeed > 0.2) {
 						flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);	
 					}
 				}
@@ -1232,7 +1232,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 			block.setType(Minecraft.MinecraftBlockTypes.air);
 			console.warn(`${player.nameTag} had their placed block reverted!`);
 		} catch (error) {
-			console.warn(`${player.nameTag} had theur placed block reverted!`);
+			console.warn(`${player.nameTag} had their placed block reverted!`);
 			player.runCommandAsync(`fill ${block.location.x} ${block.location.y} ${block.location.z} ${block.location.x} ${block.location.y} ${block.location.z} air`)
 		}
 	}
