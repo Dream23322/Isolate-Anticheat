@@ -718,7 +718,7 @@ Minecraft.system.runInterval(() => {
 			// Speed/C = Checks for BHop velocity
 			if(playerSpeed > 0.2 && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime")) {
 				const yV = Math.abs(playerVelocity.y).toFixed(4);
-				const prediction = yV === "0.1000" || yV === "0.4000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302";
+				const prediction = yV === "0.1000" || yV === "0.4000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302" || yV === "0.0428" || yV === "0.1212" || yV === "0.2305";
 				if(prediction) {
 					flag(player, "Speed", "C", "Movement", "y-Velocity", yV, true);
 				}
@@ -897,7 +897,7 @@ Minecraft.system.runInterval(() => {
 					const currentSpeed = getSpeed(player);
 
 					// This checks for hovering with Fly or Using glide
-					const prediction1 = playerVelocity.y === -0.9657211303710938 || playerVelocity.y === -0.078399658203125;
+					const prediction1 = playerVelocity.y === -0.9657211303710938 || playerVelocity.y === -0.078399658203125 || playerVelocity.y === -0.02566051483154297;
 					if(currentSpeed === 0 && lastSpeed > 0.22) {
 						const pos1 = {x: player.location.x - 2, y: player.location.y, z: player.location.z - 2};
 						const pos2 = {x: player.location.x + 2, y: player.location.y + 2, z: player.location.z + 2};
@@ -1196,6 +1196,9 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 		if(distance > config.modules.reachB.reach) {
 			flag(player, "Reach", "B", "Placement", "distance", distance, false);
 			undoPlace = true;
+		}
+		if(distance === 1.25) {
+			flag(player, "Scaffold", "E", "Placement", "distance", distance, false);
 		}
 	}
 
