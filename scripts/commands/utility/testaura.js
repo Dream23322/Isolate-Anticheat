@@ -28,4 +28,5 @@ export function testaura(message, args) {
     if(!member) return player.sendMessage("§r§j[§uIsolate§j]§r Couldn't find that player.");
 
     member.runCommandAsync("function tools/aura");    
+    player.sendMessage("§r§j[§uIsolate§j]§r Aura bot spawned.");
 }
