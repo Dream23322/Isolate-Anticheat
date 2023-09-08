@@ -48,7 +48,13 @@ world.beforeEvents.chatSend.subscribe((msg) => {
 		msg.cancel = true;
 		
 	}
-
+	if(lastMessage) {
+		if(lastMessage.get(player) === message) {
+			msg.cancel = true;
+			player.sendMessage("Please do not repeat yourself");
+		}
+	}
+	lastMessage.set(player, message);
 	if(player.hasTag("isMuted")) {
 		msg.cancel = true;
 		player.sendMessage("§r§j[§uIsolate§j]§r §1§lNOPE! §r§cYou have been muted.");
@@ -95,13 +101,7 @@ world.afterEvents.chatSend.subscribe((msg) => {
 		return flag(player, "Spammer", "D", "Misc", undefined, undefined, true, msg);
 		currentVL++;
 
-	if(lastMessage) {
-		if(lastMessage.get(player) === msg.message) {
-			msg.cancel = true;
-			player.sendMessage("Please do not repeat yourself");
-		}
-	}
-	lastMessage.set(player, msg.message);
+
 	// commandHandler(player, msg);
 });
 
@@ -170,9 +170,9 @@ Minecraft.system.runInterval(() => {
 					}
 				}
 
-				// Aim/B = Checks for perfect mouse movements (Diag)
+				// Aim/B = Checks for perfect mouse movements
 				if (config.modules.aimB.enabled) {
-					if (deltaYaw === deltaPitch && deltaPitch !== 0 && deltaYaw !== 0) {
+					if (deltaYaw === deltaPitch && deltaPitch !== 0 && deltaYaw !== 0 || deltaPitch === 0 && Math.abs(deltaYaw) > 1 || deltaYaw === 0 && Math.abs(deltaPitch) > 1) {
 						playerFlags.add(player);
 						player.addTag("b");
 					} else {
@@ -629,7 +629,7 @@ Minecraft.system.runInterval(() => {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
 					if(player.hasTag("moving") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
-						const prediction = playerVelocity.y > 0.37 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true;
+						const prediction = playerVelocity.y > 2.01 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true;
 						if(prediction === true) {
 							flag(player, "Fly", "F", "Movement", "y-velocity", playerVelocity.y, false);
 						}
@@ -863,10 +863,10 @@ Minecraft.system.runInterval(() => {
 			// Jesus/A will be here
 
 			// Velocity/A = Checks for funni velocity, Paradox Anticheat
-			if(config.modules.velocityA.enabled) {
+			if(config.modules.velocityA.enabled && player.hasTag("damaged") && !player.isJumping && !player.hasTag("jump")) {
 				const velocity = player.getVelocity();
 				const velocitySum = Math.abs(velocity.y) + Math.abs(velocity.x) + Math.abs(velocity.z);
-				if (velocitySum <= config.modules.velocityA.magnitude) {
+				if (velocitySum <= config.modules.velocityA.magnitude || velocitySum.toFixed(4) === "0.5839") {
 					if(!player.hasTag("dead")) {
 						flag(player, "Velocity", "A", "Combat", "magnitude", velocitySum, false);
 					}
