@@ -522,17 +522,6 @@ Minecraft.system.runInterval(() => {
 
 				// Y velocity Checks
 
-				const oldOldyVel = oldoldYvelocity.get(player) || 0;
-				const oldyVel = oldYvelocity.get(player) || 0;
-				const currentyVelo = playerVelocity.y;
-
-				if(
-					oldOldyVel === oldyVel &&
-					oldyVel === currentyVelo &&
-					currentyVelo !== 0
-				) {
-					flag(player, "Fly", "A", "Movement", "y Velocity", currentyVelo, false);
-				}
 
 
 				// Y position checks
@@ -566,6 +555,7 @@ Minecraft.system.runInterval(() => {
 				// If the player is above world height, flag
 				if(aroundAir(player) && player.location.y > 319 && !player.isOnGround && !player.hasTag("elytra")) {
 					flag(player, "Fly", "A", "Movement", "y", player.location.y, false);
+					player.teleport({x: player.location.x, y: player.location.y -150, z: player.location.z});
 				}
 
 				// Update all maps if the player is in air
@@ -628,7 +618,7 @@ Minecraft.system.runInterval(() => {
 				if(aroundAir(player) === true) {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
-					if(player.hasTag("moving") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
+					if(player.hasTag("moving") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
 						const prediction = playerVelocity.y > 2.01 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true;
 						if(prediction === true) {
 							flag(player, "Fly", "F", "Movement", "y-velocity", playerVelocity.y, false);
@@ -1101,6 +1091,9 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 						
 					}
 				}
+				if(rotation.x < 80 && player.isJumping && playerSpeed < 0.2) {
+					flag(player, "Scaffold", "A", "Placement", "rotation", rotation.x, false);
+				}
 			}
 		}
 
@@ -1109,7 +1102,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 			//const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 			if(!player.isFlying) {
 				if(!player.hasTag("trident")) {
-					if(rotation.x === 60 || rotation.x < 80 && player.isJumping && playerSpeed > 0.2) {
+					if(rotation.x === 60) {
 						flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);	
 					}
 				}
