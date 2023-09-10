@@ -12,3 +12,6 @@ execute @a[tag=!op,m=s,scores={gmc=1..}] ~~~ function checks/optional/gamemodeS
 execute @a[scores={commandblocks=1..}] ~~~ function checks/optional/nocommandblocks
 execute @r[scores={cmds=1..}] ~~~ function checks/optional/overridecommandblocksenabled
 execute @e[type=item,tag=!didCheck] ~~~ function checks/assets/xray
+
+# Run utilites file
+function util
