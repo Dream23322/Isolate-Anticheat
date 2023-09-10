@@ -518,7 +518,7 @@ export default
         // The check is broken
         "flyF": {
             "enabled": true,
-            "description": "Prediction Check",
+            "description": "In air velocity check",
             "punishment": "kick", 
             "diff": 0.1,
             "speed": 2.45,
@@ -535,7 +535,7 @@ export default
             "minVlbeforePunishment": 100
         },
         "flyH": {
-            "enabled": true,
+            "enabled": false,
             "description": "Checks for consistant vertical velocity",
             "punishment": "kick",
             "minVlbeforePunishment": 20
