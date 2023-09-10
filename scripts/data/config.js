@@ -897,7 +897,7 @@ export default
             "enabled": true,
             "description": "Checks for fly or bhop like velocity",
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 15
         },
         "badpacketsF": {
             "enabled": true,
@@ -924,7 +924,7 @@ export default
             "anglePC": 10,
             "hits": 15,
             "punishment": "kick",
-            "minVlbeforePunishment": 15
+            "minVlbeforePunishment": 5
         }
     },
     "misc_modules": {
