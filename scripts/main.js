@@ -887,7 +887,7 @@ Minecraft.system.runInterval(() => {
 					const currentSpeed = getSpeed(player);
 
 					// This checks for hovering with Fly or Using glide
-					const prediction1 = playerVelocity.y === -0.9657211303710938 || playerVelocity.y === -0.078399658203125 || playerVelocity.y === -0.02566051483154297;
+					const prediction1 = playerVelocity.y === -0.9657211303710938 || playerVelocity.y === -0.02566051483154297;
 					if(currentSpeed === 0 && lastSpeed > 0.22) {
 						const pos1 = {x: player.location.x - 2, y: player.location.y, z: player.location.z - 2};
 						const pos2 = {x: player.location.x + 2, y: player.location.y + 2, z: player.location.z + 2};
@@ -901,7 +901,7 @@ Minecraft.system.runInterval(() => {
 					}
 
 					// Simple glide check (-0.01)
-					if(prediction1) {
+					if(prediction1 && ) {
 						flag(player, "Prediction", "A", "Movement", "yVelocity", playerVelocity.y, false);
 					}
 				}
