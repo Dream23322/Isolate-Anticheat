@@ -13,8 +13,7 @@ import { banplayer } from "./data/paradoxban.js";
 const world = Minecraft.world;
 
 // Maps for logging data that we use in checks
-const previousSpeedLog = new Map();
-const previousRotationLog = new Map();
+
 const fastStopLog = new Map();
 const oldOldSpeed = new Map();
 const oldOldDiff = new Map();
@@ -420,7 +419,7 @@ Minecraft.system.runInterval(() => {
 		// ==================================
 		if(config.generalModules.sprint) {
 			// invalidsprint/a = checks for sprinting with the blindness effect
-			if(config.modules.invalidsprintA.enabled && player.getEffect("blindness") && player.hasTag("sprint"))
+			if(config.modules.invalidsprintA.enabled && player.getEffect("blindness") && player.isSprinting)
 				flag(player, "InvalidSprint", "A", "Movement", undefined, undefined, true);
 				currentVL++;
 		}
@@ -511,6 +510,29 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.fly === true) {
 			// Fly/A = Checks for consistant airspeed
 			if (config.modules.flyA.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isGliding) {
+				if(aroundAir(player) === true) {
+					const currentYPos = player.location.y;
+					const oldY = oldYPos.get(player) || currentYPos;
+					const yDiff = Math.abs(oldY - currentYPos);
+
+					if(!player.hasTag("nofly") && !player.hasTag("nofly") && !player.hasTag("damaged")) {
+						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
+						
+						const prediction = playerVelocity.y > 0.42 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true;
+
+						if(prediction && getScore(player, "tick_counter2", 0) > 3) {
+							flag(player, "Fly", "A", "Movement", "y-velocity", playerVelocity.y, false);
+						}
+					}
+					oldOldYPos.set(player, oldY);
+					oldYPos.set(player, currentYPos);
+				}
+			}
+
+			// Fly/B = Checks for vertical Fly
+			// Fly/G damn near renders this check usesless but I'm not removing it incase mojong become more useless and removes shit that it depends on, it also false flags
+			if(config.modules.flyB.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.getEffect("jump_boost") && !player.hasTag("slime")) {
+
 				// Checks for invalid downwards accelerations
 
 				/*
@@ -548,13 +570,13 @@ Minecraft.system.runInterval(() => {
 				if (final1 === final2 && final2 !== 0) {
 					// if the player is in Air, continue to flag
 					if(aroundAir(player)) {
-						flag(player, "Fly", "A", "Movement", "difference", final1, false);
+						flag(player, "Fly", "B", "Movement", "difference", final1, false);
 					}
 				}
 
 				// If the player is above world height, flag
 				if(aroundAir(player) && player.location.y > 319 && !player.isOnGround && !player.hasTag("elytra")) {
-					flag(player, "Fly", "A", "Movement", "y", player.location.y, false);
+					flag(player, "Fly", "B", "Movement", "y", player.location.y, false);
 					player.teleport({x: player.location.x, y: player.location.y -150, z: player.location.z});
 				}
 
@@ -565,17 +587,6 @@ Minecraft.system.runInterval(() => {
 					oldoldx.set(player, oldxp);
 					oldoldz.set(player, oldzp);
 				}
-			}
-
-			// Fly/B = Checks for vertical Fly
-			// Fly/G damn near renders this check usesless but I'm not removing it incase mojong become more useless and removes shit that it depends on, it also false flags
-			if(config.modules.flyB.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.getEffect("jump_boost") && !player.hasTag("slime")) {
-
-				const hVelocity = Math.abs((playerVelocity.x + playerVelocity.z) / 2);
-				const yVelocity = playerVelocity.y;
-				if(aroundAir(player) === true && playerVelocity.y > config.modules.flyB.minVelocity && hVelocity < config.modules.flyB.MaxHVelocity && !player.hasTag("op") && !player.isJumping && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.getEffect("speed") && yVelocity > 1.0) {
-					flag(player, "Fly", "B", "Movement", "yVelocity", Math.abs(playerVelocity.y), false);
-				} 
 			}
 
 			// Fly C = Checks for having invalid velocity while in the air
@@ -615,57 +626,20 @@ Minecraft.system.runInterval(() => {
 
 			// Fly/F = Goofy prediction checks all thrown into one because im lazy
 			if(config.modules.flyF.enabled && !player.getEffect("jump_boost")) {
-				if(aroundAir(player) === true) {
-					const currentYPos = player.location.y;
-					const oldY = oldYPos.get(player) || currentYPos;
-					const yDiff = Math.abs(oldY - currentYPos);
-
-					if(!player.hasTag("nofly") && !player.hasTag("nofly") && !player.hasTag("damaged")) {
-						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
-						
-						const prediction = playerVelocity.y > 0.42 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true;
-
-						if(prediction && getScore(player, "tick_counter2", 0) > 3) {
-							flag(player, "Fly", "F", "Movement", "y-velocity", playerVelocity.y, false);
-						}
-					}
-					oldOldYPos.set(player, oldY);
-					oldYPos.set(player, currentYPos);
-				}
-
-			}
-
-			// Fly/G
-			//Scythe check :skull:
-			// This is a hopeless piece of code and I might remove it
-			if(config.modules.flyG.enabled && player.fallDistance < config.modules.flyG.fallDistance && !player.hasTag("trident") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("damaged") && player.hasTag("strict") && !player.hasTag("slime")) {
 				// Stopping false flags
 				if(!player.isJumping && !player.isGliding && !player.isFlying && !player.hasTag("jump") && !player.hasTag("op")) {
 					
 					if(aroundAir(player) === true) {
-						flag(player, "Fly", "G", "Movement", "fallDistance", player.fallDistance, false);
+						flag(player, "Fly", "F", "Movement", "fallDistance", player.fallDistance, false);
 					}	
 				}
+
 			}
 
-			// Fly/H = Checks for consistant vertical velocity
-			if(config.modules.flyH.enabled && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.hasTag("ground")) {
-				if(aroundAir(player)) {
-					// Get the players last coupe of Y velocities.
-					const oldYv = oldYvelocity.get(player) || 0;
-					const currentYVelocity = playerVelocity.y;
-					if(currentYVelocity > 0.05 && oldYv < 0) {
-						flag(player, "Fly", "H", "Movement", "yVelocity", currentYVelocity, false);
-					}
 
-					oldYvelocity.set(player, currentYVelocity);
 
-				}
-			}
 
-			if(player.isFlying && playerSpeed > 1.09) {
-				flag(player, "Motion", "D", "Movement", "speed", playerSpeed, true);
-			}
+
 		}
 
 		// ==================================
@@ -702,22 +676,19 @@ Minecraft.system.runInterval(() => {
 			// 	previousRotationLog.set(player, currentRotation);
 			// }
 
-			// Speed/B, The updated version does use the deceleration check as it is a lot less buggy and more accurate
+			// Speed/B = Checks for bhop and vhop velocities
 
 			if(config.modules.speedB.enabled) {
-				if(playerSpeed > 0.22 && playerVelocity.x === 0 && playerVelocity.z === 0) {
-					flag(player, "Speed", "B", "Movement", "speed", playerSpeed, true);
+				if(playerSpeed > 0.2 && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime")) {
+					const yV = Math.abs(playerVelocity.y).toFixed(4);
+					const prediction = yV === "0.1000" || yV === "0.4000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302" || yV === "0.0428" || yV === "0.1212" || yV === "0.2305";
+					if(prediction) {
+						flag(player, "Speed", "C", "Movement", "y-Velocity", yV, true);
+					}
 				}
 			}
 
-			// Speed/C = Checks for BHop velocity
-			if(playerSpeed > 0.2 && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime")) {
-				const yV = Math.abs(playerVelocity.y).toFixed(4);
-				const prediction = yV === "0.1000" || yV === "0.4000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302" || yV === "0.0428" || yV === "0.1212" || yV === "0.2305";
-				if(prediction) {
-					flag(player, "Speed", "C", "Movement", "y-Velocity", yV, true);
-				}
-			}
+
 			
 		}
 
@@ -735,11 +706,8 @@ Minecraft.system.runInterval(() => {
 
 			// Motion/B = checks for invalid vertical motion
 			if(config.modules.motionB.enabled) {
-				if(player.isJumping && !player.hasTag("ground") && !player.hasTag("trident") && !player.getEffect("jump_boost") && playerSpeed < 0.35 && !player.hasTag("ice") && !player.hasTag("slime")) {
-					const jumpheight = player.fallDistance - 0.1;
-					if(jumpheight < config.modules.motionB.height) {
-						flag(player, "Motion", "B", "Movement", "height", jumpheight, false);
-					}
+				if(player.isFlying && playerSpeed > 2.29) {
+					flag(player, "Motion", "B", "Movement", "speed", playerSpeed, true);
 				}
 			}
 
@@ -1253,9 +1221,9 @@ world.afterEvents.blockBreak.subscribe((blockBreak) => {
 
 	if(config.debug) console.warn(`${player.nameTag} has broken the block ${blockBreak.brokenBlockPermutation.type.id}`);
 	
-	if(getScore(player, "xray", 1) <= 1 && brokenBlockId === "minecraft:diamond_ore") {
+	if(brokenBlockId === "minecraft:diamond_ore") {
 		player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §b[§cXray§b]§r ${player.nameTag} has found §g1x Diamond Ore."}]}`);
-	} else if (getScore(player, "xray", 1) <= 1 && brokenBlockId === "minecraft:ancient_debirs") {
+	} else if (brokenBlockId === "minecraft:ancient_debirs") {
 		player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §b§c[Xray§b]§r ${player.nameTag} has found §g1x Ancient Debris."}]}`);
 	}
 
@@ -1725,7 +1693,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			}
 		}
 
-		// Killaura/F = Paradox check that looks for not having the attacked entity on screen
+		// Hitbox/A = Paradox check that looks for not having the attacked entity on screen
 		// This can cause some issues on laggy servers so im gonna have to try fix that
 		if(config.modules.hitboxA.enabled) {
 			if(isAttackingFromOutsideView(player, entity, 90)) {
