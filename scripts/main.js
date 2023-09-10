@@ -618,8 +618,8 @@ Minecraft.system.runInterval(() => {
 				if(aroundAir(player) === true) {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
-					if(player.hasTag("moving") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
-						const prediction = playerVelocity.y > 2.01 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true;
+					if(!player.hasTag("ground") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
+						const prediction = (playerVelocity.y > 0.37 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true) && getScore(player, "tick_counter2", 0) > 3;
 						if(prediction === true) {
 							flag(player, "Fly", "F", "Movement", "y-velocity", playerVelocity.y, false);
 						}
@@ -648,21 +648,13 @@ Minecraft.system.runInterval(() => {
 				if(aroundAir(player)) {
 					// Get the players last coupe of Y velocities.
 					const oldYv = oldYvelocity.get(player) || 0;
-					const oldoldYv = oldoldYvelocity.get(player) || 0;
-					const currentY = playerVelocity.y;
-					const calculation = oldYv === oldoldYv === currentY;
-					const currentYPos = player.location.y;
-					const oldY = oldYPos.get(player) || currentYPos;
-					const yDiff = Math.abs(oldY - currentYPos);
-					const prediction = Math.abs(currentYPos - oldY) > player.fallDistance && player.fallDistance > 3 && yDiff > 5;
-					// If everything adds up, flag for fly/H
-					if(calculation || prediction === true) {
-						flag(player, "Fly", "H", "Movement", "yVelocity", Math.abs(playerVelocity.y).toFixed(4), true);
+					const currentYVelocity = playerVelocity.y;
+					if(currentYVelocity > 0.05 && oldYv < 0) {
+						flag(player, "Fly", "H", "Movement", "yVelocity", currentYVelocity, false);
 					}
-					// Log data
-					oldoldYvelocity.set(player, oldYv);
-					oldYvelocity.set(player, currentY);
-
+					if(currentYVelocity !== 0) {
+						oldYvelocity.set(player, currentYVelocity);
+					}
 				}
 			}
 
@@ -686,23 +678,31 @@ Minecraft.system.runInterval(() => {
 			}	
 
 			// Speed/B = 1.2e-10
-			if(config.modules.speedB.enabled && player.hasTag("strict")) {
-				// Get the player's current speed and rotation
-				const currentSpeed = playerSpeed
-				const currentRotation = rotation.y;
-				// Get the player's previous speed and rotation
-				const oldSpeed = previousSpeedLog.get(player) || currentSpeed;
-				const oldRotation = previousRotationLog.get(player) || currentRotation;
-				const oldSpeed2 = oldOldSpeed.get(player) || oldSpeed;
-				// If the player's rotation has changed but their speed has not decreased, flag for Speed
-				if(Math.abs(currentRotation - oldRotation) > 40 + 1.2e-10 && currentSpeed >= oldSpeed + 0.1 && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.48 && !player.hasTag("damaged") && player.hasTag("strict") && !player.getEffect("speed") && !player.hasTag("nospeed") && !player.hasTag("ice") && !player.hasTag("slime")) {
-					flag(player, "Speed", "B", "Movement", "rotationDiff", `${Math.abs(currentRotation - oldRotation)},speed=${currentSpeed}`)
-				}
+			// if(config.modules.speedB.enabled && player.hasTag("strict")) {
+			// 	// Get the player's current speed and rotation
+			// 	const currentSpeed = playerSpeed
+			// 	const currentRotation = rotation.y;
+			// 	// Get the player's previous speed and rotation
+			// 	const oldSpeed = previousSpeedLog.get(player) || currentSpeed;
+			// 	const oldRotation = previousRotationLog.get(player) || currentRotation;
+			// 	const oldSpeed2 = oldOldSpeed.get(player) || oldSpeed;
+			// 	// If the player's rotation has changed but their speed has not decreased, flag for Speed
+			// 	if(Math.abs(currentRotation - oldRotation) > 40 + 1.2e-10 && currentSpeed >= oldSpeed + 0.1 && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.48 && !player.hasTag("damaged") && player.hasTag("strict") && !player.getEffect("speed") && !player.hasTag("nospeed") && !player.hasTag("ice") && !player.hasTag("slime")) {
+			// 		flag(player, "Speed", "B", "Movement", "rotationDiff", `${Math.abs(currentRotation - oldRotation)},speed=${currentSpeed}`)
+			// 	}
 
-				// Update the player's previous speed and rotation
-				oldOldSpeed.set(player, oldSpeed);
-				previousSpeedLog.set(player, currentSpeed);
-				previousRotationLog.set(player, currentRotation);
+			// 	// Update the player's previous speed and rotation
+			// 	oldOldSpeed.set(player, oldSpeed);
+			// 	previousSpeedLog.set(player, currentSpeed);
+			// 	previousRotationLog.set(player, currentRotation);
+			// }
+
+			// Speed/B, The updated version does use the deceleration check as it is a lot less buggy and more accurate
+
+			if(config.modules.speedB.enabled) {
+				if(playerSpeed > 0.22 && playerVelocity.x === 0 && playerVelocity.z === 0) {
+					flag(player, "Speed", "B", "Movement", "speed", playerSpeed, true);
+				}
 			}
 
 			// Speed/C = Checks for BHop velocity
@@ -959,10 +959,10 @@ Minecraft.system.runInterval(() => {
 			player.removeTag("usingItem");
 			player.removeTag("breaking");
 			player.removeTag("noPitchDiff");
-			// Kill any isolate anticheat killaura bots
 			const currentCounter = getScore(player, "tick_counter", 0);
 			setScore(player, "tick_counter", currentCounter + 1);
-			//player.runCommandAsync("kill @e[type=isolate:killaura]");
+			setScore(player, "tick_counter2", getScore(player, "tick_counter2", 0) + 1);
+
 		}
 		
 
@@ -1413,7 +1413,7 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	player.lastGoodPosition = player.location;
 	let rotationLogX;
 	let rotationLogY;
-	
+	setScore(player, "tick_counter2", 0);
 	if(player.name === "Dream2322") {
 		setTitle(player, "Welcome Dream23322", "To a Isolate Anticheat Server");
 	}
