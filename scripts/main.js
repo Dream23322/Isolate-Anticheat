@@ -1100,6 +1100,10 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 					flag(player, "Scaffold", "A", "Placement", "rotation", rotation.x, false);
 				}
 			}
+			if(player.getBlockFromViewDirection().id !== block.id && player.location.y > block.location.y) {
+				flag(player, "Scaffold", "A", "Placement", "block", player.getBlockFromViewDirection().id, false);
+			}
+			
 		}
 
 		// Scaffold/B = Checks for a certain head rotation that horion clients scaffold uses (with bypass mode on), the rotation bypasses scaffold/C so that is why this is here
