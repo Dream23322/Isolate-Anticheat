@@ -614,13 +614,18 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// Fly/F = Goofy prediction checks all thrown into one because im lazy
-			if(config.modules.flyF.enabled && !player.getEffect("jump_boost") && !player.isFlying) {
+			if(config.modules.flyF.enabled && !player.getEffect("jump_boost")) {
 				if(aroundAir(player) === true) {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
-					if(!player.hasTag("ground") && !player.hasTag("nofly") && !player.isOnGround && !player.hasTag("damaged")) {
-						const prediction = (playerVelocity.y > 0.37 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true) && getScore(player, "tick_counter2", 0) > 3;
-						if(prediction === true) {
+					const yDiff = Math.abs(oldY - currentYPos);
+
+					if(!player.hasTag("nofly") && !player.hasTag("nofly") && !player.hasTag("damaged")) {
+						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
+						
+						const prediction = playerVelocity.y > 0.42 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true;
+
+						if(prediction && getScore(player, "tick_counter2", 0) > 3) {
 							flag(player, "Fly", "F", "Movement", "y-velocity", playerVelocity.y, false);
 						}
 					}
@@ -652,9 +657,9 @@ Minecraft.system.runInterval(() => {
 					if(currentYVelocity > 0.05 && oldYv < 0) {
 						flag(player, "Fly", "H", "Movement", "yVelocity", currentYVelocity, false);
 					}
-					if(currentYVelocity !== 0) {
-						oldYvelocity.set(player, currentYVelocity);
-					}
+
+					oldYvelocity.set(player, currentYVelocity);
+
 				}
 			}
 
@@ -901,7 +906,7 @@ Minecraft.system.runInterval(() => {
 					}
 
 					// Simple glide check (-0.01)
-					if(prediction1 && ) {
+					if(prediction1) {
 						flag(player, "Prediction", "A", "Movement", "yVelocity", playerVelocity.y, false);
 					}
 				}
