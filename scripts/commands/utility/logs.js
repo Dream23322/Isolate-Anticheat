@@ -1,5 +1,5 @@
 import data from "../../data/data";
-import { playerTellraw  } from "../../data/api/api.js";
+import { playerTellraw } from "../../utils/gameUtil";
 /**
  * @name logs
  * @param {object} message - Message object

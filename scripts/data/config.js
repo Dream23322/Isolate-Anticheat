@@ -490,28 +490,50 @@ export default
         },
         "flyC": {
             "enabled": true,
+            "velocity": 0.5423,
+            "description":"Checks for invalid speed and velocity in air",
+            "hVelocity": 0.525,
+            "punishment": "kick",
+            "punishmentLength": "5m",
+            "minVlbeforePunishment": 3
+        },          
+        "flyD": {
+            "enabled": true,
             "Velocity": 0.6,
             "description":"Checks for invalid horizontal velocity in air",
             "punishment": "kick",
             "punishmentLength": "5m",
             "minVlbeforePunishment": 5
-        },          
-        "flyD": {
+        },    
+        "flyE": {
             "enabled": true,
             "description":"Checks for invalid horizontal velocity in air",
             "hVelocity": 0.512,
             "punishment": "kick",
             "punishmentLength": "5d",
             "minVlbeforePunishment": 10
-        },    
-        "flyE": {
+        },        
+
+        // Do **NOT** enabled
+        // The check is broken
+        "flyF": {
+            "enabled": true,
+            "description": "In air velocity check",
+            "punishment": "kick", 
+            "diff": 0.1,
+            "speed": 2.45,
+            "punishmentLength": "3d",
+            "minVlbeforePunishment": 10
+        },   
+        // This scythe check is so very fucking shit it annoys the piss out of me.
+        "flyG": {
             "enabled": true,
             "description": "Checks for invalid Y movements (Scythe Check So Bad)",
             "fallDistance": 0,
             "punishment": "kick",
             "punishmentLength": "1m",
             "minVlbeforePunishment": 100
-        },        
+        }, 
         "illegalitemsE": {
             "enabled": false,
             "punishment": "ban",

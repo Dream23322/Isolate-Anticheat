@@ -3,7 +3,7 @@
 import * as Minecraft from "@minecraft/server";
 import config from "./data/config.js";
 import data from "./data/data.js";
-import { setParticle, setSound } from "./data/api/api.js";
+import { setParticle, setSound } from "./utils/gameUtil.js";
 
 
 const world = Minecraft.world;
