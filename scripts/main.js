@@ -509,113 +509,10 @@ Minecraft.system.runInterval(() => {
 		//                   Fly Checks
 		// ==================================
 		if(config.generalModules.fly === true) {
-			// Fly/A = Checks for consistant airspeed
-			if (config.modules.flyA.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isGliding) {
-				// Checks for invalid downwards accelerations
 
-				/*
-					This is a mix of a bunch o different stuffs because too much random stuff spread out is
-					1. Annoying to understand and handle
-					2. Can cause performance issues with the server
-				*/
-
-
-				// Y velocity Checks
-
-
-
-				// Y position checks
-
-
-				// Get all data
-				const oldxp = oldx.get(player) || 0;
-				const oldzp = oldz.get(player) || 0;
-				const oldoldxp = oldoldx.get(player) || 0;
-				const oldoldzp = oldoldz.get(player) || 0;
-
-				// We calculate 2 diffferences so that we can compare the 2
-				const diff1 = Math.abs(oldoldxp - oldxp);
-				const diff2 = Math.abs(oldoldzp - oldzp);
-				const diff3 = Math.abs(oldxp - player.location.x);
-				const diff4 = Math.abs(oldzp - player.location.z);
-
-				// Calculate the final differences
-				const final1 = Math.abs(diff1 - diff2) / 2;
-				const final2 = Math.abs(diff3 - diff4) / 2;
-
-				// If the differences are the same, flag for fly/A
-				
-				if (final1 === final2 && final2 !== 0) {
-					// if the player is in Air, continue to flag
-					if(aroundAir(player)) {
-						flag(player, "Fly", "A", "Movement", "difference", final1, false);
-					}
-				}
-
-				// If the player is above world height, flag
-				if(aroundAir(player) && player.location.y > 319 && !player.isOnGround && !player.hasTag("elytra")) {
-					flag(player, "Fly", "A", "Movement", "y", player.location.y, false);
-					player.teleport({x: player.location.x, y: player.location.y -150, z: player.location.z});
-				}
-
-				// Update all maps if the player is in air
-				if(aroundAir(player) && !player.isOnGround) {
-					oldx.set(player, player.location.x);
-					oldz.set(player, player.location.z);
-					oldoldx.set(player, oldxp);
-					oldoldz.set(player, oldzp);
-				}
-			}
-
-			// Fly/B = Checks for vertical Fly
-			// Fly/G damn near renders this check usesless but I'm not removing it incase mojong become more useless and removes shit that it depends on, it also false flags
-			if(config.modules.flyB.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.getEffect("jump_boost") && !player.hasTag("slime")) {
-
-				const hVelocity = Math.abs((playerVelocity.x + playerVelocity.z) / 2);
-				const yVelocity = playerVelocity.y;
-				if(aroundAir(player) === true && playerVelocity.y > config.modules.flyB.minVelocity && hVelocity < config.modules.flyB.MaxHVelocity && !player.hasTag("op") && !player.isJumping && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.getEffect("speed") && yVelocity > 1.0) {
-					flag(player, "Fly", "B", "Movement", "yVelocity", Math.abs(playerVelocity.y), false);
-				} 
-			}
-
-			// Fly C = Checks for having invalid velocity while in the air
-			if (config.modules.flyC.enabled && !player.hasTag("op") && !player.isFlying && !player.hasTag("ground") && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged")) {
-				const vertical_velo = playerVelocity.y;
-				if(playerSpeed > 0.1 && vertical_velo === 0 && !player.hasTag("ground") && playerSpeed > config.modules.speedA.speed - 0.1 && aroundAir(player) && !player.getEffect("speed")) {
-					flag(player, "Fly", "C", "Movement", "vertical", vertical_velo, true)
-					currentVL++;
-				}
-			}
-
-			//Fly/D = Checks for fly like velocity
-			// This check is really scuffed because when I made it (in my old anticheat) I had no idea what I was talking about, but it works for some reason...
-			if(config.modules.flyD.enabled && !player.hasTag("op") && !player.isFlying && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.hasTag("slime")) {
-				const makeYVelocity1 = Math.abs(playerVelocity.x + playerVelocity.z)
-				const yVelocity = Math.abs(makeYVelocity1 / 2)
-				if(playerVelocity.y > yVelocity && playerVelocity.x > config.modules.flyD.Velocity && aroundAir(player) && !player.getEffect("speed")) {
-					if(!player.isJumping || player.hasTag("sneak") || player.isSneaking) {
-						flag(player, "Fly", "D", "Movement", "velocity", Math.abs(playerVelocity.y).toFixed(4), true);
-					}
-				}
-			}
-
-			// Fly/E = Checks for being in air but not falling
-			if(config.modules.flyE.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.hasTag("ground")) {
-				if(playerVelocity.y === 0) {
-					const findHVelocity = Math.abs((playerVelocity.x + playerVelocity.z) / 2);
-					
-					if(aroundAir(player) === true && findHVelocity > config.modules.flyE.hVelocity && !player.getEffect("speed")) {
-						if(!player.isJumping || player.hasTag("sneak") || player.isSneaking) {
-							flag(player, "Fly", "E", "Movement", "yVelocity", Math.abs(player.velocityV).toFixed(4), true);
-							player.addTag("strict");
-						}
-					}          
-				}
-			}
-
-			// Fly/F = Goofy prediction checks all thrown into one because im lazy
-			if(config.modules.flyF.enabled && !player.getEffect("jump_boost")) {
-				if(aroundAir(player) === true) {
+			// Fly/A = Old Fly/F
+			if(config.modules.flyA.enabled) {
+				if(aroundAir(player) === true && !player.getEFfect("jump_boost")) {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
 					const yDiff = Math.abs(oldY - currentYPos);
@@ -626,27 +523,77 @@ Minecraft.system.runInterval(() => {
 						const prediction = playerVelocity.y > 0.42 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true;
 
 						if(prediction && getScore(player, "tick_counter2", 0) > 3) {
-							flag(player, "Fly", "F", "Movement", "y-velocity", playerVelocity.y, false);
+							flag(player, "Fly", "A", "Movement", "y-velocity", playerVelocity.y, false);
 						}
 					}
 					oldOldYPos.set(player, oldY);
 					oldYPos.set(player, currentYPos);
 				}
-
 			}
 
-			// Fly/G
-			//Scythe check :skull:
-			// This is a hopeless piece of code and I might remove it
-			if(config.modules.flyG.enabled && player.fallDistance < config.modules.flyG.fallDistance && !player.hasTag("trident") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("damaged") && player.hasTag("strict") && !player.hasTag("slime")) {
+			// New Fly/B = old Fly/A
+			if(config.modules.flyB.enabled) {
+				if (config.modules.flyA.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isGliding) {
+					// Checks for invalid downwards accelerations
+					/*
+						This is a mix of a bunch o different stuffs because too much random stuff spread out is
+						1. Annoying to understand and handle
+						2. Can cause performance issues with the server
+					*/
+					// Get all data
+					const oldxp = oldx.get(player) || 0;
+					const oldzp = oldz.get(player) || 0;
+					const oldoldxp = oldoldx.get(player) || 0;
+					const oldoldzp = oldoldz.get(player) || 0;
+
+					// We calculate 2 diffferences so that we can compare the 2
+					const diff1 = Math.abs(oldoldxp - oldxp);
+					const diff2 = Math.abs(oldoldzp - oldzp);
+					const diff3 = Math.abs(oldxp - player.location.x);
+					const diff4 = Math.abs(oldzp - player.location.z);
+
+					// Calculate the final differences
+					const final1 = Math.abs(diff1 - diff2) / 2;
+					const final2 = Math.abs(diff3 - diff4) / 2;
+
+					// If the differences are the same, flag for fly/A
+					
+					if (final1 === final2 && final2 !== 0) {
+						// if the player is in Air, continue to flag
+						if(aroundAir(player)) {
+							flag(player, "Fly", "B", "Movement", "difference", final1, false);
+						}
+					}
+
+					// If the player is above world height, flag
+					if(aroundAir(player) && player.location.y > 319 && !player.isOnGround && !player.hasTag("elytra")) {
+						flag(player, "Fly", "B", "Movement", "y", player.location.y, false);
+						player.teleport({x: player.location.x, y: player.location.y -150, z: player.location.z});
+					}
+
+					// Update all maps if the player is in air
+					if(aroundAir(player) && !player.isOnGround) {
+						oldx.set(player, player.location.x);
+						oldz.set(player, player.location.z);
+						oldoldx.set(player, oldxp);
+						oldoldz.set(player, oldzp);
+					}
+				}
+			}
+
+			// Fly/C = Old fly/G
+			if(config.modules.flyC.enabled && player.fallDistance < config.modules.flyC.fallDistance && !player.hasTag("trident") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("damaged") && player.hasTag("strict") && !player.hasTag("slime")) {
 				// Stopping false flags
 				if(!player.isJumping && !player.isGliding && !player.isFlying && !player.hasTag("jump") && !player.hasTag("op")) {
 					
 					if(aroundAir(player) === true) {
-						flag(player, "Fly", "G", "Movement", "fallDistance", player.fallDistance, false);
+						flag(player, "Fly", "C", "Movement", "fallDistance", player.fallDistance, false);
 					}	
 				}
-			}
+			}	
+
+
+
 		}
 
 		// ==================================
