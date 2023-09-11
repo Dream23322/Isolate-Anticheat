@@ -515,7 +515,6 @@ Minecraft.system.runInterval(() => {
 				if(aroundAir(player) === true && !player.getEFfect("jump_boost")) {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
-					const yDiff = Math.abs(oldY - currentYPos);
 
 					if(!player.hasTag("nofly") && !player.hasTag("nofly") && !player.hasTag("damaged")) {
 						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
@@ -533,7 +532,7 @@ Minecraft.system.runInterval(() => {
 
 			// New Fly/B = old Fly/A
 			if(config.modules.flyB.enabled) {
-				if (config.modules.flyA.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isGliding) {
+				if (config.modules.flyB.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isGliding) {
 					// Checks for invalid downwards accelerations
 					/*
 						This is a mix of a bunch o different stuffs because too much random stuff spread out is
@@ -972,22 +971,6 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 			
 			// @ts-expect-error
 			if(!player.isFlying && player.isJumping && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
-				const yPosDiff = player.location.y - Math.floor(Math.abs(player.location.y));
-				
-				if(yPosDiff > config.modules.scaffoldA.max_y_pos_diff) {
-					const checkGmc = world.getPlayers({
-						excludeGameModes: [Minecraft.GameMode.creative],
-						name: player.name
-					});
-
-					if([...checkGmc].length > 0 && yPosDiff < 0.49) {
-						flag(player, "Scaffold", "A", "Placement", "yPosDiff", yPosDiff, false);
-						block.setType(Minecraft.MinecraftBlockTypes.air);
-						blockPlace.cancel = true;
-						
-						
-					}
-				}
 				if(rotation.x < 80 && player.isJumping && playerSpeed < 0.2) {
 					flag(player, "Scaffold", "A", "Placement", "rotation", rotation.x, false);
 				}
