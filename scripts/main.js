@@ -971,7 +971,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 			
 			// @ts-expect-error
 			if(!player.isFlying && player.isJumping && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
-				if(rotation.x < 80 && player.isJumping && playerSpeed < 0.2) {
+				if(rotation.x < 75 && player.isJumping && playerSpeed < 0.2) {
 					flag(player, "Scaffold", "A", "Placement", "rotation", rotation.x, false);
 				}
 			}
