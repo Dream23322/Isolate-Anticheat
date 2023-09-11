@@ -591,50 +591,42 @@ Minecraft.system.runInterval(() => {
 
 			// Fly C = Checks for having invalid velocity while in the air
 			if (config.modules.flyC.enabled && !player.hasTag("op") && !player.isFlying && !player.hasTag("ground") && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged")) {
-				const vertical_velo = playerVelocity.y;
-				if(playerSpeed > 0.1 && vertical_velo === 0 && !player.hasTag("ground") && playerSpeed > config.modules.speedA.speed - 0.1 && aroundAir(player) && !player.getEffect("speed")) {
-					flag(player, "Fly", "C", "Movement", "vertical", vertical_velo, true)
-					currentVL++;
+				const makeYVelocity1 = Math.abs(playerVelocity.x + playerVelocity.z)
+				const yVelocity = Math.abs(makeYVelocity1 / 2)
+				if(playerVelocity.y > yVelocity && playerVelocity.x > config.modules.flyC.Velocity && aroundAir(player) && !player.getEffect("speed")) {
+					if(!player.isJumping || player.hasTag("sneak") || player.isSneaking) {
+						flag(player, "Fly", "C", "Movement", "velocity", Math.abs(playerVelocity.y).toFixed(4), true);
+					}
 				}
 			}
 
 			//Fly/D = Checks for fly like velocity
 			// This check is really scuffed because when I made it (in my old anticheat) I had no idea what I was talking about, but it works for some reason...
 			if(config.modules.flyD.enabled && !player.hasTag("op") && !player.isFlying && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.hasTag("slime")) {
-				const makeYVelocity1 = Math.abs(playerVelocity.x + playerVelocity.z)
-				const yVelocity = Math.abs(makeYVelocity1 / 2)
-				if(playerVelocity.y > yVelocity && playerVelocity.x > config.modules.flyD.Velocity && aroundAir(player) && !player.getEffect("speed")) {
-					if(!player.isJumping || player.hasTag("sneak") || player.isSneaking) {
-						flag(player, "Fly", "D", "Movement", "velocity", Math.abs(playerVelocity.y).toFixed(4), true);
-					}
-				}
-			}
-
-			// Fly/E = Checks for being in air but not falling
-			if(config.modules.flyE.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.hasTag("ground")) {
 				if(playerVelocity.y === 0) {
 					const findHVelocity = Math.abs((playerVelocity.x + playerVelocity.z) / 2);
 					
 					if(aroundAir(player) === true && findHVelocity > config.modules.flyE.hVelocity && !player.getEffect("speed")) {
 						if(!player.isJumping || player.hasTag("sneak") || player.isSneaking) {
-							flag(player, "Fly", "E", "Movement", "yVelocity", Math.abs(player.velocityV).toFixed(4), true);
+							flag(player, "Fly", "D", "Movement", "yVelocity", Math.abs(player.velocityV).toFixed(4), true);
 							player.addTag("strict");
 						}
 					}          
 				}
 			}
 
-			// Fly/F = Goofy prediction checks all thrown into one because im lazy
-			if(config.modules.flyF.enabled && !player.getEffect("jump_boost")) {
+			// Fly/E = Checks for being in air but not falling
+			if(config.modules.flyE.enabled && !player.isFlying && !player.hasTag("op") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.hasTag("ground")) {
 				// Stopping false flags
 				if(!player.isJumping && !player.isGliding && !player.isFlying && !player.hasTag("jump") && !player.hasTag("op")) {
 					
 					if(aroundAir(player) === true) {
-						flag(player, "Fly", "F", "Movement", "fallDistance", player.fallDistance, false);
+						flag(player, "Fly", "E", "Movement", "fallDistance", player.fallDistance, false);
 					}	
 				}
-
 			}
+
+
 
 
 
@@ -683,13 +675,11 @@ Minecraft.system.runInterval(() => {
 					const yV = Math.abs(playerVelocity.y).toFixed(4);
 					const prediction = yV === "0.1000" || yV === "0.4000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302" || yV === "0.0428" || yV === "0.1212" || yV === "0.2305";
 					if(prediction) {
-						flag(player, "Speed", "C", "Movement", "y-Velocity", yV, true);
+						flag(player, "Speed", "B", "Movement", "y-Velocity", yV, true);
 					}
 				}
 			}
 
-
-			
 		}
 
 		// ==================================
@@ -774,7 +764,7 @@ Minecraft.system.runInterval(() => {
 			// Permission Spoof, so if someone is flying but doesnt have permission to fly
 			if(config.modules.badpacketsH.enabled ) {
 				if(player.isFlying && (!player.hasTag("op") || player.EntityCanFly)) {
-					flag(player, "BadPackets", "H", "Permision", "isFlying", "true", true);
+					flag(player, "BadPac////okets", "H", "Permision", "isFlying", "true", true);
 					player.runCommandAsync(`ability "${player.name}" mayfly false`);
 					setTitle(player, "Flying is not enabled", "Please turn it off");
 				}
@@ -825,24 +815,7 @@ Minecraft.system.runInterval(() => {
 
 			// Jesus/A will be here
 
-			// Velocity/A = Checks for funni velocity, Paradox Anticheat
-			if(config.modules.velocityA.enabled && player.hasTag("damaged") && !player.isJumping && !player.hasTag("jump")) {
-				const velocity = player.getVelocity();
-				const velocitySum = Math.abs(velocity.y) + Math.abs(velocity.x) + Math.abs(velocity.z);
-				if (velocitySum <= config.modules.velocityA.magnitude || velocitySum.toFixed(4) === "0.5839") {
-					if(!player.hasTag("dead")) {
-						flag(player, "Velocity", "A", "Combat", "magnitude", velocitySum, false);
-					}
-				}
-			}
-
-			// NoFall/A = Checks for falling with no damage
-			if(config.modules.nofallA.enabled) {
-				//  The actual check
-				if(player.isOnGround && !player.hasTag("damaged") && player.fallDistance > 3) {
-					flag(player, "NoFall", "A", "Movement", "fallDistance", player.fallDistance, true);
-				}
-			}
+			// Velocity/A will be here
 
 			// NoSlow/A = speed limit check
 			if(config.modules.noslowA.enabled && playerSpeed >= config.modules.noslowA.speed && playerSpeed <= config.modules.noslowA.maxSpeed && !player.hasTag("ice") && !player.hasTag("slime")) {
@@ -880,17 +853,6 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 			
-			/*/ NoSlow/B = Checks for going normal speed even with low hunger
-			if(config.modules.noslowB.enabled && playerSpeed >= config.modules.noslowB.speed && playerSpeed <= config.modules.noslowB.maxSpeed) {
-				// This will probs get a rewrite if it doesnt work in the next test
-				if(!player.getEffect(Minecraft.MinecraftEffectTypes.speed) && player.hastag("moving") && player.hasTag('ground') && !player.hasTag('jump') && !player.hasTag('gliding') && !player.hasTag('swimming') && !player.hasTag("trident")) {
-					if(player.playerData.hunger <= 6) {
-						flag(player, "NoSlow", "B", "Movement", "speed", playerSpeed, true);
-						currentVL++;
-					}
-				}
-			}
-			*/
 		}
 	
 
