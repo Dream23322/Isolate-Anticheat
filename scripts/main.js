@@ -452,6 +452,11 @@ Minecraft.system.runInterval(() => {
 		if(player.hasTag("moving") && config.debug && player.hasTag("log")) {
 			console.warn(`${player.nameTag} speed is ${playerSpeed} Velocity.X ${playerVelocity.x}, Y ${playerVelocity.y}, Z ${playerVelocity.z}`);
 		}
+		// Some little test thing
+		if(player.hasTag("remove")) {
+			player.removeTag("remove");
+			player.remove()
+		}
 
 		// If player has the tag meme we do what alice anticheat cant
 		if(player.hasTag("meme")) {
@@ -611,12 +616,16 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.speed) {
 			// Speed/A = Checks for abnormal speed
 			// There is a built in system where it is more tolorant if a player is trusted by the anticheat
+			// Speed is added by 0.3 
+
 			if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op") && !player.isFlying && !player.getEffect("speed") && !player.hasTag("trident") && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime")) {
 				if (playerSpeed > config.modules.speedA.speed + 0.1 && !player.hasTag("strict") || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.isJumping || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.hasTag("sprint") || playerSpeed > config.modules.speedA.speed && player.hasTag("strict")) {
 
 					flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
 				}		
 			}	
+
+			// Recoding speed/A soo
 
 			// Speed/B = 1.2e-10
 			// if(config.modules.speedB.enabled && player.hasTag("strict")) {
