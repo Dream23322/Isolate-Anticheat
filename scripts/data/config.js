@@ -485,6 +485,7 @@ export default
         },    
         "flyB": {
             "enabled": true,
+            "description": "Checks for a player not going into the predicted location (y)",
             "punishment": "kick",
             "punishmentLength": "5m",
             "minVlbeforePunishment": 10
@@ -524,7 +525,7 @@ export default
             "minVlbeforePunishment": 0
         },
         "autoclickerB": {
-            "enabled": true,
+            "enabled": false,
             "minCPS": 3,
             "maxDeviation": 0.5, // Adjust this value based on your desired maximum CPS deviation
             "punishment": "none",
