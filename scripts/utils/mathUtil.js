@@ -115,3 +115,23 @@ export function getBlocksBetween(pos1, pos2) {
     return coordinates;
 }
 
+
+/**
+ * @name angleMaths
+ */
+export function angleCalc(player, hitEntity) {
+    const pos1 = { x: player.location.x, y: player.location.y, z: player.location.z };
+    const pos2 = { x: hitEntity.location.x, y: hitEntity.location.y, z: hitEntity.location.z };
+    let angle = Math.atan2((pos2.z - pos1.z), (pos2.x - pos1.x)) * 180 / Math.PI - player.getRotation().y - 90;
+    
+    angle = Math.abs(angle); 
+    return angle;
+}
+
+/**
+ * @name hVelocity
+ * @remarks Calculates a players horizontal velocity
+ */
+export function hVelocity(player) {
+    return (player.getVelocity().x + player.getVelocity().z) / 2
+}

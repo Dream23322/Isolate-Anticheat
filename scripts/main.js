@@ -512,7 +512,7 @@ Minecraft.system.runInterval(() => {
 
 			// Fly/A = Old Fly/F
 			if(config.modules.flyA.enabled) {
-				if(aroundAir(player) === true && !player.getEFfect("jump_boost")) {
+				if(aroundAir(player) === true && !player.getEffect("jump_boost")) {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
 
@@ -1603,7 +1603,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		// Hitbox/A = Paradox check that looks for not having the attacked entity on screen
 		// This can cause some issues on laggy servers so im gonna have to try fix that
 		if(config.modules.hitboxA.enabled) {
-			if(isAttackingFromOutsideView(player, entity, 90)) {
+			if(isAttackingFromOutsideView(player, entity, config.modules.hitboxA.angleMobile)) {
 				entityHit.cancel;
 				flag(player, "Hitbox", "A", "Combat", "angle", "> 90", false);
 			}
