@@ -440,6 +440,12 @@ Minecraft.system.runInterval(() => {
 			}
 		}
 		
+		if(config.autoReset) {
+			if(getScore(player, "tick_counter2", 0) > 300) {
+				player.runCommandAsync("function tools/resetwarns");
+				setScore(player, "tick_counter2", 0);
+			}
+		}
 		if(player.hasTag("moving") && config.debug && player.hasTag("log")) {
 			console.warn(`${player.nameTag} speed is ${playerSpeed} Velocity.X ${playerVelocity.x}, Y ${playerVelocity.y}, Z ${playerVelocity.z}`);
 		}
