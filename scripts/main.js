@@ -594,7 +594,7 @@ Minecraft.system.runInterval(() => {
 				// Stopping false flags
 				if(!player.isJumping && !player.isGliding && !player.isFlying && !player.hasTag("jump") && !player.hasTag("op")) {
 					
-					if(aroundAir(player) === true) {
+					if(aroundAir(player) === true && Math.abs(playerVelocity.y) > 0.1) {
 						flag(player, "Fly", "C", "Movement", "fallDistance", player.fallDistance, false);
 					}	
 				}
