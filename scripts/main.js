@@ -2,7 +2,7 @@
 // @ts-ignore
 import * as Minecraft from "@minecraft/server";
 import { getHealth, playerTellraw, setTitle, setParticle, setSound, inAir, aroundAir} from "./utils/gameUtil.js";
-import { isAttackingFromOutsideView, isAttackingFromAboveOrBelow, getBlocksBetween, getSpeed } from "./utils/mathUtil.js";
+import { isAttackingFromOutsideView, isAttackingFromAboveOrBelow, getBlocksBetween, getSpeed, angleCalc } from "./utils/mathUtil.js";
 import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
 import { commandHandler } from "./commands/handler.js";
 import config from "./data/config.js";
@@ -634,7 +634,7 @@ Minecraft.system.runInterval(() => {
 			if(config.modules.speedB.enabled) {
 				if(playerSpeed > 0.2 && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime")) {
 					const yV = Math.abs(playerVelocity.y).toFixed(4);
-					const prediction = yV === "0.1000" || yV === "0.4000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302" || yV === "0.0428" || yV === "0.1212" || yV === "0.2305";
+					const prediction = yV === "0.1000" || yV === "0.4000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302" || yV === "0.0428" || yV === "0.1212" || yV === "0.2305" && !player.getEffect("speed") || yV === "1.1661" || yV === "1.0244";
 					if(prediction) {
 						flag(player, "Speed", "B", "Movement", "y-Velocity", yV, true);
 					}
@@ -1604,8 +1604,18 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		// This can cause some issues on laggy servers so im gonna have to try fix that
 		if(config.modules.hitboxA.enabled) {
 			if(isAttackingFromOutsideView(player, entity, config.modules.hitboxA.angleMobile)) {
-				entityHit.cancel;
 				flag(player, "Hitbox", "A", "Combat", "angle", "> 90", false);
+			}
+		}
+ 
+		// Killaura/F = Checks for looking at the center of an entity
+		if(config.modules.killauraF.enabled) {
+			if(angleCalc(player, entity) < 0.99) {
+				const pos1 = { x: player.location.x, y: player.location.y, z: player.location.z };
+				const pos2 = { x: entity.location.x, y: entity.location.y, z: entity.location.z };
+				if(Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2)) > 2.6 && !player.hasTag("strict")) {
+					flag(player, "Killaura", "F", "Combat", "angle", angleCalc(player, entity), true);
+				}
 			}
 		}
 	}
@@ -1670,7 +1680,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	}
 	
 
-	if(config.debug) console.warn(player.getTags(), rotation.x);
+	if(config.debug) console.warn(player.getTags(), "rotation", rotation.x, "angleDiff", angleCalc(player, entity));
 });
 world.afterEvents.entityHitBlock.subscribe((entityHit) => {
 	const { damagingEntity: player} = entityHit;

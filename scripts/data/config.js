@@ -574,6 +574,12 @@ export default
             "punishmentLength": "3m",
             "minVlbeforePunishment": 5
         },
+        "killauraF": {
+            "enabled": true,
+            "description": "Checks for looking at the exact center of a player",
+            "punishment": "kick",
+            "minVlbeforePunishment": 40
+        },
         "scaffoldA": {
             "enabled": true,
             "description": "Checks for goofy velocity while scaffolding",
@@ -837,7 +843,7 @@ export default
         "badpacketsI": {
             "enabled": true,
             "description": "Checks for head rotation over 90 ",
-            "angle": 90,
+            "angle": 89.89999389648438,
             "punishment": "kick",
             "minVlbeforePunishment": 3
         },
