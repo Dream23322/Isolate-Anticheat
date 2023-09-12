@@ -10,7 +10,7 @@ export default
         "punishment": "mute"
     },
     "ViolationsBeforeBan": 30,
-
+    "autoReset": true,
     // If you dont really know how to config the anticheat, use this... lol
     "silent": true,
     "generalModules": {
