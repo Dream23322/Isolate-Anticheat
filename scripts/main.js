@@ -442,6 +442,9 @@ Minecraft.system.runInterval(() => {
 		
 		if(config.autoReset) {
 			if(getScore(player, "tick_counter2", 0) > 300) {
+				if(!player.hasTag("reported") && player.hasTag("strict")) {
+					player.removeTag("strict");
+				}
 				player.runCommandAsync("function tools/resetwarns");
 				setScore(player, "tick_counter2", 0);
 			}

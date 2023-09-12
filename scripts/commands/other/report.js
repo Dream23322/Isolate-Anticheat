@@ -37,6 +37,7 @@ export function report(message, args) {
     player.sendMessage(`§r§j[§uIsolate§j]§r You have reported ${member.nameTag} for: ${reason}.`);
     
     member.addTag("strict");
+    member.addTag("reported");
     
 
     player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has reported ${member.nameTag} for ${reason}"}]}`);
