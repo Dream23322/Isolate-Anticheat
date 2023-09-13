@@ -614,18 +614,44 @@ Minecraft.system.runInterval(() => {
 		// ==================================
 
 		if(config.generalModules.speed) {
-			// Speed/A = Checks for abnormal speed
-			// There is a built in system where it is more tolorant if a player is trusted by the anticheat
-			// Speed is added by 0.3 
+			// Speed/A = Checks for high speed
 
-			if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op") && !player.isFlying && !player.getEffect("speed") && !player.hasTag("trident") && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime")) {
-				if (playerSpeed > config.modules.speedA.speed + 0.1 && !player.hasTag("strict") || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.isJumping || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.hasTag("sprint") || playerSpeed > config.modules.speedA.speed && player.hasTag("strict")) {
+			// In speed/A we make sure we are still able to check players who have the speed effect! We do this by adding an estimate effect multiplier to the max speed.
+			if(config.modules.speedA.enabled) {
+				// Check if the player has an effect or not
+				if(player.getEffect("speed")) {
 
-					flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
-				}		
-			}	
+					// Define everything that is needed
+					const maxSpeed = config.modules.speedA.speed;
+					const speedEffectValue = player.getEffect("speed").amplifier();
+					let modifiedSpeed = maxSpeed; 
+					
+					// Add to the maxspeed value the corisponding amount
+					for (let i = 0; i < speedEffectValue; i++) {
+						// Add 0.3 to make sure there are no false flags
+						modifiedSpeed += 0.3; 
+					}
 
-			// Recoding speed/A soo
+					// If the speed is higher than the max speed, flag the player for Speed/A
+					if(playerSpeed > modifiedSpeed && !player.hasTag("damaged") && !player.hasTag("op") && !player.isFlying && !player.hasTag("trident") && !player.hasTag("ice") && !player.hasTag("slime")) {
+						flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
+					}
+
+				} else {
+					// If the player doesnt have the strict tag, be more tolerant
+					if(!player.hasTag("strict")) {
+						if(playerSpeed > config.modules.speedA.speed + 0.1 && !player.hasTag("strict") && !player.hasTag("damaged") && !player.hasTag("op") && !player.isFlying && !player.hasTag("trident") && !player.hasTag("ice") && !player.hasTag("slime") && !player.isJumping) {
+							flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
+						}
+					
+					} else {
+						// If the player doesnt have the the strict tag, be lesss tolerant
+						if(playerSpeed > config.modules.speedA.speed && !player.hasTag("damaged") && !player.hasTag("op") && !player.isFlying && !player.hasTag("trident") && !player.hasTag("ice") && !player.hasTag("slime")) {
+							flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
+						}
+					}
+				}
+			}
 
 			// Speed/B = 1.2e-10
 			// if(config.modules.speedB.enabled && player.hasTag("strict")) {
@@ -646,6 +672,16 @@ Minecraft.system.runInterval(() => {
 			// 	previousSpeedLog.set(player, currentSpeed);
 			// 	previousRotationLog.set(player, currentRotation);
 			// }
+
+			// Speed/A = Checks for abnormal speed
+			// There is a built in system where it is more tolorant if a player is trusted by the anticheat
+
+			// if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op") && !player.isFlying && !player.getEffect("speed") && !player.hasTag("trident") && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime")) {
+			// 	if (playerSpeed > config.modules.speedA.speed + 0.1 && !player.hasTag("strict") || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.isJumping || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.hasTag("sprint") || playerSpeed > config.modules.speedA.speed && player.hasTag("strict")) {
+
+			// 		flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
+			// 	}		
+			// }	
 
 			// Speed/B = Checks for bhop and vhop velocities
 
