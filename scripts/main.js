@@ -636,6 +636,7 @@ Minecraft.system.runInterval(() => {
 					if(playerSpeed > modifiedSpeed && !player.hasTag("damaged") && !player.hasTag("op") && !player.isFlying && !player.hasTag("trident") && !player.hasTag("ice") && !player.hasTag("slime")) {
 						flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
 					}
+					//modifiedSpeed = 0;
 
 				} else {
 					// If the player doesnt have the strict tag, be more tolerant
@@ -740,7 +741,7 @@ Minecraft.system.runInterval(() => {
 
 		if(config.generalModules.packet) {
 			//Badpackets/B = Checks for nopacket/blink movement
-			if(config.modules.badpacketsB.enabled && !player.hasTag("op")) {
+			if(config.modules.badpacketsB.enabled && !player.hasTag("op") && !player.getEffect("speed")) {
 				if(playerSpeed > config.modules.badpacketsB.speed) {
 					if(player.hasTag("ground")) {
 						flag(player, "BadPackets", "B", "Movement", "speed", playerSpeed, true);
