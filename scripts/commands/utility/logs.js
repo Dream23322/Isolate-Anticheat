@@ -15,5 +15,5 @@ export function logs(message) {
     for (let i = 0; i < logs.length; i++) {
         playerTellraw(player, logs[i]);
     }
-    
+    playerTellraw(player, "---------------\n");
 }
