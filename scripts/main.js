@@ -2,7 +2,7 @@
 // @ts-ignore
 import * as Minecraft from "@minecraft/server";
 import { getHealth, playerTellraw, setTitle, setParticle, setSound, inAir, aroundAir} from "./utils/gameUtil.js";
-import { isAttackingFromOutsideView, isAttackingFromAboveOrBelow, getBlocksBetween, getSpeed, angleCalc } from "./utils/mathUtil.js";
+import { isAttackingFromOutsideView, isAttackingFromAboveOrBelow, getBlocksBetween, getSpeed, angleCalc, hVelocity } from "./utils/mathUtil.js";
 import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
 import { commandHandler } from "./commands/handler.js";
 import config from "./data/config.js";
@@ -617,7 +617,7 @@ Minecraft.system.runInterval(() => {
 			// Speed/A = Checks for high speed
 
 			// In speed/A we make sure we are still able to check players who have the speed effect! We do this by adding an estimate effect multiplier to the max speed.
-			if(config.modules.speedA.enabled) {
+			if(config.modules.speedA.enabled && hVelocity(player) > 0.05) {
 				// Check if the player has an effect or not
 				if(player.getEffect("speed")) {
 
@@ -641,7 +641,7 @@ Minecraft.system.runInterval(() => {
 				} else {
 					// If the player doesnt have the strict tag, be more tolerant
 					if(!player.hasTag("strict")) {
-						if(playerSpeed > config.modules.speedA.speed + 0.1 && !player.hasTag("strict") && !player.hasTag("damaged") && !player.hasTag("op") && !player.isFlying && !player.hasTag("trident") && !player.hasTag("ice") && !player.hasTag("slime") && !player.isJumping) {
+						if(playerSpeed > config.modules.speedA.speed + 0.1 && !player.hasTag("strict") && !player.hasTag("damaged") && !player.hasTag("op") && !player.isFlying && !player.hasTag("trident") && !player.hasTag("ice") && !player.hasTag("slime")) {
 							flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
 						}
 					
@@ -654,35 +654,8 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 
-			// Speed/B = 1.2e-10
-			// if(config.modules.speedB.enabled && player.hasTag("strict")) {
-			// 	// Get the player's current speed and rotation
-			// 	const currentSpeed = playerSpeed
-			// 	const currentRotation = rotation.y;
-			// 	// Get the player's previous speed and rotation
-			// 	const oldSpeed = previousSpeedLog.get(player) || currentSpeed;
-			// 	const oldRotation = previousRotationLog.get(player) || currentRotation;
-			// 	const oldSpeed2 = oldOldSpeed.get(player) || oldSpeed;
-			// 	// If the player's rotation has changed but their speed has not decreased, flag for Speed
-			// 	if(Math.abs(currentRotation - oldRotation) > 40 + 1.2e-10 && currentSpeed >= oldSpeed + 0.1 && playerSpeed !== 0 && player.hasTag("moving") && Math.abs(currentRotation - oldRotation) !== 0 && playerSpeed > 0.48 && !player.hasTag("damaged") && player.hasTag("strict") && !player.getEffect("speed") && !player.hasTag("nospeed") && !player.hasTag("ice") && !player.hasTag("slime")) {
-			// 		flag(player, "Speed", "B", "Movement", "rotationDiff", `${Math.abs(currentRotation - oldRotation)},speed=${currentSpeed}`)
-			// 	}
 
-			// 	// Update the player's previous speed and rotation
-			// 	oldOldSpeed.set(player, oldSpeed);
-			// 	previousSpeedLog.set(player, currentSpeed);
-			// 	previousRotationLog.set(player, currentRotation);
-			// }
 
-			// Speed/A = Checks for abnormal speed
-			// There is a built in system where it is more tolorant if a player is trusted by the anticheat
-
-			// if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op") && !player.isFlying && !player.getEffect("speed") && !player.hasTag("trident") && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime")) {
-			// 	if (playerSpeed > config.modules.speedA.speed + 0.1 && !player.hasTag("strict") || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.isJumping || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.hasTag("sprint") || playerSpeed > config.modules.speedA.speed && player.hasTag("strict")) {
-
-			// 		flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
-			// 	}		
-			// }	
 
 			// Speed/B = Checks for bhop and vhop velocities
 

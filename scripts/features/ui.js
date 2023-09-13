@@ -29,15 +29,35 @@ export function mainGui(player, error) {
         .button("Configure Settings", "textures/ui/gear.png")
         .button(`Manage Players\n§8§o${[...world.getPlayers()].length} player(s) online`, "textures/ui/FriendsDiversity.png")
         .button("Server Options", "textures/ui/servers.png")
-        .button("Exit", "textures/ui/redX1.png");
+        .button("Exit", "textures/ui/redX1.png")
+        .button("Logs", "textures/ui/WarningGlyph.png");
     if(config.debug) menu.button("⭐ Debug", "textures/ui/debug_glyph_color.png");
+    
     menu.show(player).then((response) => {
         if(response.selection === 0) banMenu(player);
         if(response.selection === 1) settingsMenu(player);
         if(response.selection === 2) playerSettingsMenu(player);
         if(response.selection === 3) worldSettingsMenu(player);
         if(response.selection === 4) return;
-        if(config.debug && response.selection === 5) debugSettingsMenu(player);
+        if(response.selection === 5) logsMenu(player);
+        if(config.debug && response.selection === 6) debugSettingsMenu(player);
+        
+    });
+}
+
+function logsMenu(player) {
+    player.playSound("mob.chicken.plop");
+    let logs = data.recentLogs;          
+    let text = "";
+    for (let i = 0; i < logs.length; i++) {
+        text = text + logs[i] + "\n";
+    }
+    const menu = new MinecraftUI.ActionFormData()
+        .title("Isolate Anticheat Logs")
+        .body(`"Logs since last restart"\n\n${text}`)
+        .button("Back", "textures/ui/arrow_left.png");
+    menu.show(player).then((response) => {
+        if(response.selection === 4) return;
     });
 }
 
@@ -252,8 +272,8 @@ function playerSettingsMenu(player) {
     
     for(const plr of allPlayers) {
         let playerName = `${plr.name}`;
-        if(plr.id === player.id) playerName += " §1[YOU]";
-        if(plr.hasTag("op")) playerName += " §1[OP]";
+        if(plr.id === player.id) playerName += " §9[YOU]";
+        if(plr.hasTag("op")) playerName += " §9[OP]";
         menu.button(playerName, playerIcons[Math.floor(Math.random() * playerIcons.length)]);
     }
 

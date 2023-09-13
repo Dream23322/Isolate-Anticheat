@@ -213,7 +213,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     const kickvl = getScore(player, "kickvl", 0);
     const kickvlValue = kickvl; 
     if(!checkData.enabled) throw Error(`${check}/${checkType} was flagged but the module was disabled.`);
-    const message = `${player.name} §jwas flagged for §p${check}§r/§n${checkType}§j [§2x§n${currentVl}§j]`;
+    const message = `§u${player.name} §hwas flagged for §p${check}§r/§n${checkType}§j [§2x§n${currentVl}§j]`;
 
     // Check if the last message in recentLogs is the same as the new one (excluding the violation level)
     if (data.recentLogs.length > 0) {
@@ -263,7 +263,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     setScore(player, "kickvl", 0);
                     setSound(player, "raid:horn");
                     console.warn(`${new Date().toISOString()} |${player.name} was banned by Isolate Anticheat for ${check}/${checkType}`);
-                    const message = `${player.name} §jwas §pbanned§j by §nIsolate Anticheat §j[§n${check}§j]`;
+                    const message = `§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat §j[§n${check}§j]`;
     
                     data.recentLogs.push(message)
                     
@@ -276,7 +276,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 player.addTag("strict");
                 setSound(player, "mob.endermen.death");
                 console.warn(`${new Date().toISOString()} |${player.name} was kicked by Isolate Anticheat for ${check}/${checkType}`);
-                const message = `${player.name} §jwas §pkicked §jby §nIsolate Anticheat §j[§n${check}§j]`;
+                const message = `§u${player.name} §hwas §pkicked §hby §nIsolate Anticheat §j[§n${check}§j]`;
     
                 data.recentLogs.push(message)
                 
@@ -308,7 +308,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 let banLength;
 
                 
-                const message = `${player.name} §jwas §pbanned§j by §nIsolate Anticheat`;
+                const message = `§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat`;
     
                 data.recentLogs.push(message)
                 
