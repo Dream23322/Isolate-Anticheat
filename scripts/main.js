@@ -623,7 +623,7 @@ Minecraft.system.runInterval(() => {
 
 					// Define everything that is needed
 					const maxSpeed = config.modules.speedA.speed;
-					const speedEffectValue = player.getEffect("speed").amplifier();
+					const speedEffectValue = player.getEffect("speed").amplifier;
 					let modifiedSpeed = maxSpeed; 
 					
 					// Add to the maxspeed value the corisponding amount
