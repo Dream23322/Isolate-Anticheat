@@ -478,6 +478,9 @@ Minecraft.system.runInterval(() => {
 		if(blockBelow.typeId.includes("slime")) {
 			player.addTag("slime")
 		}
+		if(player.hasTag("trident")) {
+			setScore(player, "right", 0)
+		}
 
 
 		// bigrat.jar = Op me
