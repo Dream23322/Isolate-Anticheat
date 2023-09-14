@@ -536,7 +536,7 @@ Minecraft.system.runInterval(() => {
 					if(!player.hasTag("nofly") && !player.hasTag("nofly") && !player.hasTag("damaged")) {
 						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
 						
-						const prediction = playerVelocity.y > 0.42 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true;
+						const prediction = (playerVelocity.y > 0.42 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true) && playerVelocity.y !== 1;
 
 						if(prediction && getScore(player, "tick_counter2", 0) > 3) {
 							flag(player, "Fly", "A", "Movement", "y-velocity", playerVelocity.y, false);
