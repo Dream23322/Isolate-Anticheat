@@ -811,7 +811,17 @@ Minecraft.system.runInterval(() => {
 				if(!player.getEffect("speed") && player.hasTag('moving') && player.hasTag('right') && player.hasTag('ground') && !player.hasTag('jump') && !player.hasTag('gliding') && !player.hasTag('swimming') && !player.hasTag("trident") && getScore(player, "right") >= 5 && !player.hasTag("damaged")) {
 					flag(player, "NoSlow", "A", "Movement", "speed", playerSpeed, true);
 					currentVL++;
-					player.addTag("strict");
+				}
+			}
+
+			// NoSlow/B = Checks for speeding while in webs
+			if(config.modules.noslowB.enabled) {
+				const pos1 = {x: player.location.x , y: player.location.y, z: player.location.z};
+				const pos2 = {x: player.location.x, y: player.location.y, z: player.location.z};
+
+				const isInWeb = !getBlocksBetween(pos1, pos2).some((block) => player.dimension.getBlock(block)?.typeId !== "minecraft:web");
+				if(player.hasTag("moving") && isInWeb) {
+					flag(player, "NoSlow", "B", "Movement", "speed", playerSpeed, true);
 				}
 			}
 
@@ -1359,7 +1369,7 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	player.removeTag("moving");
 	player.removeTag("sleeping");
 
-	const message = `${player.name} §jhas §pjoined§j the server`;
+	const message = `§u${player.name} §hhas §pjoined§h the server`;
     
 	data.recentLogs.push(message)
 	// load custom nametag

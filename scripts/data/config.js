@@ -5,7 +5,7 @@ export default
     "flagWhitelist": [],
     // Amount of anticheat kicks a player needs to get before getting perm banned
     "kicksBeforeBan": 10,
-    clientSpam: {
+    "clientSpam": {
         // Change to mute if you want to mute the player who used the horion/zephyr spam message
         "punishment": "mute"
     },
@@ -404,10 +404,11 @@ export default
             "speed": 0.22,
             "maxSpeed": 0.36,
             "punishment": "kick",
-            "minVlbeforePunishment": 15
+            "minVlbeforePunishment": 40
         },
         "noslowB": {
             "enabled": true,
+            "description": "Checks for moving to fast while in cobwebs",
             "speed": 0.22,
             "maxSpeed": 0.36,
             "punishment": "kick",
@@ -843,7 +844,7 @@ export default
         "badpacketsI": {
             "enabled": true,
             "description": "Checks for head rotation over 90 ",
-            "angle": 89.89999389648438,
+            "angle": 89.9000015258789,
             "punishment": "kick",
             "minVlbeforePunishment": 3
         },
