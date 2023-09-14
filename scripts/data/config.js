@@ -837,16 +837,16 @@ export default
         "reachB": {
             "enabled": true,
             "description": "Checks for placing or breaking to far away",
-            "reach": 6,
+            "reach": 6.8,
             "punishment": "kick",
             "minVlbeforePunishment": 2
         },
         "badpacketsI": {
             "enabled": true,
             "description": "Checks for head rotation over 90 ",
-            "angle": 89.9000015258789,
+            "angle": 89.90000915527344,
             "punishment": "kick",
-            "minVlbeforePunishment": 3
+            "minVlbeforePunishment": 200
         },
         "badpacketsJ": {
             "enabled": true,

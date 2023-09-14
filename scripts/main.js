@@ -823,7 +823,7 @@ Minecraft.system.runInterval(() => {
 				const pos2 = {x: player.location.x, y: player.location.y, z: player.location.z};
 
 				const isInWeb = !getBlocksBetween(pos1, pos2).some((block) => player.dimension.getBlock(block)?.typeId !== "minecraft:web");
-				if(player.hasTag("moving") && isInWeb) {
+				if(player.hasTag("moving") && isInWeb && Math.abs(playerVelocity.y) < 0.1 && !player.getEffect("speed")) {
 					flag(player, "NoSlow", "B", "Movement", "speed", playerSpeed, true);
 				}
 			}
