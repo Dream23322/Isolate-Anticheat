@@ -533,11 +533,11 @@ Minecraft.system.runInterval(() => {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
 
-					if(!player.hasTag("nofly") && !player.hasTag("nofly") && !player.hasTag("damaged")) {
+					if(!player.hasTag("nofly") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isJumping && !player.isGliding) {
 						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
 						
 						const prediction = (playerVelocity.y > 0.42 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true) && playerVelocity.y !== 1;
-
+						if(player.getEffect("speed") && player.getEffect("speed").getAmplifier > 5)  continue;
 						if(prediction && getScore(player, "tick_counter2", 0) > 3) {
 							flag(player, "Fly", "A", "Movement", "y-velocity", playerVelocity.y, false);
 						}
@@ -614,7 +614,7 @@ Minecraft.system.runInterval(() => {
 
 		// ==================================
 		//                 Speed Checks
-		// ==================================
+		// ==================================f
 
 		if(config.generalModules.speed) {
 			// Speed/A = Checks for high speed
@@ -665,7 +665,7 @@ Minecraft.system.runInterval(() => {
 			if(config.modules.speedB.enabled) {
 				if(playerSpeed > 0.2 && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime")) {
 					const yV = Math.abs(playerVelocity.y).toFixed(4);
-					const prediction = yV === "0.1000" || yV === "0.4000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302" || yV === "0.0428" || yV === "0.1212" || yV === "0.2305" && !player.getEffect("speed") && !player.isJumping || yV === "1.1661" || yV === "1.0244";
+					const prediction = yV === "0.1000" || yV === "0.4000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302" || yV === "0.0428" || yV === "0.1212" || yV === "0.0428" || yV === "1.1661" || yV === "1.0244";
 					if(prediction) {
 						flag(player, "Speed", "B", "Movement", "y-Velocity", yV, true);
 					}
@@ -756,7 +756,7 @@ Minecraft.system.runInterval(() => {
 			// Permission Spoof, so if someone is flying but doesnt have permission to fly
 			if(config.modules.badpacketsH.enabled ) {
 				if(player.isFlying && (!player.hasTag("op") || player.EntityCanFly)) {
-					flag(player, "BadPac////okets", "H", "Permision", "isFlying", "true", true);
+					flag(player, "BadPackets","H", "Permision", "isFlying", "true", true);
 					player.runCommandAsync(`ability "${player.name}" mayfly false`);
 					setTitle(player, "Flying is not enabled", "Please turn it off");
 				}
