@@ -11,8 +11,9 @@ export default
     },
     "ViolationsBeforeBan": 30,
     "autoReset": true,
-    // If you dont really know how to config the anticheat, use this... lol
+    // Having the silent mode on will stop the anticheat from lagging the flagged player back
     "silent": true,
+    // If you dont really know how to config the anticheat, use this... lol
     "generalModules": {
         "fly": true,
         "speed": true,
@@ -465,8 +466,8 @@ export default
             "velocity": 0.412,
             "checkForSprint": false,
             "checkForJump": true,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
+            "punishment": "kick",
+            "minVlbeforePunishment": 3
         },  
         "speedC": {
             "enabled": true,
@@ -837,7 +838,7 @@ export default
         "reachB": {
             "enabled": true,
             "description": "Checks for placing or breaking to far away",
-            "reach": 6.8,
+            "reach": 7.55,
             "punishment": "kick",
             "minVlbeforePunishment": 2
         },
