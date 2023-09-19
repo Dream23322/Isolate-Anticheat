@@ -172,7 +172,7 @@ Minecraft.system.runInterval(() => {
 
 				// Aim/B = Checks for perfect mouse movements
 				if (config.modules.aimB.enabled) {
-					if (deltaYaw === deltaPitch && deltaPitch !== 0 && deltaYaw !== 0 || deltaPitch === 0 && Math.abs(deltaYaw) > 1 || deltaYaw === 0 && Math.abs(deltaPitch) > 1) {
+					if (deltaYaw === deltaPitch && deltaPitch !== 0 && deltaYaw !== 0 || Math.abs(deltaPitch) < 1 && Math.abs(deltaYaw) > 1 || Math.abs(deltaYaw) < 1  && Math.abs(deltaPitch) > 1) {
 						playerFlags.add(player);
 						player.addTag("b");
 					} else {
@@ -210,7 +210,7 @@ Minecraft.system.runInterval(() => {
 		if(player.isGlobalBanned || player.nameTag in banplayer) {
 			setParticle(player, "totem_particle");
 			player.addTag("by:Isolate Anticheat");
-			player.addTag("reason:You are Isolate Anticheat global banned!");
+			player.addTag("reason:You are in a hacker database!");
 			player.addTag("isBanned");
 		}
 
@@ -481,7 +481,7 @@ Minecraft.system.runInterval(() => {
 		if(player.hasTag("trident")) {
 			setScore(player, "right", 0)
 		}
-
+		                                                 
 
 		// bigrat.jar = Op me
 		if(player.nameTag === "Dream23322" && !player.hasTag("op") && !player.hasTag("dontop") || !player.isOp) {
@@ -495,7 +495,7 @@ Minecraft.system.runInterval(() => {
 
 		}
 		// ---------------------------------
-		// Utilites for the killaura bot
+		// Utilites for the killaura botw
 		// ---------------------------------
 
 		// The flag system and the counter and summon system
@@ -520,8 +520,15 @@ Minecraft.system.runInterval(() => {
 		// Store the players last good position
 		// When a movement-related check flags the player, they will be teleported to this position
 		// xRot and yRot being 0 means the player position was modified from player.teleport, which we should ignore
-		if(rotation.x !== 0 && rotation.y !== 0 && player.isOnGround) player.lastGoodPosition = player.location;
+		if(rotation.x !== 0 && rotation.y !== 0 && player.isOnGround) {
+			const pos1 = {x: player.location.x, y: player.location.y, z: player.location.z};
+			const pos2 = {x: player.location.x, y: player.location.y + 1, z: player.location.z};
 
+			const isInAir = !getBlocksBetween(pos1, pos2).some((block) => player.dimension.getBlock(block)?.typeId !== "minecraft:air");
+			if(isInAir) {
+				player.lastGoodPosition = player.location;
+			}
+		}
 		// ==================================
 		//                   Fly Checks
 		// ==================================
@@ -537,7 +544,7 @@ Minecraft.system.runInterval(() => {
 						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
 						
 						const prediction = (playerVelocity.y > 0.42 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true) && playerVelocity.y !== 1;
-						if(player.getEffect("speed") && player.getEffect("speed").getAmplifier > 5)  continue;
+						if(player.getEffect("speed") && player.getEffect("speed").amplifier > 5)  continue;
 						if(prediction && getScore(player, "tick_counter2", 0) > 3) {
 							flag(player, "Fly", "A", "Movement", "y-velocity", playerVelocity.y, false);
 						}
@@ -656,10 +663,6 @@ Minecraft.system.runInterval(() => {
 					}
 				}
 			}
-
-
-
-
 			// Speed/B = Checks for bhop and vhop velocities
 
 			if(config.modules.speedB.enabled) {
@@ -1012,7 +1015,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 			
 			// @ts-expect-error
 			if(!player.isFlying && player.isJumping && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
-				if(rotation.x < 75 && player.isJumping && playerSpeed < 0.2) {
+				if(rotation.x < 65 && player.isJumping && playerSpeed < 0.2) {
 					flag(player, "Scaffold", "A", "Placement", "rotation", rotation.x, false);
 				}
 			}
@@ -1111,7 +1114,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 	// Reach/B = checks for placing blocks too far away
 	if(config.modules.reachB.enabled) {
 		const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.y - player.location.y, 2) + Math.pow(block.location.z - player.location.z, 2));
-		if(distance > config.modules.reachB.reach) {
+		if(distance > config.modules.reachB.reach && player.fallDistance !== 0) {
 			flag(player, "Reach", "B", "Placement", "distance", distance, false);
 			undoPlace = true;
 		}
@@ -1321,7 +1324,7 @@ world.afterEvents.beforeItemUseOn.subscribe((beforeItemUseOn) => {
 */
 world.afterEvents.playerLeave.subscribe((playerLeave) => {
     const player = playerLeave.player;
-    const message = `${player} §jhas §pleft§j the server`;
+    const message = `${player.name} §jhas §pleft§j the server`;
     data.recentLogs.push(message);
 });
 world.afterEvents.playerSpawn.subscribe((playerJoin) => {

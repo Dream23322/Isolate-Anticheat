@@ -66,5 +66,17 @@ export const banList = [
    "DynamicRealm",
    "WildcatOrc76351",
    "CATmilkYUM",
-   "Cookies16748"
+   "Cookies16748",
+   "thewrd3988",
+   "otx mangod",
+   "OillliiliilO",
+   "themcodgamer",
+   "walker108576",
+   "BlueAce46561636",
+   "OIlllIIlIIlO",
+   "VotingStew81306",
+   "q9ji",
+   "Vexedu54",
+   "Zempk",
+   "Solid56ice"
 ];
