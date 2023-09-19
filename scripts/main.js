@@ -919,7 +919,7 @@ Minecraft.system.runInterval(() => {
 
 });
 
-world.afterEvents.blockPlace.subscribe((blockPlace) => {
+world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	const { block, player} = blockPlace;
 	const rotation = player.getRotation()
 	const playerVelocity = player.getVelocity();
@@ -1159,7 +1159,7 @@ world.afterEvents.blockPlace.subscribe((blockPlace) => {
 	}
 });
 
-world.afterEvents.blockBreak.subscribe((blockBreak) => {
+world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 	const player = blockBreak.player;
 	const dimension = blockBreak.dimension;
 	const block = blockBreak.block;
