@@ -845,7 +845,7 @@ export default
         "badpacketsI": {
             "enabled": true,
             "description": "Checks for head rotation over 90 ",
-            "angle": 89.90000915527344,
+            "angle": 89.999999999999999999999999999,
             "punishment": "kick",
             "minVlbeforePunishment": 200
         },
