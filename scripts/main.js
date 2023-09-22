@@ -29,8 +29,8 @@ const oldx = new Map();
 const oldz = new Map();
 const oldoldx = new Map();
 const oldoldz = new Map();
-const oldYvelocity = new Map();
-const oldoldYvelocity = new Map();
+const lastYRot = new Map();
+const oldLastYRot = new Map();
 
 const lastMessage = new Map();
 
@@ -51,7 +51,7 @@ world.beforeEvents.chatSend.subscribe((msg) => {
 	if(lastMessage) {
 		if(lastMessage.get(player) === message) {
 			msg.cancel = true;
-			player.sendMessage("Please do not repeat yourself");
+			player.sendMessage("§cPlease do not repeat yourself");
 		}
 	}
 	lastMessage.set(player, message);
@@ -139,7 +139,7 @@ Minecraft.system.runInterval(() => {
 		// ==================================
 		//                   Aim Checks
 		// ==================================
-		if(config.generalModules.aim) {
+		if(config.generalModules.aim && !player.hasTag("noaim")) {
 
 			// If there is a previous rotation stored
 			if (prevRotation) {
@@ -532,7 +532,7 @@ Minecraft.system.runInterval(() => {
 		// ==================================
 		//                   Fly Checks
 		// ==================================
-		if(config.generalModules.fly === true) {
+		if(config.generalModules.fly === true && !player.hasTag("nofly")) {
 
 			// Fly/A = Old Fly/F
 			if(config.modules.flyA.enabled) {
@@ -623,7 +623,7 @@ Minecraft.system.runInterval(() => {
 		//                 Speed Checks
 		// ==================================f
 
-		if(config.generalModules.speed) {
+		if(config.generalModules.speed && !player.hasTag("nospeed")) {
 			// Speed/A = Checks for high speed
 
 			// In speed/A we make sure we are still able to check players who have the speed effect! We do this by adding an estimate effect multiplier to the max speed.
@@ -680,7 +680,7 @@ Minecraft.system.runInterval(() => {
 		// ==================================
 		//                 Motion Checks
 		// ==================================
-		if(config.generalModules.motion) {
+		if(config.generalModules.motion && !player.hasTag("nomotion")) {
 			// Motion/A = Checks for very high speed in air
 			if(config.modules.motionA.enabled && !player.hasTag("op")) {
 				if(playerSpeed > config.modules.motionA.speed && !player.hasTag("ground")) {
@@ -718,7 +718,7 @@ Minecraft.system.runInterval(() => {
 		//                 Packet Checks
 		// ==================================
 
-		if(config.generalModules.packet) {
+		if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
 			//Badpackets/B = Checks for nopacket/blink movement
 			if(config.modules.badpacketsB.enabled && !player.hasTag("op") && !player.getEffect("speed")) {
 				if(playerSpeed > config.modules.badpacketsB.speed) {
@@ -813,7 +813,7 @@ Minecraft.system.runInterval(() => {
 			// Velocity/A will be here
 
 			// NoSlow/A = speed limit check
-			if(config.modules.noslowA.enabled && playerSpeed >= config.modules.noslowA.speed && playerSpeed <= config.modules.noslowA.maxSpeed && !player.hasTag("ice") && !player.hasTag("slime")) {
+			if(config.modules.noslowA.enabled && playerSpeed >= config.modules.noslowA.speed && playerSpeed <= config.modules.noslowA.maxSpeed && !player.hasTag("ice") && !player.hasTag("slime") && !player.hasTag("no-noslow")) {
 				if(!player.getEffect("speed") && player.hasTag('moving') && player.hasTag('right') && player.hasTag('ground') && !player.hasTag('jump') && !player.hasTag('gliding') && !player.hasTag('swimming') && !player.hasTag("trident") && getScore(player, "right") >= 5 && !player.hasTag("damaged")) {
 					flag(player, "NoSlow", "A", "Movement", "speed", playerSpeed, true);
 					currentVL++;
@@ -821,7 +821,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// NoSlow/B = Checks for speeding while in webs
-			if(config.modules.noslowB.enabled) {
+			if(config.modules.noslowB.enabled && !player.hasTag("no-noslow")) {
 				const pos1 = {x: player.location.x , y: player.location.y, z: player.location.z};
 				const pos2 = {x: player.location.x, y: player.location.y, z: player.location.z};
 
@@ -832,7 +832,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// Prediction/A = Checks for fast stop
-			if(config.modules.predictionA.enabled) {
+			if(config.modules.predictionA.enabled && !player.hasTag("noprediction")) {
 				if(playerSpeed === 0) {
 					const lastSpeed = fastStopLog.get(player) || 0;
 					const currentSpeed = getSpeed(player);
@@ -866,7 +866,7 @@ Minecraft.system.runInterval(() => {
 		// ==================================
 
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
-		if(config.modules.scaffoldF.enabled) {
+		if(config.modules.scaffoldF.enabled && !player.hasTag("noscaffold")) {
 			const tickValue = getScore(player, "tickValue", 0);
 			const valueOfBlocks = getScore(player, "scaffoldAmount", 0);
 			if (tickValue > 20 - 2.67e-11) {
@@ -1006,7 +1006,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	//               Scaffold Checks
 	// ==================================
 
-	if(config.generalModules.scaffold) {
+	if(config.generalModules.scaffold && !player.hasTag("noscaffold")) {
 		// Scaffold/a = checks for upwards scaffold
 		// Need to improve this because its really easy to false flag
 		if(config.modules.scaffoldA.enabled && playerSpeed < 0.2) {
@@ -1112,7 +1112,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	}
 
 	// Reach/B = checks for placing blocks too far away
-	if(config.modules.reachB.enabled) {
+	if(config.modules.reachB.enabled && !player.hasTag("noreach")) {
 		const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.y - player.location.y, 2) + Math.pow(block.location.z - player.location.z, 2));
 		if(distance > config.modules.reachB.reach && player.fallDistance !== 0) {
 			flag(player, "Reach", "B", "Placement", "distance", distance, false);
@@ -1179,7 +1179,7 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 	}
 
 	// Reach/B = checks for breaking blocks too far away
-	if(config.modules.reachB.enabled) {
+	if(config.modules.reachB.enabled && !player.hasTag("noreach")) {
 		const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.y - player.location.y, 2) + Math.pow(block.location.z - player.location.z, 2));
 		if(distance > config.modules.reachB.reach) {
 			flag(player, "Reach", "B", "Breaking", "distance", distance, false);
@@ -1620,7 +1620,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	// ==================================
 	//                    Killaura
 	// ==================================
-	if(config.generalModules.killaura) {
+	if(config.generalModules.killaura && !player.hasTag("noaura")) {
 		// killaura/C = checks for multi-aura
 		if(config.modules.killauraC.enabled && !player.entitiesHit.includes(entity.id)) 
 			player.entitiesHit.push(entity.id);
@@ -1666,7 +1666,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 
 	
 	// reach/A = check if a player hits an entity more then 5.1 blocks away
-	if(config.modules.reachA.enabled || config.generalModules.reach) {
+	if((config.modules.reachA.enabled || config.generalModules.reach) && !player.hasTag("noreach")) {
 		// get the difference between 2 three dimensional coordinates
 		const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
 		//if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}`);
