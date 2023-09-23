@@ -2,7 +2,7 @@
 // @ts-ignore
 import * as Minecraft from "@minecraft/server";
 import { getHealth, playerTellraw, setTitle, setParticle, setSound, inAir, aroundAir} from "./utils/gameUtil.js";
-import { isAttackingFromOutsideView, isAttackingFromAboveOrBelow, getBlocksBetween, getSpeed, angleCalc, hVelocity } from "./utils/mathUtil.js";
+import { getBlocksBetween, getSpeed, angleCalc, hVelocity } from "./utils/mathUtil.js";
 import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
 import { commandHandler } from "./commands/handler.js";
 import config from "./data/config.js";
@@ -31,7 +31,8 @@ const oldoldx = new Map();
 const oldoldz = new Map();
 const lastYRot = new Map();
 const oldLastYRot = new Map();
-
+const lastDeltaZ = new Map();
+let lastAttackVector2Angle = new Map();
 const lastMessage = new Map();
 
 const playerData = new Map();
@@ -211,7 +212,17 @@ Minecraft.system.runInterval(() => {
 						oldOldDiff.set(player, currentDiff);
 					}
 				}
+				if(config.modules.aimD) {
 
+					const lastDeltaYaw = lastDeltaZ.get(player) || 0;
+					const deltaZ = Math.abs(rotation.z - lastYRot.get(player) || 0);
+					// The check
+					if(deltaZ > 320 && lastDeltaYaw > 30) {
+						flag(player, "Aim", "D", "Combat", "deltaZ", deltaZ);
+					}
+					// Reset the values
+					lastDeltaZ.set(player, deltaZ);
+				}
   
 			}
 			playerRotations.set(player, rotation);
@@ -1043,7 +1054,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 			//const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 			if(!player.isFlying) {
 				if(!player.hasTag("trident")) {
-					if(rotation.x === 60) {
+					if(rotation.x === 60 || rotation.x.toFixed(2) === "84.89" || rotation.x.toFixed(2) === "84.63") {
 						flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);	
 					}
 				}
@@ -1615,88 +1626,6 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			flag(player, "Aim", "C", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
 			player.removeTag("c");
 		}
-		if(config.modules.aimD.enabled) {
-			let data = playerData.get(player.id);
-			if (!data) {
-				data = {
-					yawOffsets: [],
-					pitchOffsets: [],
-					abuffer: 0,
-					vl: 0
-				};
-				playerData.set(player.id, data);
-			}
-		
-			const deltaYaw = rotation.y - data.lastDeltaYaw;
-			const deltaPitch = rotation.x - data.lastDeltaPitch;
-		
-			const offset = [Math.abs(deltaYaw), Math.abs(deltaPitch)];
-		
-			if (offset[0] === 0) {
-				if (deltaYaw > 0.2 && ++data.abuffer > 5) {
-					data.vl++;
-					data.abuffer = 5;
-					console.log(`Player ${player.name} might be using an aimbot! t=a y=${offset[1]} dy=${deltaYaw}`);
-				}
-			} else {
-				data.abuffer = 0;
-			}
-		
-			offset[0] = Math.abs(deltaYaw);
-			data.yawOffsets.push(offset[0]);
-			data.pitchOffsets.push(offset[1]);
-		
-			if (data.yawOffsets.length > 10) {
-				data.yawOffsets.shift();
-			}
-		
-			if (data.pitchOffsets.length > 10) {
-				data.pitchOffsets.shift();
-			}
-		
-			if (data.yawOffsets.length < 8 || data.pitchOffsets.length < 8) return;
-			if(player.hasTag("debugAim")) {
-				console.log(`po=${offset[1]} yo=${offset[0]}`);
-			}
-			data.lastDeltaYaw = deltaYaw;
-			data.lastDeltaPitch = deltaPitch;			
-		}
-		if(config.modules.aimE.enabled) {
-			let data = playerDatav3.get(player.id);
-			if (!data) {
-				data = {
-					arm: 0,
-					useEntity: 0,
-					buffer: 0,
-					validAmount: 0,
-					vl: 0
-				};
-				playerDatav3.set(player.id, data);
-			}
-		
-			data.useEntity++;
-		
-			if (player.velocity > 0.21 && entity && Math.abs(entity.velocity.y - (-0.078)) > 0.001) {
-				data.validAmount++;
-			}
-		
-			if (++data.arm >= 14) {
-				const ratio = data.useEntity / data.arm;
-		
-				if (ratio > 0.99) {
-					if (data.validAmount > 6 && ++data.buffer > 4) {
-						data.vl++;
-						flag(player, "Aim", "E", "Combat", "ratio", `${ratio}`, false);
-					}
-				} else {
-					data.buffer = 0;
-				}
-		
-				console.log(`ratio=${ratio} b=${data.buffer} v=${data.validAmount}`);
-		
-				data.arm = data.validAmount = data.useEntity = 0;
-			}	
-		}
 
 	}
 
@@ -1758,36 +1687,31 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 				}
 			}
 		}
-		if(config.modules.killauraF.enabled) {
-			let data = playerDatav4.get(player.id);
-			if (!data) {
-				data = {
-					buffer: 0,
-					vl: 0,
-					lastTeleportTime: 0
-				};
-				playerDatav4.set(player.id, data);
+		if (config.modules.killauraF.enabled) {
+			const pos1 = player.getHeadLocation();
+			const pos2 = entity.getHeadLocation();
+			let angle1 = Math.atan2(pos2.z - pos1.z, pos2.x - pos1.x) * (180 / Math.PI) - player.getRotation().y - 90;
+			if (angle1 <= -180) angle1 += 360;
+			angle1 = Math.abs(angle1);
+			let angle2 = Math.atan2(pos2.y - pos1.y, pos2.x - pos1.x) * (180 / Math.PI) - player.getRotation().x * 2 - 90;
+			if (angle2 <= -180) angle2 += 360;
+			angle2 = Math.abs(angle2);
+			const attackVector2Angle = { x: angle1, y: angle2 };
+			
+			if (
+				lastAttackVector2Angle.get(player) (
+				Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) <= 0.99 ||
+				Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) <= 0.99
+				)
+			) {
+				flag(player, "Killaura", "F", "Combat", "angleDiff", Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x), true);
 			}
-		
-			const pitch = rotation.x;
-			const lastPitch = data.lastPitch;
-		
-			const deltaX = player.x - data.lastX;
-		
-			if (pitch === lastPitch && pitch === 0 && deltaX > 12) {
-				if (++data.buffer > 3) {
-					data.vl++;
-					flag(player, "Killaura", "F", "Combat", "buffer", data.buffer, true);
-				}
-			} else {
-				data.buffer = 0;
+			if(lastAttackVector2Angle.get(player)) {
+				console.warn(`|| LOGS || (KILLAURA) [F] - Angle Diff 1 ${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, Angle Diff 2 ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`);
 			}
-		
-			console.log(`(KILLAURA) {F} [LOGS]     pitch=${pitch} lastPitch=${lastPitch} buffer=${data.buffer}`);
-		
-			data.lastPitch = pitch;
-			data.lastX = player.x;
+			lastAttackVector2Angle.set(player, attackVector2Angle);
 		}
+		  
 	}
 
 	
