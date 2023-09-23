@@ -131,7 +131,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     const rotation = player.getRotation();
 
     // If debug is enabled, then we log everything we know about the player.
-    if(config.debug) {
+    if(config.debug && player.hasTag("debugFlags")) {
         const currentItem = player.getComponent("inventory").container.getItem(player.selectedSlot);
         const velocity = player.getVelocity();
         const headRotation = player.getHeadLocation();
@@ -173,6 +173,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
         console.warn(JSON.stringify(data));
     }
+    console.warn("[Flag]", player.name, check, checkType, hackType, debugName, debug);
 
     // cancel the message
     if(cancelObject) cancelObject.cancel = true;
@@ -249,7 +250,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     if(currentVl > checkData.minVlbeforePunishment) {
 
 
-        if (punishment === "kick") {
+        if (punishment === "kick" && !player.hasTag("nokick")) {
             let banLength2;
             try {
                 //banAnimation(player, "type2");

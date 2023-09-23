@@ -11,6 +11,7 @@ declare module "@minecraft/server" {
 		flagNamespoofB: boolean
 
 		// Numbers
+		pitch: number
 		blocksBroken: number
 		startBreakTime: number
 		lastSelectedSlot: number
