@@ -173,7 +173,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
         console.warn(JSON.stringify(data));
     }
-    console.warn("[Flag]", player.name, check, checkType, hackType, debugName, debug);
+    console.warn("[Flag]", player.name, check,"[",checkType,"]", hackType, "-", debugName, debug);
 
     // cancel the message
     if(cancelObject) cancelObject.cancel = true;
