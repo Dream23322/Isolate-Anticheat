@@ -399,6 +399,18 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 15,
         },
+        "aimD": {
+            "enabled": true,
+            "description": "Checks for un-legitimate pitch acceleration",
+            "punishment": "kick",
+            "minVlbeforePunishment": 15
+        },
+        "aimE": {
+            "enabled": true,
+            "description": "Checks for rounded pitch",
+            "punishment": "kick",
+            "minVlbeforePunishment": 15
+        },
         "noslowA": {
             "enabled": true,
             "description": "Checks for going to fast while using an item, false flags with tridents",

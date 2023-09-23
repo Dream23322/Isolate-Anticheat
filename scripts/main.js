@@ -34,7 +34,10 @@ const oldLastYRot = new Map();
 
 const lastMessage = new Map();
 
-
+const playerData = new Map();
+let playerDatav2 = new Map();
+let playerDatav3 = new Map();
+let playerDatav4 = new Map();
 
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
 let currentVL;
@@ -135,7 +138,7 @@ Minecraft.system.runInterval(() => {
 
 		const prevRotation = playerRotations.get(player);
 		const prevDiff = playerDifferences.get(player);
-
+		
 		// ==================================
 		//                   Aim Checks
 		// ==================================
@@ -178,6 +181,14 @@ Minecraft.system.runInterval(() => {
 					} else {
 						playerFlags.delete(player);
 					}
+					if(lastYRot.get(player) !== rotation.y && rotation.y === oldLastYRot.get(player)) {
+						playerFlags.add(player);
+						player.addTag("b");
+					}
+					// Make sure to set the new values! (I always forget this lol)
+					oldLastYRot.set(player, lastYRot.get(player));
+					lastYRot.set(player, rotation.y);
+					
 				}
 				
 				// Aim/C = Checks for smoothed rotation
@@ -200,6 +211,7 @@ Minecraft.system.runInterval(() => {
 						oldOldDiff.set(player, currentDiff);
 					}
 				}
+
   
 			}
 			playerRotations.set(player, rotation);
@@ -503,11 +515,12 @@ Minecraft.system.runInterval(() => {
 			if(player.hasTag("killauraEFlag")) {
 				flag(player, "Killaura", "E", "Combat", "Attacking Bot", "true", false);
 				player.removeTag("killauraEFlag");
-				setScore(player, "tick_counter", 190);
+				setScore(player, "tick_counter", 290);
 			}
-			if(getScore(player, "tick_counter", 0) > 200) {
-				const x = Math.random() * 6 - 3; // Generate a random number between -3 and 3
-				const z = Math.random() * 6 - 3; // Generate a random number between -3 and 3
+			if(getScore(player, "tick_counter", 0) > 300) {
+				// Generate random x and z coordinates
+				const x = Math.random() * 6 - 3; 
+				const z = Math.random() * 6 - 3; 
 				player.runCommandAsync(`summon isolate:killaura ~${x} ~3 ~${z}`);
 				setScore(player, "tick_counter", 0);
 			}
@@ -1602,6 +1615,89 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			flag(player, "Aim", "C", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
 			player.removeTag("c");
 		}
+		if(config.modules.aimD.enabled) {
+			let data = playerData.get(player.id);
+			if (!data) {
+				data = {
+					yawOffsets: [],
+					pitchOffsets: [],
+					abuffer: 0,
+					vl: 0
+				};
+				playerData.set(player.id, data);
+			}
+		
+			const deltaYaw = rotation.y - data.lastDeltaYaw;
+			const deltaPitch = rotation.x - data.lastDeltaPitch;
+		
+			const offset = [Math.abs(deltaYaw), Math.abs(deltaPitch)];
+		
+			if (offset[0] === 0) {
+				if (deltaYaw > 0.2 && ++data.abuffer > 5) {
+					data.vl++;
+					data.abuffer = 5;
+					console.log(`Player ${player.name} might be using an aimbot! t=a y=${offset[1]} dy=${deltaYaw}`);
+				}
+			} else {
+				data.abuffer = 0;
+			}
+		
+			offset[0] = Math.abs(deltaYaw);
+			data.yawOffsets.push(offset[0]);
+			data.pitchOffsets.push(offset[1]);
+		
+			if (data.yawOffsets.length > 10) {
+				data.yawOffsets.shift();
+			}
+		
+			if (data.pitchOffsets.length > 10) {
+				data.pitchOffsets.shift();
+			}
+		
+			if (data.yawOffsets.length < 8 || data.pitchOffsets.length < 8) return;
+			if(player.hasTag("debugAim")) {
+				console.log(`po=${offset[1]} yo=${offset[0]}`);
+			}
+			data.lastDeltaYaw = deltaYaw;
+			data.lastDeltaPitch = deltaPitch;			
+		}
+		if(config.modules.aimE.enabled) {
+			let data = playerDatav3.get(player.id);
+			if (!data) {
+				data = {
+					arm: 0,
+					useEntity: 0,
+					buffer: 0,
+					validAmount: 0,
+					vl: 0
+				};
+				playerDatav3.set(player.id, data);
+			}
+		
+			data.useEntity++;
+		
+			if (player.velocity > 0.21 && entity && Math.abs(entity.velocity.y - (-0.078)) > 0.001) {
+				data.validAmount++;
+			}
+		
+			if (++data.arm >= 14) {
+				const ratio = data.useEntity / data.arm;
+		
+				if (ratio > 0.99) {
+					if (data.validAmount > 6 && ++data.buffer > 4) {
+						data.vl++;
+						flag(player, "Aim", "E", "Combat", "ratio", `${ratio}`, false);
+					}
+				} else {
+					data.buffer = 0;
+				}
+		
+				console.log(`ratio=${ratio} b=${data.buffer} v=${data.validAmount}`);
+		
+				data.arm = data.validAmount = data.useEntity = 0;
+			}	
+		}
+
 	}
 
 
@@ -1647,7 +1743,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		// Hitbox/A = Paradox check that looks for not having the attacked entity on screen
 		// This can cause some issues on laggy servers so im gonna have to try fix that
 		if(config.modules.hitboxA.enabled) {
-			if(isAttackingFromOutsideView(player, entity, config.modules.hitboxA.angleMobile)) {
+			if(angleCalc(player, entity) > 90) {
 				flag(player, "Hitbox", "A", "Combat", "angle", "> 90", false);
 			}
 		}
@@ -1661,6 +1757,36 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 					flag(player, "Killaura", "F", "Combat", "angle", angleCalc(player, entity), true);
 				}
 			}
+		}
+		if(config.modules.killauraF.enabled) {
+			let data = playerDatav4.get(player.id);
+			if (!data) {
+				data = {
+					buffer: 0,
+					vl: 0,
+					lastTeleportTime: 0
+				};
+				playerDatav4.set(player.id, data);
+			}
+		
+			const pitch = rotation.x;
+			const lastPitch = data.lastPitch;
+		
+			const deltaX = player.x - data.lastX;
+		
+			if (pitch === lastPitch && pitch === 0 && deltaX > 12) {
+				if (++data.buffer > 3) {
+					data.vl++;
+					flag(player, "Killaura", "F", "Combat", "buffer", data.buffer, true);
+				}
+			} else {
+				data.buffer = 0;
+			}
+		
+			console.log(`(KILLAURA) {F} [LOGS]     pitch=${pitch} lastPitch=${lastPitch} buffer=${data.buffer}`);
+		
+			data.lastPitch = pitch;
+			data.lastX = player.x;
 		}
 	}
 
@@ -1724,7 +1850,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	}
 	
 
-	if(config.debug) console.warn(player.getTags(), "rotation", rotation.x, "angleDiff", angleCalc(player, entity));
+	if(config.debug && player.hasTag("logHits")) console.warn(player.getTags(), "rotation", rotation.x, "angleDiff", angleCalc(player, entity));
 });
 world.afterEvents.entityHitBlock.subscribe((entityHit) => {
 	const { damagingEntity: player} = entityHit;
