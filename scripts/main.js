@@ -1671,8 +1671,9 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 
 		// Hitbox/A = Paradox check that looks for not having the attacked entity on screen
 		// This can cause some issues on laggy servers so im gonna have to try fix that
-		if(config.modules.hitboxA.enabled) {
-			if(angleCalc(player, entity) > 90) {
+		if(config.modules.hitboxA.enabled && !player.hasTag("nohitbox")) {
+			const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
+			if(angleCalc(player, entity) > 90 && distance > 2) {
 				flag(player, "Hitbox", "A", "Combat", "angle", "> 90", false);
 			}
 		}
@@ -1687,6 +1688,10 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 				}
 			}
 		}
+		
+		// Killaura/F is an extremely advanced check that looks at players rotations to try to determine if the player is using any sort of Killaura or Aimbot style cheats
+		// The check does its best to find Killaura and not flag for players who just have naturally good Aim
+		// Tho that is true, it still has the chance to false flag a player for using killaura even if their not
 		if (config.modules.killauraF.enabled) {
 			const pos1 = player.getHeadLocation();
 			const pos2 = entity.getHeadLocation();
@@ -1699,19 +1704,49 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			const attackVector2Angle = { x: angle1, y: angle2 };
 			
 			if (
-				lastAttackVector2Angle.get(player) (
-				Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) <= 0.99 ||
-				Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) <= 0.99
+					lastAttackVector2Angle.get(player) && 
+				(
+					(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) <= 0.5 &&
+					Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) !== 0 ||
+					Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) <= 0.5 &&
+					Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) !== 0) ||
+					(Math.abs(lastAttackVector2Angle.get(player).x) > 1.2 && Math.abs(lastAttackVector2Angle.get(player).x) < 1.5) ||
+					(Math.abs(lastAttackVector2Angle.get(player).y) > 1.2 && Math.abs(lastAttackVector2Angle.get(player).y) < 1.5)
 				)
-			) {
-				flag(player, "Killaura", "F", "Combat", "angleDiff", Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x), true);
+				) {
+				if (getScore(player, "auraF_buffer", 0) > 5) {
+					flag(player, "Killaura", "F", "Combat", "angleDiff(1)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
+					setScore(player, "auraF_buffer", 0);
+				} else {
+					setScore(player, "auraF_buffer", getScore(player, "auraF_buffer", 0) + 1);
+				}
 			}
-			if(lastAttackVector2Angle.get(player)) {
+			// Check for small head snaps
+			const rotationThreshold = 5;
+			const maxRotation = 10;
+			if (
+				lastAttackVector2Angle.get(player) &&
+				lastAttackVector2Angle.get(player).x !== undefined &&
+				lastAttackVector2Angle.get(player).y !== undefined &&
+				(
+					(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) > rotationThreshold &&
+					Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) < maxRotation) ||
+					(Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) > rotationThreshold &&
+					Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) < maxRotation)
+				)
+				) {
+				if (getScore(player, "auraF_buffer", 0) > 10) {
+					flag(player, "Killaura", "F", "Combat", "angleDiff(2)", Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x), true);
+					setScore(player, "auraF_buffer", 0);
+				} else {
+					setScore(player, "auraF_buffer", getScore(player, "auraF_buffer", 0) + 1);
+				}
+			}
+			if (lastAttackVector2Angle.get(player)) {
 				console.warn(`|| LOGS || (KILLAURA) [F] - Angle Diff 1 ${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, Angle Diff 2 ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`);
 			}
 			lastAttackVector2Angle.set(player, attackVector2Angle);
-		}
-		  
+		}	  
 	}
 
 	
