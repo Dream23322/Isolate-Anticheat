@@ -173,7 +173,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
         console.warn(JSON.stringify(data));
     }
-    console.warn("[Flag]", player.name, check,"[",checkType,"]", hackType, "-", debugName, debug);
+    
 
     // cancel the message
     if(cancelObject) cancelObject.cancel = true;
@@ -194,7 +194,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     setScore(player, scoreboardObjective, currentVl + 1);
 
     currentVl++;
-
+    console.warn("[Flag]", player.name, check,"[",checkType,"]", hackType, "-", debugName, debug, "VL=", currentVl);
     player.runCommandAsync(`tellraw @a[tag=notify,tag=debug,tag=theme2,tag=!theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j] §g ${player.nameTag}§r §jhas failed §a[§2${hackType}§a] §p${check}§r/§n${checkType.toUpperCase()} §3(${debugName}=${debug}§r§7)§j. [§2x§n${currentVl}§j]"}]}`);
     player.runCommandAsync(`tellraw @a[tag=notify,tag=!debug,tag=theme2,tag=!theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j] §g ${player.nameTag}§r §jhas failed §a[§2${hackType}§a] §p${check}§r/§n${checkType.toUpperCase()}§j. [§2x§n${currentVl}§j]"}]}`);
     player.runCommandAsync(`tellraw @a[tag=notify,tag=debug,tag=!theme2,tag=!theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§jx§9${currentVl}§h]"}]}`);
@@ -237,11 +237,6 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     const punishment = checkData.punishment?.toLowerCase();
     if(typeof punishment !== "string") throw TypeError(`Error: punishment is type of ${typeof punishment}. Expected "string"`);
     if(punishment === "none" || punishment === "") return;
-    if (currentVl > checkData.minVlbeforePunishment - 3) {
-        player.runCommandAsync("particle minecraft:totem_particle ~ ~ ~");
-        player.runCommandAsync("particle minecraft:totem_particle ~ ~ ~");
-        player.runCommandAsync("particle minecraft:totem_particle ~ ~ ~");
-    }
     if(currentVl > checkData.minVlbeforePunishment - 2 && currentVl < checkData.minVlbeforePunishment - 1) {
         player.runCommandAsync("title @s title §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
         player.runCommandAsync("title @s subtitle §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
@@ -270,7 +265,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     
                 }
                 player.runCommandAsync("function tools/resetwarns");
-                setParticle(player, "explode");
+                
                 for (let i = 0; i < 3; i++) {
                     player.sendMessage("§4§klakjfdal;skdjfa;lskdjf;alskjdfa;lskjdfa;lksjdf;laskjdf;laskjdf;laskjdf;alskjdfa;lksjdf;alsjkfdla;skjdfa;lskdjfa;lsdjf;lasjdfl;aksjdfl;aksjdf;laksjdfl;kajsd;flkjaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
                 }

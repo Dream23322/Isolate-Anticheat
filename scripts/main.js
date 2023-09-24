@@ -1692,7 +1692,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		// Killaura/F is an extremely advanced check that looks at players rotations to try to determine if the player is using any sort of Killaura or Aimbot style cheats
 		// The check does its best to find Killaura and not flag for players who just have naturally good Aim
 		// Tho that is true, it still has the chance to false flag a player for using killaura even if their not
-		if (config.modules.killauraF.enabled) {
+		if (config.modules.killauraF.enabled && player.hasTag("strict")) {
 			const pos1 = player.getHeadLocation();
 			const pos2 = entity.getHeadLocation();
 			let angle1 = Math.atan2(pos2.z - pos1.z, pos2.x - pos1.x) * (180 / Math.PI) - player.getRotation().y - 90;
@@ -1714,7 +1714,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 					(Math.abs(lastAttackVector2Angle.get(player).y) > 1.2 && Math.abs(lastAttackVector2Angle.get(player).y) < 1.5)
 				)
 				) {
-				if (getScore(player, "auraF_buffer", 0) > 5) {
+				if (getScore(player, "auraF_buffer", 0) > 5 && hVelocity(player) > 1) {
 					flag(player, "Killaura", "F", "Combat", "angleDiff(1)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
 					setScore(player, "auraF_buffer", 0);
 				} else {
@@ -1729,14 +1729,14 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 				lastAttackVector2Angle.get(player).x !== undefined &&
 				lastAttackVector2Angle.get(player).y !== undefined &&
 				(
-					(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) > rotationThreshold &&
-					Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) < maxRotation) ||
-					(Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) > rotationThreshold &&
-					Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) < maxRotation)
+					(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) > 0 &&
+					Number.isInteger(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x))) ||
+					(Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) > 0 &&
+					Number.isInteger(Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)))
 				)
 				) {
 				if (getScore(player, "auraF_buffer", 0) > 10) {
-					flag(player, "Killaura", "F", "Combat", "angleDiff(2)", Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x), true);
+					flag(player, "Killaura", "F", "Combat", "angleDiff(2)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
 					setScore(player, "auraF_buffer", 0);
 				} else {
 					setScore(player, "auraF_buffer", getScore(player, "auraF_buffer", 0) + 1);
@@ -1744,6 +1744,19 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			}
 			if (lastAttackVector2Angle.get(player)) {
 				console.warn(`|| LOGS || (KILLAURA) [F] - Angle Diff 1 ${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, Angle Diff 2 ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`);
+			}
+
+
+			// Large changes in yaw without large changes in pitch could be a sign of someone using Killaura cheats
+			if(lastAttackVector2Angle.get(player) && lastAttackVector2Angle.get(player).x !== undefined && lastAttackVector2Angle.get(player).y !== undefined) {
+				if(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) < 10 && Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) > 30 && Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) > 5) {
+					if (getScore(player, "auraF_buffer", 0) > 10) {
+						flag(player, "Killaura", "F", "Combat", "angleDiff(3)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
+						setScore(player, "auraF_buffer", 0);
+					} else {
+						setScore(player, "auraF_buffer", getScore(player, "auraF_buffer", 0) + 1);
+					}
+				}
 			}
 			lastAttackVector2Angle.set(player, attackVector2Angle);
 		}	  
