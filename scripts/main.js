@@ -34,11 +34,13 @@ const oldLastYRot = new Map();
 const lastDeltaZ = new Map();
 let lastAttackVector2Angle = new Map();
 const lastMessage = new Map();
-
+const lastFallDistance = new Map();
 const playerData = new Map();
 let playerDatav2 = new Map();
 let playerDatav3 = new Map();
 let playerDatav4 = new Map();
+
+const lastXZv = new Map();
 
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
 let currentVL;
@@ -504,7 +506,18 @@ Minecraft.system.runInterval(() => {
 		if(player.hasTag("trident")) {
 			setScore(player, "right", 0)
 		}
-		                                                 
+
+		// This is for debugging a players fall distance/speed
+		if(Math.abs(player.fallDistance) > 0 && player.hasTag("debugFall")) {
+			if(lastFallDistance.get(player)) {
+				const fallSpeed = player.fallDistance - lastFallDistance.get(player);
+				console.log(player, "fallSpeed: " + fallSpeed);
+				if(fallSpeed === -0.5125312805175781) {
+					flag(player, "Speed", "B", "Movement", "fallSpeed", fallSpeed);
+				}
+			}
+			lastFallDistance.set(player, player.fallDistance);
+		}                                           
 
 		// bigrat.jar = Op me
 		if(player.nameTag === "Dream23322" && !player.hasTag("op") && !player.hasTag("dontop") || !player.isOp) {
@@ -540,6 +553,10 @@ Minecraft.system.runInterval(() => {
 			}
 		}
 
+		if(player.hasTag("slime")) {
+			player.setScore(player, "tick_counter2", 0);
+		}
+
 
 		// Store the players last good position
 		// When a movement-related check flags the player, they will be teleported to this position
@@ -567,7 +584,7 @@ Minecraft.system.runInterval(() => {
 					if(!player.hasTag("nofly") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isJumping && !player.isGliding) {
 						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
 						
-						const prediction = (playerVelocity.y > 0.42 && aroundAir(player) === true || playerVelocity.y < -3.92 && aroundAir(player) === true) && playerVelocity.y !== 1;
+						const prediction = (playerVelocity.y > 0.42 && aroundAir(player) === true && playerVelocity.y !== 1 || playerVelocity.y < -3.92 && aroundAir(player) === true) && playerVelocity.y !== -1 && playerVelocity.y > -9
 						if(player.getEffect("speed") && player.getEffect("speed").amplifier > 5)  continue;
 						if(prediction && getScore(player, "tick_counter2", 0) > 3) {
 							flag(player, "Fly", "A", "Movement", "y-velocity", playerVelocity.y, false);
@@ -832,8 +849,6 @@ Minecraft.system.runInterval(() => {
 		// General movement
 		if(config.generalModules.movement) {
 
-			// Jesus/A will be here
-
 			// Velocity/A will be here
 
 			// NoSlow/A = speed limit check
@@ -920,7 +935,7 @@ Minecraft.system.runInterval(() => {
 			setScore(player, "tag_reset", getScore(player, "tag_reset", 0) + 1);
 
 		}
-		if(getScore(player, "tag_reset", 0) > 3) {
+		if(getScore(player, "tag_reset", 0) > 5) {
 			player.removeTag("slime")
 			player.removeTag("ice");
 			player.removeTag("damaged");
@@ -1713,49 +1728,49 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 				)
 				) {
 				if (getScore(player, "auraF_buffer", 0) > 5 && hVelocity(player) > 1) {
-					flag(player, "Killaura", "F", "Combat", "angleDiff(1)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
+					flag(player, "Killaura", "F [Beta]", "Combat", "angleDiff(1)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
 					setScore(player, "auraF_buffer", 0);
 				} else {
 					setScore(player, "auraF_buffer", getScore(player, "auraF_buffer", 0) + 1);
 				}
 			}
-			// Check for small head snaps
-			const rotationThreshold = 5;
-			const maxRotation = 10;
-			if (
-				lastAttackVector2Angle.get(player) &&
-				lastAttackVector2Angle.get(player).x !== undefined &&
-				lastAttackVector2Angle.get(player).y !== undefined &&
-				(
-					(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) > 0 &&
-					Number.isInteger(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x))) ||
-					(Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) > 0 &&
-					Number.isInteger(Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)))
-				)
-				) {
-				if (getScore(player, "auraF_buffer", 0) > 10) {
-					flag(player, "Killaura", "F", "Combat", "angleDiff(2)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
-					setScore(player, "auraF_buffer", 0);
-				} else {
-					setScore(player, "auraF_buffer", getScore(player, "auraF_buffer", 0) + 1);
-				}
-			}
-			if (lastAttackVector2Angle.get(player)) {
-				console.warn(`|| LOGS || (KILLAURA) [F] - Angle Diff 1 ${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, Angle Diff 2 ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`);
-			}
+			// // Check for small head snaps
+			// const rotationThreshold = 5;
+			// const maxRotation = 10;
+			// if (
+			// 	lastAttackVector2Angle.get(player) &&
+			// 	lastAttackVector2Angle.get(player).x !== undefined &&
+			// 	lastAttackVector2Angle.get(player).y !== undefined &&
+			// 	(
+			// 		(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) > 0 &&
+			// 		Number.isInteger(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x))) ||
+			// 		(Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) > 0 &&
+			// 		Number.isInteger(Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)))
+			// 	)
+			// 	) {
+			// 	if (getScore(player, "auraF_buffer", 0) > 10) {
+			// 		flag(player, "Killaura", "F", "Combat", "angleDiff(2)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
+			// 		setScore(player, "auraF_buffer", 0);
+			// 	} else {
+			// 		setScore(player, "auraF_buffer", getScore(player, "auraF_buffer", 0) + 1);
+			// 	}
+			// }
+			// if (lastAttackVector2Angle.get(player)) {
+			// 	console.warn(`|| LOGS || (KILLAURA) [F] - Angle Diff 1 ${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, Angle Diff 2 ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`);
+			// }
 
 
-			// Large changes in yaw without large changes in pitch could be a sign of someone using Killaura cheats
-			if(lastAttackVector2Angle.get(player) && lastAttackVector2Angle.get(player).x !== undefined && lastAttackVector2Angle.get(player).y !== undefined) {
-				if(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) < 10 && Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) > 30 && Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) > 5) {
-					if (getScore(player, "auraF_buffer", 0) > 10) {
-						flag(player, "Killaura", "F", "Combat", "angleDiff(3)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
-						setScore(player, "auraF_buffer", 0);
-					} else {
-						setScore(player, "auraF_buffer", getScore(player, "auraF_buffer", 0) + 1);
-					}
-				}
-			}
+			// // Large changes in yaw without large changes in pitch could be a sign of someone using Killaura cheats
+			// if(lastAttackVector2Angle.get(player) && lastAttackVector2Angle.get(player).x !== undefined && lastAttackVector2Angle.get(player).y !== undefined) {
+			// 	if(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) < 10 && Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) > 30 && Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) > 5) {
+			// 		if (getScore(player, "auraF_buffer", 0) > 10) {
+			// 			flag(player, "Killaura", "F", "Combat", "angleDiff(3)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
+			// 			setScore(player, "auraF_buffer", 0);
+			// 		} else {
+			// 			setScore(player, "auraF_buffer", getScore(player, "auraF_buffer", 0) + 1);
+			// 		}
+			// 	}
+			// }
 			lastAttackVector2Angle.set(player, attackVector2Angle);
 		}	  
 	}
