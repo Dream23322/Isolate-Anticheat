@@ -914,19 +914,17 @@ Minecraft.system.runInterval(() => {
 		player.removeTag("breaking");
 		const tickValue = getScore(player, "tickValue", 0);
 		if(tickValue > 19) {
-			player.removeTag("slime")
-			player.removeTag("ice");
-			player.removeTag("damaged");
-			// Remove tags for checks :D
-			player.removeTag("placing");
-			player.removeTag("attacking");
-			player.removeTag("usingItem");
-			player.removeTag("breaking");
-			player.removeTag("noPitchDiff");
 			const currentCounter = getScore(player, "tick_counter", 0);
 			setScore(player, "tick_counter", currentCounter + 1);
 			setScore(player, "tick_counter2", getScore(player, "tick_counter2", 0) + 1);
+			setScore(player, "tag_reset", getScore(player, "tag_reset", 0) + 1);
 
+		}
+		if(getScore(player, "tag_reset", 0) > 3) {
+			player.removeTag("slime")
+			player.removeTag("ice");
+			player.removeTag("damaged");
+			setScore(player, "tag_reset", 0);
 		}
 		
 
@@ -1673,13 +1671,13 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		// This can cause some issues on laggy servers so im gonna have to try fix that
 		if(config.modules.hitboxA.enabled && !player.hasTag("nohitbox")) {
 			const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
-			if(angleCalc(player, entity) > 90 && distance > 2) {
+			if(angleCalc(player, entity) > 90 && distance > 4) {
 				flag(player, "Hitbox", "A", "Combat", "angle", "> 90", false);
 			}
 		}
  
 		// Killaura/F = Checks for looking at the center of an entity
-		if(config.modules.killauraF.enabled) {
+		if(config.modules.killauraF.enabled && player.hasTag("strict")) {
 			if(angleCalc(player, entity) < 0.99) {
 				const pos1 = { x: player.location.x, y: player.location.y, z: player.location.z };
 				const pos2 = { x: entity.location.x, y: entity.location.y, z: entity.location.z };

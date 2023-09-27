@@ -86,6 +86,7 @@
 					"/scoreboard objectives add tick_counter dummy",
 					"/scoreboard objectives add tick_counter2 dummy",
 					"/scoreboard objectives add auraF_buffer dummy",
+					"/scoreboard objectives add tag_reset dummy",
 					// If enabled from previous login then activate
 					"/ability @s[tag=flying,m=!c] mayfly true"
 					// alert the user if Gametest Framework is not enabled
