@@ -554,7 +554,7 @@ Minecraft.system.runInterval(() => {
 		}
 
 		if(player.hasTag("slime")) {
-			player.setScore(player, "tick_counter2", 0);
+			setScore(player, "tick_counter2", 0);
 		}
 
 
