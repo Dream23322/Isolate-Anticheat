@@ -291,156 +291,6 @@ Minecraft.system.runInterval(() => {
 		}
 
 		// ==================================
-		//                 Item Checks
-		// ==================================
-		
-		// @ts-expect-error
-		const container = player.getComponent('inventory').container;
-		for (let i = 0; i < 36; i++) {
-			const item = container.getItem(i);
-			if(!item) continue;
-
-			// Illegalitems/C = item stacked over 64 check
-			if(config.modules.illegalitemsC.enabled && item.amount > item.maxAmount)
-				flag(player, "IllegalItems", "C", "Exploit", "stack", item.amount, undefined, undefined, i);
-				currentVL++;
-				
-			// Illegalitems/D = additional item clearing check
-			if(config.modules.illegalitemsD.enabled) {
-				if(config.itemLists.items_very_illegal.includes(item.typeId)) flag(player, "IllegalItems", "D", "Exploit", "item", item.typeId, undefined, undefined, i);
-				currentVL++;
-				
-				// semi illegal items
-				if(!player.hasTag("op")) {
-					let flagPlayer = false;
-
-					// patch element blocks
-					if(config.itemLists.elements && item.typeId.startsWith("minecraft:element_"))
-						flagPlayer = true;
-					
-					// patch spawn eggs
-					if(item.typeId.endsWith("_spawn_egg")) {
-						if(config.itemLists.spawnEggs.clearVanillaSpawnEggs && item.typeId.startsWith("minecraft:"))
-							flagPlayer = true;
-
-						if(config.itemLists.spawnEggs.clearCustomSpawnEggs && !item.typeId.startsWith("minecraft:"))
-							flagPlayer = true;
-					}
-		
-					if(config.itemLists.items_semi_illegal.includes(item.typeId) || flagPlayer) {
-						const checkGmc = world.getPlayers({
-							excludeGameModes: [Minecraft.GameMode.creative],
-							name: player.name
-						});
-					
-						if([...checkGmc].length !== 0) {
-							flag(player, "IllegalItems", "D", "Exploit", "item", item.typeId, undefined, undefined, i);
-							currentVL++;
-						}
-					}
-				}
-			}
-
-			// CommandBlockExploit/H = clear items
-			if(config.modules.commandblockexploitH.enabled && config.itemLists.cbe_items.includes(item.typeId))
-				flag(player, "CommandBlockExploit", "H", "Exploit", "item", item.typeId, undefined, undefined, i);
-				currentVL++;
-				
-			// Illegalitems/F = Checks if an item has a name longer then 32 characters
-			if(config.modules.illegalitemsF.enabled && item.nameTag?.length > config.modules.illegalitemsF.length)
-				flag(player, "IllegalItems", "F", "Exploit", "name", `${item.nameTag},length=${item.nameTag.length}`, undefined, undefined, i);
-				currentVL++;
-			
-			// IllegalItems/L = check for keep on death items
-			if(config.modules.illegalitemsL.enabled && item.keepOnDeath)
-				flag(player, "IllegalItems", "L", "Exploit", undefined, undefined, false, undefined, i);
-				currentVL++;
-
-			// BadEnchants/D = checks if an item has a lore
-			if(config.modules.badenchantsD.enabled) {
-				const lore = String(item.getLore());
-
-				if(lore && !config.modules.badenchantsD.exclusions.includes(lore))
-					flag(player, "BadEnchants", "D", "Exploit", "lore", lore, undefined, undefined, i);
-					currentVL++;
-			}
-
-			/*
-				As of 1.19.30, Mojang removed all illegal items from MinecraftItemTypes, although this change
-				doesnt matter, they mistakenly removed 'written_book', which can be obtained normally.
-				Written books will make this code error out, and make any items that havent been check bypass
-				anti32k checks. In older versions, this error will also make certian players not get checked
-				leading to a Scythe Semi-Gametest Disabler method.
-			*/
-			const itemType = item.type ?? Minecraft.ItemTypes.get("minecraft:book");
-
-			if(config.modules.resetItemData.enabled && config.modules.resetItemData.items.includes(item.typeId)) {
-				// This creates a duplicate version of the item, with just its amount and data.
-				const item2 = new Minecraft.ItemStack(itemType, item.amount);
-				container.setItem(i, item2);
-			}
-
-			if(config.modules.badenchantsA.enabled || config.modules.badenchantsB.enabled || config.modules.badenchantsC.enabled || config.modules.badenchantsE.enabled) {
-				const itemEnchants = item.getComponent("enchantments").enchantments;
-
-				const item2 = new Minecraft.ItemStack(itemType, 1);
-		
-				// @ts-expect-error
-				const item2Enchants = item2.getComponent("enchantments").enchantments;
-				const enchantments = [];
-				
-				const loopIterator = (iterator) => {
-					const iteratorResult = iterator.next();
-					if(iteratorResult.done) return;
-					const enchantData = iteratorResult.value;
-
-					// badenchants/A = checks for items with invalid enchantment levels
-					if(config.modules.badenchantsA.enabled) {
-						const maxLevel = config.modules.badenchantsA.levelExclusions[enchantData.type.id];
-
-						if(typeof maxLevel === "number") {
-							if(enchantData.level > maxLevel) flag(player, "BadEnchants", "A", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
-						} else if(enchantData.level > enchantData.type.maxLevel)
-							flag(player, "BadEnchants", "A", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
-							currentVL++;
-					}
-
-					// badenchants/B = checks for negative enchantment levels
-					if(config.modules.badenchantsB.enabled && enchantData.level <= 0)
-						flag(player, "BadEnchants", "B", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
-						currentVL++;
-
-					// badenchants/C = checks if an item has an enchantment which isnt support by the item
-					if(config.modules.badenchantsC.enabled) {
-						if(!item2Enchants.canAddEnchantment(new Minecraft.Enchantment(enchantData.type, 1))) {
-							flag(player, "BadEnchants", "C", "Exploit", "item", `${item.typeId},enchant=minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
-							currentVL++;
-						}
-
-						if(config.modules.badenchantsB.multi_protection) {
-							item2Enchants.addEnchantment(new Minecraft.Enchantment(enchantData.type, 1));
-
-							// @ts-expect-error
-							item2.getComponent("enchantments").enchantments = item2Enchants;
-						}
-					}
-
-					// BadEnchants/E = checks if an item has duplicated enchantments
-					if(config.modules.badenchantsE.enabled) {
-						if(enchantments.includes(enchantData.type.id)) {
-							enchantments.push(enchantData.type.id);
-							flag(player, "BadEnchants", "E", "Exploit", "enchantments", enchantments.join(", "), false, undefined , i);
-							currentVL++;
-						} else enchantments.push(enchantData.type.id);
-					}
-
-					loopIterator(iterator);
-				};	
-				loopIterator(itemEnchants[Symbol.iterator]());
-			}
-		}
-
-		// ==================================
 		//                  Sprint Checks
 		// ==================================
 		if(config.generalModules.sprint) {
@@ -962,60 +812,8 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	const playerVelocity = player.getVelocity();
 	if(config.debug) console.warn(`${player.nameTag} has placed ${block.typeId}. Player Tags: ${player.getTags()} Player X Rotation: ${rotation.x}`);
 	const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
-
 	
 	let undoPlace = false;
-
-	// IllegalItems/H = checks for pistons that can break any block
-	if(config.modules.illegalitemsH.enabled && block.typeId === "minecraft:piston" || block.typeId === "minecraft:sticky_piston") {
-		const piston = block.getComponent("piston");
-	
-		// @ts-expect-error
-		if(!piston.isRetracted || piston.isMoving || piston.isExpanded) {
-			// @ts-expect-error
-			flag(player, "IllegalItems", "H", "Exploit", "isRetracted", `${piston.isRetracted},isRetracting=${piston.isRetracting},isMoving=${piston.isMoving},isExpanding=${piston.isExpanding},isExpanded=${piston.isExpanded}`, false, false, player.selectedSlot);
-			block.setType(Minecraft.MinecraftBlockTypes.air);
-		}
-	}
-
-	if(config.modules.illegalitemsI.enabled && config.modules.illegalitemsI.container_blocks.includes(block.typeId) && !player.hasTag("op")) {
-		// @ts-expect-error
-		const container = block.getComponent("inventory").container;
-
-		let startNumber = 0;
-		let didFindItems = false;
-		const emptySlots = container.emptySlotsCount;
-		if(container.size > 27) startNumber = container.size / 2;
-	
-		for (let i = startNumber; i < container.size; i++) {
-			const item = container.getItem(i);
-			if(!item) continue;
-
-			// an item exists within the container, get fucked hacker!
-			container.setItem(i, undefined);
-			didFindItems = true;
-		}
-
-		if(didFindItems) {
-			flag(player, "IllegalItems", "I", "Exploit", "containerBlock", `${block.typeId},totalSlots=${container.size},emptySlots=${emptySlots}`, undefined, undefined, player.selectedSlot);
-			block.setType(Minecraft.MinecraftBlockTypes.air);
-		}
-	}
-
-	if(config.modules.illegalitemsJ.enabled && block.typeId.includes("sign")) {
-		// we need to wait 1 tick before we can get the sign text
-		Minecraft.system.runTimeout(() => {
-			if(config.modules.illegalitemsJ.exclude_scythe_op && player.hasTag("op")) return;
-
-			// @ts-expect-error
-			const text = block.getComponent("sign").text;
-
-			if(text.length >= 1) {
-				flag(player, "IllegalItems", "J", "Exploit", "signText", text, undefined, undefined, player.selectedSlot);
-				block.setType(Minecraft.MinecraftBlockTypes.air);
-			}
-		}, 1);
-	}
 
 	if(config.modules.commandblockexploitH.enabled && block.typeId === "minecraft:hopper") {
 		const pos1 = {x: block.location.x + 2, y: block.location.y + 2, z: block.location.z + 2};
@@ -1166,24 +964,6 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	if(!player.hasTag("placing")) {
 		player.addTag("placing");
 	}
-	if(config.modules.illegalitemsN.enabled && block.typeId.includes("shulker_box")) {
-		// @ts-expect-error
-		const container = block.getComponent("inventory").container;
-
-		const illegalItems = [];
-
-		for (let i = 0; i < 27; i++) {
-			const item = container.getItem(i);
-			if(!item) continue;
-
-			if(config.itemLists.items_very_illegal.includes(item.typeId) || config.itemLists.cbe_items.includes(item.typeId)) illegalItems.push(illegalItems);
-		}
-
-		if(illegalItems.length >= 1) {
-			flag(player, "IllegalItems", "N", "Exploit", "items_count", illegalItems.length, undefined, undefined, player.selectedSlot);
-			block.setType(Minecraft.MinecraftBlockTypes.air);
-		}
-	} 
 
 	if(undoPlace === true) {
 		try {
@@ -1491,41 +1271,6 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 		}
 	}
 
-	if(entity.typeId === "minecraft:item") {
-		// @ts-expect-error
-		const item = entity.getComponent("item").itemStack;
-
-		if(config.modules.illegalitemsB.enabled) {
-			if(config.itemLists.items_very_illegal.includes(item.typeId) || config.itemLists.items_semi_illegal.includes(item.typeId))
-				entity.kill();
-		}
-
-		if(config.modules.illegalitemsB.enabled && config.itemLists.cbe_items.includes(item.typeId))
-			entity.kill();
-	}
-
-	// IllegalItems/K = checks if a player places a chest boat with items already inside it
-	if(config.modules.illegalitemsK.enabled && config.modules.illegalitemsK.entities.includes(entity.typeId)) {
-		Minecraft.system.runTimeout(() => {
-			const player = getClosestPlayer(entity);
-			if(!player) return;
-
-			if(config.modules.illegalitemsK.exclude_scythe_op && player.hasTag("op")) return;
-
-			// @ts-expect-error
-			const container = entity.getComponent("inventory").container;
-
-			if(container.size !== container.emptySlotsCount) {
-				for (let i = 0; i < container.size; i++) {
-					container.setItem(i, undefined);
-				}
-
-				flag(player, "IllegalItems", "K", "Exploit", "totalSlots", `${container.size},emptySlots=${container.emptySlotsCount}`, undefined, undefined, player.selectedSlot);
-				entity.kill();
-				currentVL++;
-			}
-		}, 1);
-	}
 	
 	if(config.misc_modules.lag_machine.antiArmorStandCluster.enabled && entity.typeId === "minecraft:armor_stand") {
 		const entities = [...entity.dimension.getEntities({
