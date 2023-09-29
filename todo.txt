@@ -134,3 +134,45 @@ Old speed check
 			// 	previousSpeedLog.set(player, currentSpeed);
 			// 	previousRotationLog.set(player, currentRotation);
 			// }
+
+
+
+
+
+			// // Check for small head snaps
+			// const rotationThreshold = 5;
+			// const maxRotation = 10;
+			// if (
+			// 	lastAttackVector2Angle.get(player) &&
+			// 	lastAttackVector2Angle.get(player).x !== undefined &&
+			// 	lastAttackVector2Angle.get(player).y !== undefined &&
+			// 	(
+			// 		(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) > 0 &&
+			// 		Number.isInteger(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x))) ||
+			// 		(Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) > 0 &&
+			// 		Number.isInteger(Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)))
+			// 	)
+			// 	) {
+			// 	if (getScore(player, "auraF_buffer", 0) > 10) {
+			// 		flag(player, "Killaura", "F", "Combat", "angleDiff(2)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
+			// 		setScore(player, "auraF_buffer", 0);
+			// 	} else {
+			// 		setScore(player, "auraF_buffer", getScore(player, "auraF_buffer", 0) + 1);
+			// 	}
+			// }
+			// if (lastAttackVector2Angle.get(player)) {
+			// 	console.warn(`|| LOGS || (KILLAURA) [F] - Angle Diff 1 ${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, Angle Diff 2 ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`);
+			// }
+
+
+			// // Large changes in yaw without large changes in pitch could be a sign of someone using Killaura cheats
+			// if(lastAttackVector2Angle.get(player) && lastAttackVector2Angle.get(player).x !== undefined && lastAttackVector2Angle.get(player).y !== undefined) {
+			// 	if(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) < 10 && Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) > 30 && Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) > 5) {
+			// 		if (getScore(player, "auraF_buffer", 0) > 10) {
+			// 			flag(player, "Killaura", "F", "Combat", "angleDiff(3)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
+			// 			setScore(player, "auraF_buffer", 0);
+			// 		} else {
+			// 			setScore(player, "auraF_buffer", getScore(player, "auraF_buffer", 0) + 1);
+			// 		}
+			// 	}
+			// }
