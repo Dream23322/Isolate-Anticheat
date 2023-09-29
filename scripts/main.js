@@ -1151,6 +1151,11 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 		setTitle(player, "Welcome Dream23322", "To a Isolate Anticheat Server");
 	}
 
+
+	// This is not to worry about
+	// When im testing Isolate Anticheat, there are often cases that I will get autobanned by the anticheat.
+	// So this is here so I can join back without hacking to spam text into the server console and it work like 2% of the time.
+	// Direct message to Visual, if u gonna ss this don't take it out of context keep the comments in the ss.
 	if(player.name === "Dream23322") {
 		player.removeTag("isBanned");
 	} 
@@ -1376,17 +1381,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	}
 
 
-	/*
-	So you see a blanked out criticals check, this is beacuse there is no way to see if a player gave a critical hit... the second mojang adds it we get a good criticals check.
-	*/
-
-	/*/ Criticals/A = Checks for crits without falling
-	if(config.modules.criticalsA.enabled && !player.isJumping && !player.isFlying && !player.hasTag("nocrit")) {
-		if(player.fallDistance === 0 && ) {
-			flag(player, "Criticals", "A", "Combat", "fallDistance", player.fallDistance, true)
-		}
-	}
-	*/
+   
 
 	// ==================================
 	//                    Killaura
@@ -1415,11 +1410,11 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			}
 		}
 
-		// Hitbox/A = Paradox check that looks for not having the attacked entity on screen
+		// Hitbox/A = Checks for not having the attacked player on your screen
 		// This can cause some issues on laggy servers so im gonna have to try fix that
 		if(config.modules.hitboxA.enabled && !player.hasTag("nohitbox")) {
 			const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
-			if(angleCalc(player, entity) > 90 && distance > 4) {
+			if(angleCalc(player, entity) > 95 && distance > 4) {
 				flag(player, "Hitbox", "A", "Combat", "angle", "> 90", false);
 			}
 		}
@@ -1427,8 +1422,6 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		// Killaura/F = Checks for looking at the center of an entity
 		if(config.modules.killauraF.enabled && player.hasTag("strict")) {
 			if(angleCalc(player, entity) < 0.99) {
-				const pos1 = { x: player.location.x, y: player.location.y, z: player.location.z };
-				const pos2 = { x: entity.location.x, y: entity.location.y, z: entity.location.z };
 				if(Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2)) > 2.6 && !player.hasTag("strict")) {
 					flag(player, "Killaura", "F", "Combat", "angle", angleCalc(player, entity), true);
 				}
