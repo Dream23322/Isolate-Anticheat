@@ -675,7 +675,7 @@ Minecraft.system.runInterval(() => {
 				if(player.hasTag("placing") && player.hasTag("attacking")) {
 					flag(player, "BadPackets", "G", "Packet", "actions", "Placement, Attacking", false);
 				}
-				if(player.hasTag("placing") && player.hasTag("breaking")) {
+				if(player.hasTag("placing") && player.hasTag("breaking") && !player.hasTag("snow")) {
 					flag(player, "BadPackets", "G", "Packet", "actions", "Placement, Breaking", false);
 				}
 				if (player.hasTag("attacking") && player.hasTag("breaking")) {
@@ -775,6 +775,7 @@ Minecraft.system.runInterval(() => {
 		player.removeTag("attacking");
 		player.removeTag("usingItem");
 		player.removeTag("breaking");
+		
 		const tickValue = getScore(player, "tickValue", 0);
 		if(tickValue > 19) {
 			const currentCounter = getScore(player, "tick_counter", 0);
@@ -782,6 +783,7 @@ Minecraft.system.runInterval(() => {
 			setScore(player, "tick_counter2", getScore(player, "tick_counter2", 0) + 1);
 			setScore(player, "tag_reset", getScore(player, "tag_reset", 0) + 1);
 			setScore(player, "aimc_reset", getScore(player, "aimc_reset", 0) + 1);
+			player.removeTag("snow");
 
 		}
 		if(getScore(player, "tag_reset", 0) > 5) {
@@ -1037,6 +1039,9 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 			flag(player, "Nuker", "A", "Misc", "blocksBroken", player.blocksBroken, true);
 			
 		}
+	}
+	if(brokenBlockId === "minecraft:snow" || brokenBlockId === "minecraft:snow_layer") {
+		player.addTag("snow");
 	}
 
 	// Autotool/A = checks for player slot mismatch
