@@ -406,12 +406,6 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 15
         },
-        "aimE": {
-            "enabled": true,
-            "description": "Checks for rounded pitch",
-            "punishment": "kick",
-            "minVlbeforePunishment": 15
-        },
         "noslowA": {
             "enabled": true,
             "description": "Checks for going to fast while using an item, false flags with tridents",
@@ -783,14 +777,6 @@ export default
             "magnitude": -0.078,
             "punishment": "kick",
             "minVlbeforePunishment": 100
-        },
-        "jesusA": {
-            "enabled": true
-        },
-        "criticalsA": {
-            "enabled": true,
-            "punishment": "kick",
-            "minVlbeforePunishment": 0
         },
         "motionA": {
             "enabled": true,
