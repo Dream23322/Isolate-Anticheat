@@ -144,7 +144,11 @@ Minecraft.system.runInterval(() => {
 		//                   Aim Checks
 		// ==================================
 		if(config.generalModules.aim && !player.hasTag("noaim")) {
-
+			// Reset the buffer for Aim/C
+			if(getScore(player, "aimc_reset") > 20) {
+				setScore(player, "aimc_reset", 0);
+				setScore(player, "aimc_buffer", 0);
+			}
 			// If there is a previous rotation stored
 			if (prevRotation && lastDeltPitch.get(player) && lastDeltYaw.get(player)) {
 				// Maths go brrrrrrrr
@@ -205,8 +209,15 @@ Minecraft.system.runInterval(() => {
 						const smoothRotation = Math.abs(currentDiff - oldDiff) <= 0.06 && Math.abs(currentDiff - oldDiff) >= 0;
 						
 						if (smoothRotation) {
-							//playerFlags.add(player);
-							player.addTag("c");
+							setScore(player, "aimc_buffer", getScore(player, "aimc_buffer", 0) + 1);
+							const buffer = getScore(player, "aimc_buffer", 0);
+							
+							if(buffer > config.modules.aimC.buffer) {
+								player.addTag("c");
+								setScore(player, "aimc_buffer", 0);
+								setScore(player, "aimc_reset", 0);
+							}
+							
 						} else {
 							//playerFlags.delete(player);
 
@@ -774,6 +785,7 @@ Minecraft.system.runInterval(() => {
 			setScore(player, "tick_counter", currentCounter + 1);
 			setScore(player, "tick_counter2", getScore(player, "tick_counter2", 0) + 1);
 			setScore(player, "tag_reset", getScore(player, "tag_reset", 0) + 1);
+			setScore(player, "aimc_reset", getScore(player, "aimc_reset", 0) + 1);
 
 		}
 		if(getScore(player, "tag_reset", 0) > 5) {

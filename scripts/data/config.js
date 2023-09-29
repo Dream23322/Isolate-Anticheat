@@ -396,6 +396,7 @@ export default
         "aimC": {
             "enabled": true,
             "description": "Checks for smooth rotation",
+            "buffer": 3,
             "punishment": "kick",
             "minVlbeforePunishment": 15,
         },
