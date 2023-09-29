@@ -245,7 +245,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     if(currentVl > checkData.minVlbeforePunishment) {
 
 
-        if (punishment === "kick" && !player.hasTag("nokick")) {
+        if (punishment === "kick") {
             let banLength2;
             try {
                 //banAnimation(player, "type2");
