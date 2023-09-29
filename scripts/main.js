@@ -434,7 +434,7 @@ Minecraft.system.runInterval(() => {
 						
 						const prediction = (playerVelocity.y > 0.42 && aroundAir(player) === true && playerVelocity.y !== 1 || playerVelocity.y < -3.92 && aroundAir(player) === true) && playerVelocity.y !== -1 && playerVelocity.y > -9
 						if(player.getEffect("speed") && player.getEffect("speed").amplifier > 5)  continue;
-						if(prediction && getScore(player, "tick_counter2", 0) > 3) {
+						if(prediction && getScore(player, "tick_counter2", 0) > 3 && player.fallDistance < 25) {
 							flag(player, "Fly", "A", "Movement", "y-velocity", playerVelocity.y, false);
 						}
 					}
@@ -1161,26 +1161,15 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	}
 
 
-	// This is not to worry about
-	// When im testing Isolate Anticheat, there are often cases that I will get autobanned by the anticheat.
-	// So this is here so I can join back without hacking to spam text into the server console and it work like 2% of the time.
-	// Direct message to Visual, if u gonna ss this don't take it out of context keep the comments in the ss.
-	if(player.name === "Dream23322") {
-		player.removeTag("isBanned");
-	} 
-	if(player.name === "Aurxrah4ck") {
-		player.removeTag("isBanned");
-	}
-	if(player.name === "CoySugar1636776") {
-		player.removeTag("isBanned");
-	}
-
 	// fix a disabler method
 	player.nameTag = player.nameTag.replace(/[^A-Za-z0-9_\-() ]/gm, "").trim();
 
 	if(!data.loaded) {
 		player.runCommandAsync("scoreboard players set scythe:config gametestapi 1");
 		data.loaded = true;
+	}
+	if(player.hasTag("notify")) {
+		player.runCommandAsync('execute at @a[tag=reported] run tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r "},{"selector":"@s"},{"text":" §chas been Reported while your were offline "}]}');
 	}
 
 	// remove tags
