@@ -172,7 +172,7 @@ Minecraft.system.runInterval(() => {
 				// This check is easy to false flag, so you need to have the tag strict on you for it to do anything
 				if (config.modules.aimA.enabled && player.hasTag("strict")) {
 					// If the rotation speed exceeds the threshold
-					if (Math.abs(deltaYaw) < ROTATION_SPEED_THRESHOLD - ROTATION_SPEED_THRESHOLD / 2 && Math.abs(lastDY) > ROTATION_SPEED_THRESHOLD || Math.abs(deltaPitch) < ROTATION_SPEED_THRESHOLD - ROTATION_SPEED_THRESHOLD / 2 && Math.abs(lastDP) > ROTATION_SPEED_THRESHOLD) {
+					if (Math.abs(deltaYaw) < ROTATION_SPEED_THRESHOLD - ROTATION_SPEED_THRESHOLD / 3 && Math.abs(lastDY) > ROTATION_SPEED_THRESHOLD || Math.abs(deltaPitch) < ROTATION_SPEED_THRESHOLD - ROTATION_SPEED_THRESHOLD / 3 && Math.abs(lastDP) > ROTATION_SPEED_THRESHOLD) {
 						// Set the player flag as true
 						playerFlags.add(player);
 						player.addTag("a");
@@ -196,7 +196,6 @@ Minecraft.system.runInterval(() => {
 					// Make sure to set the new values! (I always forget this lol)
 					oldLastYRot.set(player, lastYRot.get(player));
 					lastYRot.set(player, rotation.y);
-					
 				}
 				
 				// Aim/C = Checks for smoothed rotation
@@ -218,10 +217,7 @@ Minecraft.system.runInterval(() => {
 								setScore(player, "aimc_reset", 0);
 							}
 							
-						} else {
-							//playerFlags.delete(player);
-
-						}
+						} 
 						
 						oldOldDiff.set(player, currentDiff);
 					}
@@ -1480,8 +1476,8 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		// get the difference between 2 three dimensional coordinates
 		const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
 		//if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}`);
-
-		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && !player.hasTag("strict") || distance > config.modules.reachA.reach - 0.1 && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && player.hasTag("strict")) {
+		const entityVelocity = entity.getVelocity();
+		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 2) {
 			const checkGmc = world.getPlayers({
 				excludeGameModes: [Minecraft.GameMode.creative],
 				name: player.name
