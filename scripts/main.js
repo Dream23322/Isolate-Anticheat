@@ -35,10 +35,8 @@ const lastDeltaZ = new Map();
 let lastAttackVector2Angle = new Map();
 const lastMessage = new Map();
 const lastFallDistance = new Map();
-const playerData = new Map();
-let playerDatav2 = new Map();
-let playerDatav3 = new Map();
-let playerDatav4 = new Map();
+const lastDeltPitch = new Map();
+const lastDeltYaw = new Map();
 
 const lastXZv = new Map();
 
@@ -148,13 +146,15 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.aim && !player.hasTag("noaim")) {
 
 			// If there is a previous rotation stored
-			if (prevRotation) {
+			if (prevRotation && lastDeltPitch.get(player) && lastDeltYaw.get(player)) {
 				// Maths go brrrrrrrr
 				const deltaYaw = rotation.y - prevRotation.y;
 				const deltaPitch = rotation.x - prevRotation.x;
-				const diffYaw = deltaYaw;
-				const diffPitch = deltaPitch;
-				// The threshold can be adjusted based on your requirements
+
+
+				const lastDY = lastDeltYaw.get(player) || 0;
+				const lastDP = lastDeltPitch.get(player) || 0;
+
 				const ROTATION_SPEED_THRESHOLD = config.modules.aimA.rotSpeed;
 				
 				if(deltaPitch < 0.1) {
@@ -163,11 +163,12 @@ Minecraft.system.runInterval(() => {
 				if(deltaPitch > 0.1) {
 					player.removeTag("noPitchDiff");
 				}
+				
 				// Aim/A = Checks for fast head snap movements
 				// This check is easy to false flag, so you need to have the tag strict on you for it to do anything
 				if (config.modules.aimA.enabled && player.hasTag("strict")) {
 					// If the rotation speed exceeds the threshold
-					if (Math.abs(deltaYaw) > ROTATION_SPEED_THRESHOLD || Math.abs(deltaPitch) > ROTATION_SPEED_THRESHOLD) {
+					if (Math.abs(deltaYaw) < ROTATION_SPEED_THRESHOLD - ROTATION_SPEED_THRESHOLD / 2 && Math.abs(lastDY) > ROTATION_SPEED_THRESHOLD || Math.abs(deltaPitch) < ROTATION_SPEED_THRESHOLD - ROTATION_SPEED_THRESHOLD / 2 && Math.abs(lastDP) > ROTATION_SPEED_THRESHOLD) {
 						// Set the player flag as true
 						playerFlags.add(player);
 						player.addTag("a");
@@ -228,6 +229,8 @@ Minecraft.system.runInterval(() => {
   
 			}
 			playerRotations.set(player, rotation);
+			lastDeltPitch.set(player, rotation.x - prevRotation.x);	
+			lastDeltYaw.set(player, rotation.y - prevRotation.y);
 		}
 				
 		const selectedSlot = player.selectedSlot;
@@ -828,6 +831,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	// ==================================
 	//               Scaffold Checks
 	// ==================================
+	//   The best in the game
 
 	if(config.generalModules.scaffold && !player.hasTag("noscaffold")) {
 		// Scaffold/a = checks for upwards scaffold
@@ -945,9 +949,6 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 			flag(player, "Scaffold", "E", "Placement", "distance", distance, false);
 		}
 	}
-
-
-
 	// This is used for other checks
 	if(!player.hasTag("placing")) {
 		player.addTag("placing");
@@ -1380,9 +1381,6 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 
 	}
 
-
-   
-
 	// ==================================
 	//                    Killaura
 	// ==================================
@@ -1460,43 +1458,6 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 					setScore(player, "auraF_buffer", getScore(player, "auraF_buffer", 0) + 1);
 				}
 			}
-			// // Check for small head snaps
-			// const rotationThreshold = 5;
-			// const maxRotation = 10;
-			// if (
-			// 	lastAttackVector2Angle.get(player) &&
-			// 	lastAttackVector2Angle.get(player).x !== undefined &&
-			// 	lastAttackVector2Angle.get(player).y !== undefined &&
-			// 	(
-			// 		(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) > 0 &&
-			// 		Number.isInteger(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x))) ||
-			// 		(Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) > 0 &&
-			// 		Number.isInteger(Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)))
-			// 	)
-			// 	) {
-			// 	if (getScore(player, "auraF_buffer", 0) > 10) {
-			// 		flag(player, "Killaura", "F", "Combat", "angleDiff(2)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
-			// 		setScore(player, "auraF_buffer", 0);
-			// 	} else {
-			// 		setScore(player, "auraF_buffer", getScore(player, "auraF_buffer", 0) + 1);
-			// 	}
-			// }
-			// if (lastAttackVector2Angle.get(player)) {
-			// 	console.warn(`|| LOGS || (KILLAURA) [F] - Angle Diff 1 ${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, Angle Diff 2 ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`);
-			// }
-
-
-			// // Large changes in yaw without large changes in pitch could be a sign of someone using Killaura cheats
-			// if(lastAttackVector2Angle.get(player) && lastAttackVector2Angle.get(player).x !== undefined && lastAttackVector2Angle.get(player).y !== undefined) {
-			// 	if(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) < 10 && Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) > 30 && Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) > 5) {
-			// 		if (getScore(player, "auraF_buffer", 0) > 10) {
-			// 			flag(player, "Killaura", "F", "Combat", "angleDiff(3)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
-			// 			setScore(player, "auraF_buffer", 0);
-			// 		} else {
-			// 			setScore(player, "auraF_buffer", getScore(player, "auraF_buffer", 0) + 1);
-			// 		}
-			// 	}
-			// }
 			lastAttackVector2Angle.set(player, attackVector2Angle);
 		}	  
 	}
