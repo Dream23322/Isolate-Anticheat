@@ -430,7 +430,7 @@ Minecraft.system.runInterval(() => {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
 
-					if(!player.hasTag("nofly") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isJumping && !player.isGliding) {
+					if(!player.hasTag("nofly") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isGliding) {
 						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
 						
 						const prediction = (playerVelocity.y > 0.42 && aroundAir(player) === true && playerVelocity.y !== 1 || playerVelocity.y < -3.92 && aroundAir(player) === true) && playerVelocity.y !== -1 && playerVelocity.y > -9
