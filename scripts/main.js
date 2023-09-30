@@ -37,6 +37,7 @@ const lastMessage = new Map();
 const lastFallDistance = new Map();
 const lastDeltPitch = new Map();
 const lastDeltYaw = new Map();
+const lastCPS = new Map();
 
 const lastXZv = new Map();
 
@@ -681,15 +682,11 @@ Minecraft.system.runInterval(() => {
 				if (player.hasTag("attacking") && player.hasTag("breaking")) {
 					flag(player, "BadPackets", "G", "Packet", "actions", "Breaking, Attacking", false);
 				}
-				if(player.hasTag("usingItem") && player.hasTag("attacking")) {
+				if(player.hasTag("usingItem") && (player.hasTag("attacking") || player.hasTag("placing") || player.hasTag("breaking"))) {
 					flag(player, "BadPackets", "G", "Packet", "actions", "ItemUse, Attacking", false);
 				}
-				if(player.hasTag("usingItem") && player.hasTag("placing")) {
-					flag(player, "BadPackets", "G", "Packet", "actions", "ItemUse, Placement", false);
-				}
-				if(player.hasTag("usingItem") && player.hasTag("breaking")) {
-					flag(player, "BadPackets", "G", "Packet", "actions", "ItemUse, Breaking", false);
-				}
+
+				
 			}
 
 		}
@@ -798,7 +795,10 @@ Minecraft.system.runInterval(() => {
 			player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
 			// autoclicker/A = checks for high cps
 			if(player.cps > config.modules.autoclickerA.maxCPS) flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
-
+			if(lastCPS.get(player)) {
+				if(Math.abs(player.cps - lastCPS.get(player)) < 0.95 && player.cps > 12) flag(player, "Autoclicker", "B", "Combat", "CPS", player.cps);
+			}
+			lastCPS.set(player, player.cps);
 			player.firstAttack = Date.now();
 			player.cps = 0;
 		}
