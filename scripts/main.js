@@ -469,7 +469,7 @@ Minecraft.system.runInterval(() => {
 					const final1 = Math.abs(diff1 - diff2) / 2;
 					const final2 = Math.abs(diff3 - diff4) / 2;
 
-					// If the differences are the same, flag for fly/A
+					// If the differences are the same, flag for fly/B
 					
 					if (final1 === final2 && final2 !== 0) {
 						// if the player is in Air, continue to flag
@@ -556,7 +556,7 @@ Minecraft.system.runInterval(() => {
 			// Speed/B = Checks for bhop and vhop velocities
 
 			if(config.modules.speedB.enabled) {
-				if(playerSpeed > 0.2 && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime")) {
+				if(playerSpeed > 0.2 && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime") && !player.isFlying) {
 					const yV = Math.abs(playerVelocity.y).toFixed(4);
 					const prediction = yV === "0.1000" || yV === "0.4000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302" || yV === "0.0428" || yV === "0.1212" || yV === "0.0428" || yV === "1.1661" || yV === "1.0244";
 					if(prediction) {
@@ -581,7 +581,7 @@ Minecraft.system.runInterval(() => {
 
 			// Motion/B = checks for invalid vertical motion
 			if(config.modules.motionB.enabled) {
-				if(player.isFlying && playerSpeed > 2.29) {
+				if(player.isFlying && playerSpeed > 3.99) {
 					flag(player, "Motion", "B", "Movement", "speed", playerSpeed, true);
 				}
 			}
