@@ -115,6 +115,9 @@ world.afterEvents.entityHurt.subscribe((data) => {
 
 	if(player.typeId !== "minecraft:player") return;
 	player.addTag("damaged");
+	if(data.damageSource.cause === "fall") {
+		player.addTag("fall_damage");
+	}
 	if(config.debug) console.warn(`${new Date().toISOString()} |${player.name} was damaged!`);
 	
 });
@@ -430,7 +433,7 @@ Minecraft.system.runInterval(() => {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
 
-					if(!player.hasTag("nofly") && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isGliding) {
+					if(!player.hasTag("nofly") && !player.hasTag("nofly") && (!player.hasTag("damaged") && !player.hasTag("fall_damage")) && !player.isGliding) {
 						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
 						
 						const prediction = (playerVelocity.y > 0.42 && aroundAir(player) === true && playerVelocity.y !== 1 || playerVelocity.y < -3.92 && aroundAir(player) === true) && playerVelocity.y !== -1 && playerVelocity.y > -9
@@ -446,7 +449,7 @@ Minecraft.system.runInterval(() => {
 
 			// New Fly/B = old Fly/A
 			if(config.modules.flyB.enabled) {
-				if (config.modules.flyB.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && !player.hasTag("damaged") && !player.isGliding) {
+				if (config.modules.flyB.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && (!player.hasTag("damaged") && !player.hasTag("fall_damage")) && !player.isGliding) {
 					// Checks for invalid downwards accelerations
 					/*
 						This is a mix of a bunch o different stuffs because too much random stuff spread out is
@@ -495,7 +498,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// Fly/C = Old fly/G
-			if(config.modules.flyC.enabled && player.fallDistance < config.modules.flyC.fallDistance && !player.hasTag("trident") && !player.hasTag("ground") && !player.hasTag("nofly") && !player.hasTag("damaged") && player.hasTag("strict") && !player.hasTag("slime")) {
+			if(config.modules.flyC.enabled && player.fallDistance < config.modules.flyC.fallDistance && !player.hasTag("trident") && !player.hasTag("ground") && !player.hasTag("nofly") && (!player.hasTag("damaged") && !player.hasTag("fall_damage")) && player.hasTag("strict") && !player.hasTag("slime")) {
 				// Stopping false flags
 				if(!player.isJumping && !player.isGliding && !player.isFlying && !player.hasTag("jump") && !player.hasTag("op")) {
 					
@@ -787,6 +790,7 @@ Minecraft.system.runInterval(() => {
 			player.removeTag("slime")
 			player.removeTag("ice");
 			player.removeTag("damaged");
+			player.removeTag("fall_damage");
 			setScore(player, "tag_reset", 0);
 		}
 		
