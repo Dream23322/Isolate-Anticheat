@@ -1369,7 +1369,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			// Report the player
 			if(player.hasTag("a")) {
 				const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
-				if(distance > 2) {
+				if(distance > 2 && angleCalc(player, entity) < 3) {
 					entityHit.cancel;
 					flag(player, "Aim", "A", "Combat", "rotation", `${rotation.x},${rotation.y}`, false);
 					player.removeTag("a");
