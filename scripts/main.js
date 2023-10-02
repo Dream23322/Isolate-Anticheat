@@ -874,7 +874,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 			//const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 			if(!player.isFlying) {
 				if(!player.hasTag("trident")) {
-					if(rotation.x === 60 || rotation.x.toFixed(2) === "84.89" || rotation.x.toFixed(2) === "84.63" || rotation.x.toFixed(2) === "65.3") {
+					if(rotation.x === 60 || rotation.x.toFixed(2) === "84.89" || rotation.x.toFixed(2) === "84.63" || rotation.x.toFixed(2) === "65.31") {
 						flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);	
 					}
 				}
@@ -912,7 +912,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 			}
 
 			// If the blocks placement location cant be reached, flag
-			if(blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y - 1&& blockUnder.location.z === block.location.z) {
+			if(blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y + 1 && blockUnder.location.z === block.location.z) {
 				if(blockUnder.typeId !== "minecraft:air") {
 					flag(player, "Scaffold", "D", "Placement", "blockUnder", blockUnder.typeId, false);
 				}
