@@ -874,7 +874,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 			//const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 			if(!player.isFlying) {
 				if(!player.hasTag("trident")) {
-					if(rotation.x === 60 || rotation.x.toFixed(2) === "84.89" || rotation.x.toFixed(2) === "84.63") {
+					if(rotation.x === 60 || rotation.x.toFixed(2) === "84.89" || rotation.x.toFixed(2) === "84.63" || rotation.x.toFixed(2) === "65.3") {
 						flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);	
 					}
 				}
@@ -1362,7 +1362,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	// ==================================
 	//                   Aim Flags
 	// ==================================
-
+                                                                     
 	if(config.generalModules.aim) {
 		// If the player flag for aim checks is true, then report the player
 		if (playerFlags.has(player)) {
