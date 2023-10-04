@@ -41,6 +41,7 @@ const lastCPS = new Map();
 
 const lastXZv = new Map();
 
+const lastPosition = new Map();
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
 let currentVL;
 world.beforeEvents.chatSend.subscribe((msg) => {
@@ -675,6 +676,20 @@ Minecraft.system.runInterval(() => {
 			// Having your pitch over 90 isnt possible! Horion client might be able to do it
 			if(Math.abs(rotation.x) > config.modules.badpacketsI.angle && config.modules.badpacketsI.enabled || Math.abs(rotation.x) === 54.09275817871094 && config.modules.badpacketsI.enabled) {
 				flag(player, "BadPackets", "I", "Rotation", "angle", rotation.x, true);
+			}
+
+			// BadPackets/E = Checks for a disabler on Vector client that can bypasss 90% of movement checks
+			// Average ratted client :skull:
+			if(config.modules.badpacketsE.enabled) {
+				if(lastPosition.get(player)) {
+					const diffx = Math.abs(lastPosition.get(player).x - player.location.x);
+					const diffz = Math.abs(lastPosition.get(player).z - player.location.z);
+					if(playerSpeed === 0 && diffx > 0.5 && diffz > 0.5) {
+						flag(player, "BadPackets", "E", "Movement", "speed", playerSpeed, true);
+					}
+				}
+				// Set new values
+				lastPosition.set(player, {x: player.location.x, y: player.location.y, z: player.location.z});
 			}
 		
 			// BadPackets/G = Checks for invalid actions
