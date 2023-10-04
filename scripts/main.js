@@ -690,6 +690,10 @@ Minecraft.system.runInterval(() => {
 				}
 				// Set new values
 				lastPosition.set(player, {x: player.location.x, y: player.location.y, z: player.location.z});
+				// I don't feel like making a whole new check for this
+				if(playerVelocity.y === 0 && playerVelocity.isJumping) {
+					flag(player, "BadPackets", "E", "Movement", "yVelocity", playerVelocity.y, false);
+				}
 			}
 		
 			// BadPackets/G = Checks for invalid actions
