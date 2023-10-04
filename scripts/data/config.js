@@ -809,6 +809,7 @@ export default
         },
         "badpacketsE": {
             "enabled": true,
+            "description": "Patches a disabler for Isolate on Vector client (Changing location without velocity)",
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },
@@ -825,6 +826,7 @@ export default
         },
         "strafeA": {
             "enabled": true,
+            "description": "Checks for drastically changing xz velocity whilst in air",
             "pos_diff": 0.09,
             "time_int": 0.5
         },
