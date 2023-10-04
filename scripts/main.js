@@ -1460,6 +1460,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		}
  
 		// Killaura/F = Checks for looking at the center of an entity
+
 		if(config.modules.killauraF.enabled && player.hasTag("strict")) {
 			if(angleCalc(player, entity) < 0.99) {
 				if(Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2)) > 2.6 && !player.hasTag("strict")) {
@@ -1471,6 +1472,8 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		// Killaura/F is an extremely advanced check that looks at players rotations to try to determine if the player is using any sort of Killaura or Aimbot style cheats
 		// The check does its best to find Killaura and not flag for players who just have naturally good Aim
 		// Tho that is true, it still has the chance to false flag a player for using killaura even if their not
+
+		// Orginally from Nokararos Anticheat
 		if (config.modules.killauraF.enabled && player.hasTag("strict")) {
 			const pos1 = player.getHeadLocation();
 			const pos2 = entity.getHeadLocation();
