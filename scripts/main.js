@@ -702,7 +702,7 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.movement) {
 
 			// Strafe/A looks for a player changing their x or z velocity while in the air (Under most conditions this isnt possible by large amounts)
-			if(config.modules.strafeA.enabled && !player.isOnGround) {
+			if(config.modules.strafeA.enabled && !player.isOnGround && !player.isJumping) {
 				if(lastXZv.get(player)) {
 					// calculate velocity differences
 					const x_diff = Math.abs(lastXZv.get(player).x - playerVelocity.x);
