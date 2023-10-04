@@ -501,6 +501,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// Fly/C = Old fly/G
+			// This fly check can cause some false flags with funny extra conditions while jumping
 			if(config.modules.flyC.enabled && player.fallDistance < config.modules.flyC.fallDistance && !player.hasTag("trident") && !player.hasTag("ground") && !player.hasTag("nofly") && (!player.hasTag("damaged") && !player.hasTag("fall_damage")) && player.hasTag("strict") && !player.hasTag("slime")) {
 				// Stopping false flags
 				if(!player.isJumping && !player.isGliding && !player.isFlying && !player.hasTag("jump") && !player.hasTag("op")) {
@@ -700,8 +701,21 @@ Minecraft.system.runInterval(() => {
 		// General movement
 		if(config.generalModules.movement) {
 
-			// Velocity/A will be here
+			// Strafe/A looks for a player changing their x or z velocity while in the air (Under most conditions this isnt possible by large amounts)
+			if(config.modules.strafeA.enabled && !player.isOnGround) {
+				if(lastXZv.get(player)) {
+					// calculate velocity differences
+					const x_diff = Math.abs(lastXZv.get(player).x - playerVelocity.x);
+					const z_diff = Math.abs(lastXZv.get(player).z - playerVelocity.z);
 
+					// If the player seems to be using any sort of strafe cheats, flag them for Strafe/A
+					if(hVelocity(player) > 1 && (x_diff > 0.5 || z_diff > 0.5)) {
+						flag(player, "Strafe", "A", "Movement", "x_diff", `${x_diff}, z_diff=${z_diff}`, true);
+					}
+				}
+				// Set the new lastXZv to the current player velocity values.
+				lastXZv.set(player, {x: playerVelocity.x, z: playerVelocity.z});
+			}
 			// NoSlow/A = speed limit check
 			if(config.modules.noslowA.enabled && playerSpeed >= config.modules.noslowA.speed && playerSpeed <= config.modules.noslowA.maxSpeed && !player.hasTag("ice") && !player.hasTag("slime") && !player.hasTag("no-noslow")) {
 				if(!player.getEffect("speed") && player.hasTag('moving') && player.hasTag('right') && player.hasTag('ground') && !player.hasTag('jump') && !player.hasTag('gliding') && !player.hasTag('swimming') && !player.hasTag("trident") && getScore(player, "right") >= 5 && !player.hasTag("damaged")) {
