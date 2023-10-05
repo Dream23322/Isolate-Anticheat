@@ -502,7 +502,7 @@ export default
         "flyC": {
             "enabled": true,
             "description": "Checks for invalid Y movements (Scythe Check So Bad)",
-            "fallDistance": 0,
+            "fallDistance": -1,
             "punishment": "kick",
             "punishmentLength": "1m",
             "minVlbeforePunishment": 100
@@ -608,7 +608,7 @@ export default
             "description": "Checks for not looking where a player is placing",
             "punishment": "kick", 
             "angle": 45,
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 5
         },
         "scaffoldD": {
             "enabled": true,
@@ -828,7 +828,9 @@ export default
             "enabled": true,
             "description": "Checks for drastically changing xz velocity whilst in air",
             "pos_diff": 0.09,
-            "time_int": 0.5
+            "time_int": 0.5,
+            "punishment": "kick",
+            "minVlbeforePunishment": 3
         },
         "badpacketsH": {
             "enabled": true,
