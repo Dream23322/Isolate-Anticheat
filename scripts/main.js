@@ -684,7 +684,7 @@ Minecraft.system.runInterval(() => {
 				if(lastPosition.get(player)) {
 					const diffx = Math.abs(lastPosition.get(player).x - player.location.x);
 					const diffz = Math.abs(lastPosition.get(player).z - player.location.z);
-					if(playerSpeed === 0 && diffx > 0.5 && diffz > 0.5) {
+					if(playerSpeed === 0 && diffx > 0.5 && diffz > 0.5 && playerVelocity.y !== 0) {
 						flag(player, "BadPackets", "E", "Movement", "speed", playerSpeed, true);
 					}
 				}
