@@ -721,14 +721,14 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.movement) {
 
 			// Strafe/A looks for a player changing their x or z velocity while in the air (Under most conditions this isnt possible by large amounts)
-			if(config.modules.strafeA.enabled && !player.isOnGround && !player.isJumping) {
+			if(config.modules.strafeA.enabled && !player.isJumping) {
 				if(lastXZv.get(player)) {
 					// calculate velocity differences
 					const x_diff = Math.abs(lastXZv.get(player).x - playerVelocity.x);
 					const z_diff = Math.abs(lastXZv.get(player).z - playerVelocity.z);
 
 					// If the player seems to be using any sort of strafe cheats, flag them for Strafe/A
-					if(hVelocity(player) > 1 && (x_diff > 0.5 || z_diff > 0.5)) {
+					if(hVelocity(player) > 1 && (x_diff > 0.1 || z_diff > 0.1)) {
 						flag(player, "Strafe", "A", "Movement", "x_diff", `${x_diff}, z_diff=${z_diff}`, true);
 					}
 				}
@@ -921,7 +921,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 			if(!player.isFlying && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
 				// The actual check
 				
-				if(!player.hasTag("right") && !player.hasTag("jump") && !player.hasTag("trident") && player.hasTag("left") && rotation.x < config.modules.scaffoldC.angle) {
+				if(!player.hasTag("right") && !player.hasTag("trident") && rotation.x < config.modules.scaffoldC.angle) {
 					flag(player, "Scaffold", "C", "Placement", "invalidKeypress", `!right,angle=${rotation.x}`, false);
 					
 				}
