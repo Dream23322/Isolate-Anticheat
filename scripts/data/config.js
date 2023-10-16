@@ -33,7 +33,7 @@ export default
     Although this may be a useful feature, it can be exploited by hackers to completely disable the anticheat for themselves.
     Enable with caution.
     */
-    "disable_flags_from_scythe_op": false,
+    "disable_flags_from_isolate_op": false,
     "customcommands": {
         "prefix": "!",
         "sendInvalidCommandMsg": false,

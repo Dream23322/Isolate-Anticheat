@@ -114,7 +114,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     if(typeof cancelObject !== "object" && typeof cancelObject !== "undefined") throw TypeError(`Error: cancelObject is type of ${typeof cancelObject}. Expected "object" or "undefined`);
     if(typeof slot !== "number" && typeof slot !== "undefined") throw TypeError(`Error: slot is type of ${typeof slot}. Expected "number" or "undefined`);
 
-    if(config.disable_flags_from_scythe_op && player.hasTag("op")) return;
+    if(config.disable_flags_from_isolate_op && player.hasTag("op")) return;
 
     if(debug) {
         // remove characters that may break commands, and newlines
