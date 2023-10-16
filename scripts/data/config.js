@@ -647,7 +647,7 @@ export default
         
         "autoclickerA": {
             "enabled": true,
-            "maxCPS": 15,
+            "maxCPS": 18,
             "description":"Checks for CPS over config amount",
             "checkCPSAfter": 1000,
             "punishment": "none",
@@ -839,7 +839,7 @@ export default
             "minVlbeforePunishment": 50
         },
         "reachB": {
-            "enabled": true,
+            "enabled": false,
             "description": "Checks for placing or breaking to far away",
             "reach": 7.55,
             "punishment": "kick",
