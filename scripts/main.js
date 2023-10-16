@@ -792,7 +792,7 @@ Minecraft.system.runInterval(() => {
 		if(config.modules.scaffoldF.enabled && !player.hasTag("noscaffold")) {
 			const tickValue = getScore(player, "tickValue", 0);
 			const valueOfBlocks = getScore(player, "scaffoldAmount", 0);
-			if (tickValue > 20 - 2.67e-11) {
+			if (tickValue > 20 - 2.67e-11 && playerVelocity.y < 0.3) {
 				if(valueOfBlocks > config.modules.scaffoldF.blocksPerSecond) {
 					flag(player, "Scaffold", "F", "Limit", "amount", valueOfBlocks, false);
 				} 
@@ -1420,7 +1420,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		if(config.modules.killauraD.enabled && !player.hasTag("sleeping")) {
 			const rotation = player.getRotation()
 			const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
-			if(rotation.x > 79 && distance > 2 || distance > 2 && rotation.x < -79) {
+			if(rotation.x > 79 && distance > 4 || distance > 4 && rotation.x < -79) {
 				if(!player.hasTag("trident") && !player.hasTag("bow")) {
 					entityHit.cancel;
 					flag(player, "Killaura", "D", "Combat", "angle", `${rotation.x},distance=${distance}`, false);
