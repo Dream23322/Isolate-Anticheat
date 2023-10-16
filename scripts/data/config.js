@@ -460,7 +460,7 @@ export default
         "speedA": {
             "enabled": true,
             "description":"Checks for impossible speeds",
-            "speed": 2.453,
+            "speed": 2.953,
             "checkForSprint": false,
             "checkForJump": true,
             "punishment": "kick",
@@ -619,7 +619,7 @@ export default
         "scaffoldE": {
             "enabled": true,
             "description": "Checks for going too fast while placing",
-            "speed": 2.5,
+            "speed": 2.82,
             "punishment": "kick",
             "minVlbeforePunishment": 1
         },

@@ -442,7 +442,7 @@ Minecraft.system.runInterval(() => {
 						
 						const prediction = (playerVelocity.y > max_v_up && aroundAir(player) === true && playerVelocity.y !== 1 || playerVelocity.y < -3.92 && aroundAir(player) === true) && playerVelocity.y !== -1 && playerVelocity.y > -9
 						if(player.getEffect("speed") && player.getEffect("speed").amplifier > 5)  continue;
-						if(prediction && getScore(player, "tick_counter2", 0) > 3 && player.fallDistance < 25) {
+						if(prediction && getScore(player, "tick_counter2", 0) > 3 && player.fallDistance < 25 && !player.hasTag("placing")) {
 							flag(player, "Fly", "A", "Movement", "y-velocity", playerVelocity.y, false);
 						}
 					}
@@ -566,7 +566,7 @@ Minecraft.system.runInterval(() => {
 			if(config.modules.speedB.enabled) {
 				if(playerSpeed > 0.2 && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime") && !player.isFlying) {
 					const yV = Math.abs(playerVelocity.y).toFixed(4);
-					const prediction = yV === "0.1000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302" || yV === "0.0428" || yV === "0.1212" || yV === "0.0428" || yV === "1.1661" || yV === "1.0244";
+					const prediction = yV === "0.1000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302" || yV === "0.0428" || yV === "0.1212" || yV === "0.0428" || yV === "1.1661" || yV === "1.0244" || yV === "0.3331";
 					if(prediction) {
 						flag(player, "Speed", "B", "Movement", "y-Velocity", yV, true);
 					}
@@ -600,7 +600,7 @@ Minecraft.system.runInterval(() => {
 				const pos2 = {x: player.location.x + 2, y: player.location.y + 2, z: player.location.z + 2};
 
 				const isInAir = !getBlocksBetween(pos1, pos2).some((block) => player.dimension.getBlock(block)?.typeId !== "minecraft:air");
-				if(isInAir && aroundAir(player)) flag(player, "Motion", "C", "Movement", "vertical_speed", Math.abs(playerVelocity.y).toFixed(4), true);
+				if(isInAir && aroundAir(player) && player.fallDistance < 30) flag(player, "Motion", "C", "Movement", "vertical_speed", Math.abs(playerVelocity.y).toFixed(4), true);
 					else if(config.debug) console.warn(`${new Date().toISOString()} | ${player.name} was detected with Motion/C but was found near solid blocks.`);
 			}
 
@@ -890,12 +890,6 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 			// get block under player
 			const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 			
-			// @ts-expect-error
-			if(!player.isFlying && player.isJumping && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
-				if(rotation.x < 65 && player.isJumping && playerSpeed < 0.2) {
-					flag(player, "Scaffold", "A", "Placement", "rotation", rotation.x, false);
-				}
-			}
 			if(player.getBlockFromViewDirection().id !== block.id && player.location.y > block.location.y) {
 				flag(player, "Scaffold", "A", "Placement", "block", player.getBlockFromViewDirection().id, false);
 			}
@@ -907,8 +901,10 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 			//const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 			if(!player.isFlying) {
 				if(!player.hasTag("trident")) {
-					if(rotation.x === 60 || rotation.x.toFixed(2) === "84.89" || rotation.x.toFixed(2) === "84.63" || rotation.x.toFixed(2) === "65.31") {
-						flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);	
+					if(rotation.x === 60 || rotation.x === 77.68765258789062 || rotation.x === 77.68768310546875 || rotation.x === 77.68777465820312 || rotation.x === 77.68795776367188) {
+						if(getScore(player, "scaffoldb_buffer", 0) > 2) {
+							flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);	
+						}
 					}
 				}
 			}	
@@ -1490,7 +1486,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	// reach/A = check if a player hits an entity more then 5.1 blocks away
 	if((config.modules.reachA.enabled || config.generalModules.reach) && !player.hasTag("noreach")) {
 		// get the difference between 2 three dimensional coordinates
-		const distance = (Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2)) / 2;
+		const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
 		//if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}`);
 		const entityVelocity = entity.getVelocity();
 		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 1.5) {
