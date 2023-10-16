@@ -1381,7 +1381,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			// Report the player
 			if(player.hasTag("a")) {
 				const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
-				if(distance > 2 && angleCalc(player, entity) < 3) {
+				if(distance > 2 && angleCalc(player, entity) < 2) {
 					entityHit.cancel;
 					flag(player, "Aim", "A", "Combat", "rotation", `${rotation.x},${rotation.y}`, false);
 					player.removeTag("a");
@@ -1490,7 +1490,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	// reach/A = check if a player hits an entity more then 5.1 blocks away
 	if((config.modules.reachA.enabled || config.generalModules.reach) && !player.hasTag("noreach")) {
 		// get the difference between 2 three dimensional coordinates
-		const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
+		const distance = (Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2)) / 2;
 		//if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}`);
 		const entityVelocity = entity.getVelocity();
 		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 1.5) {
