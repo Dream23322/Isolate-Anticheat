@@ -566,7 +566,7 @@ Minecraft.system.runInterval(() => {
 			if(config.modules.speedB.enabled) {
 				if(playerSpeed > 0.2 && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime") && !player.isFlying) {
 					const yV = Math.abs(playerVelocity.y).toFixed(4);
-					const prediction = yV === "0.1000" || yV === "0.4000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302" || yV === "0.0428" || yV === "0.1212" || yV === "0.0428" || yV === "1.1661" || yV === "1.0244";
+					const prediction = yV === "0.1000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302" || yV === "0.0428" || yV === "0.1212" || yV === "0.0428" || yV === "1.1661" || yV === "1.0244";
 					if(prediction) {
 						flag(player, "Speed", "B", "Movement", "y-Velocity", yV, true);
 					}
@@ -721,7 +721,7 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.movement) {
 
 			// Strafe/A looks for a player changing their x or z velocity while in the air (Under most conditions this isnt possible by large amounts)
-			if(config.modules.strafeA.enabled && !player.isJumping) {
+			if(config.modules.strafeA.enabled && !player.isJumping && !player.hasTag("nostrafe") && !player.hasTag("damaged")) {
 				if(lastXZv.get(player)) {
 					// calculate velocity differences
 					const x_diff = Math.abs(lastXZv.get(player).x - playerVelocity.x);
@@ -795,11 +795,11 @@ Minecraft.system.runInterval(() => {
 			if (tickValue > 20 - 2.67e-11) {
 				if(valueOfBlocks > config.modules.scaffoldF.blocksPerSecond) {
 					flag(player, "Scaffold", "F", "Limit", "amount", valueOfBlocks, false);
-				}
+				} 
 				setScore(player, "scaffoldAmount", 0);
 				setScore(player, "tickValue", 0);
 			} else {
-				if(valueOfBlocks > 0) {
+				if(valueOfBlocks > 0 && player.hasTag("debugBlock")) {
 					if(config.debug) console.warn(`${new Date().toISOString()} | ${player.name} has placed ${valueOfBlocks} in ${tickValue} tick's`);
 				}
 				setScore(player, "tickValue", tickValue + 1);
@@ -930,27 +930,6 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 		
 		// Scaffold/D = Checks for the item a player is holding not being the block the player placed
 		if(config.modules.scaffoldD.enabled) {
-			const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
-			if(!player.isFlying && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
-				// Get items and stuffs
-				const container = player.getComponent('inventory').container;
-				const selectedSlot = player.selectedSlot;
-				const item = container.getItem(selectedSlot);
-
-				// Check to see if the player doesnt place the held item
-				if(item.typeId !== block.typeId) {
-					flag(player, "Scaffold", "D", "Placement", "heldItem", `${item.typeId},blockId=${block.typeId}`, false);
-					undoPlace = true;
-				}
-			}
-
-			// If the blocks placement location cant be reached, flag
-			if(blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y + 1 && blockUnder.location.z === block.location.z) {
-				if(blockUnder.typeId !== "minecraft:air") {
-					flag(player, "Scaffold", "D", "Placement", "blockUnder", blockUnder.typeId, false);
-				}
-			}
-
 			// If the blocks location is below -64 flag
 			if(block.location.y < -64) {
 				flag(player, "Scaffold", "D", "Placement", "location", block.location.y, false);
@@ -989,7 +968,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	}
 
 	// Reach/B = checks for placing blocks too far away
-	if(config.modules.reachB.enabled && !player.hasTag("noreach")) {
+	if(config.modules.reachB.enabled && !player.hasTag("noreach") && playerVelocity.y === 0 && player.fallDistance < 3) {
 		const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.y - player.location.y, 2) + Math.pow(block.location.z - player.location.z, 2));
 		if(distance > config.modules.reachB.reach && player.fallDistance !== 0) {
 			flag(player, "Reach", "B", "Placement", "distance", distance, false);
@@ -1511,10 +1490,10 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	// reach/A = check if a player hits an entity more then 5.1 blocks away
 	if((config.modules.reachA.enabled || config.generalModules.reach) && !player.hasTag("noreach")) {
 		// get the difference between 2 three dimensional coordinates
-		const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
+		const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
 		//if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}`);
 		const entityVelocity = entity.getVelocity();
-		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 2) {
+		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 1.5) {
 			const checkGmc = world.getPlayers({
 				excludeGameModes: [Minecraft.GameMode.creative],
 				name: player.name

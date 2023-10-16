@@ -594,7 +594,7 @@ export default
             "description": "Checks for goofy velocity while scaffolding",
             "max_y_pos_diff": 0.35,
             "punishment": "kick",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 3
         },
         "scaffoldB": {
             "enabled": true,
@@ -614,21 +614,21 @@ export default
             "enabled": true,
             "description":"Checks for invalid slot selection / Invalid placement locations",
             "punishment": "kick",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 5
         },
         "scaffoldE": {
             "enabled": true,
             "description": "Checks for going too fast while placing",
             "speed": 2.5,
             "punishment": "kick",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 1
         },
         "scaffoldF": {
             "enabled": true,
             "description":"Checks for placing too many blocks in 20 ticks",
             "blocksPerSecond": 7,
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 2
         },
         "illegalitemsF": {
             "enabled": false,
