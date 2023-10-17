@@ -702,7 +702,7 @@ Minecraft.system.runInterval(() => {
 				if(player.hasTag("placing") && player.hasTag("attacking")) {
 					flag(player, "BadPackets", "G", "Packet", "actions", "Placement, Attacking", false);
 				}
-				if(player.hasTag("placing") && player.hasTag("breaking") && !player.hasTag("snow")) {
+				if(player.hasTag("placing") && player.hasTag("breaking") && !player.hasTag("snow") && !player.hasTag("gmc")) {
 					flag(player, "BadPackets", "G", "Packet", "actions", "Placement, Breaking", false);
 				}
 				if (player.hasTag("attacking") && player.hasTag("breaking")) {
@@ -744,7 +744,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// NoSlow/B = Checks for speeding while in webs
-			if(config.modules.noslowB.enabled && !player.hasTag("no-noslow")) {
+			if(config.modules.noslowB.enabled && !player.hasTag("no-noslow") && playerSpeed !== 0 && player.isOnGround && player.fallDistance === 0) {
 				const pos1 = {x: player.location.x , y: player.location.y, z: player.location.z};
 				const pos2 = {x: player.location.x, y: player.location.y, z: player.location.z};
 
@@ -793,7 +793,7 @@ Minecraft.system.runInterval(() => {
 			const tickValue = getScore(player, "tickValue", 0);
 			const valueOfBlocks = getScore(player, "scaffoldAmount", 0);
 			if (tickValue > 20 - 2.67e-11 && playerVelocity.y < 0.3) {
-				if(valueOfBlocks > config.modules.scaffoldF.blocksPerSecond) {
+				if(valueOfBlocks > config.modules.scaffoldF.blocksPerSecond && !player.getEffect("speed")) {
 					flag(player, "Scaffold", "F", "Limit", "amount", valueOfBlocks, false);
 				} 
 				setScore(player, "scaffoldAmount", 0);
@@ -902,9 +902,9 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 			if(!player.isFlying) {
 				if(!player.hasTag("trident")) {
 					if(rotation.x === 60 || rotation.x === 77.68765258789062 || rotation.x === 77.68768310546875 || rotation.x === 77.68777465820312 || rotation.x === 77.68795776367188) {
-						if(getScore(player, "scaffoldb_buffer", 0) > 2) {
-							flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);	
-						}
+				
+						flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);	
+						
 					}
 				}
 			}	
@@ -1060,7 +1060,7 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 	}
 
 	// Autotool/A = checks for player slot mismatch
-	if(config.modules.autotoolA.enabled && player.flagAutotoolA) {
+	if(config.modules.autotoolA.enabled && player.flagAutotoolA && !player.hasTag("gmc")) {
 		revertBlock = true;
 		flag(player, "AutoTool", "A", "Misc", "selectedSlot", `${player.selectedSlot},lastSelectedSlot=${player.lastSelectedSlot},switchDelay=${player.autotoolSwitchDelay}`);
 		currentVL++;
