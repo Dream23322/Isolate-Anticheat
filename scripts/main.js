@@ -670,7 +670,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// Checks for a players rotation being a flat number
-			if((Number.isInteger(rotation.x) || Number.isInteger(rotation.y)) && rotation.x !== 0 && rotation.y !== 0 && rotation.x !== 90 && rotation.x !== 60) flag(player, "BadPackets", "F", "Rotation", "xRot",`${rotation.x},yRot=${rotation.y}`, true);
+			if((Number.isInteger(rotation.x) || Number.isInteger(rotation.y)) && rotation.x !== 0 && rotation.y !== 0 && rotation.x !== 90 && rotation.x !== 60 && rotation.x !== -45) flag(player, "BadPackets", "F", "Rotation", "xRot",`${rotation.x},yRot=${rotation.y}`, true);
 
 			// Impossible Rotations
 			// Having your pitch over 90 isnt possible! Horion client might be able to do it
@@ -793,7 +793,11 @@ Minecraft.system.runInterval(() => {
 			const tickValue = getScore(player, "tickValue", 0);
 			const valueOfBlocks = getScore(player, "scaffoldAmount", 0);
 			if (tickValue > 20 - 2.67e-11 && playerVelocity.y < 0.3) {
-				if(valueOfBlocks > config.modules.scaffoldF.blocksPerSecond && !player.getEffect("speed")) {
+				let maxBlocks = config.modules.scaffoldF.blocksPerSecond;
+				if(player.getEffect("speed")) {
+					maxBlocks = config.modules.scaffoldF.blocksPerSecond + player.getEffect("speed").amplifier;
+				}
+				if(valueOfBlocks > maxBlocks && !player.getEffect("speed")) {
 					flag(player, "Scaffold", "F", "Limit", "amount", valueOfBlocks, false);
 				} 
 				setScore(player, "scaffoldAmount", 0);
@@ -917,7 +921,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 			if(!player.isFlying && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
 				// The actual check
 				
-				if(!player.hasTag("right") && !player.hasTag("trident") && rotation.x < config.modules.scaffoldC.angle) {
+				if(!player.hasTag("right") && !player.hasTag("trident") && rotation.x < config.modules.scaffoldC.angle && !player.isJumping && !player.hasTag("jump")) {
 					flag(player, "Scaffold", "C", "Placement", "invalidKeypress", `!right,angle=${rotation.x}`, false);
 					
 				}
