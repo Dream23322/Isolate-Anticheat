@@ -1486,8 +1486,8 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		// Check if the player attacks an entity while looking perfectly down
 		if(config.modules.killauraD.enabled && !player.hasTag("sleeping")) {
 			const rotation = player.getRotation()
-			const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
-			if(rotation.x > 79 && distance > 4 || distance > 4 && rotation.x < -79) {
+			const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
+			if(Math.abs(rotation.x) > 79 && distance > 3.5) {
 				if(!player.hasTag("trident") && !player.hasTag("bow")) {
 					entityHit.cancel;
 					flag(player, "Killaura", "D", "Combat", "angle", `${rotation.x},distance=${distance}`, false);
