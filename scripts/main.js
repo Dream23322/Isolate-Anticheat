@@ -922,8 +922,14 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 			}
 		}
 		
-		// Scaffold/D = Checks for the item a player is holding not being the block the player placed
+		
 		if(config.modules.scaffoldD.enabled) {
+			//TODO
+			// Check for small deviations in x rotation
+			// These will either be in like small ranges or another way
+
+
+
 			// If the blocks location is below -64 flag
 			if(block.location.y < -64) {
 				flag(player, "Scaffold", "D", "Placement", "location", block.location.y, false);
