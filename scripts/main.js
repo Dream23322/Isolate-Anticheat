@@ -519,7 +519,7 @@ Minecraft.system.runInterval(() => {
 
 		// ==================================
 		//                 Speed Checks
-		// ==================================f
+		// ==================================
 
 		if(config.generalModules.speed && !player.hasTag("nospeed")) {
 			// Speed/A = Checks for high speed
