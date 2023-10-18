@@ -844,7 +844,7 @@ Minecraft.system.runInterval(() => {
 	}
 
 });
-
+const lastPlacePitch = new Map();
 world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	const { block, player} = blockPlace;
 	const rotation = player.getRotation()
@@ -898,8 +898,9 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 		if(config.modules.scaffoldB.enabled) {
 			//const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 			if(!player.isFlying) {
+				const clientRotations = [46.596282958984375, 46.59794616699219, 46.598968505859375, 46.5970458984375, 46.60420227050781, 46.605743408203125, 46.599029541015625, 46.609466552734375, 46.60064697265625, 46.597686767578125];
 				if(!player.hasTag("trident")) {
-					if(rotation.x === 60 || rotation.x === 77.68765258789062 || rotation.x === 77.68768310546875 || rotation.x === 77.68777465820312 || rotation.x === 77.68795776367188) {
+					if(rotation.x === 60 || rotation.x === 77.68765258789062 || rotation.x === 77.68768310546875 || rotation.x === 77.68777465820312 || rotation.x === 77.68795776367188 || clientRotations.includes(rotation.x)) {
 				
 						flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);	
 						
@@ -915,7 +916,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 			if(!player.isFlying && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
 				// The actual check
 				
-				if(!player.hasTag("right") && !player.hasTag("trident") && rotation.x < config.modules.scaffoldC.angle && !player.isJumping && !player.hasTag("jump")) {
+				if(!player.hasTag("right") && !player.hasTag("trident") && rotation.x < config.modules.scaffoldC.angle && !player.isJumping && !player.hasTag("jump") && playerVelocity.y < 0.1) {
 					flag(player, "Scaffold", "C", "Placement", "invalidKeypress", `!right,angle=${rotation.x}`, false);
 					
 				}
@@ -924,12 +925,78 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 		
 		
 		if(config.modules.scaffoldD.enabled) {
-			//TODO
-			// Check for small deviations in x rotation
-			// These will either be in like small ranges or another way
 
-
-
+			if(lastPlacePitch.get(player)) {
+				let pitch_diff = Math.abs(lastPlacePitch.get(player) - rotation.x);
+				// List of the differences between the last place and the current rotation
+				const rotationDifferences = [
+					6.87432861328125,
+					1.52850341796875,
+					2.228729248046875,
+					1.676239013671875,
+					2.18382263183594,
+					1.66786193847656,
+					0.81658935546875,
+					0.329559326171875,
+					1.72975158691406,
+					2.70010375976563,
+					1.67823791503906,
+					2.16250610351563,
+					1.65989685058594,
+					1.72856140136719,
+					2.23068237304688,
+					1.71002197265625,
+					2.19158935546875,
+					1.69364929199219,
+					3.07861328125,
+					2.97360992431641,
+					2.27449035644531,
+					1.44749450683594,
+					1.81301116943359,
+					1.47972869873047,
+					6.05283569335938, 
+					9.66135215759277, 
+					5.66259765625,   
+					8.94805145263672, 
+					3.95509338378906, 
+					6.14602661132813, 
+					2.16079711914062, 
+					5.73162841796875, 
+					2.68417358398438, 
+					6.15313720703125, 
+					3.55624389648437, 
+					5.67083740234375, 
+					1.90574645996094, 
+					4.28034973144531, 
+					1.79312133789063, 
+					4.74583435058594, 
+					1.80088806152344, 
+					4.53787231445313, 
+					1.50727844238281, 
+					4.10185241699219, 
+					1.50425720214844, 
+					4.291748046875,   
+					2.2454833984375,  
+					3.6058349609375,  
+					1.20573425292969, 
+					3.21308898925781, 
+					1.75494384765625, 
+					3.11309814453125, 
+					1.71617126464844, 
+					3.46534729003906, 
+					2.06148529052734, 
+					3.11279296875,    
+					1.47979736328125, 
+					2.68540191650391, 
+					1.82327270507812, 
+					3.50386047363281, 
+					2.54501342773438  
+				  ];
+		       // Check if the difference is in the list
+				if(rotationDifferences.includes(pitch_diff)) {
+					flag(player, "Scaffold", "D", "Placement", "pitch_diff", pitch_diff, false);
+				}
+			}
 			// If the blocks location is below -64 flag
 			if(block.location.y < -64) {
 				flag(player, "Scaffold", "D", "Placement", "location", block.location.y, false);
@@ -982,7 +1049,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	if(!player.hasTag("placing")) {
 		player.addTag("placing");
 	}
-
+	lastPlacePitch.set(player, rotation.x);
 	if(undoPlace === true) {
 		try {
 			block.setType(Minecraft.MinecraftBlockTypes.air);
