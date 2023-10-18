@@ -564,7 +564,7 @@ Minecraft.system.runInterval(() => {
 			// Speed/B = Checks for bhop and vhop velocities
 
 			if(config.modules.speedB.enabled) {
-				if(playerSpeed > 0.2 && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime") && !player.isFlying && !player.hasTag("spec")) {
+				if(playerSpeed > 0.2 && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime") && !player.isFlying && !player.hasTag("spec") && !player.hasTag("gmc")) {
 					const yV = Math.abs(playerVelocity.y).toFixed(4);
 					const prediction = yV === "0.1000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302" || yV === "0.0428" || yV === "0.1212" || yV === "0.0428" || yV === "1.1661" || yV === "1.0244" || yV === "0.3331";
 					if(prediction) {
@@ -580,10 +580,12 @@ Minecraft.system.runInterval(() => {
 		// ==================================
 		if(config.generalModules.motion && !player.hasTag("nomotion")) {
 			// Motion/A = Checks for very high speed in air
-			if(config.modules.motionA.enabled && !player.hasTag("op")) {
-				if(playerSpeed > config.modules.motionA.speed && !player.hasTag("ground")) {
-					flag(player, "Motion", "A", "Movement", "speed", playerSpeed, true);
-					player.addTag("strict");
+			if(config.modules.motionA.enabled) {
+				if(playerSpeed > config.modules.badpacketsB.speed) {
+					if(player.hasTag("ground")) {
+						flag(player, "Motion", "A", "Movement", "speed", playerSpeed, true);
+						player.addTag("strict");
+					}
 				}
 			}
 
@@ -617,15 +619,7 @@ Minecraft.system.runInterval(() => {
 		// ==================================
 
 		if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
-			//Badpackets/B = Checks for nopacket/blink movement
-			if(config.modules.badpacketsB.enabled && !player.hasTag("op") && !player.getEffect("speed")) {
-				if(playerSpeed > config.modules.badpacketsB.speed) {
-					if(player.hasTag("ground")) {
-						flag(player, "BadPackets", "B", "Movement", "speed", playerSpeed, true);
-						player.addTag("strict");
-					}
-				}
-			}
+
 
 			// Checks for derp rotation (Really fast)
 			if(config.modules.badpacketsD.enabled) {
