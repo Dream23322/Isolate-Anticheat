@@ -564,7 +564,7 @@ Minecraft.system.runInterval(() => {
 			// Speed/B = Checks for bhop and vhop velocities
 
 			if(config.modules.speedB.enabled) {
-				if(playerSpeed > 0.2 && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime") && !player.isFlying) {
+				if(playerSpeed > 0.2 && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime") && !player.isFlying && !player.hasTag("spec")) {
 					const yV = Math.abs(playerVelocity.y).toFixed(4);
 					const prediction = yV === "0.1000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302" || yV === "0.0428" || yV === "0.1212" || yV === "0.0428" || yV === "1.1661" || yV === "1.0244" || yV === "0.3331";
 					if(prediction) {
@@ -721,7 +721,7 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.movement) {
 
 			// Strafe/A looks for a player changing their x or z velocity while in the air (Under most conditions this isnt possible by large amounts)
-			if(config.modules.strafeA.enabled && !player.isJumping && !player.hasTag("nostrafe") && !player.hasTag("damaged")) {
+			if(config.modules.strafeA.enabled && !player.isJumping && !player.hasTag("nostrafe") && !player.hasTag("damaged") && !player.isFlying) {
 				if(lastXZv.get(player)) {
 					// calculate velocity differences
 					const x_diff = Math.abs(lastXZv.get(player).x - playerVelocity.x);
@@ -744,7 +744,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// NoSlow/B = Checks for speeding while in webs
-			if(config.modules.noslowB.enabled && !player.hasTag("no-noslow") && playerSpeed !== 0 && player.isOnGround && player.fallDistance === 0) {
+			if(config.modules.noslowB.enabled && !player.hasTag("no-noslow") && playerSpeed !== 0 && player.isOnGround && player.fallDistance === 0 && !player.hasTag("spec")) {
 				const pos1 = {x: player.location.x , y: player.location.y, z: player.location.z};
 				const pos2 = {x: player.location.x, y: player.location.y, z: player.location.z};
 
@@ -1493,13 +1493,13 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
 		//if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}`);
 		const entityVelocity = entity.getVelocity();
-		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 1.5) {
+		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 1.5 || distance > 3.5 && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && !player.hasTag("moving")) {
 			const checkGmc = world.getPlayers({
 				excludeGameModes: [Minecraft.GameMode.creative],
 				name: player.name
 			});
 		
-			if([...checkGmc].length !== 0) {
+			if([...checkGmc].length !== 0 && !player.hasTag("gmc")) {
 				entityHit.cancel;
 				flag(player, "Reach", "A", "Combat", "entity", `${entity.typeId},distance=${distance}`, false);
 			}
