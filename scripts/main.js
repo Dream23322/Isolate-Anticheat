@@ -1550,7 +1550,21 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 				}
 			}
 			lastAttackVector2Angle.set(player, attackVector2Angle);
-		}	  
+		}	
+		if(config.modules.killauraF.enabled) {
+			if(angleCalc(player, entity) < 2) {
+                setScore(player, "killauraF_buffer", getScore(player, "auraF_buffer",) + 1);
+
+            }
+			setScore(player, "killauraF_reset", getScore(player, "auraF_reset", 0) + 1);
+			if(getScore(player, "killauraF_reset", 0) > 30) {
+				setScore(player, "killauraF_reset", 0);
+				if(getScore(player, "killauraF_buffer", 0) > 25) {
+					flag(player, "Killaura", "F [Beta]", "Combat", "accuracy", getScore(player, "killauraF_buffer", 0 ), false)
+				}
+				setScore(player, "killauraF_buffer", 0);
+			}
+		}  
 	}
 
 	
