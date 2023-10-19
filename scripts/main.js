@@ -1547,17 +1547,18 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			lastAttackVector2Angle.set(player, attackVector2Angle);
 		}	
 		if(config.modules.killauraF.enabled) {
-			if(angleCalc(player, entity) < 2) {
-                setScore(player, "killauraF_buffer", getScore(player, "auraF_buffer",) + 1);
-
+			if(angleCalc(player, entity) < 1) {
+                setScore(player, "killauraF_buffer", getScore(player, "killauraF_buffer", 0) + 1);
             }
-			setScore(player, "killauraF_reset", getScore(player, "auraF_reset", 0) + 1);
+			setScore(player, "killauraF_reset", getScore(player, "killauraF_reset", 0) + 1);
 			if(getScore(player, "killauraF_reset", 0) > 30) {
-				setScore(player, "killauraF_reset", 0);
-				if(getScore(player, "killauraF_buffer", 0) > 25) {
-					flag(player, "Killaura", "F [Beta]", "Combat", "accuracy", getScore(player, "killauraF_buffer", 0 ), false)
-				}
 				setScore(player, "killauraF_buffer", 0);
+				setScore(player, "killauraF_reset", 0);
+				if(getScore(player, "killauraF_buffer", 0) > 5) {
+					flag(player, "Killaura", "F [Beta]", "Combat", "accuracy", getScore(player, "killauraF_buffer", 0), false);
+					setScore(player, "killauraF_buffer", 0);	
+				}
+				
 			}
 		}  
 	}
@@ -1570,7 +1571,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		//if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}`);
 		const entityVelocity = entity.getVelocity();
 		
-		if(distance > config.modules.reachA.reach - (0.1 * getScore(player, "reachvl", 0)) && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 1.5 || distance > 3.5 && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && !player.hasTag("moving")) {
+		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 1.5 || distance > 3.5 && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && !player.hasTag("moving")) {
 			const checkGmc = world.getPlayers({
 				excludeGameModes: [Minecraft.GameMode.creative],
 				name: player.name
@@ -1623,7 +1624,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	}
 	
 
-	if(config.debug && player.hasTag("logHits")) console.warn(player.getTags(), "rotation", rotation.x, "angleDiff", angleCalc(player, entity), "auraF", getScore(player, "killauraF_buffer", 0), "killauraF_reset", getScore(player, "killauraF_reset", 0));
+	if(config.debug && player.hasTag("logHits")) console.warn(player.getTags(), "rotation", rotation.x, "angleDiff", angleCalc(player, entity), "auraF" + getScore(player, "killauraF_buffer", 0), "killauraF_reset", getScore(player, "killauraF_reset", 0));
 });
 world.afterEvents.entityHitBlock.subscribe((entityHit) => {
 	const { damagingEntity: player} = entityHit;
