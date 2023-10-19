@@ -453,7 +453,7 @@ Minecraft.system.runInterval(() => {
 
 			// New Fly/B = old Fly/A
 			if(config.modules.flyB.enabled) {
-				if (config.modules.flyB.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && (!player.hasTag("damaged") && !player.hasTag("fall_damage")) && !player.isGliding) {
+				if (config.modules.flyB.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && (!player.hasTag("damaged") || !player.hasTag("fall_damage")) && !player.isGliding) {
 					// Checks for invalid downwards accelerations
 					/*
 						This is a mix of a bunch o different stuffs because too much random stuff spread out is
@@ -512,9 +512,6 @@ Minecraft.system.runInterval(() => {
 					}	
 				}
 			}	
-
-
-
 		}
 
 		// ==================================
@@ -544,8 +541,6 @@ Minecraft.system.runInterval(() => {
 					if(playerSpeed > modifiedSpeed && !player.hasTag("damaged") && !player.hasTag("op") && !player.isFlying && !player.hasTag("trident") && !player.hasTag("ice") && !player.hasTag("slime")) {
 						flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
 					}
-					//modifiedSpeed = 0;
-
 				} else {
 					// If the player doesnt have the strict tag, be more tolerant
 					if(!player.hasTag("strict")) {
