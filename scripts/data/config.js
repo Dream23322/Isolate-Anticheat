@@ -377,7 +377,7 @@ export default
         "reachA": {
             "enabled": true,
             "description": "Checks for invalid reach",
-            "reach": 6.65,
+            "reach": 6,
             "entities_blacklist": [
                 "minecraft:enderman",
                 "minecraft:fireball",
@@ -386,7 +386,7 @@ export default
             ],
             "punishment": "kick",
             "punishmentLength": "3m",
-            "minVlbeforePunishment": 20
+            "minVlbeforePunishment": 10
         },
         "aimA": {
             "enabled": true,

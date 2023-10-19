@@ -1569,7 +1569,8 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
 		//if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}`);
 		const entityVelocity = entity.getVelocity();
-		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 1.5 || distance > 3.5 && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && !player.hasTag("moving")) {
+		
+		if(distance > config.modules.reachA.reach - (0.1 * getScore(player, "reachvl", 0)) && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 1.5 || distance > 3.5 && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && !player.hasTag("moving")) {
 			const checkGmc = world.getPlayers({
 				excludeGameModes: [Minecraft.GameMode.creative],
 				name: player.name
