@@ -2,6 +2,7 @@ export default
 {
     // This config is made for pvp servers so most of the illegal checks are turned off
     "debug": true,
+    "fancy_kick_calculation": true,
     "flagWhitelist": [],
     // Amount of anticheat kicks a player needs to get before getting perm banned
     "kicksBeforeBan": 10,
