@@ -597,7 +597,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// Motion/C = Checks for fly / glide / bhop like velocity
-			if(config.modules.motionC.enabled && Math.abs(playerVelocity.y).toFixed(4) === "0.1552" && !player.isJumping && !player.isGliding && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
+			if(config.modules.motionC.enabled && Math.abs(playerVelocity.y).toFixed(4) === "0.1552" && !player.isJumping && !player.isGliding && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.hasTag("gmc")) {
 				const pos1 = {x: player.location.x - 2, y: player.location.y - 1, z: player.location.z - 2};
 				const pos2 = {x: player.location.x + 2, y: player.location.y + 2, z: player.location.z + 2};
 
