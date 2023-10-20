@@ -1529,13 +1529,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			if (
 					lastAttackVector2Angle.get(player) && 
 				(
-					(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) <= 0.5 &&
-					Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) !== 0 ||
-					Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) <= 0.5 &&
-					Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) !== 0) ||
-					(Math.abs(lastAttackVector2Angle.get(player).x) > 1.2 && Math.abs(lastAttackVector2Angle.get(player).x) < 1.5) ||
-					(Math.abs(lastAttackVector2Angle.get(player).y) > 1.2 && Math.abs(lastAttackVector2Angle.get(player).y) < 1.5)
-				)
+					(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) <= 0.5 && Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) !== 0 || Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) <= 0.5 && Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) !== 0) || (Math.abs(lastAttackVector2Angle.get(player).x) > 1.2 && Math.abs(lastAttackVector2Angle.get(player).x) < 1.5) || (Math.abs(lastAttackVector2Angle.get(player).y) > 1.2 && Math.abs(lastAttackVector2Angle.get(player).y) < 1.5))
 				) {
 				if (getScore(player, "auraF_buffer", 0) > 5 && hVelocity(player) > 1) {
 					flag(player, "Killaura", "F [Beta]", "Combat", "angleDiff(1)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
@@ -1547,18 +1541,20 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			lastAttackVector2Angle.set(player, attackVector2Angle);
 		}	
 		if(config.modules.killauraF.enabled) {
+			// Havent tested this yet but it should be able to detect horion client
 			if(angleCalc(player, entity) < 1) {
                 setScore(player, "killauraF_buffer", getScore(player, "killauraF_buffer", 0) + 1);
             }
 			setScore(player, "killauraF_reset", getScore(player, "killauraF_reset", 0) + 1);
 			if(getScore(player, "killauraF_reset", 0) > 30) {
-				setScore(player, "killauraF_buffer", 0);
-				setScore(player, "killauraF_reset", 0);
-				if(getScore(player, "killauraF_buffer", 0) > 5) {
-					flag(player, "Killaura", "F [Beta]", "Combat", "accuracy", getScore(player, "killauraF_buffer", 0), false);
-					setScore(player, "killauraF_buffer", 0);	
-				}
 				
+				setScore(player, "killauraF_reset", 0);
+				if(getScore(player, "killauraF_buffer", 0) > 3) {
+					
+					flag(player, "Killaura", "F", "Combat", "accuracy", getScore(player, "killauraF_buffer", 0), false);	
+					setScore(player, "killauraF_buffer", 0);
+				}
+				setScore(player, "killauraF_buffer", 0);
 			}
 		}  
 	}
@@ -1577,7 +1573,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 				name: player.name
 			});
 		
-			if([...checkGmc].length !== 0 && !player.hasTag("gmc")) {
+			if([...checkGmc].length !== 0) {
 				entityHit.cancel;
 				flag(player, "Reach", "A", "Combat", "entity", `${entity.typeId},distance=${distance}`, false);
 			}

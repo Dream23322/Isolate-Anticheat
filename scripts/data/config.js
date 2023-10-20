@@ -377,7 +377,7 @@ export default
         "reachA": {
             "enabled": true,
             "description": "Checks for invalid reach",
-            "reach": 6,
+            "reach": 5.5,
             "entities_blacklist": [
                 "minecraft:enderman",
                 "minecraft:fireball",
