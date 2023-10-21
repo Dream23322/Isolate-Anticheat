@@ -453,7 +453,7 @@ Minecraft.system.runInterval(() => {
 
 			// New Fly/B = old Fly/A
 			if(config.modules.flyB.enabled) {
-				if (config.modules.flyB.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && (!player.hasTag("damaged") || !player.hasTag("fall_damage")) && !player.isGliding) {
+				if (config.modules.flyB.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && (!player.hasTag("damaged") || !player.hasTag("fall_damage")) && !player.isGliding && !player.getEffect("speed") &&!player.getEffect("slow_falling")) {
 					// Checks for invalid downwards accelerations
 					/*
 						This is a mix of a bunch o different stuffs because too much random stuff spread out is
@@ -503,7 +503,7 @@ Minecraft.system.runInterval(() => {
 
 			// Fly/C = Old fly/G
 			// This fly check can cause some false flags with funny extra conditions while jumping
-			if(config.modules.flyC.enabled && player.fallDistance < config.modules.flyC.fallDistance && !player.hasTag("trident") && !player.hasTag("ground") && !player.hasTag("nofly") && (!player.hasTag("damaged") && !player.hasTag("fall_damage")) && player.hasTag("strict") && !player.hasTag("slime")) {
+			if(config.modules.flyC.enabled && player.fallDistance < config.modules.flyC.fallDistance && !player.hasTag("trident") && !player.hasTag("ground") && !player.hasTag("nofly") &&  (!player.hasTag("damaged") || !player.hasTag("fall_damage")) && player.hasTag("strict") && !player.hasTag("slime")) {
 				// Stopping false flags
 				if(!player.isJumping && !player.isGliding && !player.isFlying && !player.hasTag("jump") && !player.hasTag("op")) {
 					
