@@ -522,7 +522,7 @@ export default
             "minVlbeforePunishment": 1
         },
         "commandblockexploitG": {
-            "enabled": true,
+            "enabled": false,
             "npc": true,
             "entities": [
                 "minecraft:command_block_minecart",

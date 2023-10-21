@@ -179,14 +179,14 @@ function banPlayerMenu(player, playerSelected, lastMenu = 0) {
         });
         if(playerSelected.hasTag("op")){ 
             playerSelected.sendMessage(`§r§j[§uIsolate§j]§r ${playerSelected.name} is an Isolate Operator and cannot be banned!`)
-            return;
+        } else {
+            playerSelected.addTag(`reason:${reason}`);
+            playerSelected.addTag(`by:${player.nameTag}`);
+            if(banLength && shouldPermBan === "false") playerSelected.addTag(`time:${Date.now() + banLength}`);
+            playerSelected.addTag("isBanned");
+        
+            player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has banned ${playerSelected.nameTag}. Reason: ${reason}"}]}`);
         }
-        playerSelected.addTag(`reason:${reason}`);
-        playerSelected.addTag(`by:${player.nameTag}`);
-        if(banLength && shouldPermBan === "false") playerSelected.addTag(`time:${Date.now() + banLength}`);
-        playerSelected.addTag("isBanned");
-    
-        player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has banned ${playerSelected.nameTag}. Reason: ${reason}"}]}`);
     });
 }
 
