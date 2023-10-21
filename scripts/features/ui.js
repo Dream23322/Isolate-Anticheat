@@ -177,7 +177,10 @@ function banPlayerMenu(player, playerSelected, lastMenu = 0) {
             t = t.replace(/"/g, "");
             if(t.startsWith("reason:") || t.startsWith("by:") || t.startsWith("time:")) playerSelected.removeTag(t);
         });
-    
+        if(playerSelected.hasTag("op")){ 
+            playerSelected.sendMessage(`§r§j[§uIsolate§j]§r ${playerSelected.name} is an Isolate Operator and cannot be banned!`)
+            return;
+        }
         playerSelected.addTag(`reason:${reason}`);
         playerSelected.addTag(`by:${player.nameTag}`);
         if(banLength && shouldPermBan === "false") playerSelected.addTag(`time:${Date.now() + banLength}`);

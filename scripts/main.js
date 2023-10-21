@@ -426,7 +426,7 @@ Minecraft.system.runInterval(() => {
 		// ==================================
 		//                   Fly Checks
 		// ==================================
-		if(config.generalModules.fly === true && !player.hasTag("nofly")) {
+		if(config.generalModules.fly === true && !player.hasTag("nofly") && !player.hasTag("op")) {
 
 			// Fly/A = Old Fly/F
 			if(config.modules.flyA.enabled) {
@@ -586,7 +586,7 @@ Minecraft.system.runInterval(() => {
 
 			// Motion/B = checks for invalid vertical motion
 			if(config.modules.motionB.enabled) {
-				if(player.isFlying && playerSpeed > 3.99) {
+				if(player.isFlying && playerSpeed > 7) {
 					flag(player, "Motion", "B", "Movement", "speed", playerSpeed, true);
 				}
 			}
@@ -659,7 +659,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// Checks for a players rotation being a flat number
-			if((Number.isInteger(rotation.x) || Number.isInteger(rotation.y)) && rotation.x !== 0 && rotation.y !== 0 && rotation.x !== 90 && rotation.x !== 60 && rotation.x !== -45) flag(player, "BadPackets", "F", "Rotation", "xRot",`${rotation.x},yRot=${rotation.y}`, true);
+			if((Number.isInteger(rotation.x) || Number.isInteger(rotation.y)) && rotation.x !== 0 && rotation.y !== 0 && rotation.x !== 90 && rotation.x !== 60) flag(player, "BadPackets", "F", "Rotation", "xRot",`${rotation.x},yRot=${rotation.y}`, true);
 
 			// Impossible Rotations
 			// Having your pitch over 90 isnt possible! Horion client might be able to do it
@@ -710,7 +710,7 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.movement) {
 
 			// Strafe/A looks for a player changing their x or z velocity while in the air (Under most conditions this isnt possible by large amounts)
-			if(config.modules.strafeA.enabled && !player.isJumping && !player.hasTag("nostrafe") && !player.hasTag("damaged") && !player.isFlying) {
+			if(config.modules.strafeA.enabled && !player.isJumping && !player.hasTag("nostrafe") && !player.hasTag("damaged") && !player.isFlying && !player.hasTag("op")) {
 				if(lastXZv.get(player)) {
 					// calculate velocity differences
 					const x_diff = Math.abs(lastXZv.get(player).x - playerVelocity.x);
@@ -1472,7 +1472,6 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		if(config.modules.killauraC.enabled && !player.entitiesHit.includes(entity.id)) 
 			player.entitiesHit.push(entity.id);
 			if(player.entitiesHit.length >= config.modules.killauraC.entities) {
-				entityHit.cancel;
 				flag(player, "KillAura", "C", "Combat", "entitiesHit", player.entitiesHit.length, true);
 				player.addTag("strict");
 			}
@@ -1484,7 +1483,6 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
 			if(Math.abs(rotation.x) > 79 && distance > 3.5) {
 				if(!player.hasTag("trident") && !player.hasTag("bow")) {
-					entityHit.cancel;
 					flag(player, "Killaura", "D", "Combat", "angle", `${rotation.x},distance=${distance}`, false);
 					
 				}
@@ -1529,7 +1527,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			if (
 					lastAttackVector2Angle.get(player) && 
 				(
-					(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) <= 0.5 && Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) !== 0 || Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) <= 0.5 && Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) !== 0) || (Math.abs(lastAttackVector2Angle.get(player).x) > 1.2 && Math.abs(lastAttackVector2Angle.get(player).x) < 1.5) || (Math.abs(lastAttackVector2Angle.get(player).y) > 1.2 && Math.abs(lastAttackVector2Angle.get(player).y) < 1.5))
+					(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) <= 0.5 && (Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) !== 0 || hVelocity(entity) !== 0 || hVelocity(player) !== 0) || Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) <= 0.5 && (Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) !== 0 || hVelocity(entity) !== 0 || hVelocity(player) !== 0)) || (Math.abs(lastAttackVector2Angle.get(player).x) > 1.2 && Math.abs(lastAttackVector2Angle.get(player).x) < 1.5) || (Math.abs(lastAttackVector2Angle.get(player).y) > 1.2 && Math.abs(lastAttackVector2Angle.get(player).y) < 1.5))
 				) {
 				if (getScore(player, "auraF_buffer", 0) > 5 && hVelocity(player) > 1) {
 					flag(player, "Killaura", "F [Beta]", "Combat", "angleDiff(1)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
@@ -1563,19 +1561,22 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	// reach/A = check if a player hits an entity more then 5.1 blocks away
 	if((config.modules.reachA.enabled || config.generalModules.reach) && !player.hasTag("noreach")) {
 		// get the difference between 2 three dimensional coordinates
+		
 		const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
-		//if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}`);
+		if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}`);
 		const entityVelocity = entity.getVelocity();
 		
-		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 1.5 || distance > 3.5 && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && !player.hasTag("moving")) {
+		
+		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 1.5 || distance > 4.1 && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && !player.hasTag("moving") && getSpeed(player) === 0 && hVelocity(player) === 0) {
 			const checkGmc = world.getPlayers({
 				excludeGameModes: [Minecraft.GameMode.creative],
 				name: player.name
 			});
-		
+			
 			if([...checkGmc].length !== 0) {
-				entityHit.cancel;
+				
 				flag(player, "Reach", "A", "Combat", "entity", `${entity.typeId},distance=${distance}`, false);
+				
 			}
 		}
 	}
@@ -1620,7 +1621,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	}
 	
 
-	if(config.debug && player.hasTag("logHits")) console.warn(player.getTags(), "rotation", rotation.x, "angleDiff", angleCalc(player, entity), "auraF" + getScore(player, "killauraF_buffer", 0), "killauraF_reset", getScore(player, "killauraF_reset", 0));
+	if(config.debug && player.hasTag("logHits")) console.warn(player.getTags(), "rotation", rotation.x, "angleDiff", angleCalc(player, entity), "auraF" + getScore(player, "killauraF_buffer", 0), "killauraF_reset", getScore(player, "killauraF_reset", 0), "reach", Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2)));
 });
 world.afterEvents.entityHitBlock.subscribe((entityHit) => {
 	const { damagingEntity: player} = entityHit;
