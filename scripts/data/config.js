@@ -595,7 +595,7 @@ export default
             "enabled": true,
             "description": "Checks for looking at the exact center of a player",
             "punishment": "kick",
-            "minVlbeforePunishment": 40
+            "minVlbeforePunishment": 1
         },
         "scaffoldA": {
             "enabled": true,
