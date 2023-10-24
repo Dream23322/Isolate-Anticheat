@@ -659,7 +659,7 @@ Minecraft.system.runInterval(() => {
 			}
 
 			// Checks for a players rotation being a flat number
-			if((Number.isInteger(rotation.x) || Number.isInteger(rotation.y)) && rotation.x !== 0 && rotation.y !== 0 && rotation.x !== 90 && rotation.x !== 60) flag(player, "BadPackets", "F", "Rotation", "xRot",`${rotation.x},yRot=${rotation.y}`, true);
+			if((Number.isInteger(rotation.x) || Number.isInteger(rotation.y)) && rotation.x !== 0 && rotation.y !== 0 && rotation.x !== 90 && rotation.x !== 60 && rotation.x !== -85) flag(player, "BadPackets", "F", "Rotation", "xRot",`${rotation.x},yRot=${rotation.y}`, true);
 
 			// Impossible Rotations
 			// Having your pitch over 90 isnt possible! Horion client might be able to do it
@@ -893,7 +893,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 		if(config.modules.scaffoldB.enabled) {
 			//const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
 			if(!player.isFlying) {
-				const clientRotations = [46.596282958984375, 46.59794616699219, 46.598968505859375, 46.5970458984375, 46.60420227050781, 46.605743408203125, 46.599029541015625, 46.609466552734375, 46.60064697265625, 46.597686767578125];
+				const clientRotations = [46.596282958984375, 46.59794616699219, 46.598968505859375, 46.5970458984375, 46.60420227050781, 46.605743408203125, 46.599029541015625, 46.609466552734375, 46.60064697265625, 46.597686767578125, -85];
 				if(!player.hasTag("trident")) {
 					if(rotation.x === 60 || rotation.x === 77.68765258789062 || rotation.x === 77.68768310546875 || rotation.x === 77.68777465820312 || rotation.x === 77.68795776367188 || clientRotations.includes(rotation.x)) {
 				
