@@ -16,7 +16,6 @@ const world = Minecraft.world;
 // Maps for logging data that we use in checks
 
 const fastStopLog = new Map();
-const oldOldSpeed = new Map();
 const oldOldDiff = new Map();
 const playerRotations = new Map();
 const playerDifferences = new Map();
@@ -32,7 +31,7 @@ const oldoldz = new Map();
 const lastYRot = new Map();
 const oldLastYRot = new Map();
 const lastDeltaZ = new Map();
-let lastAttackVector2Angle = new Map();
+const lastAngle = new Map();
 const lastMessage = new Map();
 const lastFallDistance = new Map();
 const lastDeltPitch = new Map();
@@ -1507,36 +1506,15 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 				}
 			}
 		}
-		
-		// Killaura/F is an extremely advanced check that looks at players rotations to try to determine if the player is using any sort of Killaura or Aimbot style cheats
-		// The check does its best to find Killaura and not flag for players who just have naturally good Aim
-		// Tho that is true, it still has the chance to false flag a player for using killaura even if their not
-
-		// Orginally from Nokararos Anticheat
-		if (config.modules.killauraF.enabled && player.hasTag("strict")) {
-			const pos1 = player.getHeadLocation();
-			const pos2 = entity.getHeadLocation();
-			let angle1 = Math.atan2(pos2.z - pos1.z, pos2.x - pos1.x) * (180 / Math.PI) - player.getRotation().y - 90;
-			if (angle1 <= -180) angle1 += 360;
-			angle1 = Math.abs(angle1);
-			let angle2 = Math.atan2(pos2.y - pos1.y, pos2.x - pos1.x) * (180 / Math.PI) - player.getRotation().x * 2 - 90;
-			if (angle2 <= -180) angle2 += 360;
-			angle2 = Math.abs(angle2);
-			const attackVector2Angle = { x: angle1, y: angle2 };
-			
-			if (
-					lastAttackVector2Angle.get(player) && 
-				(
-					(Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) <= 0.5 && (Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x) !== 0 || hVelocity(entity) !== 0 || hVelocity(player) !== 0) || Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) <= 0.5 && (Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y) !== 0 || hVelocity(entity) !== 0 || hVelocity(player) !== 0)) || (Math.abs(lastAttackVector2Angle.get(player).x) > 1.2 && Math.abs(lastAttackVector2Angle.get(player).x) < 1.5) || (Math.abs(lastAttackVector2Angle.get(player).y) > 1.2 && Math.abs(lastAttackVector2Angle.get(player).y) < 1.5))
-				) {
-				if (getScore(player, "auraF_buffer", 0) > 5 && hVelocity(player) > 1) {
-					flag(player, "Killaura", "F [Beta]", "Combat", "angleDiff(1)", `${Math.abs(lastAttackVector2Angle.get(player).x - attackVector2Angle.x)}, ${Math.abs(lastAttackVector2Angle.get(player).y - attackVector2Angle.y)}`, true);
-					setScore(player, "auraF_buffer", 0);
-				} else {
-					setScore(player, "auraF_buffer", getScore(player, "auraF_buffer", 0) + 1);
+		if (config.modules.killauraD.enabled) {
+			const oldAngle = lastAngle.get(player) || 0;
+			const currentAngle = angleCalc(player, entity);
+			if(lastAngle.has(player)) {
+				if(Math.abs(currentAngle - oldAngle) < 0.1) {
+					flag(player, "Killaura", "D", "Combat", "diff", Math.abs(currentAngle - oldAngle), true);
 				}
 			}
-			lastAttackVector2Angle.set(player, attackVector2Angle);
+		
 		}	
 		if(config.modules.killauraF.enabled) {
 			// Havent tested this yet but it should be able to detect horion client

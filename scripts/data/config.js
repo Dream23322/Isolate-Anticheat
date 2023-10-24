@@ -790,9 +790,9 @@ export default
             "enabled": true,
             "speed": 11.5,
             "description": "Checks for really high speed",
-            "punishment": "kick",
-            "punishmentLength": "30d",
-            "minVlbeforePunishment": 2
+            "punishment": "ban",
+            "punishmentLength": "1m",
+            "minVlbeforePunishment": 1
         },
         "motionB": {
             "enabled": true,
