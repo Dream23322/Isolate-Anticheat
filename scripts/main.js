@@ -1506,16 +1506,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 				}
 			}
 		}
-		if (config.modules.killauraD.enabled) {
-			const oldAngle = lastAngle.get(player) || 0;
-			const currentAngle = angleCalc(player, entity);
-			if(lastAngle.has(player)) {
-				if(Math.abs(currentAngle - oldAngle) < 0.1) {
-					flag(player, "Killaura", "D", "Combat", "diff", Math.abs(currentAngle - oldAngle), true);
-				}
-			}
-		
-		}	
+
 		if(config.modules.killauraF.enabled) {
 			// Havent tested this yet but it should be able to detect horion client
 			if(angleCalc(player, entity) < 1) {
@@ -1545,7 +1536,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		const entityVelocity = entity.getVelocity();
 		
 		
-		if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 1.5 || distance > 4.1 && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && !player.hasTag("moving") && getSpeed(player) === 0 && hVelocity(player) === 0) {
+		if(distance - hVelocity(entity) / 2 > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 1.5 || distance > 4.1 && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && !player.hasTag("moving") && getSpeed(player) === 0 && hVelocity(player) === 0) {
 			const checkGmc = world.getPlayers({
 				excludeGameModes: [Minecraft.GameMode.creative],
 				name: player.name
