@@ -10,7 +10,7 @@ import { banList } from "./data/globalban.js";
 import data from "./data/data.js";
 import { mainGui, playerSettingsMenuSelected } from "./features/ui.js";
 import { banplayer } from "./data/paradoxban.js";
-import { movement } from "./checks/handler.js";
+
 const world = Minecraft.world;
 
 // Maps for logging data that we use in checks
@@ -24,7 +24,10 @@ const oldYPos = new Map();
 const oldOldYPos = new Map();
 let lastPlayerYawRotations = new Map();
 const lastYawDiff = new Map();
-
+const oldx = new Map();
+const oldz = new Map();
+const oldoldx = new Map();
+const oldoldz = new Map();
 const lastYRot = new Map();
 const oldLastYRot = new Map();
 const lastDeltaZ = new Map();
@@ -423,8 +426,91 @@ Minecraft.system.runInterval(() => {
 		//                   Fly Checks
 		// ==================================
 		if(config.generalModules.fly === true && !player.hasTag("nofly") && !player.hasTag("op")) {
-			movement(player);
 
+			// Fly/A = Old Fly/F
+			if(config.modules.flyA.enabled) {
+				if(aroundAir(player) === true && !player.getEffect("jump_boost")) {
+					const currentYPos = player.location.y;
+					const oldY = oldYPos.get(player) || currentYPos;
+					let max_v_up = 0.42;
+					if(player.isJumping) {
+						max_v_up = 0.6;
+					}
+					if(!player.hasTag("nofly") && !player.hasTag("nofly") && (!player.hasTag("damaged") && !player.hasTag("fall_damage")) && !player.isGliding) {
+						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
+						
+						const prediction = (playerVelocity.y > max_v_up && aroundAir(player) === true && playerVelocity.y !== 1 || playerVelocity.y < -3.92 && aroundAir(player) === true) && playerVelocity.y !== -1 && playerVelocity.y > -9
+						if(player.getEffect("speed") && player.getEffect("speed").amplifier > 5)  continue;
+						if(prediction && getScore(player, "tick_counter2", 0) > 3 && player.fallDistance < 25 && !player.hasTag("placing")) {
+							flag(player, "Fly", "A", "Movement", "y-velocity", playerVelocity.y, false);
+						}
+					}
+					oldOldYPos.set(player, oldY);
+					oldYPos.set(player, currentYPos);
+				}
+			}
+
+			// New Fly/B = old Fly/A
+			if(config.modules.flyB.enabled) {
+				if (config.modules.flyB.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && (!player.hasTag("damaged") || !player.hasTag("fall_damage")) && !player.isGliding && !player.getEffect("speed") &&!player.getEffect("slow_falling")) {
+					// Checks for invalid downwards accelerations
+					/*
+						This is a mix of a bunch o different stuffs because too much random stuff spread out is
+						1. Annoying to understand and handle
+						2. Can cause performance issues with the server
+					*/
+					// Get all data
+					const oldxp = oldx.get(player) || 0;
+					const oldzp = oldz.get(player) || 0;
+					const oldoldxp = oldoldx.get(player) || 0;
+					const oldoldzp = oldoldz.get(player) || 0;
+
+					// We calculate 2 diffferences so that we can compare the 2
+					const diff1 = Math.abs(oldoldxp - oldxp);
+					const diff2 = Math.abs(oldoldzp - oldzp);
+					const diff3 = Math.abs(oldxp - player.location.x);
+					const diff4 = Math.abs(oldzp - player.location.z);
+
+					// Calculate the final differences
+					const final1 = Math.abs(diff1 - diff2) / 2;
+					const final2 = Math.abs(diff3 - diff4) / 2;
+
+					// If the differences are the same, flag for fly/B
+					
+					if (final1 === final2 && final2 !== 0) {
+						// if the player is in Air, continue to flag
+						if(aroundAir(player)) {
+							flag(player, "Fly", "B", "Movement", "difference", final1, false);
+						}
+					}
+
+					// If the player is above world height, flag
+					if(aroundAir(player) && player.location.y > 319 && !player.isOnGround && !player.hasTag("elytra")) {
+						flag(player, "Fly", "B", "Movement", "y", player.location.y, false);
+						player.teleport({x: player.location.x, y: player.location.y -150, z: player.location.z});
+					}
+
+					// Update all maps if the player is in air
+					if(aroundAir(player) && !player.isOnGround) {
+						oldx.set(player, player.location.x);
+						oldz.set(player, player.location.z);
+						oldoldx.set(player, oldxp);
+						oldoldz.set(player, oldzp);
+					}
+				}
+			}
+
+			// Fly/C = Old fly/G
+			// This fly check can cause some false flags with funny extra conditions while jumping
+			if(config.modules.flyC.enabled && player.fallDistance < config.modules.flyC.fallDistance && !player.hasTag("trident") && !player.hasTag("ground") && !player.hasTag("nofly") &&  (!player.hasTag("damaged") || !player.hasTag("fall_damage")) && player.hasTag("strict") && !player.hasTag("slime")) {
+				// Stopping false flags
+				if(!player.isJumping && !player.isGliding && !player.isFlying && !player.hasTag("jump") && !player.hasTag("op")) {
+					
+					if(aroundAir(player) === true && Math.abs(playerVelocity.y) > 0.1) {
+						flag(player, "Fly", "C", "Movement", "fallDistance", player.fallDistance, false);
+					}	
+				}
+			}	
 		}
 
 		// ==================================
@@ -787,7 +873,8 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	// ==================================
 	//               Scaffold Checks
 	// ==================================
-	//   The best in the game (kinda)
+	//   The best in the game
+
 	if(config.generalModules.scaffold && !player.hasTag("noscaffold")) {
 		// Scaffold/a = checks for upwards scaffold
 		// Need to improve this because its really easy to false flag
@@ -800,6 +887,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 			}
 			
 		}
+
 		// Scaffold/B = Checks for a certain head rotation that horion clients scaffold uses (with bypass mode on), the rotation bypasses scaffold/C so that is why this is here
 		if(config.modules.scaffoldB.enabled) {
 			//const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
@@ -814,6 +902,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 				}
 			}	
 		}
+
 		// Scaffold/C = Checks for not looking where you are placing, it has measures in place to not false with the dumb bedrock bridinging mechanics.
 		if(config.modules.scaffoldC.enabled === true) {
 			
@@ -827,6 +916,8 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 				}
 			}
 		}
+		
+		
 		if(config.modules.scaffoldD.enabled) {
 
 			if(lastPlacePitch.get(player)) {
@@ -1328,6 +1419,12 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 
 });
 
+
+
+
+let lastHitTime = new Map();
+let consecutiveHits = new Map();
+
 world.afterEvents.entityHitEntity.subscribe((entityHit) => {
     const { hitEntity: entity, damagingEntity: player} = entityHit;
     if(player.typeId !== "minecraft:player") return;
@@ -1356,12 +1453,14 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 				flag(player, "Aim", "B", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
 				player.removeTag("b");
 			}
+
 		}
 		if(player.hasTag("c")) {
 			entityHit.cancel;
 			flag(player, "Aim", "C", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
 			player.removeTag("c");
 		}
+
 	}
 
 	// ==================================
@@ -1375,6 +1474,8 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 				flag(player, "KillAura", "C", "Combat", "entitiesHit", player.entitiesHit.length, true);
 				player.addTag("strict");
 			}
+
+
 		// Check if the player attacks an entity while looking perfectly down
 		if(config.modules.killauraD.enabled && !player.hasTag("sleeping")) {
 			const rotation = player.getRotation()
@@ -1382,6 +1483,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			if(Math.abs(rotation.x) > 79 && distance > 3.5) {
 				if(!player.hasTag("trident") && !player.hasTag("bow")) {
 					flag(player, "Killaura", "D", "Combat", "angle", `${rotation.x},distance=${distance}`, false);
+					
 				}
 			}
 		}
@@ -1396,6 +1498,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 		}
  
 		// Killaura/F = Checks for looking at the center of an entity
+
 		if(config.modules.killauraF.enabled && player.hasTag("strict")) {
 			if(angleCalc(player, entity) < 0.99) {
 				if(Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2)) > 2.6 && !player.hasTag("strict")) {
@@ -1549,4 +1652,3 @@ if([...world.getPlayers()].length >= 1) {
 		player.lastGoodPosition = player.location;
 	}
 };
-
