@@ -432,9 +432,9 @@ Minecraft.system.runInterval(() => {
 				if(aroundAir(player) === true && !player.getEffect("jump_boost")) {
 					const currentYPos = player.location.y;
 					const oldY = oldYPos.get(player) || currentYPos;
-					let max_v_up = 0.42;
+					let max_v_up = 0.52;
 					if(player.isJumping) {
-						max_v_up = 0.6;
+						max_v_up = 0.7;
 					}
 					if(!player.hasTag("nofly") && !player.hasTag("nofly") && (!player.hasTag("damaged") && !player.hasTag("fall_damage")) && !player.isGliding) {
 						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
@@ -1512,7 +1512,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 			if(getScore(player, "killauraF_reset", 0) > 30) {
 				
 				setScore(player, "killauraF_reset", 0);
-				if(getScore(player, "killauraF_buffer", 0) > 3) {
+				if(getScore(player, "killauraF_buffer", 0) > 7) {
 					
 					flag(player, "Killaura", "F", "Combat", "accuracy", getScore(player, "killauraF_buffer", 0), false);	
 					setScore(player, "killauraF_buffer", 0);
