@@ -1068,11 +1068,7 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 
 	if(config.debug) console.warn(`${player.nameTag} has broken the block ${blockBreak.brokenBlockPermutation.type.id}`);
 	
-	if(brokenBlockId === "minecraft:diamond_ore") {
-		player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §b[§cXray§b]§r ${player.nameTag} has found §g1x Diamond Ore."}]}`);
-	} else if (brokenBlockId === "minecraft:ancient_debirs") {
-		player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §b§c[Xray§b]§r ${player.nameTag} has found §g1x Ancient Debris."}]}`);
-	}
+
 
 	// Reach/B = checks for breaking blocks too far away
 	if(config.modules.reachB.enabled && !player.hasTag("noreach")) {
