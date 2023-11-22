@@ -10,6 +10,38 @@ import { banList } from "./data/globalban.js";
 import data from "./data/data.js";
 import { mainGui, playerSettingsMenuSelected } from "./features/ui.js";
 import { banplayer } from "./data/paradoxban.js";
+import { speed_a } from "./checks/movement/speed/speedA.js";
+import { speed_b } from "./checks/movement/speed/speedB.js";
+import { motion_a } from "./checks/movement/motion/motionA.js";
+import { motion_b } from "./checks/movement/motion/motionB.js";
+import { motion_c } from "./checks/movement/motion/motionC.js";
+import { motion_d } from "./checks/movement/motion/motionD.js";
+import { fly_c } from "./checks/movement/fly/flyC.js";
+import { fly_a } from "./checks/movement/fly/flyA.js";
+import { strafe_a } from "./checks/movement/strafe/strafeA.js";
+import { scaffold_b } from "./checks/world/scaffold/scaffoldB.js";
+import { scaffold_c } from "./checks/world/scaffold/scaffoldC.js";
+import { fly_b } from "./checks/movement/fly/flyB.js";
+import { scaffold_d } from "./checks/world/scaffold/scaffoldD.js";
+import { noslow_a } from "./checks/movement/noslow/noslowA.js";
+import { badpackets_f } from "./checks/packet/badpackets/badpacketsF.js";
+import { badpackets_g } from "./checks/packet/badpackets/badpacketsG.js";
+import { badpackets_h } from "./checks/packet/badpackets/badpacketsH.js";
+import { badpackets_i } from "./checks/packet/badpackets/badpacketsI.js";
+import { exploit_b } from "./checks/packet/exploit/exploitB.js";
+import { aimCheckManager } from "./checks/combat/aim/aim.js";
+import { killaura_c } from "./checks/combat/killaura/killauraC.js";
+import { killaura_f } from "./checks/combat/killaura/killauraF.js";
+import { killaura_d } from "./checks/combat/killaura/killauraD.js";
+import { hitbox_a } from "./checks/combat/hitbox/hitboxA.js";
+import { badpackets_c } from "./checks/packet/badpackets/badpacketsC.js";
+import { tower_a } from "./checks/world/scaffold/towerA.js";
+import { badpackets_d } from "./checks/packet/badpackets/badpacketsD.js";
+import { nuker_b } from "./checks/world/nuker/nukerB.js";
+import { reach_b } from "./checks/world/reach/reachB.js";
+import { badpackets_e } from "./checks/packet/badpackets/badpacketsE.js";
+import { prediction_a } from "./checks/movement/prediction/predictionA.js";
+import { scaffold_f } from "./checks/world/scaffold/scaffoldF.js";
 
 const world = Minecraft.world;
 
@@ -20,8 +52,6 @@ const oldOldDiff = new Map();
 const playerRotations = new Map();
 const playerDifferences = new Map();
 const playerFlags = new Set();
-const oldYPos = new Map();
-const oldOldYPos = new Map();
 let lastPlayerYawRotations = new Map();
 const lastYawDiff = new Map();
 const oldx = new Map();
@@ -189,7 +219,7 @@ Minecraft.system.runInterval(() => {
 				if (config.modules.aimB.enabled) {
 					if (deltaYaw === deltaPitch && deltaPitch !== 0 && deltaYaw !== 0 || Math.abs(deltaPitch) < 1 && Math.abs(deltaYaw) > 1 || Math.abs(deltaYaw) < 1  && Math.abs(deltaPitch) > 1) {
 						playerFlags.add(player);
-						player.addTag("b");
+						flag(player, "Aim", "B", "Combat", "diff", deltaYaw, false);
 					} else {
 						playerFlags.delete(player);
 					}
@@ -341,24 +371,6 @@ Minecraft.system.runInterval(() => {
 		if(player.hasTag("moving") && config.debug && player.hasTag("log")) {
 			console.warn(`${player.nameTag} speed is ${playerSpeed} Velocity.X ${playerVelocity.x}, Y ${playerVelocity.y}, Z ${playerVelocity.z}`);
 		}
-		// Some little test thing
-		if(player.hasTag("remove")) {
-			player.removeTag("remove");
-			player.remove()
-		}
-
-		// If player has the tag meme we do what alice anticheat cant
-		if(player.hasTag("meme")) {
-			if(player.hasTag("moving")) {
-				flag(player, "Autowalk", "A", "Movement", "maths", "e+0.1-coffee", false);
-			}
-			if(player.hasTag("jump")) {
-				flag(player, "Autojump", "A", "Movement", "maths", "energy = milk + coffee^2", false);
-			}
-			if(player.hasTag("cactus")) {
-				flag(player, "Anticactus", "A", "Exploit", "maths", "e+0.1 x i need help", false);
-			}
-		}
 
 		const blockBelow = player.dimension.getBlock({x: player.location.x, y: player.location.y - 1, z: player.location.z}) ?? {typeId: "minecraft:air"};
 		if(blockBelow.typeId.includes("ice")) {
@@ -370,6 +382,9 @@ Minecraft.system.runInterval(() => {
 		if(player.hasTag("trident")) {
 			setScore(player, "right", 0)
 		}
+		if(blockBelow.typeId.includes("end_portal")) {
+			player.addTag("end_portal")
+        }
 
 		// This is for debugging a players fall distance/speed
 		if(Math.abs(player.fallDistance) > 0 && player.hasTag("debugFall")) {
@@ -426,91 +441,9 @@ Minecraft.system.runInterval(() => {
 		//                   Fly Checks
 		// ==================================
 		if(config.generalModules.fly === true && !player.hasTag("nofly") && !player.hasTag("op")) {
-
-			// Fly/A = Old Fly/F
-			if(config.modules.flyA.enabled) {
-				if(aroundAir(player) === true && !player.getEffect("jump_boost")) {
-					const currentYPos = player.location.y;
-					const oldY = oldYPos.get(player) || currentYPos;
-					let max_v_up = 0.52;
-					if(player.isJumping) {
-						max_v_up = 0.7;
-					}
-					if(!player.hasTag("nofly") && !player.hasTag("nofly") && (!player.hasTag("damaged") && !player.hasTag("fall_damage")) && !player.isGliding) {
-						//const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
-						
-						const prediction = (playerVelocity.y > max_v_up && aroundAir(player) === true && playerVelocity.y !== 1 || playerVelocity.y < -3.92 && aroundAir(player) === true) && playerVelocity.y !== -1 && playerVelocity.y > -9
-						if(player.getEffect("speed") && player.getEffect("speed").amplifier > 5)  continue;
-						if(prediction && getScore(player, "tick_counter2", 0) > 3 && player.fallDistance < 25 && !player.hasTag("placing")) {
-							flag(player, "Fly", "A", "Movement", "y-velocity", playerVelocity.y, false);
-						}
-					}
-					oldOldYPos.set(player, oldY);
-					oldYPos.set(player, currentYPos);
-				}
-			}
-
-			// New Fly/B = old Fly/A
-			if(config.modules.flyB.enabled) {
-				if (config.modules.flyB.enabled && !player.hasTag("op") && !player.isFlying && !player.isOnGround && !player.isJumping && !player.hasTag("nofly") && (!player.hasTag("damaged") || !player.hasTag("fall_damage")) && !player.isGliding && !player.getEffect("speed") &&!player.getEffect("slow_falling")) {
-					// Checks for invalid downwards accelerations
-					/*
-						This is a mix of a bunch o different stuffs because too much random stuff spread out is
-						1. Annoying to understand and handle
-						2. Can cause performance issues with the server
-					*/
-					// Get all data
-					const oldxp = oldx.get(player) || 0;
-					const oldzp = oldz.get(player) || 0;
-					const oldoldxp = oldoldx.get(player) || 0;
-					const oldoldzp = oldoldz.get(player) || 0;
-
-					// We calculate 2 diffferences so that we can compare the 2
-					const diff1 = Math.abs(oldoldxp - oldxp);
-					const diff2 = Math.abs(oldoldzp - oldzp);
-					const diff3 = Math.abs(oldxp - player.location.x);
-					const diff4 = Math.abs(oldzp - player.location.z);
-
-					// Calculate the final differences
-					const final1 = Math.abs(diff1 - diff2) / 2;
-					const final2 = Math.abs(diff3 - diff4) / 2;
-
-					// If the differences are the same, flag for fly/B
-					
-					if (final1 === final2 && final2 !== 0) {
-						// if the player is in Air, continue to flag
-						if(aroundAir(player)) {
-							flag(player, "Fly", "B", "Movement", "difference", final1, false);
-						}
-					}
-
-					// If the player is above world height, flag
-					if(aroundAir(player) && player.location.y > 319 && !player.isOnGround && !player.hasTag("elytra")) {
-						flag(player, "Fly", "B", "Movement", "y", player.location.y, false);
-						player.teleport({x: player.location.x, y: player.location.y -150, z: player.location.z});
-					}
-
-					// Update all maps if the player is in air
-					if(aroundAir(player) && !player.isOnGround) {
-						oldx.set(player, player.location.x);
-						oldz.set(player, player.location.z);
-						oldoldx.set(player, oldxp);
-						oldoldz.set(player, oldzp);
-					}
-				}
-			}
-
-			// Fly/C = Old fly/G
-			// This fly check can cause some false flags with funny extra conditions while jumping
-			if(config.modules.flyC.enabled && player.fallDistance < config.modules.flyC.fallDistance && !player.hasTag("trident") && !player.hasTag("ground") && !player.hasTag("nofly") &&  (!player.hasTag("damaged") || !player.hasTag("fall_damage")) && player.hasTag("strict") && !player.hasTag("slime")) {
-				// Stopping false flags
-				if(!player.isJumping && !player.isGliding && !player.isFlying && !player.hasTag("jump") && !player.hasTag("op")) {
-					
-					if(aroundAir(player) === true && Math.abs(playerVelocity.y) > 0.1) {
-						flag(player, "Fly", "C", "Movement", "fallDistance", player.fallDistance, false);
-					}	
-				}
-			}	
+			fly_a(player);
+			fly_b(player,oldx,oldz,oldoldx,oldoldz);
+			fly_c(player);
 		}
 
 		// ==================================
@@ -519,93 +452,27 @@ Minecraft.system.runInterval(() => {
 
 		if(config.generalModules.speed && !player.hasTag("nospeed")) {
 			// Speed/A = Checks for high speed
+			speed_a(player);
 
-			// In speed/A we make sure we are still able to check players who have the speed effect! We do this by adding an estimate effect multiplier to the max speed.
-			if(config.modules.speedA.enabled && hVelocity(player) > 0.05) {
-				// Check if the player has an effect or not
-				if(player.getEffect("speed")) {
-
-					// Define everything that is needed
-					const maxSpeed = config.modules.speedA.speed;
-					const speedEffectValue = player.getEffect("speed").amplifier;
-					let modifiedSpeed = maxSpeed; 
-					
-					// Add to the maxspeed value the corisponding amount
-					for (let i = 0; i < speedEffectValue; i++) {
-						// Add 0.3 to make sure there are no false flags
-						modifiedSpeed += 0.3; 
-					}
-
-					// If the speed is higher than the max speed, flag the player for Speed/A
-					if(playerSpeed > modifiedSpeed && !player.hasTag("damaged") && !player.hasTag("op") && !player.isFlying && !player.hasTag("trident") && !player.hasTag("ice") && !player.hasTag("slime")) {
-						flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
-					}
-				} else {
-					// If the player doesnt have the strict tag, be more tolerant
-					if(!player.hasTag("strict")) {
-						if(playerSpeed > config.modules.speedA.speed + 0.1 && !player.hasTag("strict") && !player.hasTag("damaged") && !player.hasTag("op") && !player.isFlying && !player.hasTag("trident") && !player.hasTag("ice") && !player.hasTag("slime")) {
-							flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
-						}
-					
-					} else {
-						// If the player doesnt have the the strict tag, be lesss tolerant
-						if(playerSpeed > config.modules.speedA.speed && !player.hasTag("damaged") && !player.hasTag("op") && !player.isFlying && !player.hasTag("trident") && !player.hasTag("ice") && !player.hasTag("slime")) {
-							flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
-						}
-					}
-				}
-			}
 			// Speed/B = Checks for bhop and vhop velocities
-
-			if(config.modules.speedB.enabled) {
-				if(playerSpeed > 0.2 && !player.hasTag("damaged") && !player.hasTag("ice") && !player.hasTag("slime") && !player.isFlying && !player.hasTag("spec") && !player.hasTag("gmc")) {
-					const yV = Math.abs(playerVelocity.y).toFixed(4);
-					const prediction = yV === "0.1000" || yV === "0.6000" || yV === "0.8000" || yV === "0.9000" || yV === "0.0830" || yV === "0.2280" || yV === "0.3200" || yV === "0.2302" || yV === "0.0428" || yV === "0.1212" || yV === "0.0428" || yV === "1.1661" || yV === "1.0244" || yV === "0.3331";
-					if(prediction) {
-						flag(player, "Speed", "B", "Movement", "y-Velocity", yV, true);
-					}
-				}
-			}
-
+			speed_b(player);
 		}
 
 		// ==================================
 		//                 Motion Checks
 		// ==================================
-		if(config.generalModules.motion && !player.hasTag("nomotion")) {
+		if(config.generalModules.motion && !player.hasTag("nomotion") && !player.hasTag("end_portal")) {
 			// Motion/A = Checks for very high speed in air
-			if(config.modules.motionA.enabled) {
-				if(playerSpeed > config.modules.badpacketsB.speed) {
-					if(player.hasTag("ground")) {
-						flag(player, "Motion", "A", "Movement", "speed", playerSpeed, true);
-						player.addTag("strict");
-					}
-				}
-			}
+			motion_a(player);
 
 			// Motion/B = checks for invalid vertical motion
-			if(config.modules.motionB.enabled) {
-				if(player.isFlying && playerSpeed > 7) {
-					flag(player, "Motion", "B", "Movement", "speed", playerSpeed, true);
-				}
-			}
+			motion_b(player);
 
 			// Motion/C = Checks for fly / glide / bhop like velocity
-			if(config.modules.motionC.enabled && Math.abs(playerVelocity.y).toFixed(4) === "0.1552" && !player.isJumping && !player.isGliding && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.hasTag("gmc")) {
-				const pos1 = {x: player.location.x - 2, y: player.location.y - 1, z: player.location.z - 2};
-				const pos2 = {x: player.location.x + 2, y: player.location.y + 2, z: player.location.z + 2};
-
-				const isInAir = !getBlocksBetween(pos1, pos2).some((block) => player.dimension.getBlock(block)?.typeId !== "minecraft:air");
-				if(isInAir && aroundAir(player) && player.fallDistance < 30) flag(player, "Motion", "C", "Movement", "vertical_speed", Math.abs(playerVelocity.y).toFixed(4), true);
-					else if(config.debug) console.warn(`${new Date().toISOString()} | ${player.name} was detected with Motion/C but was found near solid blocks.`);
-			}
+			motion_c(player);
 
 			// Motion/D = Checks for invalid movements
-			if(config.modules.motionD.enabled) {
-				if(player.fallDistance === 0 && player.hasTag("jumping") && player.isJumping) {
-					flag(player, "Motion", "D", "Movement", "fallDistance", player.fallDistance, false);
-				}
-			}
+			motion_d(player);
 		}
 
 		// ==================================
@@ -615,93 +482,22 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
 
 
-			// Checks for derp rotation (Really fast)
-			if(config.modules.badpacketsD.enabled) {
-				const currentRotation = player.getRotation();
+			badpackets_d(player, lastPlayerYawRotations, lastYawDiff);
 
-				if (!lastPlayerYawRotations.has(player)) {
-					lastPlayerYawRotations.set(player, currentRotation.y);
-					continue;
-				}
-		
-				const yawDiff = Math.abs(currentRotation.y - lastPlayerYawRotations.get(player));
-				if(player.hasTag("logDiff")) {
-					console.warn(`${new Date().toISOString()} |${player.name} rot diff = ${yawDiff}!`)
-				}
-				// Check for the condition
-				// So, with the derp module, it changes the players rotation by 4 or 2, so its really really really easy to detect
-				// There is another mode on it which BadPackets/F tries to detect, but its hard because of how it works
-				if (yawDiff === 2 && lastYawDiff.get(player) === 4 || yawDiff === 4 && lastYawDiff.get(player) === 2 || yawDiff === 2 && lastYawDiff.get(player) === 2) {
-					flag(player, "BadPackets", "D", "Rotation", "yawdiff", yawDiff, false)
-					
-				}
 
-				// Update stored rotations
-				lastPlayerYawRotations.set(player, currentRotation.y);
-				lastYawDiff.set(player, yawDiff);
-				
-			}
+			exploit_b(player);
 
-			// Permission Spoof, so if someone is flying but doesnt have permission to fly
-			if(config.modules.badpacketsH.enabled ) {
-				if(player.isFlying && (!player.hasTag("op"))) {
-					flag(player, "BadPackets","H", "Permision", "isFlying", "true", true);
-					player.runCommandAsync(`ability "${player.name}" mayfly false`);
-					setTitle(player, "Flying is not enabled", "Please turn it off");
-				}
-			}
-
-			// Impossible Locations
-			if(player.location.y < -104 && config.modules.exploitB.enabled) {
-				player.teleport({x: player.location.x, y: -104, z: player.location.z});
-				flag(player, "Exploit", "B", "Packet", "y pos", player.location.y);
-			}
 
 			// Checks for a players rotation being a flat number
-			if((Number.isInteger(rotation.x) || Number.isInteger(rotation.y)) && rotation.x !== 0 && rotation.y !== 0 && rotation.x !== 90 && rotation.x !== 60 && rotation.x !== -85) flag(player, "BadPackets", "F", "Rotation", "xRot",`${rotation.x},yRot=${rotation.y}`, true);
+			badpackets_f(player);
+			badpackets_g(player);
+			badpackets_h(player);
+			badpackets_i(player);
+			badpackets_e(player, lastPosition);
 
-			// Impossible Rotations
-			// Having your pitch over 90 isnt possible! Horion client might be able to do it
-			if(Math.abs(rotation.x) > config.modules.badpacketsI.angle && config.modules.badpacketsI.enabled || Math.abs(rotation.x) === 54.09275817871094 && config.modules.badpacketsI.enabled) {
-				flag(player, "BadPackets", "I", "Rotation", "angle", rotation.x, true);
-			}
 
-			// BadPackets/E = Checks for a disabler on Vector client that can bypasss 90% of movement checks
-			// Average ratted client :skull:
-			if(config.modules.badpacketsE.enabled) {
-				if(lastPosition.get(player)) {
-					const diffx = Math.abs(lastPosition.get(player).x - player.location.x);
-					const diffz = Math.abs(lastPosition.get(player).z - player.location.z);
-					if(playerSpeed === 0 && diffx > 0.5 && diffz > 0.5 && playerVelocity.y !== 0) {
-						flag(player, "BadPackets", "E", "Movement", "speed", playerSpeed, true);
-					}
-				}
-				// Set new values
-				lastPosition.set(player, {x: player.location.x, y: player.location.y, z: player.location.z});
-				// I don't feel like making a whole new check for this
-				if(playerVelocity.y === 0 && playerVelocity.isJumping) {
-					flag(player, "BadPackets", "E", "Movement", "yVelocity", playerVelocity.y, false);
-				}
-			}
 		
-			// BadPackets/G = Checks for invalid actions
-			// So like if someone attacks while placing a block, or if someone breaks and places a block, not possible!
-			if(config.modules.badpacketsG.enabled) {
-				if(player.hasTag("placing") && player.hasTag("attacking")) {
-					flag(player, "BadPackets", "G", "Packet", "actions", "Placement, Attacking", false);
-				}
-				if(player.hasTag("placing") && player.hasTag("breaking") && !player.hasTag("snow") && !player.hasTag("gmc")) {
-					flag(player, "BadPackets", "G", "Packet", "actions", "Placement, Breaking", false);
-				}
-				if (player.hasTag("attacking") && player.hasTag("breaking")) {
-					flag(player, "BadPackets", "G", "Packet", "actions", "Breaking, Attacking", false);
-				}
-				if(player.hasTag("usingItem") && (player.hasTag("attacking") || player.hasTag("placing") || player.hasTag("breaking"))) {
-					flag(player, "BadPackets", "G", "Packet", "actions", "ItemUse, Attacking", false);
-				}
 
-				
-			}
 
 		}
 
@@ -709,65 +505,14 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.movement) {
 
 			// Strafe/A looks for a player changing their x or z velocity while in the air (Under most conditions this isnt possible by large amounts)
-			if(config.modules.strafeA.enabled && !player.isJumping && !player.hasTag("nostrafe") && !player.hasTag("damaged") && !player.isFlying && !player.hasTag("op")) {
-				if(lastXZv.get(player)) {
-					// calculate velocity differences
-					const x_diff = Math.abs(lastXZv.get(player).x - playerVelocity.x);
-					const z_diff = Math.abs(lastXZv.get(player).z - playerVelocity.z);
+			strafe_a(player, lastXZv);
+			
 
-					// If the player seems to be using any sort of strafe cheats, flag them for Strafe/A
-					if(hVelocity(player) > 1 && (x_diff > 0.1 || z_diff > 0.1)) {
-						flag(player, "Strafe", "A", "Movement", "x_diff", `${x_diff}, z_diff=${z_diff}`, true);
-					}
-				}
-				// Set the new lastXZv to the current player velocity values.
-				lastXZv.set(player, {x: playerVelocity.x, z: playerVelocity.z});
-			}
-			// NoSlow/A = speed limit check
-			if(config.modules.noslowA.enabled && playerSpeed >= config.modules.noslowA.speed && playerSpeed <= config.modules.noslowA.maxSpeed && !player.hasTag("ice") && !player.hasTag("slime") && !player.hasTag("no-noslow")) {
-				if(!player.getEffect("speed") && player.hasTag('moving') && player.hasTag('right') && player.hasTag('ground') && !player.hasTag('jump') && !player.hasTag('gliding') && !player.hasTag('swimming') && !player.hasTag("trident") && getScore(player, "right") >= 5 && !player.hasTag("damaged")) {
-					flag(player, "NoSlow", "A", "Movement", "speed", playerSpeed, true);
-					currentVL++;
-				}
-			}
+			noslow_a(player);
 
-			// NoSlow/B = Checks for speeding while in webs
-			if(config.modules.noslowB.enabled && !player.hasTag("no-noslow") && playerSpeed !== 0 && player.isOnGround && player.fallDistance === 0 && !player.hasTag("spec")) {
-				const pos1 = {x: player.location.x , y: player.location.y, z: player.location.z};
-				const pos2 = {x: player.location.x, y: player.location.y, z: player.location.z};
 
-				const isInWeb = !getBlocksBetween(pos1, pos2).some((block) => player.dimension.getBlock(block)?.typeId !== "minecraft:web");
-				if(player.hasTag("moving") && isInWeb && Math.abs(playerVelocity.y) < 0.1 && !player.getEffect("speed")) {
-					flag(player, "NoSlow", "B", "Movement", "speed", playerSpeed, true);
-				}
-			}
+			prediction_a(player, fastStopLog);
 
-			// Prediction/A = Checks for fast stop
-			if(config.modules.predictionA.enabled && !player.hasTag("noprediction")) {
-				if(playerSpeed === 0) {
-					const lastSpeed = fastStopLog.get(player) || 0;
-					const currentSpeed = getSpeed(player);
-
-					// This checks for hovering with Fly or Using glide
-					const prediction1 = playerVelocity.y === -0.9657211303710938 || playerVelocity.y === -0.02566051483154297;
-					if(currentSpeed === 0 && lastSpeed > 0.22) {
-						const pos1 = {x: player.location.x - 2, y: player.location.y, z: player.location.z - 2};
-						const pos2 = {x: player.location.x + 2, y: player.location.y + 2, z: player.location.z + 2};
-		
-						const isInAir = !getBlocksBetween(pos1, pos2).some((block) => player.dimension.getBlock(block)?.typeId !== "minecraft:air");
-						if(isInAir && playerSpeed === 0) {
-							if(!player.isJumping && !player.hasTag("moving")) {
-								flag(player, "Prediction", "A", "Movement", "lastSpeed", lastSpeed, false);
-							}
-						}
-					}
-
-					// Simple glide check (-0.01)
-					if(prediction1) {
-						flag(player, "Prediction", "A", "Movement", "yVelocity", playerVelocity.y, false);
-					}
-				}
-			}
 			
 		}
 	
@@ -876,169 +621,23 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	//   The best in the game
 
 	if(config.generalModules.scaffold && !player.hasTag("noscaffold")) {
-		// Scaffold/a = checks for upwards scaffold
-		// Need to improve this because its really easy to false flag
-		if(config.modules.scaffoldA.enabled && playerSpeed < 0.2) {
-			// get block under player
-			const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
-			
-			if(player.getBlockFromViewDirection().id !== block.id && player.location.y > block.location.y) {
-				flag(player, "Scaffold", "A", "Placement", "block", player.getBlockFromViewDirection().id, false);
-			}
-			
-		}
 
-		// Scaffold/B = Checks for a certain head rotation that horion clients scaffold uses (with bypass mode on), the rotation bypasses scaffold/C so that is why this is here
-		if(config.modules.scaffoldB.enabled) {
-			//const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
-			if(!player.isFlying) {
-				const clientRotations = [46.596282958984375, 46.59794616699219, 46.598968505859375, 46.5970458984375, 46.60420227050781, 46.605743408203125, 46.599029541015625, 46.609466552734375, 46.60064697265625, 46.597686767578125, -85];
-				if(!player.hasTag("trident")) {
-					if(rotation.x === 60 || rotation.x === 77.68765258789062 || rotation.x === 77.68768310546875 || rotation.x === 77.68777465820312 || rotation.x === 77.68795776367188 || clientRotations.includes(rotation.x)) {
-				
-						flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);	
-						
-					}
-				}
-			}	
-		}
 
-		// Scaffold/C = Checks for not looking where you are placing, it has measures in place to not false with the dumb bedrock bridinging mechanics.
-		if(config.modules.scaffoldC.enabled === true) {
-			
-			const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
-			if(!player.isFlying && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
-				// The actual check
-				
-				if(!player.hasTag("right") && !player.hasTag("trident") && rotation.x < config.modules.scaffoldC.angle && !player.isJumping && !player.hasTag("jump") && playerVelocity.y < 0.1) {
-					flag(player, "Scaffold", "C", "Placement", "invalidKeypress", `!right,angle=${rotation.x}`, false);
-					
-				}
-			}
-		}
+		scaffold_b(player);
+
+		scaffold_c(player, block);
 		
 		
-		if(config.modules.scaffoldD.enabled) {
+		scaffold_d(player, block, lastPlacePitch);
 
-			if(lastPlacePitch.get(player)) {
-				let pitch_diff = Math.abs(lastPlacePitch.get(player) - rotation.x);
-				// List of the differences between the last place and the current rotation
-				const rotationDifferences = [
-					6.87432861328125,
-					1.52850341796875,
-					2.228729248046875,
-					1.676239013671875,
-					2.18382263183594,
-					1.66786193847656,
-					0.81658935546875,
-					0.329559326171875,
-					1.72975158691406,
-					2.70010375976563,
-					1.67823791503906,
-					2.16250610351563,
-					1.65989685058594,
-					1.72856140136719,
-					2.23068237304688,
-					1.71002197265625,
-					2.19158935546875,
-					1.69364929199219,
-					3.07861328125,
-					2.97360992431641,
-					2.27449035644531,
-					1.44749450683594,
-					1.81301116943359,
-					1.47972869873047,
-					6.05283569335938, 
-					9.66135215759277, 
-					5.66259765625,   
-					8.94805145263672, 
-					3.95509338378906, 
-					6.14602661132813, 
-					2.16079711914062, 
-					5.73162841796875, 
-					2.68417358398438, 
-					6.15313720703125, 
-					3.55624389648437, 
-					5.67083740234375, 
-					1.90574645996094, 
-					4.28034973144531, 
-					1.79312133789063, 
-					4.74583435058594, 
-					1.80088806152344, 
-					4.53787231445313, 
-					1.50727844238281, 
-					4.10185241699219, 
-					1.50425720214844, 
-					4.291748046875,   
-					2.2454833984375,  
-					3.6058349609375,  
-					1.20573425292969, 
-					3.21308898925781, 
-					1.75494384765625, 
-					3.11309814453125, 
-					1.71617126464844, 
-					3.46534729003906, 
-					2.06148529052734, 
-					3.11279296875,    
-					1.47979736328125, 
-					2.68540191650391, 
-					1.82327270507812, 
-					3.50386047363281, 
-					2.54501342773438  
-				  ];
-		       // Check if the difference is in the list
-				if(rotationDifferences.includes(pitch_diff)) {
-					flag(player, "Scaffold", "D", "Placement", "pitch_diff", pitch_diff, false);
-				}
-			}
-			// If the blocks location is below -64 flag
-			if(block.location.y < -64) {
-				flag(player, "Scaffold", "D", "Placement", "location", block.location.y, false);
-			}
-		}
+		scaffold_f(player, block);
 
-		// Scaffold/E = Speed limit check
-		if(config.modules.scaffoldE.enabled) {
-			if(!player.isFlying && !player.hasTag("op")) {
-				if(playerSpeed > config.modules.scaffoldE.speed && !player.hasTag("speed") || playerSpeed > config.modules.scaffoldE.speed - 0.1 && player.hasTag("strict")) {
-					flag(player, "Scaffold", "E", "Placement", "speed", playerSpeed, false);
-				}
-			}
-		}
 
-		// Scaffold/F = Place limit check (Amount of blocks placed in a scaffold ish way per 20 ticks)
-		if(config.modules.scaffoldF.enabled) {
-			const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.y - player.location.y, 2) + Math.pow(block.location.z - player.location.z, 2));
-			if(distance < 2) {
-				const valueOfBlocks = getScore(player, "scaffoldAmount", 0)
-				setScore(player, "scaffoldAmount", valueOfBlocks + 1);
-			}
-		}
 
-		// Tower/A = Checks for 90 degree rotation
-		if(config.modules.towerA.enabled) {
-			// get block under player
-			const blockUnder = player.dimension.getBlock({x: Math.floor(player.location.x), y: Math.floor(player.location.y) - 1, z: Math.floor(player.location.z)});
-			if(rotation.x === 90 && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
-				flag(player, "Tower", "A", "Placement", "xRot", "90", true);
-				if(config.modules.towerA.undoPlace) {
-					undoPlace = true;
-				}
-			}
-		}
+		tower_a(player, block);
 	}
 
-	// Reach/B = checks for placing blocks too far away
-	if(config.modules.reachB.enabled && !player.hasTag("noreach") && playerVelocity.y === 0 && player.fallDistance < 3) {
-		const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.y - player.location.y, 2) + Math.pow(block.location.z - player.location.z, 2));
-		if(distance > config.modules.reachB.reach && player.fallDistance !== 0) {
-			flag(player, "Reach", "B", "Placement", "distance", distance, false);
-			undoPlace = true;
-		}
-		if(distance === 1.25) {
-			flag(player, "Scaffold", "E", "Placement", "distance", distance, false);
-		}
-	}
+	reach_b(player, block);
 	// This is used for other checks
 	if(!player.hasTag("placing")) {
 		player.addTag("placing");
@@ -1079,32 +678,7 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 		}
 	}
 
-	if(config.modules.breakerA.enabled) {
-    // Check if the block being broken is a bed
-		if(block.typeId.includes("minecraft:bed")) {
-			// Check the blocks around the player
-			let isBreakingThroughBlock = false;
-			for (let x = -1; x <= 1; x++) {
-				for (let y = -1; y <= 1; y++) {
-					for (let z = -1; z <= 1; z++) {
-						const blockAroundPlayer = dimension.getBlock({ x: player.location.x + x, y: player.location.y + y, z: player.location.z + z });
-						if (blockAroundPlayer.typeId !== "minecraft:air") {
-							isBreakingThroughBlock = true;
-							break;
-						}
-					}
-					if(isBreakingThroughBlock) break;
-				}
-				if(isBreakingThroughBlock) break;
-			}
 
-			if(isBreakingThroughBlock) {
-				// The player is breaking a bed through a block, flag for BedFucker
-				flag(player, "Breaker", "A", "Misc", "blocks between bed", "true", false);
-				revertBlock = true;
-			}
-		}
-	}
 
 	// nuker/a = checks if a player breaks more than 3 blocks in a tick
 	if(config.modules.nukerA.enabled) {
@@ -1116,6 +690,7 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 			
 		}
 	}
+	nuker_b(player, block, brokenBlockId)
 	if(brokenBlockId === "minecraft:snow" || brokenBlockId === "minecraft:snow_layer") {
 		player.addTag("snow");
 	}
@@ -1434,28 +1009,8 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
                                                                      
 	if(config.generalModules.aim) {
 		// If the player flag for aim checks is true, then report the player
-		if (playerFlags.has(player)) {
-			// Report the player
-			if(player.hasTag("a")) {
-				const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
-				if(distance > 2 && angleCalc(player, entity) < 2) {
-					entityHit.cancel;
-					flag(player, "Aim", "A", "Combat", "rotation", `${rotation.x},${rotation.y}`, false);
-					player.removeTag("a");
-				}
-			} 
-			if(player.hasTag("b")) {
-				entityHit.cancel;
-				flag(player, "Aim", "B", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
-				player.removeTag("b");
-			}
+		aimCheckManager(player, entity);
 
-		}
-		if(player.hasTag("c")) {
-			entityHit.cancel;
-			flag(player, "Aim", "C", "Combat", "x", `${rotation.x},y=${rotation.y}`, false);
-			player.removeTag("c");
-		}
 
 	}
 
@@ -1464,95 +1019,17 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	// ==================================
 	if(config.generalModules.killaura && !player.hasTag("noaura")) {
 		// killaura/C = checks for multi-aura
-		if(config.modules.killauraC.enabled && !player.entitiesHit.includes(entity.id)) 
-			player.entitiesHit.push(entity.id);
-			if(player.entitiesHit.length >= config.modules.killauraC.entities) {
-				flag(player, "KillAura", "C", "Combat", "entitiesHit", player.entitiesHit.length, true);
-				player.addTag("strict");
-			}
-
-
-		// Check if the player attacks an entity while looking perfectly down
-		if(config.modules.killauraD.enabled && !player.hasTag("sleeping")) {
-			const rotation = player.getRotation()
-			const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
-			if(Math.abs(rotation.x) > 79 && distance > 3.5) {
-				if(!player.hasTag("trident") && !player.hasTag("bow")) {
-					flag(player, "Killaura", "D", "Combat", "angle", `${rotation.x},distance=${distance}`, false);
-					
-				}
-			}
-		}
-
-		// Hitbox/A = Checks for not having the attacked player on your screen
-		// This can cause some issues on laggy servers so im gonna have to try fix that
-		if(config.modules.hitboxA.enabled && !player.hasTag("nohitbox")) {
-			const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
-			if(angleCalc(player, entity) > 95 && distance > 4) {
-				flag(player, "Hitbox", "A", "Combat", "angle", "> 90", false);
-			}
-		}
- 
-		// Killaura/F = Checks for looking at the center of an entity
-
-		if(config.modules.killauraF.enabled && player.hasTag("strict")) {
-			if(angleCalc(player, entity) < 0.99) {
-				if(Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2)) > 2.6 && !player.hasTag("strict")) {
-					flag(player, "Killaura", "F", "Combat", "angle", angleCalc(player, entity), true);
-				}
-			}
-		}
-
-		if(config.modules.killauraF.enabled) {
-			// Havent tested this yet but it should be able to detect horion client
-			if(angleCalc(player, entity) < 1) {
-                setScore(player, "killauraF_buffer", getScore(player, "killauraF_buffer", 0) + 1);
-            }
-			setScore(player, "killauraF_reset", getScore(player, "killauraF_reset", 0) + 1);
-			if(getScore(player, "killauraF_reset", 0) > 30) {
-				
-				setScore(player, "killauraF_reset", 0);
-				if(getScore(player, "killauraF_buffer", 0) > 7) {
-					
-					flag(player, "Killaura", "F", "Combat", "accuracy", getScore(player, "killauraF_buffer", 0), false);	
-					setScore(player, "killauraF_buffer", 0);
-				}
-				setScore(player, "killauraF_buffer", 0);
-			}
-		}  
+		killaura_c(player, entity);
+		killaura_d(player, entity);
+		killaura_f(player, entity);
 	}
+
+	hitbox_a(player, entity);
 
 	
-	// reach/A = check if a player hits an entity more then 5.1 blocks away
-	if((config.modules.reachA.enabled || config.generalModules.reach) && !player.hasTag("noreach")) {
-		// get the difference between 2 three dimensional coordinates
-		
-		const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
-		if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}`);
-		const entityVelocity = entity.getVelocity();
-		
-		
-		if(distance - hVelocity(entity) / 2 > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 1.5 || distance > 4.1 && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && !player.hasTag("moving") && getSpeed(player) === 0 && hVelocity(player) === 0) {
-			const checkGmc = world.getPlayers({
-				excludeGameModes: [Minecraft.GameMode.creative],
-				name: player.name
-			});
-			
-			if([...checkGmc].length !== 0) {
-				
-				flag(player, "Reach", "A", "Combat", "entity", `${entity.typeId},distance=${distance}`, false);
-				
-			}
-		}
-	}
-	
+	badpackets_c(player, entity);	
 
-	// badpackets[3] = checks if a player attacks themselves
-	// some (bad) hacks use this to bypass anti-movement cheat checks
-	if(config.modules.badpacketsC.enabled && entity.id === player.id) {
-		flag(player, "BadPackets", "C", "Exploit");
-		entityHit.cancel;
-	}
+
 	if(!player.hasTag("attacking")) {
 		player.addTag("attacking")
 	}

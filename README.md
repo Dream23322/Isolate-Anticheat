@@ -15,25 +15,18 @@ its not, i added a bunch of checks and commands, im also making it run better an
 # Main checks!
 __**Fly**__
 
-A - Checks for horion vanilla velocity
+A - High air velocity
 
-B - Vertical fly
+B - Not falling
 
-C - Horizontal Fly
-
-D - Velocity
-
-E - Velocity (2)
-
-F - Fall 
-
-G - Fall
-
+C - Falling upwards
 
 
 **__Speed__**
 
 A - Unatural speed
+
+B - Speed y velocity
 
 **Motion**
 
