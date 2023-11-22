@@ -8,5 +8,5 @@ export function kickall(message) {
 
     const player = message.sender;
 
-    player.runCommandAsync("event entity @a scythe:kick");
+    player.runCommandAsync("event entity @a[tag=!op] scythe:kick");
 }

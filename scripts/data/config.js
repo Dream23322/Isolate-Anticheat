@@ -465,6 +465,12 @@ export default
             "punishment": "none",
             "minVlbeforePunishment": 0
         },
+        "nukerB": {
+            "enabled": true,
+            "description":"Checks for breaking a bed that is behind you",
+            "punishment": "kick",
+            "minVlbeforePunishment": 0
+        },
         "speedA": {
             "enabled": true,
             "description":"Checks for impossible speeds",
@@ -487,7 +493,7 @@ export default
         "speedC": {
             "enabled": true,
             "velocity": 0.412,
-            "speed": 2.35,
+            "speed": 2.45,
             "velocity": 0.2,
             "punishment": "none"
         },

@@ -16,7 +16,7 @@ tellraw @s {"rawtext":[{"text":"§u!notify§r - Enables/Disables cheat notificat
 tellraw @s {"rawtext":[{"text":"§u!credits§r - Shows credits, that's it."}]}
 tellraw @s {"rawtext":[{"text":"§u!op <username>§r - Op's a player in Isolate Anticheat features."}]}
 tellraw @s {"rawtext":[{"text":"§u!unban <username> [reason]§r - Unbans the specified player."}]}
-tellraw @s {"rawtext":[{"text":"§u!kickall §r - Kicks everyone from the server (including you)."}]}
+tellraw @s {"rawtext":[{"text":"§u!kickall §r - Kicks everyone from the server (except op's)."}]}
 
 
 tellraw @s {"rawtext":[{"text":"\n§l§dOptional Features"}]}
