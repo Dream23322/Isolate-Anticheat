@@ -5,7 +5,7 @@ The most advanced minecraft bedrock edition anticheat for pvp style servers
 Isolate Anticheat is the most advanced minecraft bedrock edition anticheat, it has the best fly, killaura, speed, reach and exploit checks in an anticheat. It was made because there are issues in scythe that seem to not be getting fixed.
 Its also made with copious amounts of:
 **COFFEE**
-![[Alt text]()](https://github.com/gNewl/Isolate-Anticheat/blob/main/image.png?raw=true)
+![Alt text](https://github.com/gNewl/Isolate-Anticheat/blob/main/image.png?raw=true)
 
 
 # Dear mf's who think this is a pure copy of scythe
