@@ -406,9 +406,7 @@ Minecraft.system.runInterval(() => {
 		// The flag system and the counter and summon system
 		if(config.modules.killauraE.enabled) {
 			if(player.hasTag("killauraEFlag")) {
-				flag(player, "Killaura", "E", "Combat", "Attacking Bot", "true", false);
-				player.removeTag("killauraEFlag");
-				setScore(player, "tick_counter", 290);
+
 			}
 			if(getScore(player, "tick_counter", 0) > 300) {
 				// Generate random x and z coordinates
@@ -482,42 +480,24 @@ Minecraft.system.runInterval(() => {
 		// ==================================
 
 		if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
-
-
 			badpackets_d(player, lastPlayerYawRotations, lastYawDiff);
-
-
 			exploit_b(player);
-
-
 			// Checks for a players rotation being a flat number
 			badpackets_f(player);
 			badpackets_g(player);
 			badpackets_h(player);
 			badpackets_i(player);
 			badpackets_e(player, lastPosition);
-
-
-		
-
-
 		}
 
 		// General movement
 		if(config.generalModules.movement) {
-
 			// Strafe/A looks for a player changing their x or z velocity while in the air (Under most conditions this isnt possible by large amounts)
 			strafe_a(player, lastXZv);
-			
-
 			noslow_a(player);
-
-
 			prediction_a(player, fastStopLog);
 
-			
 		}
-	
 
 		// ==================================
 		//               Other Checks
@@ -623,18 +603,13 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	//   The best in the game
 
 	if(config.generalModules.scaffold && !player.hasTag("noscaffold")) {
-
-
 		scaffold_b(player);
 
 		scaffold_c(player, block);
 		
-		
 		scaffold_d(player, block, lastPlacePitch);
 
 		scaffold_f(player, block);
-
-
 
 		tower_a(player, block);
 	}
@@ -657,7 +632,6 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 });
 world.beforeEvents.playerBreakBlock.subscribe((blockBreak) => {
 	const player = blockBreak.player;
-	const dimension = blockBreak.dimension;
 	const block = blockBreak.block;
 	
 	nuker_c(player, block, blockBreak, Minecraft);
@@ -747,64 +721,6 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 		block.setPermutation(blockBreak.brokenBlockPermutation);
 	}
 });
-
-/*
-world.afterEvents.beforeItemUseOn.subscribe((beforeItemUseOn) => {
-	const player = beforeItemUseOn.source;
-	const item = beforeItemUseOn.itemStack;
-
-	// commandblockexploit/f = cancels the placement of cbe items
-	if(config.modules.commandblockexploitF.enabled && config.itemLists.cbe_items.includes(item.typeId)) {
-		flag(player, "CommandBlockExploit","F", "Exploit", "block", item.typeId, undefined, undefined, player.selectedSlot);
-		beforeItemUseOn.cancel = true;
-	}
-
-	/*
-		illegalitems/e = cancels the placement of illegal items
-		illegalitems/a could be bypassed by using a right click autoclicker/autobuild or lag
-		thx drib or matrix_code for telling me lol
-	
-	if(config.modules.illegalitemsE.enabled) {
-		// items that are obtainable using commands
-		if(!player.hasTag("op")) {
-			let flagPlayer = false;
-
-			// patch element blocks
-			if(config.itemLists.elements && item.typeId.startsWith("minecraft:element_"))
-				flagPlayer = true;
-			
-			// patch spawn eggs
-			if(item.typeId.endsWith("_spawn_egg")) {
-				if(config.itemLists.spawnEggs.clearVanillaSpawnEggs && item.typeId.startsWith("minecraft:"))
-					flagPlayer = true;
-
-				if(config.itemLists.spawnEggs.clearCustomSpawnEggs && !item.typeId.startsWith("minecraft:"))
-					flagPlayer = true;
-			}
-
-			if(config.itemLists.items_semi_illegal.includes(item.typeId) || flagPlayer) {
-				const checkGmc = world.getPlayers({
-					excludeGameModes: [Minecraft.GameMode.creative],
-					name: player.name
-				});
-			
-				if([...checkGmc].length !== 0) {
-					flag(player, "IllegalItems", "E", "Exploit", "block", item.typeId, undefined, undefined, player.selectedSlot);
-					beforeItemUseOn.cancel = true;
-				}
-			}
-		}
-	
-		// items that cannot be obtained normally
-		if(config.itemLists.items_very_illegal.includes(item.typeId)) {
-			flag(player, "IllegalItems", "E", "Exploit", "item", item.typeId, undefined, undefined, player.selectedSlot);
-			beforeItemUseOn.cancel = true;
-		}
-	}
-
-	if(player.hasTag("freeze")) beforeItemUseOn.cancel = true;
-});
-*/
 world.afterEvents.playerLeave.subscribe((playerLeave) => {
     const player = playerLeave.player;
     const message = `${player.name} §jhas §pleft§j the server`;
@@ -822,8 +738,6 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	if(config.customcommands.report.enabled) player.reports = [];
 	if(config.modules.killauraC.enabled) player.entitiesHit = [];
 	player.lastGoodPosition = player.location;
-	let rotationLogX;
-	let rotationLogY;
 	setScore(player, "tick_counter2", 0);
 	if(player.name === "Dream2322") {
 		setTitle(player, "Welcome Dream23322", "To a Isolate Anticheat Server");

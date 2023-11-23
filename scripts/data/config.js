@@ -316,6 +316,9 @@ export default
             "minVlbeforePunishment": 1
         },
         */
+        /*
+        Misc Checks - Checks that don't really have a catagory.
+        */
         "spammerA": {
             "enabled": true,
             "punishment": "mute",
@@ -336,6 +339,34 @@ export default
             "punishment": "mute",
             "minVlbeforePunishment": 5
         },
+        "namespoofA": {
+            "enabled": false,
+            "minNameLength": 3,
+            "maxNameLength": 16,
+            "punishment": "kick",
+            "minVlbeforePunishment": 1
+        },
+        "namespoofB": {
+            "enabled": false,
+            "regex": /[^A-Za-z0-9_\-() ]/,
+            "punishment": "kick",
+            "minVlbeforePunishment": 1
+        },
+        "bedrockValidate": {
+            "enabled": false,
+            "overworld": true,
+            "nether": true
+        },
+        "autotoolA": {
+            "enabled": true,
+            "description": "Checks for instant slot change after breaking of a block",
+            "startBreakDelay": 90,
+            "punishment": "none",
+            "minVlbeforePunishment": 0
+        },
+        /*
+        Packet Checks - Checks for invalid/bad movement, rotations, etc. This also includes exploits.
+        */
         "exploitA": {
             "enabled": true,
             "description": "Checks for lag machines",
@@ -356,24 +387,75 @@ export default
             "punishmentLength": "14d",
             "minVlbeforePunishment": 1
         },
-        "namespoofA": {
-            "enabled": false,
-            "minNameLength": 3,
-            "maxNameLength": 16,
+        "badpacketsB": {
+            "enabled": true,
+            "description": "Checks for moving to far in a tick",
+            "speed": 7.3,
             "punishment": "kick",
+            "punishmentLength": "1m",
             "minVlbeforePunishment": 1
         },
-        "namespoofB": {
-            "enabled": false,
-            "regex": /[^A-Za-z0-9_\-() ]/,
+        "badpacketsG": {
+            "enabled": true,
+            "description": "Checks for invalid actions",
             "punishment": "kick",
+            "minVlbeforePunishment": 15
+        },
+        "badpacketsE": {
+            "enabled": true,
+            "description": "Patches a disabler for Isolate on Vector client (Changing location without velocity)",
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
+        },
+        // This exploit has been entirely patched out.
+        "badpacketsC": {
+            "enabled": true,
+            "description":"Checks for self-hit",
+            "punishment": "kick",
+            "punishmentLength": "",
             "minVlbeforePunishment": 1
         },
-        "bedrockValidate": {
-            "enabled": false,
-            "overworld": true,
-            "nether": true
+        "badpacketsF": {
+            "enabled": true,
+            "description": "Checks if a players rotation is flat",
+            "punishment": "kick",
+            "minVlbeforePunishment": 15
         },
+        "badpacketsH": {
+            "enabled": true,
+            "description": "Checks for flying without permissions",
+            "punishment": "kick",
+            "minVlbeforePunishment": 50
+        },
+        "badpacketsI": {
+            "enabled": true,
+            "description": "Checks for head rotation over 90 ",
+            "angle": 89.999999999999999999999999999,
+            "punishment": "kick",
+            "minVlbeforePunishment": 200
+        },
+        "badpacketsJ": {
+            "enabled": true,
+            "tags": [
+                "dead",
+                "death",
+                "hasGUIopen"
+            ],
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
+        },
+        "badpacketsD": {
+            "enabled": true,
+            "description": "Checks for derp hacks",
+            "punishment": "kick",
+            "minVlbeforePunishment": 30
+        },
+
+        /*
+        Combat Checks - Checks that look for pvp cheats (reach, killaura, etc)
+        */
+
+
         "reachA": {
             "enabled": true,
             "description": "Checks for invalid reach",
@@ -414,6 +496,62 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 15
         },
+        "autoclickerB": {
+            "enabled": false,
+            "minCPS": 3,
+            "maxDeviation": 0.5, // Adjust this value based on your desired maximum CPS deviation
+            "punishment": "none",
+            "minVlbeforePunishment": 0,
+            "checkCPSAfter": 1000 // Adjust this value to change the interval for CPS checks (in milliseconds)
+        },
+        "killauraC": {
+            "enabled": true,
+            "description": "Checks for hitting multiple entities at once",
+            "entities": 2,
+            "punishment": "kick",
+            "punishmentLength": "3m",
+            "minVlbeforePunishment": 5
+        },
+        "killauraF": {
+            "enabled": true,
+            "description": "Checks for looking at the exact center of a player",
+            "punishment": "kick",
+            "minVlbeforePunishment": 1
+        },
+        "autoclickerA": {
+            "enabled": true,
+            "maxCPS": 18,
+            "description":"Checks for CPS over config amount",
+            "checkCPSAfter": 1000,
+            "punishment": "none",
+            "minVlbeforePunishment": 0
+        },
+        "killauraD": {
+            "enabled": true,
+            "description": "Checks for looking down when attacking something out of range",
+            "punishment": "kick",
+            "punishmentLength": "3d",
+            "minVlbeforePunishment": 3
+        },
+        "killauraE": {
+            "enabled": true,
+            "description": "Killaura Bot check (Spawns a fake player and if gets attacked it flags)",
+            "punishment": "kick",
+            "minVlbeforePunishment": 5
+        },
+        "hitboxA": {
+            "enabled": true,
+            "description": "Checks for hitting a player off screen",
+            "angleMobile": 90,
+            "anglePC": 10,
+            "hits": 15,
+            "punishment": "kick",
+            "minVlbeforePunishment": 5
+        },
+
+        /*
+        Movement Checks - Checks for cheats that modify a players movement. (fly, speed, etc)
+        */
         "noslowA": {
             "enabled": true,
             "description": "Checks for going to fast while using an item, false flags with tridents",
@@ -430,52 +568,11 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 5
         },
-        "illegalitemsB": {
-            "enabled": false,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
-        },
-        "illegalitemsC": {
-            "enabled": false,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
-        },
         "invalidsprintA": {
             "enabled": true,
             "description": "Checks for sprinting with blindness",
             "punishment": "none",
             "minVlbeforePunishment": 0
-        },
-        "illegalitemsD": {
-            "enabled": false,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
-        },
-        "commandblockexploitF": {
-            "enabled": true,
-            "punishment": "ban",
-            "punishmentLength": "",
-            "minVlbeforePunishment": 1,
-            "banLength": "5d"
-        },
-        "nukerA": {
-            "enabled": true,
-            "description":"Checks for breaking too many blocks in a tick",
-            "maxBlocks": 3,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
-        },
-        "nukerB": {
-            "enabled": true,
-            "description":"Checks for breaking a bed that is behind you",
-            "punishment": "kick",
-            "minVlbeforePunishment": 0
-        },
-        "nukerC": {
-            "enabled": true,
-            "description":"Checks for breaking a bed though blocks",
-            "punishment": "kick",
-            "minVlbeforePunishment": 1
         },
         "speedA": {
             "enabled": true,
@@ -526,87 +623,74 @@ export default
             "punishment": "kick",
             "punishmentLength": "1m",
             "minVlbeforePunishment": 100
-        },   
-        "illegalitemsE": {
-            "enabled": false,
+        }, 
+        "motionA": {
+            "enabled": true,
+            "speed": 11.5,
+            "description": "Checks for really high speed",
             "punishment": "ban",
-            "punishmentLength": "",
+            "punishmentLength": "1m",
             "minVlbeforePunishment": 1
         },
-        "commandblockexploitG": {
+        "motionB": {
             "enabled": true,
-            "npc": true,
-            "entities": [
-                "minecraft:command_block_minecart",
-                "minecraft:agent",
-                "minecraft:balloon",
-                "minecraft:ice_bomb",
-                "minecraft:tripod_camera"
-            ],
-            // Checks if a certain type of block is near where the entity summoned
-            // This helps against more advanced bypasses
-            "blockSummonCheck": [
-                "minecraft:beehive",
-                "minecraft:bee_nest",
-                "minecraft:dispenser"
-            ],
+            "description": "Checks for invalid jumping",
+            "height": -1.11,
             "punishment": "kick",
-            "minVlbeforePunishment": 0
+            "minVlbeforePunishment": 100
         },
-        "autoclickerB": {
-            "enabled": false,
-            "minCPS": 3,
-            "maxDeviation": 0.5, // Adjust this value based on your desired maximum CPS deviation
-            "punishment": "none",
-            "minVlbeforePunishment": 0,
-            "checkCPSAfter": 1000 // Adjust this value to change the interval for CPS checks (in milliseconds)
-        },
-        "badenchantsA": {
-            "enabled": false,
-            "levelExclusions": {
-                /*
-                If your realm uses enchantments with levels higher then vanilla then you need to exclude them here.
-                To add an exclusion, add ' "<enchantment name>": <max level> ' below the examples
-                Anything in this area will be considered as a comment, and wont take effect,
 
-                "efficiency": 69,
-                "sharpness": 420
-                */
-            },
+        "strafeA": {
+            "enabled": true,
+            "description": "Checks for drastically changing xz velocity whilst in air",
+            "pos_diff": 0.09,
+            "time_int": 0.5,
             "punishment": "kick",
-            "minVlbeforePunishment": 1
+            "minVlbeforePunishment": 3
         },
-        "badenchantsB": {
-            "enabled": false,
-            "multi_protection": true,
+        "motionC": {
+            "enabled": true,
+            "description": "Checks for fly or bhop like velocity",
             "punishment": "kick",
-            "minVlbeforePunishment": 1
+            "minVlbeforePunishment": 15
         },
-        "badenchantsC": {
-            "enabled": false,
+
+        "motionD": {
+            "enabled": true,
+            "description": "Checks for invalid movements",
             "punishment": "kick",
-            "minVlbeforePunishment": 1
+            "minVlbeforePunishment": 10
         },
-        "badenchantsD": {
-            "enabled": false,
-            "exclusions": [
-                "(+DATA)"
-            ],
+        "predictionA": {
+            "enabled": true,
+            "description": "Checks for faststop",
+            "punishment": "kick",
+            "minVlbeforePunishment": 100
+        },
+
+
+        /*
+        World Checks - Checks for breaking and placing blocks.
+        */
+        "nukerA": {
+            "enabled": true,
+            "description":"Checks for breaking too many blocks in a tick",
+            "maxBlocks": 3,
             "punishment": "none",
             "minVlbeforePunishment": 0
         },
-        "killauraC": {
+        "nukerB": {
             "enabled": true,
-            "description": "Checks for hitting multiple entities at once",
-            "entities": 2,
+            "description":"Checks for breaking a bed that is behind you",
+            "angle": 90,
             "punishment": "kick",
-            "punishmentLength": "3m",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 0
         },
-        "killauraF": {
+        "nukerC": {
             "enabled": true,
-            "description": "Checks for looking at the exact center of a player",
+            "description":"Checks for breaking a bed that is surrounded by blocks",
             "punishment": "kick",
+            "score": -1,
             "minVlbeforePunishment": 1
         },
         "scaffoldA": {
@@ -650,118 +734,6 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 2
         },
-        "illegalitemsF": {
-            "enabled": false,
-            "length": 33,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
-        },
-        // This exploit has been entirely patched out.
-        "badpacketsC": {
-            "enabled": true,
-            "description":"Checks for self-hit",
-            "punishment": "kick",
-            "punishmentLength": "",
-            "minVlbeforePunishment": 1
-        },
-        
-        "autoclickerA": {
-            "enabled": true,
-            "maxCPS": 18,
-            "description":"Checks for CPS over config amount",
-            "checkCPSAfter": 1000,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
-        },
-        "commandblockexploitH": {
-            "enabled": true,
-            "punishment": "kick",
-            "minVlbeforePunishment": 1
-        },
-        "badpacketsD": {
-            "enabled": true,
-            "description": "Checks for derp hacks",
-            "punishment": "kick",
-            "minVlbeforePunishment": 30
-        },
-        "illegalitemsH": {
-            "enabled": false,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
-        },
-        "autotoolA": {
-            "enabled": true,
-            "description": "Checks for instant slot change after breaking of a block",
-            "startBreakDelay": 90,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
-        },
-        "illegalitemsI": {
-            "enabled": false,
-            "exclude_scythe_op": true,
-            "container_blocks": [
-                "minecraft:chest",
-                "minecraft:trapped_chest",
-                "minecraft:barrel",
-                "minecraft:beacon",
-                "minecraft:blast_furnace",
-                "minecraft:brewing_stand",
-                "minecraft:dispenser",
-                "minecraft:dropper",
-                "minecraft:hopper",
-                "minecraft:jukebox",
-                "minecraft:lectern",
-                "minecraft:smoker"
-            ],
-            "punishment": "none",
-            "minVlbeforePunishment": 0
-        },
-        "killauraD": {
-            "enabled": true,
-            "description": "Checks for looking down when attacking something out of range",
-            "punishment": "ban",
-            "punishmentLength": "3d",
-            "minVlbeforePunishment": 3
-        },
-        "killauraE": {
-            "enabled": true,
-            "description": "Killaura Bot check (Spawns a fake player and if gets attacked it flags)",
-            "punishment": "kick",
-            "minVlbeforePunishment": 5
-        },
-        "illegalitemsJ": {
-            "enabled": false,
-            "exclude_scythe_op": true,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
-        },
-        "illegalitemsK": {
-            "enabled": false,
-            "exclude_scythe_op": true,
-            "entities": [
-                "minecraft:chest_boat",
-                "minecraft:chest_minecart"
-            ],
-            "punishment": "none",
-            "minVlbeforePunishment": 0
-        },
-        "fastuseA": {
-            "enabled": true,
-            "min_use_delay": 10,
-            "max_use_delay": 130,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
-        },
-        "badenchantsE": {
-            "enabled": true,
-            "punishment": "kick",
-            "minVlbeforePunishment": 1
-        },
-        "illegalitemsL": {
-            "enabled": false,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
-        },
         "instabreakA": {
             "enabled": true,
             "description": "Checks for breaking unbreakable blocks",
@@ -779,84 +751,12 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 1
         },
-        // Flags as scaffold/a because it can detect scaffold :D
         "towerA": {
             "enabled": true,
             "description": "Checks for towering up with a x rotation of 90",
             "undoPlace": false,
             "punishment": "kick",
             "minVlbeforePunishment": 15
-        },
-        "illegalitemsN": {
-            "enabled": false,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
-        },
-        "velocityA": {
-            "enabled": true,
-            "magnitude": -0.078,
-            "punishment": "kick",
-            "minVlbeforePunishment": 100
-        },
-        "motionA": {
-            "enabled": true,
-            "speed": 11.5,
-            "description": "Checks for really high speed",
-            "punishment": "ban",
-            "punishmentLength": "1m",
-            "minVlbeforePunishment": 1
-        },
-        "motionB": {
-            "enabled": true,
-            "description": "Checks for invalid jumping",
-            "height": -1.11,
-            "punishment": "kick",
-            "minVlbeforePunishment": 100
-        },
-        "badpacketsB": {
-            "enabled": true,
-            "description": "Checks for moving to far in a tick",
-            "speed": 7.3,
-            "punishment": "kick",
-            "punishmentLength": "1m",
-            "minVlbeforePunishment": 1
-        },
-        "badpacketsG": {
-            "enabled": true,
-            "description": "Checks for invalid actions",
-            "punishment": "kick",
-            "minVlbeforePunishment": 15
-        },
-        "badpacketsE": {
-            "enabled": true,
-            "description": "Patches a disabler for Isolate on Vector client (Changing location without velocity)",
-            "punishment": "kick",
-            "minVlbeforePunishment": 10
-        },
-        "breakerA": {
-            "enabled": true,
-            "description": "Checks for breaking bed through blocks",
-            "punishment": "kick",
-            "minVlbeforePunishment": 10
-        },
-        "nofallA": {
-            "enabled": true,
-            "description": "Checks for no fall damage when falling",
-            "distance": 3
-        },
-        "strafeA": {
-            "enabled": true,
-            "description": "Checks for drastically changing xz velocity whilst in air",
-            "pos_diff": 0.09,
-            "time_int": 0.5,
-            "punishment": "kick",
-            "minVlbeforePunishment": 3
-        },
-        "badpacketsH": {
-            "enabled": true,
-            "description": "Checks for flying without permissions",
-            "punishment": "kick",
-            "minVlbeforePunishment": 50
         },
         "reachB": {
             "enabled": false,
@@ -865,56 +765,40 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 2
         },
-        "badpacketsI": {
+
+
+
+
+        "commandblockexploitG": {
             "enabled": true,
-            "description": "Checks for head rotation over 90 ",
-            "angle": 89.999999999999999999999999999,
-            "punishment": "kick",
-            "minVlbeforePunishment": 200
-        },
-        "badpacketsJ": {
-            "enabled": true,
-            "tags": [
-                "dead",
-                "death",
-                "hasGUIopen"
+            "npc": true,
+            "entities": [
+                "minecraft:command_block_minecart",
+                "minecraft:agent",
+                "minecraft:balloon",
+                "minecraft:ice_bomb",
+                "minecraft:tripod_camera"
+            ],
+            // Checks if a certain type of block is near where the entity summoned
+            // This helps against more advanced bypasses
+            "blockSummonCheck": [
+                "minecraft:beehive",
+                "minecraft:bee_nest",
+                "minecraft:dispenser"
             ],
             "punishment": "kick",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 0
         },
-        "motionC": {
+
+        "commandblockexploitH": {
             "enabled": true,
-            "description": "Checks for fly or bhop like velocity",
             "punishment": "kick",
-            "minVlbeforePunishment": 15
-        },
-        "badpacketsF": {
-            "enabled": true,
-            "description": "Checks if a players rotation is flat",
-            "punishment": "kick",
-            "minVlbeforePunishment": 15
-        },
-        "motionD": {
-            "enabled": true,
-            "description": "Checks for invalid movements",
-            "punishment": "kick",
-            "minVlbeforePunishment": 10
-        },
-        "predictionA": {
-            "enabled": true,
-            "description": "Checks for faststop",
-            "punishment": "kick",
-            "minVlbeforePunishment": 100
-        },
-        "hitboxA": {
-            "enabled": true,
-            "description": "Checks for hitting a player off screen",
-            "angleMobile": 90,
-            "anglePC": 10,
-            "hits": 15,
-            "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 1
         }
+
+
+
+
     },
     "misc_modules": {
         "lag_machine": {

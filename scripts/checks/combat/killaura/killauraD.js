@@ -1,8 +1,6 @@
 import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
-import { aroundAir } from "../../../utils/gameUtil.js";
-import { getScore } from "../../../util";
 
 export function killaura_d(player, entity) {
     if(config.modules.killauraD.enabled && !player.hasTag("sleeping")) {

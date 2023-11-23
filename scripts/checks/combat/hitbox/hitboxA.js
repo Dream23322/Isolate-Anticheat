@@ -1,8 +1,6 @@
 import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
-import { aroundAir } from "../../../utils/gameUtil.js";
-import { getScore } from "../../../util";
 import { angleCalc } from "../../../utils/mathUtil.js";
 
 export function hitbox_a(player, entity) {

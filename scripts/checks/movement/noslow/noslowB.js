@@ -1,8 +1,9 @@
 import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
-import { hVelocity, getSpeed } from "../../../utils/mathUtil.js";
+import { getSpeed } from "../../../utils/mathUtil.js";
 import { getBlocksBetween } from "../../../utils/mathUtil.js";
+
 export function noslow_a(player) {
     const playerSpeed = getSpeed(player);
     const playerVelocity = player.getVelocity();
