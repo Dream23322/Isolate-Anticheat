@@ -459,7 +459,7 @@ export default
             "banLength": "5d"
         },
         "nukerA": {
-            "enabled": false,
+            "enabled": true,
             "description":"Checks for breaking too many blocks in a tick",
             "maxBlocks": 3,
             "punishment": "none",
@@ -470,6 +470,12 @@ export default
             "description":"Checks for breaking a bed that is behind you",
             "punishment": "kick",
             "minVlbeforePunishment": 0
+        },
+        "nukerC": {
+            "enabled": true,
+            "description":"Checks for breaking a bed though blocks",
+            "punishment": "kick",
+            "minVlbeforePunishment": 1
         },
         "speedA": {
             "enabled": true,

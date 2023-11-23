@@ -7,6 +7,9 @@ Its also made with copious amounts of:
 **COFFEE**
 ![Alt text](image.png)
 
+# Discord
+Join the [Discord](https://discord.gg/YQXUXMHwbM) for more updates, news and support.
+
 
 # Dear mf's who think this is a pure copy of scythe
 its not, i added a bunch of checks and commands, im also making it run better and just be better in general so piss off
