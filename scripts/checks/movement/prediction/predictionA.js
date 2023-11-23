@@ -5,6 +5,7 @@ import { hVelocity, getSpeed } from "../../../utils/mathUtil.js";
 
 export function prediction_a(player, fastStopLog) {
     const playerSpeed = getSpeed(player);
+    const playerVelocity = player.getVelocity();
     // Prediction/A = Checks for fast stop
     if(config.modules.predictionA.enabled && !player.hasTag("noprediction")) {
         if(playerSpeed === 0) {

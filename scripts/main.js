@@ -42,6 +42,7 @@ import { reach_b } from "./checks/world/reach/reachB.js";
 import { badpackets_e } from "./checks/packet/badpackets/badpacketsE.js";
 import { prediction_a } from "./checks/movement/prediction/predictionA.js";
 import { scaffold_f } from "./checks/world/scaffold/scaffoldF.js";
+import { nuker_c } from "./checks/world/nuker/nukerC.js";
 
 const world = Minecraft.world;
 
@@ -151,6 +152,7 @@ world.afterEvents.entityHurt.subscribe((data) => {
 	if(config.debug) console.warn(`${new Date().toISOString()} |${player.name} was damaged!`);
 	
 });
+
 Minecraft.system.runInterval(() => {
   if (config.modules.itemSpawnRateLimit.enabled) data.entitiesSpawnedInLastTick = 0;
 
@@ -653,7 +655,14 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 		}
 	}
 });
+world.beforeEvents.playerBreakBlock.subscribe((blockBreak) => {
+	const player = blockBreak.player;
+	const dimension = blockBreak.dimension;
+	const block = blockBreak.block;
+	
+	nuker_c(player, block, blockBreak, Minecraft);
 
+});
 world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 	const player = blockBreak.player;
 	const dimension = blockBreak.dimension;
@@ -690,7 +699,11 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 			
 		}
 	}
-	nuker_b(player, block, brokenBlockId)
+	nuker_b(player, block, brokenBlockId);
+
+	//nuker_c(player, block, brokenBlockId);
+
+
 	if(brokenBlockId === "minecraft:snow" || brokenBlockId === "minecraft:snow_layer") {
 		player.addTag("snow");
 	}
