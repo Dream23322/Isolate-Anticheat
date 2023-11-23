@@ -1,6 +1,5 @@
 /*
 Aim check manager 
-
 This is needed because the aim checks run in a different event loop than the flag.
 */
 

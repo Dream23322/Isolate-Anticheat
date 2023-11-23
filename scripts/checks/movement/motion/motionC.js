@@ -1,8 +1,8 @@
 import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
-
 import { getBlocksBetween } from "../../../utils/mathUtil.js";
+
 export function motion_c(player) {
     const playerVelocity = player.getVelocity();
     if(config.modules.motionC.enabled && Math.abs(playerVelocity.y).toFixed(4) === "0.1552" && !player.isJumping && !player.isGliding && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.hasTag("gmc") && !player.hasTag("damaged")) {

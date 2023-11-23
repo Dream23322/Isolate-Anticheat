@@ -1,7 +1,6 @@
 import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
-import { hVelocity, getSpeed } from "../../../utils/mathUtil.js";
 
 export function scaffold_c(player, block) {
     const rotation = player.getRotation();

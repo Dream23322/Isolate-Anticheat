@@ -1,9 +1,7 @@
 import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
-import { hVelocity, getSpeed } from "../../../utils/mathUtil.js";
-
-
+import { hVelocity } from "../../../utils/mathUtil.js";
 
 export function strafe_a(player, lastXZv) {
     const playerVelocity = player.getVelocity();
