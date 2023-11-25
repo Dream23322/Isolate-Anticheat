@@ -2,6 +2,7 @@ import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getBlocksBetween } from "../../../utils/mathUtil.js";
+import { aroundAir } from "../../../utils/gameUtil.js";
 
 export function motion_c(player) {
     const playerVelocity = player.getVelocity();

@@ -3,7 +3,7 @@ tellraw @s {"rawtext":[{"text":"§l§a                 Isolate Anticheat"}]}
 tellraw @s {"rawtext":[{"text":"§l§6----------------------------------------------------------"}]}
 tellraw @s {"rawtext":[{"text":"§Isolate AntiCheat is an anticheat for Minecraft Bedrock Edition."}]}
 tellraw @s {"rawtext":[{"text":"§lDeveloped and maintained by Dream23322/4urxra."}]}
-tellraw @s {"rawtext":[{"text":"§lGithub: https://github.com/Dream23322/Isolate-Anticheat}]}
+tellraw @s {"rawtext":[{"text":"§lGithub: https://github.com/Dream23322/Isolate-Anticheat"}]}
 tellraw @s {"rawtext":[{"text":"\n"}]}
 tellraw @s {"rawtext":[{"text":"§l§a               Major Contributers"}]}
 tellraw @s {"rawtext":[{"text":"§l§6----------------------------------------------------------"}]}

@@ -10,6 +10,20 @@ import { banList } from "./data/globalban.js";
 import data from "./data/data.js";
 import { mainGui, playerSettingsMenuSelected } from "./features/ui.js";
 import { banplayer } from "./data/paradoxban.js";
+
+
+// Import Packet Checks
+import { badpackets_f } from "./checks/packet/badpackets/badpacketsF.js";
+import { badpackets_g } from "./checks/packet/badpackets/badpacketsG.js";
+import { badpackets_h } from "./checks/packet/badpackets/badpacketsH.js";
+import { badpackets_i } from "./checks/packet/badpackets/badpacketsI.js";
+import { exploit_b } from "./checks/packet/exploit/exploitB.js";
+import { badpackets_c } from "./checks/packet/badpackets/badpacketsC.js";
+import { badpackets_d } from "./checks/packet/badpackets/badpacketsD.js";
+import { badpackets_e } from "./checks/packet/badpackets/badpacketsE.js";
+
+// Import movement checks
+import { speed_c } from "./checks/movement/speed/speedC.js";
 import { speed_a } from "./checks/movement/speed/speedA.js";
 import { speed_b } from "./checks/movement/speed/speedB.js";
 import { motion_a } from "./checks/movement/motion/motionA.js";
@@ -17,32 +31,31 @@ import { motion_b } from "./checks/movement/motion/motionB.js";
 import { motion_c } from "./checks/movement/motion/motionC.js";
 import { motion_d } from "./checks/movement/motion/motionD.js";
 import { fly_c } from "./checks/movement/fly/flyC.js";
+import { fly_b } from "./checks/movement/fly/flyB.js";
 import { fly_a } from "./checks/movement/fly/flyA.js";
 import { strafe_a } from "./checks/movement/strafe/strafeA.js";
+import { prediction_a } from "./checks/movement/prediction/predictionA.js";
+import { noslow_a } from "./checks/movement/noslow/noslowA.js";
+import { noslow_b } from "./checks/movement/noslow/noslowB.js";
+
+// Import World Checks
+import { scaffold_f } from "./checks/world/scaffold/scaffoldF.js";
+import { nuker_c } from "./checks/world/nuker/nukerC.js";
+import { nuker_b } from "./checks/world/nuker/nukerB.js";
+import { reach_b } from "./checks/world/reach/reachB.js";
 import { scaffold_b } from "./checks/world/scaffold/scaffoldB.js";
 import { scaffold_c } from "./checks/world/scaffold/scaffoldC.js";
-import { fly_b } from "./checks/movement/fly/flyB.js";
+import { tower_a } from "./checks/world/scaffold/towerA.js";
 import { scaffold_d } from "./checks/world/scaffold/scaffoldD.js";
-import { noslow_a } from "./checks/movement/noslow/noslowA.js";
-import { badpackets_f } from "./checks/packet/badpackets/badpacketsF.js";
-import { badpackets_g } from "./checks/packet/badpackets/badpacketsG.js";
-import { badpackets_h } from "./checks/packet/badpackets/badpacketsH.js";
-import { badpackets_i } from "./checks/packet/badpackets/badpacketsI.js";
-import { exploit_b } from "./checks/packet/exploit/exploitB.js";
+
+// Import Combat checks
 import { aimCheckManager } from "./checks/combat/aim/aim.js";
 import { killaura_c } from "./checks/combat/killaura/killauraC.js";
 import { killaura_f } from "./checks/combat/killaura/killauraF.js";
 import { killaura_d } from "./checks/combat/killaura/killauraD.js";
 import { hitbox_a } from "./checks/combat/hitbox/hitboxA.js";
-import { badpackets_c } from "./checks/packet/badpackets/badpacketsC.js";
-import { tower_a } from "./checks/world/scaffold/towerA.js";
-import { badpackets_d } from "./checks/packet/badpackets/badpacketsD.js";
-import { nuker_b } from "./checks/world/nuker/nukerB.js";
-import { reach_b } from "./checks/world/reach/reachB.js";
-import { badpackets_e } from "./checks/packet/badpackets/badpacketsE.js";
-import { prediction_a } from "./checks/movement/prediction/predictionA.js";
-import { scaffold_f } from "./checks/world/scaffold/scaffoldF.js";
-import { nuker_c } from "./checks/world/nuker/nukerC.js";
+import { reach_a } from "./checks/combat/reach/reachA.js";
+
 
 const world = Minecraft.world;
 
@@ -62,7 +75,6 @@ const oldoldz = new Map();
 const lastYRot = new Map();
 const oldLastYRot = new Map();
 const lastDeltaZ = new Map();
-const lastAngle = new Map();
 const lastMessage = new Map();
 const lastFallDistance = new Map();
 const lastDeltPitch = new Map();
@@ -71,7 +83,12 @@ const lastCPS = new Map();
 
 const lastXZv = new Map();
 
+
 const lastPosition = new Map();
+
+// Non messy bad Maps
+const speedCLog = new Map();
+
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
 let currentVL;
 world.beforeEvents.chatSend.subscribe((msg) => {
@@ -398,7 +415,8 @@ Minecraft.system.runInterval(() => {
 				}
 			}
 			lastFallDistance.set(player, player.fallDistance);
-		}                                           
+		}     
+		const tickValue = getScore(player, "tickValue", 0);                                      
 		// ---------------------------------
 		// Utilites for the killaura botw
 		// ---------------------------------
@@ -456,6 +474,9 @@ Minecraft.system.runInterval(() => {
 
 			// Speed/B = Checks for bhop and vhop velocities
 			speed_b(player);
+
+			// Speed/C = Position Difference Check
+			speed_c(player, tickValue, speedCLog);
 		}
 
 		// ==================================
@@ -495,6 +516,7 @@ Minecraft.system.runInterval(() => {
 			// Strafe/A looks for a player changing their x or z velocity while in the air (Under most conditions this isnt possible by large amounts)
 			strafe_a(player, lastXZv);
 			noslow_a(player);
+			noslow_b(player);
 			prediction_a(player, fastStopLog);
 
 		}
@@ -505,7 +527,7 @@ Minecraft.system.runInterval(() => {
 
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
 		if(config.modules.scaffoldF.enabled && !player.hasTag("noscaffold")) {
-			const tickValue = getScore(player, "tickValue", 0);
+
 			const valueOfBlocks = getScore(player, "scaffoldAmount", 0);
 			if (tickValue > 20 - 2.67e-11 && playerVelocity.y < 0.3) {
 				let maxBlocks = config.modules.scaffoldF.blocksPerSecond;
@@ -531,7 +553,7 @@ Minecraft.system.runInterval(() => {
 		player.removeTag("usingItem");
 		player.removeTag("breaking");
 		
-		const tickValue = getScore(player, "tickValue", 0);
+
 		if(tickValue > 19) {
 			const currentCounter = getScore(player, "tick_counter", 0);
 			setScore(player, "tick_counter", currentCounter + 1);
@@ -548,6 +570,7 @@ Minecraft.system.runInterval(() => {
 			player.removeTag("fall_damage");
 			setScore(player, "tag_reset", 0);
 		}
+		
 		
 
 		if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
@@ -952,7 +975,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	}
 
 	hitbox_a(player, entity);
-
+	reach_a(player, entity);
 	
 	badpackets_c(player, entity);	
 
