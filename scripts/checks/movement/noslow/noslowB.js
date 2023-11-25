@@ -4,7 +4,7 @@ import config from "../../../data/config.js";
 import { getSpeed } from "../../../utils/mathUtil.js";
 import { getBlocksBetween } from "../../../utils/mathUtil.js";
 
-export function noslow_a(player) {
+export function noslow_b(player) {
     const playerSpeed = getSpeed(player);
     const playerVelocity = player.getVelocity();
     // NoSlow/B = Checks for speeding while in webs

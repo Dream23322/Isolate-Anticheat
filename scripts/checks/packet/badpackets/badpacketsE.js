@@ -15,13 +15,6 @@ export function badpackets_e(player, lastPosition) {
             if(playerSpeed === 0 && diffx > 0.5 && diffz > 0.5 && playerVelocity.y !== 0) {
                 flag(player, "BadPackets", "E", "Movement", "speed", playerSpeed, true);
             }
-            const diff = Math.abs((diffx + diffz) / 2)
-            if(player.hasTag("testing")) {
-                console.log(`Diff: ${diff}`);
-            }   
-            if(diff > 8 && playerSpeed < 0.3 && diff < 4 && playerSpeed !== 0) {
-                flag(player, "BadPackets", "E", "Movement", "Speed", `${playerSpeed},diff=${diff}`, true);
-            }
         }
 
         // Set new values

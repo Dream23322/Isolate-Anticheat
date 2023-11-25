@@ -596,9 +596,10 @@ export default
         "speedC": {
             "enabled": true,
             "velocity": 0.412,
-            "speed": 2.45,
-            "velocity": 0.2,
-            "punishment": "none"
+            "max_bps_h": 8,
+            "max_bps_v": 9,
+            "punishment": "kick",
+            "minVlbeforePunishment":40
         },
         "flyA": {
             "enabled": true,
