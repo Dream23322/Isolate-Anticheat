@@ -609,7 +609,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	if(!player.hasTag("placing")) {
 		player.addTag("placing");
 	}
-	lastPlacePitch.set(player, rotation.x);
+
 	if(undoPlace === true) {
 		try {
 			block.setType(Minecraft.MinecraftBlockTypes.air);

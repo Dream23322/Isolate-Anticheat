@@ -696,8 +696,7 @@ export default
         },
         "scaffoldA": {
             "enabled": true,
-            "description": "Checks for goofy velocity while scaffolding",
-            "max_y_pos_diff": 0.35,
+            "description": "Checks for scaffold rotation",
             "punishment": "kick",
             "minVlbeforePunishment": 3
         },
@@ -717,7 +716,7 @@ export default
         },
         "scaffoldD": {
             "enabled": true,
-            "description":"Checks for invalid slot selection / Invalid placement locations",
+            "description":"Checks for pitch differences",
             "punishment": "kick",
             "minVlbeforePunishment": 5
         },
