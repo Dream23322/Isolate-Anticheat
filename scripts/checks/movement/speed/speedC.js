@@ -64,7 +64,7 @@ export function speed_c(player, tick_counter, speedCLog) {
                     player.addTag("speedC_bypass");
                 }
                 // Check for xyz bps being too high
-                if(xyz_bps > max_xyz_bps && !player.fallDistance < 25 && !player.hasTag("slime") && !player.hasTag("speedC_bypass")) {
+                if(xyz_bps > max_xyz_bps + 3 && !player.fallDistance < 25 && !player.hasTag("slime") && !player.hasTag("speedC_bypass")) {
                     flag(player, "Speed", "C", "Movement", "xyz_bps", xyz_bps, false);
                     player.addTag("speedC_bypass");
                 }

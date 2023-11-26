@@ -919,7 +919,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 
     const rotation = player.getRotation();
 
-
+	
 	// ==================================
 	//                   Aim Flags
 	// ==================================
@@ -936,7 +936,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	// ==================================
 	if(config.generalModules.killaura && !player.hasTag("noaura")) {
 		// killaura/C = checks for multi-aura
-		killaura_c(player, entity);
+		killaura_c(player, entity, entityHit);
 		killaura_d(player, entity);
 		killaura_f(player, entity);
 	}

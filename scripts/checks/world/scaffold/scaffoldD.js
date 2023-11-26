@@ -84,6 +84,8 @@ export function scaffold_d(player, block, lastPlacePitch) {
             if(rotation.x > 83.04 && rotation.x < 84) {
                 if(pitch_diff > 0.011 && pitch_diff < 0.5) {
                     flag(player, "Scaffold", "D", "World", "pitch_diff", pitch_diff, false);
+                }
+            }
         }
         lastPlacePitch.set(player, rotation.x);
         // If the blocks location is below -64 flag
