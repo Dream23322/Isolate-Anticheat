@@ -12,7 +12,7 @@ export function scaffold_b(player) {
             if(!player.hasTag("trident")) {
                 if(rotation.x === 60 || rotation.x === 77.68765258789062 || rotation.x === 77.68768310546875 || rotation.x === 77.68777465820312 || rotation.x === 77.68795776367188 || clientRotations.includes(rotation.x)) {
             
-                    flag(player, "Scaffold", "B", "Placement", "rotation", rotation.x, false);	
+                    flag(player, "Scaffold", "B", "World", "rotation", rotation.x, false);	
                     
                 }
             }

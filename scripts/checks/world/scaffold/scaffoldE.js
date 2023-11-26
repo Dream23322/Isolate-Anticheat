@@ -9,7 +9,7 @@ export function scaffold_c(player, block) {
     if(config.modules.scaffoldE.enabled) {
         if(!player.isFlying && !player.hasTag("op")) {
             if(playerSpeed > config.modules.scaffoldE.speed && !player.hasTag("speed") || playerSpeed > config.modules.scaffoldE.speed - 0.1 && player.hasTag("strict")) {
-                flag(player, "Scaffold", "E", "Placement", "speed", playerSpeed, false);
+                flag(player, "Scaffold", "E", "World", "speed", playerSpeed, false);
             }
         }
     }

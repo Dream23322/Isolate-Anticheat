@@ -74,17 +74,21 @@ export function scaffold_d(player, block, lastPlacePitch) {
               ];
            // Check if the difference is in the list
             if(rotationDifferences.includes(pitch_diff)) {
-                flag(player, "Scaffold", "D", "Placement", "pitch_diff", pitch_diff, false);
+                flag(player, "Scaffold", "D", "World", "pitch_diff", pitch_diff, false);
             }
             if(rotation.x > 86 && rotation.x < 87) {
-                if(pitch_diff > 1 && pitch_diff < 2) {
-                    flag(player, "Scaffold", "D", "Placement", "pitch_diff", pitch_diff, false);
+                if(pitch_diff > 0.11 && pitch_diff < 0.5) {
+                    flag(player, "Scaffold", "D", "World", "pitch_diff", pitch_diff, false);
                 }
             }
+            if(rotation.x > 83.04 && rotation.x < 84) {
+                if(pitch_diff > 0.011 && pitch_diff < 0.5) {
+                    flag(player, "Scaffold", "D", "World", "pitch_diff", pitch_diff, false);
         }
+        lastPlacePitch.set(player, rotation.x);
         // If the blocks location is below -64 flag
         if(block.location.y < -64) {
-            flag(player, "Scaffold", "D", "Placement", "location", block.location.y, false);
+            flag(player, "Scaffold", "D", "World", "location", block.location.y, false);
         }
     }
 }

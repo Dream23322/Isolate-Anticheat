@@ -12,7 +12,7 @@ export function scaffold_a(player, block) {
     if(config.modules.scaffoldA.enabled) {
         const playerRotation = player.geRotation();
         if(playerRotation.x % 1 === 0) {
-            flag(player, "Scaffold", "A", "Movement", "player rot", playerRotation.x % 1, false);
+            flag(player, "Scaffold", "A", "World", "player rot", playerRotation.x % 1, false);
         }
     }
 }
