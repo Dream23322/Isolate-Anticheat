@@ -311,11 +311,6 @@ Minecraft.system.runInterval(() => {
 			player.flagAutotoolA = true;
 			player.autotoolSwitchDelay = Date.now() - player.startBreakTime;
 		}
-		
-		// Crasher/A = invalid pos check
-		if(config.modules.crasherA.enabled && Math.abs(player.location.x) > 30000000 ||
-			Math.abs(player.location.y) > 30000000 || Math.abs(player.location.z) > 30000000) 
-				flag(player, "Crasher", "A", "Exploit", "x_pos", `${player.location.x},y_pos=${player.location.y},z_pos=${player.location.z}`, true);
 
 		// anti-namespoof
 		// these values are set in the playerJoin event
@@ -353,9 +348,6 @@ Minecraft.system.runInterval(() => {
 			} else config.modules.bedrockValidate.enabled = false;
 		}
 
-		// ==================================
-		//                  Sprint Checks
-		// ==================================
 		if(config.generalModules.sprint) {
 			// invalidsprint/a = checks for sprinting with the blindness effect
 			if(config.modules.invalidsprintA.enabled && player.getEffect("blindness") && player.isSprinting)
@@ -417,15 +409,9 @@ Minecraft.system.runInterval(() => {
 			lastFallDistance.set(player, player.fallDistance);
 		}     
 		const tickValue = getScore(player, "tickValue", 0);                                      
-		// ---------------------------------
-		// Utilites for the killaura botw
-		// ---------------------------------
 
 		// The flag system and the counter and summon system
 		if(config.modules.killauraE.enabled) {
-			if(player.hasTag("killauraEFlag")) {
-
-			}
 			if(getScore(player, "tick_counter", 0) > 300) {
 				// Generate random x and z coordinates
 				const x = Math.random() * 6 - 3; 
@@ -441,47 +427,31 @@ Minecraft.system.runInterval(() => {
 		if(player.hasTag("slime")) {
 			setScore(player, "tick_counter2", 0);
 		}
-
-
 		// Store the players last good position
 		// When a movement-related check flags the player, they will be teleported to this position
 		// xRot and yRot being 0 means the player position was modified from player.teleport, which we should ignore
 		if(rotation.x !== 0 && rotation.y !== 0 && player.isOnGround) {
 			const pos1 = {x: player.location.x, y: player.location.y, z: player.location.z};
 			const pos2 = {x: player.location.x, y: player.location.y + 1, z: player.location.z};
-
 			const isInAir = !getBlocksBetween(pos1, pos2).some((block) => player.dimension.getBlock(block)?.typeId !== "minecraft:air");
 			if(isInAir) {
 				player.lastGoodPosition = player.location;
 			}
 		}
-		// ==================================
-		//                   Fly Checks
-		// ==================================
+
 		if(config.generalModules.fly === true && !player.hasTag("nofly") && !player.hasTag("op")) {
 			fly_a(player);
 			fly_b(player,oldx,oldz,oldoldx,oldoldz);
 			fly_c(player);
 		}
 
-		// ==================================
-		//                 Speed Checks
-		// ==================================
-
 		if(config.generalModules.speed && !player.hasTag("nospeed")) {
-			// Speed/A = Checks for high speed
 			speed_a(player);
-
-			// Speed/B = Checks for bhop and vhop velocities
 			speed_b(player);
-
-			// Speed/C = Position Difference Check
 			speed_c(player, tickValue, speedCLog);
 		}
 
-		// ==================================
-		//                 Motion Checks
-		// ==================================
+
 		if(config.generalModules.motion && !player.hasTag("nomotion") && !player.hasTag("end_portal")) {
 			// Motion/A = Checks for very high speed in air
 			motion_a(player);
@@ -496,9 +466,6 @@ Minecraft.system.runInterval(() => {
 			motion_d(player);
 		}
 
-		// ==================================
-		//                 Packet Checks
-		// ==================================
 
 		if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
 			badpackets_d(player, lastPlayerYawRotations, lastYawDiff);
