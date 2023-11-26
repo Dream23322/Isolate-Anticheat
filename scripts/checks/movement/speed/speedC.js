@@ -69,8 +69,7 @@ export function speed_c(player, tick_counter, speedCLog) {
                     player.addTag("speedC_bypass");
                 }
             }
-            player.removeTag("no_speed_c");
-            
+            player.removeTag("no_speed_c");   
         }
     }
     if(tick_counter == 1) {
