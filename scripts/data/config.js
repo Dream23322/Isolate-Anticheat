@@ -599,7 +599,7 @@ export default
             "max_bps_h": 8,
             "max_bps_v": 9,
             "punishment": "kick",
-            "minVlbeforePunishment":40
+            "minVlbeforePunishment":7
         },
         "flyA": {
             "enabled": true,
