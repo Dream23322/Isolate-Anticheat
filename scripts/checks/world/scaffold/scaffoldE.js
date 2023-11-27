@@ -3,6 +3,7 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getSpeed } from "../../../utils/mathUtil.js";
 
+// Probs gonna recode this
 export function scaffold_c(player, block) {
     const playerSpeed = getSpeed(player);
     // Scaffold/E = Speed limit check

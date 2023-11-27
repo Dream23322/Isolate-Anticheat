@@ -1,6 +1,7 @@
 import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
+import { angleCalc } from "../../../utils/mathUtil.js";
 
 export function scaffold_c(player, block) {
     const rotation = player.getRotation();
@@ -12,10 +13,11 @@ export function scaffold_c(player, block) {
         if(!player.isFlying && blockUnder.location.x === block.location.x && blockUnder.location.y === block.location.y && blockUnder.location.z === block.location.z) {
             // The actual check
             
-            if(!player.hasTag("right") && !player.hasTag("trident") && rotation.x < config.modules.scaffoldC.angle && !player.isJumping && !player.hasTag("jump") && playerVelocity.y < 0.1) {
-                flag(player, "Scaffold", "C", "World", "invalidKeypress", `!right,angle=${rotation.x}`, false);
-                
-            }
+            if(!player.hasTag("right") && !player.hasTag("trident") && !player.isJumping && !player.hasTag("jump") && playerVelocity.y < 0.1) {
+                if(angleCalc(player, block) > 100 || rotation.x < config.modules.scaffoldC.angle) {
+                    flag(player, "Scaffold", "C", "World", "invalidKeypress", `!right,angle=${rotation.x}`, false);
+                }
+            }   
         }
     }
 }

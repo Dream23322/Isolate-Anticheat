@@ -7,7 +7,7 @@ export function scaffold_d(player, block, lastPlacePitch) {
     if(config.modules.scaffoldD.enabled) {
 
         if(lastPlacePitch.get(player)) {
-            let pitch_diff = Math.abs(lastPlacePitch.get(player) - rotation.x);
+            let pitch_diff = Math.abs(lastPlacePitch.get(player).a - rotation.x);
             // List of the differences between the last place and the current rotation
             const rotationDifferences = [
                 6.87432861328125,
@@ -76,7 +76,11 @@ export function scaffold_d(player, block, lastPlacePitch) {
             if(rotationDifferences.includes(pitch_diff)) {
                 flag(player, "Scaffold", "D", "World", "pitch_diff", pitch_diff, false);
             }
-            if(rotation.x > 86 && rotation.x < 87) {
+            const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.y - player.location.y, 2) + Math.pow(block.location.z - player.location.z, 2));
+            const invalid = 70 - 40 - 10 * distance;
+
+
+            if(rotation.x > 86 && rotation.x < 87 || rotation.x > 45 && rotation.x < 46 || rotation.x > 77 || invalid || !Number.isInteger(rotation.x) && rotation.x.toFixed(0) === lastPlacePitch.get(player).toFixed(0)) {
                 if(pitch_diff > 0.11 && pitch_diff < 0.5) {
                     flag(player, "Scaffold", "D", "World", "pitch_diff", pitch_diff, false);
                 }
@@ -86,8 +90,12 @@ export function scaffold_d(player, block, lastPlacePitch) {
                     flag(player, "Scaffold", "D", "World", "pitch_diff", pitch_diff, false);
                 }
             }
+            if(lastPlacePitch.get(player).a > rotation.x && lastPlacePitch.get(player).a > lastPlacePitch.get(player).b && pitch_diff > 2) { 
+                flag(player, "Scaffold", "D", "World", "pitch_diff", pitch_diff, false);
+            }
+            
         }
-        lastPlacePitch.set(player, rotation.x);
+        lastPlacePitch.set(player, {a:rotation.x, b: lastPlacePitch.get(player)});
         // If the blocks location is below -64 flag
         if(block.location.y < -64) {
             flag(player, "Scaffold", "D", "World", "location", block.location.y, false);

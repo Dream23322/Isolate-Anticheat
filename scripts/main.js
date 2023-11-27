@@ -55,6 +55,7 @@ import { killaura_f } from "./checks/combat/killaura/killauraF.js";
 import { killaura_d } from "./checks/combat/killaura/killauraD.js";
 import { hitbox_a } from "./checks/combat/hitbox/hitboxA.js";
 import { reach_a } from "./checks/combat/reach/reachA.js";
+import { scaffold_a } from "./checks/world/scaffold/scaffoldA.js";
 
 
 const world = Minecraft.world;
@@ -593,6 +594,8 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	//   The best in the game
 
 	if(config.generalModules.scaffold && !player.hasTag("noscaffold")) {
+		scaffold_a(player, block);
+
 		scaffold_b(player);
 
 		scaffold_c(player, block);
