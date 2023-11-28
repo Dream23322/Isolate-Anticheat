@@ -572,7 +572,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	const { block, player} = blockPlace;
 	const rotation = player.getRotation()
 	const playerVelocity = player.getVelocity();
-	if(config.debug) console.warn(`${player.nameTag} has placed ${block.typeId}. Player Tags: ${player.getTags()} Player X Rotation: ${rotation.x}`);
+	if(config.debug) console.warn(`${player.nameTag} has placed ${block.typeId}. Player Tags: ${player.getTags()} Player X Rotation: ${rotation.x} Player Y Rotation: ${rotation.y}`);
 	const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
 	
 	let undoPlace = false;
@@ -952,7 +952,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	// ==================================
 	if(config.generalModules.killaura && !player.hasTag("noaura")) {
 		// killaura/C = checks for multi-aura
-		killaura_c(player, entity, entityHit);
+		// killaura_c(player, entity, entityHit);
 		killaura_d(player, entity);
 		killaura_f(player, entity);
 	}
@@ -1009,14 +1009,7 @@ world.afterEvents.entityHitBlock.subscribe((entityHit) => {
 world.beforeEvents.itemUse.subscribe((itemUse) => {
 	const { source: player } = itemUse;
 
-	if(config.modules.fastuseA.enabled) {
-		const lastThrowTime = Date.now() - player.lastThrow;
-		if(lastThrowTime > config.modules.fastuseA.min_use_delay && lastThrowTime < config.modules.fastuseA.max_use_delay) {
-			// flag(player, "FastUse", "A", "Combat", "lastThrowTime", lastThrowTime);
-			itemUse.cancel = true;
-		}
-		player.lastThrow = Date.now();
-	}
+
 
 	if(!player.hasTag("usingItem")) {
 		player.addTag("usingItem");
