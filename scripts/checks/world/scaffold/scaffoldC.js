@@ -14,7 +14,7 @@ export function scaffold_c(player, block) {
             // The actual check
             
             if(!player.hasTag("right") && !player.hasTag("trident") && !player.isJumping && !player.hasTag("jump") && playerVelocity.y < 0.1) {
-                if(angleCalc(player, block) > 100 || rotation.x < config.modules.scaffoldC.angle) {
+                if(rotation.x < config.modules.scaffoldC.angle) {
                     flag(player, "Scaffold", "C", "World", "invalidKeypress", `!right,angle=${rotation.x}`, false);
                 }
             }   

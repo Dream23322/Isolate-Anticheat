@@ -56,6 +56,7 @@ import { killaura_d } from "./checks/combat/killaura/killauraD.js";
 import { hitbox_a } from "./checks/combat/hitbox/hitboxA.js";
 import { reach_a } from "./checks/combat/reach/reachA.js";
 import { scaffold_a } from "./checks/world/scaffold/scaffoldA.js";
+import { scaffold_e } from "./checks/world/scaffold/scaffoldE.js";
 
 
 const world = Minecraft.world;
@@ -89,6 +90,7 @@ const lastPosition = new Map();
 
 // Non messy bad Maps
 const speedCLog = new Map();
+const scaffold_a_map = new Map();
 
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
 let currentVL;
@@ -557,6 +559,15 @@ Minecraft.system.runInterval(() => {
 
 });
 const lastPlacePitch = new Map();
+
+// Scaffold/A
+const scaffold_a_1 = new Map();
+const scaffold_a_2 = new Map();
+const scaffold_a_3 = new Map();
+const scaffold_a_4 = new Map();
+const scaffold_a_5 = new Map();
+const scaffold_a_6 = new Map();
+
 world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	const { block, player} = blockPlace;
 	const rotation = player.getRotation()
@@ -594,13 +605,15 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	//   The best in the game
 
 	if(config.generalModules.scaffold && !player.hasTag("noscaffold")) {
-		scaffold_a(player, block);
+		scaffold_a(player, block, scaffold_a_1, scaffold_a_2, scaffold_a_3, scaffold_a_4, scaffold_a_5, scaffold_a_6);
 
 		scaffold_b(player);
 
 		scaffold_c(player, block);
 		
 		scaffold_d(player, block, lastPlacePitch);
+
+		scaffold_e(player, block);
 
 		scaffold_f(player, block);
 
