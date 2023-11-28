@@ -571,3 +571,5 @@ function debugSettingsMenu(player) {
         } else if(response.selection === 7 || response.canceled) mainGui(player);
     });
 }
+
+// very epic
