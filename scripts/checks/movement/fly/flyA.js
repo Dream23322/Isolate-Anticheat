@@ -12,6 +12,7 @@ This check works by looking for a player having a high y velocity, this works be
 
 False Flag Chance: Unlikely
 Effectiveness: Very
+Tested by: hungewrw
 */
 export function fly_a(player) {
     // Fly/A = Velocity Check
