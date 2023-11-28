@@ -436,11 +436,6 @@ export default
         },
         "badpacketsJ": {
             "enabled": true,
-            "tags": [
-                "dead",
-                "death",
-                "hasGUIopen"
-            ],
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },
