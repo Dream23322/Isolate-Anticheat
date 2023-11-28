@@ -57,6 +57,7 @@ import { hitbox_a } from "./checks/combat/hitbox/hitboxA.js";
 import { reach_a } from "./checks/combat/reach/reachA.js";
 import { scaffold_a } from "./checks/world/scaffold/scaffoldA.js";
 import { scaffold_e } from "./checks/world/scaffold/scaffoldE.js";
+import { badpackets_j } from "./checks/packet/badpackets/badpacketsJ.js";
 
 
 const world = Minecraft.world;
@@ -479,6 +480,7 @@ Minecraft.system.runInterval(() => {
 			badpackets_h(player);
 			badpackets_i(player);
 			badpackets_e(player, lastPosition);
+			badpackets_j(player, blockBelow);
 		}
 
 		// General movement
