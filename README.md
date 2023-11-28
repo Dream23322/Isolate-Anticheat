@@ -53,3 +53,7 @@ If you need to learn how to install isolate anticheat click [Here](https://githu
 # Full Check list for Isolate Anticheat
 [Click Here](https://github.com/Dream23322/Isolate-Anticheat/blob/main/checklist.md)
 
+
+hi im here too - hungewrw
+I dont do shit apart from say 3 things in the discord join that by the way - 
+thats all thanks
