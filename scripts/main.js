@@ -1,8 +1,8 @@
 // @ts-check
 // @ts-ignore
 import * as Minecraft from "@minecraft/server";
-import { getHealth, playerTellraw, setTitle, setParticle, setSound, inAir, aroundAir} from "./utils/gameUtil.js";
-import { getBlocksBetween, getSpeed, angleCalc, hVelocity } from "./utils/mathUtil.js";
+import { getHealth, setTitle, setParticle} from "./utils/gameUtil.js";
+import { getBlocksBetween, angleCalc } from "./utils/mathUtil.js";
 import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
 import { commandHandler } from "./commands/handler.js";
 import config from "./data/config.js";

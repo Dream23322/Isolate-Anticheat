@@ -52,7 +52,7 @@ export function speed_c(player, tick_counter, speedCLog) {
             const max_xyz_bps = Math.abs((max_bps_h + max_bps_v) / 2);
             // Check if the player is under conditions that could cause the player to flag the check even if they are not cheating or using client mods
             if(!player.hasTag("ice") && !player.isFlying && !player.isGliding && (!player.hasTag('damaged') || player.hasTag("fall_damage")) && !player.hasTag("no_speed_c")) {
-                player.removeTag("speedC_bypass")
+                player.removeTag("speedC_bypass");
                 // Check for xz bps being too high
                 if(xz_bps > max_bps_h && !player.hasTag("speedC_bypass")) {
                     flag(player, "Speed", "C", "Movement", "xz_bps", xz_bps, false);
