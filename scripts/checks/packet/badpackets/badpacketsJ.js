@@ -6,10 +6,7 @@ import config from "../../../data/config.js";
  If you need, help ask
 */
 export function badpackets_j(player, block_under) {
-    if(config.modules.badpacketsJ.enabled){
-        if(player.isOnGround && block_under.typeId.includes("air") && player.isJumping){
-            flag(player, "BadPackets", "J", "Packet", "blockUnder", block_under, false);
-        }
+    if(config.modules.badpacketsJ.enabled && player.isOnGround && block_under.typeId.includes("air") && player.isJumping){
+        flag(player, "BadPackets", "J", "Packet", "blockUnder", block_under, false);
     }
-
 }
