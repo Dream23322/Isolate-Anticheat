@@ -21,6 +21,7 @@ import { exploit_b } from "./checks/packet/exploit/exploitB.js";
 import { badpackets_c } from "./checks/packet/badpackets/badpacketsC.js";
 import { badpackets_d } from "./checks/packet/badpackets/badpacketsD.js";
 import { badpackets_e } from "./checks/packet/badpackets/badpacketsE.js";
+import { badpackets_j } from "./checks/packet/badpackets/badpacketsJ.js";
 
 // Import movement checks
 import { speed_c } from "./checks/movement/speed/speedC.js";
@@ -47,6 +48,8 @@ import { scaffold_b } from "./checks/world/scaffold/scaffoldB.js";
 import { scaffold_c } from "./checks/world/scaffold/scaffoldC.js";
 import { tower_a } from "./checks/world/scaffold/towerA.js";
 import { scaffold_d } from "./checks/world/scaffold/scaffoldD.js";
+import { scaffold_a } from "./checks/world/scaffold/scaffoldA.js";
+import { scaffold_e } from "./checks/world/scaffold/scaffoldE.js";
 
 // Import Combat checks
 import { aimCheckManager } from "./checks/combat/aim/aim.js";
@@ -55,9 +58,6 @@ import { killaura_f } from "./checks/combat/killaura/killauraF.js";
 import { killaura_d } from "./checks/combat/killaura/killauraD.js";
 import { hitbox_a } from "./checks/combat/hitbox/hitboxA.js";
 import { reach_a } from "./checks/combat/reach/reachA.js";
-import { scaffold_a } from "./checks/world/scaffold/scaffoldA.js";
-import { scaffold_e } from "./checks/world/scaffold/scaffoldE.js";
-import { badpackets_j } from "./checks/packet/badpackets/badpacketsJ.js";
 
 
 const world = Minecraft.world;
