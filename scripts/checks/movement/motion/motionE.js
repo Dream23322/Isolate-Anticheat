@@ -3,35 +3,37 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getSpeed } from "../../../utils/mathUtil.js";
 
+// Make the map to store data
+const lastUpdateTime = new Map();
+const lastpos = new Map();
 export function motion_e(player) {
+    const playerVelocity = player.getVelocity();
     const playerSpeed = getSpeed(player);
     const now = Date.now();
-    const timeElapsed = now - player.lastUpdateTime;
+    if(lastUpdateTime.get(player)) {
+        const timeElapsed = now - lastUpdateTime.get(player)
+        const lastPos = lastpos.get(player);
+        // Calculate predicted position based on velocity
+        const predictedX = lastPos.x + playerVelocity.x * timeElapsed / 1000.0;
+        const predictedY = lastPos.y + playerVelocity.y * timeElapsed / 1000.0;
+        const predictedZ = lastPos.z + playerVelocity.z * timeElapsed / 1000.0;
 
-    // Calculate predicted position based on velocity
-    const predictedX = player.lastX + player.velocity.x * timeElapsed / 1000.0;
-    const predictedY = player.lastY + player.velocity.y * timeElapsed / 1000.0;
-    const predictedZ = player.lastZ + player.velocity.z * timeElapsed / 1000.0;
+        // Get the actual position reported by the client
+        const actualX = player.location.x;
+        const actualY = player.location.y;
+        const actualZ = player.location.z;
 
-    // Get the actual position reported by the client
-    const actualX = player.currentX;
-    const actualY = player.currentY;
-    const actualZ = player.currentZ;
+        // Calculate the distance between predicted and actual positions
+        const distance = Math.sqrt((predictedX - actualX) ** 2 + (predictedY - actualY) ** 2 + (predictedZ - actualZ) ** 2);
 
-    // Calculate the distance between predicted and actual positions
-    const distance = Math.sqrt((predictedX - actualX) ** 2 + (predictedY - actualY) ** 2 + (predictedZ - actualZ) ** 2);
-
-    // Update the last known position and time
-    player.lastX = actualX;
-    player.lastY = actualY;
-    player.lastZ = actualZ;
-    player.lastUpdateTime = now;
-
-    if(config.modules.motion_e.enabled) {
-    // Check if the distance exceeds the allowed limit
-        if (distance > MAX_ALLOWED_SPEED * timeElapsed / 1000.0) {
-        // Possible cheating detected, take appropriate action
-        flag(player, "Motion", "E", "Movement", "speed", playerSpeed, false);
+        if(config.modules.motionE.enabled && playerSpeed !== 0 && (Math.abs(lastPos.x - actualX) + Math.abs(lastPos.z - actualZ)) / 2 < 5 && !player.hasTag("placing")) {
+        // Check if the distance exceeds the allowed limit
+            if (distance > 30 * timeElapsed / 1000.0) {
+                // Possible cheating detected, take appropriate action
+                flag(player, "Motion", "E", "Movement", "speed", playerSpeed, false);
+            }
         }
     }
+    lastUpdateTime.set(player, Date.now());
+    lastpos.set(player, {x: player.location.x, y: player.location.y, z: player.location.z});
 }
