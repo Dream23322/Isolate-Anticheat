@@ -57,6 +57,7 @@ import { killaura_d } from "./checks/combat/killaura/killauraD.js";
 import { hitbox_a } from "./checks/combat/hitbox/hitboxA.js";
 import { reach_a } from "./checks/combat/reach/reachA.js";
 import { motion_e } from "./checks/movement/motion/motionE.js";
+import { killaura_e } from "./checks/combat/killaura/killauraE.js";
 
 
 const world = Minecraft.world;
@@ -932,6 +933,7 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	if(config.generalModules.killaura && !player.hasTag("noaura")) {
 		// killaura/C = checks for multi-aura
 		// killaura_c(player, entity, entityHit);
+		killaura_e(player, entity);
 		killaura_d(player, entity);
 		killaura_f(player, entity);
 	}

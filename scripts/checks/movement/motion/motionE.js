@@ -28,7 +28,7 @@ export function motion_e(player) {
 
         if(config.modules.motionE.enabled && playerSpeed !== 0 && (Math.abs(lastPos.x - actualX) + Math.abs(lastPos.z - actualZ)) / 2 < 5 && !player.hasTag("placing") && !player.hasTag("slime")) {
         // Check if the distance exceeds the allowed limit
-            if (distance > 30 * timeElapsed / 1000.0) {
+            if (distance > 40 * timeElapsed / 1000.0 && !player.hasTag("damaged")) {
                 // Possible cheating detected, take appropriate action
                 flag(player, "Motion", "E", "Movement", "speed", playerSpeed, false);
             }
