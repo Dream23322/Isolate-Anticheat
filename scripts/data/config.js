@@ -658,7 +658,9 @@ export default
         },
         "motionE": {
             "enabled": true,
-            "description": "Checks for invalid velocity"
+            "description": "Checks for invalid velocity",
+            "punishment": "kick",
+            "minVlbeforePunishment": 30
         },
 
 
