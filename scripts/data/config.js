@@ -650,18 +650,15 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 15
         },
-
         "motionD": {
             "enabled": true,
             "description": "Checks for invalid movements",
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },
-        "predictionA": {
+        "motionE": {
             "enabled": true,
-            "description": "Checks for faststop",
-            "punishment": "kick",
-            "minVlbeforePunishment": 100
+            "description": "Checks for invalid velocity"
         },
 
 

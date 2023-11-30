@@ -44,6 +44,7 @@ export function speed_c(player, tick_counter, speedCLog) {
             // Calculate the BPS of the player
             const xz_bps = Math.abs((current_pos.x - last_pos.x) + (current_pos.z - last_pos.z) / 2);
             const y_bps = Math.abs((current_pos.y - last_pos.y));
+            if(current_pos.y < 0 || last_pos.y < 0) return;
             const xyz_bps = Math.abs((current_pos.x - last_pos.x) + (current_pos.y - last_pos.y) + (current_pos.z - last_pos.z) / 3);
             if(player.hasTag("speedC")) {
                 console.log(`player xz: ${xz_bps} xyz: ${xyz_bps} y_bps: ${y_bps}`);

@@ -21,7 +21,6 @@ import { exploit_b } from "./checks/packet/exploit/exploitB.js";
 import { badpackets_c } from "./checks/packet/badpackets/badpacketsC.js";
 import { badpackets_d } from "./checks/packet/badpackets/badpacketsD.js";
 import { badpackets_e } from "./checks/packet/badpackets/badpacketsE.js";
-import { badpackets_j } from "./checks/packet/badpackets/badpacketsJ.js";
 
 // Import movement checks
 import { speed_c } from "./checks/movement/speed/speedC.js";
@@ -35,7 +34,6 @@ import { fly_c } from "./checks/movement/fly/flyC.js";
 import { fly_b } from "./checks/movement/fly/flyB.js";
 import { fly_a } from "./checks/movement/fly/flyA.js";
 import { strafe_a } from "./checks/movement/strafe/strafeA.js";
-import { prediction_a } from "./checks/movement/prediction/predictionA.js";
 import { noslow_a } from "./checks/movement/noslow/noslowA.js";
 import { noslow_b } from "./checks/movement/noslow/noslowB.js";
 
@@ -58,6 +56,7 @@ import { killaura_f } from "./checks/combat/killaura/killauraF.js";
 import { killaura_d } from "./checks/combat/killaura/killauraD.js";
 import { hitbox_a } from "./checks/combat/hitbox/hitboxA.js";
 import { reach_a } from "./checks/combat/reach/reachA.js";
+import { motion_e } from "./checks/movement/motion/motionE.js";
 
 
 const world = Minecraft.world;
@@ -413,7 +412,6 @@ Minecraft.system.runInterval(() => {
 			lastFallDistance.set(player, player.fallDistance);
 		}     
 		const tickValue = getScore(player, "tickValue", 0);                                      
-
 		// The flag system and the counter and summon system
 		if(config.modules.killauraE.enabled) {
 			if(getScore(player, "tick_counter", 0) > 300) {
@@ -427,7 +425,6 @@ Minecraft.system.runInterval(() => {
 				player.runCommandAsync("kill @e[type=isolate:killaura]");
 			}
 		}
-
 		if(player.hasTag("slime")) {
 			setScore(player, "tick_counter2", 0);
 		}
@@ -442,45 +439,31 @@ Minecraft.system.runInterval(() => {
 				player.lastGoodPosition = player.location;
 			}
 		}
-
 		if(config.generalModules.fly === true && !player.hasTag("nofly") && !player.hasTag("op")) {
 			fly_a(player);
 			fly_b(player,oldx,oldz,oldoldx,oldoldz);
 			fly_c(player);
 		}
-
 		if(config.generalModules.speed && !player.hasTag("nospeed")) {
 			speed_a(player);
 			speed_b(player);
 			speed_c(player, tickValue, speedCLog);
 		}
-
-
 		if(config.generalModules.motion && !player.hasTag("nomotion") && !player.hasTag("end_portal")) {
-			// Motion/A = Checks for very high speed in air
 			motion_a(player);
-
-			// Motion/B = checks for invalid vertical motion
 			motion_b(player);
-
-			// Motion/C = Checks for fly / glide / bhop like velocity
 			motion_c(player);
-
-			// Motion/D = Checks for invalid movements
 			motion_d(player);
+			motion_e(player);
 		}
-
-
 		if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
 			badpackets_d(player, lastPlayerYawRotations, lastYawDiff);
 			exploit_b(player);
-			// Checks for a players rotation being a flat number
 			badpackets_f(player);
 			badpackets_g(player);
 			badpackets_h(player);
 			badpackets_i(player);
 			badpackets_e(player, lastPosition);
-			badpackets_j(player, blockBelow);
 		}
 
 		// General movement
@@ -489,14 +472,8 @@ Minecraft.system.runInterval(() => {
 			strafe_a(player, lastXZv);
 			noslow_a(player);
 			noslow_b(player);
-			prediction_a(player, fastStopLog);
 
 		}
-
-		// ==================================
-		//               Other Checks
-		// ==================================
-
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
 		if(config.modules.scaffoldF.enabled && !player.hasTag("noscaffold")) {
 
@@ -607,7 +584,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	//   The best in the game
 
 	if(config.generalModules.scaffold && !player.hasTag("noscaffold")) {
-		scaffold_a(player, block, scaffold_a_1, scaffold_a_2, scaffold_a_3, scaffold_a_4, scaffold_a_5, scaffold_a_6);
+		scaffold_a(player, block);
 
 		scaffold_b(player);
 
