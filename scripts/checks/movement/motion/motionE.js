@@ -26,7 +26,7 @@ export function motion_e(player) {
         // Calculate the distance between predicted and actual positions
         const distance = Math.sqrt((predictedX - actualX) ** 2 + (predictedY - actualY) ** 2 + (predictedZ - actualZ) ** 2);
 
-        if(config.modules.motionE.enabled && playerSpeed !== 0 && (Math.abs(lastPos.x - actualX) + Math.abs(lastPos.z - actualZ)) / 2 < 5 && !player.hasTag("placing")) {
+        if(config.modules.motionE.enabled && playerSpeed !== 0 && (Math.abs(lastPos.x - actualX) + Math.abs(lastPos.z - actualZ)) / 2 < 5 && !player.hasTag("placing") && !player.hasTag("slime")) {
         // Check if the distance exceeds the allowed limit
             if (distance > 30 * timeElapsed / 1000.0) {
                 // Possible cheating detected, take appropriate action
