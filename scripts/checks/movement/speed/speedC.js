@@ -7,6 +7,8 @@ export function speed_c(player, tick_counter, speedCLog) {
     const playerSpeed = getSpeed(player);
     // Check if Speed/C is enabled in the config and that it has run at least once
     if(config.modules.speedC.enabled && speedCLog.get(player)) {
+        // Get players Velocity
+        const playerVelocity = player.getVelocity();
         // Get the max BPS of a player
         let max_bps_h = config.modules.speedC.max_bps_h;
         let max_bps_v = config.modules.speedC.max_bps_v;
@@ -40,6 +42,11 @@ export function speed_c(player, tick_counter, speedCLog) {
                 const old_max_bps_2 = max_bps_v;
                 max_bps_v = Math.abs(jump_boost_value + old_max_bps_2);
             }
+            if(player.hasTag("placing")) {
+                max_bps_h++;
+                max_bps_h++;
+                max_bps_h++;
+            }
 
             // Calculate the BPS of the player
             const xz_bps = Math.abs((current_pos.x - last_pos.x) + (current_pos.z - last_pos.z) / 2);
@@ -49,10 +56,13 @@ export function speed_c(player, tick_counter, speedCLog) {
             if(player.hasTag("speedC")) {
                 console.log(`player xz: ${xz_bps} xyz: ${xyz_bps} y_bps: ${y_bps}`);
             }
+            if(playerVelocity.y > 5) {
+                player.addTag("speedC_bypass")
+            }
             // Calculate the max XYZ bps
             const max_xyz_bps = Math.abs((max_bps_h + max_bps_v) / 2);
             // Check if the player is under conditions that could cause the player to flag the check even if they are not cheating or using client mods
-            if(!player.hasTag("ice") && !player.isFlying && !player.isGliding && (!player.hasTag('damaged') || player.hasTag("fall_damage")) && !player.hasTag("no_speed_c")) {
+            if(!player.hasTag("ice") && !player.isFlying && !player.isGliding && (!player.hasTag('damaged') || player.hasTag("fall_damage")) && !player.hasTag("no_speed_c") && !player.hasTag("stairs")) {
                 player.removeTag("speedC_bypass");
                 // Check for xz bps being too high
                 if(xz_bps > max_bps_h && !player.hasTag("speedC_bypass")) {

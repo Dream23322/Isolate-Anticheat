@@ -12,7 +12,7 @@ export function strafe_a(player, lastXZv) {
             const z_diff = Math.abs(lastXZv.get(player).z - playerVelocity.z);
 
             // If the player seems to be using any sort of strafe cheats, flag them for Strafe/A
-            if(hVelocity(player) > 1 && (x_diff > 0.1 || z_diff > 0.1)) {
+            if(hVelocity(player) > 1 && (x_diff > 0.1 || z_diff > 0.1) && !player.getEffect("speed") && !player.hasTag("placing")) {
                 flag(player, "Strafe", "A", "Movement", "x_diff", `${x_diff}, z_diff=${z_diff}`, true);
             }
         }

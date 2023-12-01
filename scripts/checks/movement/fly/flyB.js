@@ -11,6 +11,14 @@ Fly/B Checks for funky differences in Y location which could indicate that a pla
 False Flag Chance: Near Impossible
 Effectiveness: Mid
 */
+
+
+// TODO:
+// Complete Recode
+// REASON:
+// False flags, not very efficient and its laggy.
+
+
 export function fly_b(player, oldx, oldz, oldoldx, oldoldz) {
     // New Fly/B = old Fly/A
     if(config.modules.flyB.enabled) {

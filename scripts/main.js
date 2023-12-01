@@ -56,7 +56,6 @@ import { killaura_f } from "./checks/combat/killaura/killauraF.js";
 import { killaura_d } from "./checks/combat/killaura/killauraD.js";
 import { hitbox_a } from "./checks/combat/hitbox/hitboxA.js";
 import { reach_a } from "./checks/combat/reach/reachA.js";
-import { motion_e } from "./checks/movement/motion/motionE.js";
 import { killaura_e } from "./checks/combat/killaura/killauraE.js";
 
 
@@ -389,17 +388,20 @@ Minecraft.system.runInterval(() => {
 
 		const blockBelow = player.dimension.getBlock({x: player.location.x, y: player.location.y - 1, z: player.location.z}) ?? {typeId: "minecraft:air"};
 		if(blockBelow.typeId.includes("ice")) {
-			player.addTag("ice")
+			player.addTag("ice");
 		}
 		if(blockBelow.typeId.includes("slime")) {
-			player.addTag("slime")
+			player.addTag("slime");
 		}
 		if(player.hasTag("trident")) {
-			setScore(player, "right", 0)
+			setScore(player, "right", 0);
 		}
 		if(blockBelow.typeId.includes("end_portal")) {
-			player.addTag("end_portal")
+			player.addTag("end_portal");
         }
+		if(blockBelow.typeId.includes("stairs")) {
+			player.addTag("stairs");
+		}
 
 		// This is for debugging a players fall distance/speed
 		if(Math.abs(player.fallDistance) > 0 && player.hasTag("debugFall")) {
@@ -442,7 +444,7 @@ Minecraft.system.runInterval(() => {
 		}
 		if(config.generalModules.fly === true && !player.hasTag("nofly") && !player.hasTag("op")) {
 			fly_a(player);
-			fly_b(player,oldx,oldz,oldoldx,oldoldz);
+			//fly_b(player,oldx,oldz,oldoldx,oldoldz);
 			fly_c(player);
 		}
 		if(config.generalModules.speed && !player.hasTag("nospeed")) {
@@ -455,7 +457,6 @@ Minecraft.system.runInterval(() => {
 			motion_b(player);
 			motion_c(player);
 			motion_d(player);
-			motion_e(player);
 		}
 		if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
 			badpackets_d(player, lastPlayerYawRotations, lastYawDiff);
@@ -498,7 +499,6 @@ Minecraft.system.runInterval(() => {
 		}
 
 		// Remove tags for checks :D
-		player.removeTag("placing");
 		player.removeTag("attacking");
 		player.removeTag("usingItem");
 		player.removeTag("breaking");
@@ -515,11 +515,14 @@ Minecraft.system.runInterval(() => {
 		}
 		if(getScore(player, "tag_reset", 0) > 5) {
 			player.removeTag("slime")
+			player.removeTag("placing");
 			player.removeTag("ice");
 			player.removeTag("damaged");
 			player.removeTag("fall_damage");
+			player.removeTag("end_portal");
+			player.removeTag("stairs");
 			setScore(player, "tag_reset", 0);
-		}
+		}1
 		
 		
 

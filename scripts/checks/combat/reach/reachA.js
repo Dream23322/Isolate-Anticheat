@@ -9,10 +9,10 @@ export function reach_a(player, entity) {
 		// get the difference between 2 three dimensional coordinates
 		
 		const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
-		if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}`);
+		if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}\nPlayer Tags: ${player.getTags()}`);
 		const entityVelocity = entity.getVelocity();
 		
-		
+		distance -= 1;
 		if(distance - hVelocity(entity) / 1.5 > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && (entityVelocity.x + entityVelocity.z) / 2 < 1.5 || distance > 4.1 && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && !player.hasTag("moving") && getSpeed(player) === 0 && hVelocity(player) === 0) {
 
 			
