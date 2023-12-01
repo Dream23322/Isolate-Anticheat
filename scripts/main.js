@@ -30,9 +30,8 @@ import { motion_a } from "./checks/movement/motion/motionA.js";
 import { motion_b } from "./checks/movement/motion/motionB.js";
 import { motion_c } from "./checks/movement/motion/motionC.js";
 import { motion_d } from "./checks/movement/motion/motionD.js";
-import { fly_c } from "./checks/movement/fly/flyC.js";
-import { fly_b } from "./checks/movement/fly/flyB.js";
 import { fly_a } from "./checks/movement/fly/flyA.js";
+import { fly_c } from "./checks/movement/fly/flyC.js";
 import { strafe_a } from "./checks/movement/strafe/strafeA.js";
 import { noslow_a } from "./checks/movement/noslow/noslowA.js";
 import { noslow_b } from "./checks/movement/noslow/noslowB.js";
@@ -522,7 +521,7 @@ Minecraft.system.runInterval(() => {
 			player.removeTag("end_portal");
 			player.removeTag("stairs");
 			setScore(player, "tag_reset", 0);
-		}1
+		}
 		
 		
 
