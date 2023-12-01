@@ -635,15 +635,6 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 100
         },
-
-        "strafeA": {
-            "enabled": true,
-            "description": "Checks for drastically changing xz velocity whilst in air",
-            "pos_diff": 0.09,
-            "time_int": 0.5,
-            "punishment": "kick",
-            "minVlbeforePunishment": 3
-        },
         "motionC": {
             "enabled": true,
             "description": "Checks for fly or bhop like velocity",
@@ -655,6 +646,20 @@ export default
             "description": "Checks for invalid velocity",
             "punishment": "kick",
             "minVlbeforePunishment": 75
+        },
+        "strafeA": {
+            "enabled": true,
+            "description": "Checks for drastically changing xz velocity whilst in air",
+            "pos_diff": 0.09,
+            "time_int": 0.5,
+            "punishment": "kick",
+            "minVlbeforePunishment": 3
+        },
+        "strafeB": {
+            "enabled": true,
+            "description": "Checks for pattern's in a player y velocity",
+            "punishment": "kick",
+            "minVlbeforePunishment": 5
         },
 
 
