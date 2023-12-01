@@ -463,7 +463,7 @@ export default
             ],
             "punishment": "kick",
             "punishmentLength": "3m",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 30
         },
         "aimA": {
             "enabled": true,
@@ -511,7 +511,7 @@ export default
             "enabled": true,
             "description": "Checks for looking at the exact center of a player",
             "punishment": "kick",
-            "minVlbeforePunishment": 1
+            "minVlbeforePunishment": 2
         },
         "autoclickerA": {
             "enabled": true,
@@ -532,7 +532,7 @@ export default
             "enabled": true,
             "description": "Killaura Bot check (Spawns a fake player and if gets attacked it flags)",
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 2
         },
         "hitboxA": {
             "enabled": true,
@@ -592,7 +592,7 @@ export default
             "enabled": true,
             "velocity": 0.412,
             "max_bps_h": 8,
-            "max_bps_v": 9,
+            "max_bps_v": 12,
             "punishment": "kick",
             "minVlbeforePunishment":7
         },
@@ -652,16 +652,11 @@ export default
         },
         "motionD": {
             "enabled": true,
-            "description": "Checks for invalid movements",
-            "punishment": "kick",
-            "minVlbeforePunishment": 10
-        },
-        "motionE": {
-            "enabled": true,
             "description": "Checks for invalid velocity",
             "punishment": "kick",
-            "minVlbeforePunishment": 30
+            "minVlbeforePunishment": 75
         },
+
 
 
         /*
@@ -712,7 +707,7 @@ export default
             "enabled": true,
             "description":"Checks for pitch differences",
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 20
         },
         "scaffoldE": {
             "enabled": true,
@@ -726,7 +721,7 @@ export default
             "description":"Checks for placing too many blocks in 20 ticks",
             "blocksPerSecond": 7,
             "punishment": "kick",
-            "minVlbeforePunishment": 2
+            "minVlbeforePunishment": 5
         },
         "instabreakA": {
             "enabled": true,
