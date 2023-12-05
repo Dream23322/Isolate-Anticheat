@@ -15,7 +15,7 @@ export function killaura_f(player, entity) {
         if(getScore(player, "killauraF_reset", 0) > 30) {
             
             setScore(player, "killauraF_reset", 0);
-            if(getScore(player, "killauraF_buffer", 0) > 7) {
+            if(getScore(player, "killauraF_buffer", 0) > 10) {
                 
                 flag(player, "Killaura", "F", "Combat", "accuracy", getScore(player, "killauraF_buffer", 0), false);	
                 setScore(player, "killauraF_buffer", 0);

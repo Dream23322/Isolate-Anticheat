@@ -11,4 +11,8 @@ Fly/B Checks for patterns in a players y velocity
 
 */
 
-// Define the data map.
+export function fly_b(player) {
+    if(config.modules.flyB.enabled) {
+        return;
+    }
+}
