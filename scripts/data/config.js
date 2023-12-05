@@ -2,6 +2,8 @@ export default
 {
     // This config is made for pvp servers so most of the illegal checks are turned off
     "debug": true,
+    // if you have a laggy realm/server or don't want to risk anything turn this off
+    "experimental_checks": true,
     "fancy_kick_calculation": {
         "on": true,
         // If you have flags more than these values in each catagory, you will be kicked.
@@ -645,7 +647,7 @@ export default
             "enabled": true,
             "description": "Checks for invalid velocity",
             "punishment": "kick",
-            "minVlbeforePunishment": 75
+            "minVlbeforePunishment": 10
         },
         "strafeA": {
             "enabled": true,

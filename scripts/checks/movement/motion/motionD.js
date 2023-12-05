@@ -10,7 +10,7 @@ export function motion_d(player) {
     const playerVelocity = player.getVelocity();
     const playerSpeed = getSpeed(player);
     const now = Date.now();
-    if(lastUpdateTime.get(player) && !player.hasTag("stairs")) {
+    if(lastUpdateTime.get(player) && !player.hasTag("stairs") && config.experimental_checks && !player.isFlying && !player.hasTag("op")) {
         let max_value = 40
         const timeElapsed = now - lastUpdateTime.get(player)
         const lastPos = lastpos.get(player);
@@ -24,14 +24,17 @@ export function motion_d(player) {
         const actualY = player.location.y;
         const actualZ = player.location.z;
         if((player.hasTag("damaged") && !player.hasTag("fall_damage"))) {
-            max_value + 50;
+            max_value += 50;
+        }
+        if(player.isJumping) {
+            max_value += 50;
         }
         // Calculate the distance between predicted and actual positions
         const distance = Math.sqrt((predictedX - actualX) ** 2 + (predictedY - actualY) ** 2 + (predictedZ - actualZ) ** 2);
 
         if(config.modules.motionD.enabled && playerSpeed !== 0 && (Math.abs(lastPos.x - actualX) + Math.abs(lastPos.z - actualZ)) / 2 < 5 && !player.hasTag("placing") && !player.hasTag("slime") && player.fallDistance < 3 && !player.getEffect("speed")) {
         // Check if the distance exceeds the allowed limit
-            if (distance > 50 * timeElapsed / 1000.0) {
+            if (distance > max_value * timeElapsed / 1000.0) {
                 // Possible cheating detected, take appropriate action
                 flag(player, "Motion", "D", "Movement", "speed", playerSpeed, false);
             }
