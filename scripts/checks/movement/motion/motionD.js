@@ -1,5 +1,5 @@
 import * as Minecraft from "@minecraft/server";
-import { flag } from "../../../util.js";
+import { flag, getScore, setScore } from "../../../util.js";
 import config from "../../../data/config.js";
 import { getSpeed } from "../../../utils/mathUtil.js";
 
@@ -35,10 +35,17 @@ export function motion_d(player) {
         if(config.modules.motionD.enabled && playerSpeed !== 0 && (Math.abs(lastPos.x - actualX) + Math.abs(lastPos.z - actualZ)) / 2 < 5 && !player.hasTag("placing") && !player.hasTag("slime") && player.fallDistance < 3 && !player.getEffect("speed")) {
         // Check if the distance exceeds the allowed limit
             if (distance > max_value * timeElapsed / 1000.0) {
-                // Possible cheating detected, take appropriate action
-                flag(player, "Motion", "D", "Movement", "speed", playerSpeed, false);
+                if(getScore(player, "motion_d_buffer", 0) > 4) {
+                    // Possible cheating detected, take appropriate action
+                    flag(player, "Motion", "D", "Movement", "speed", playerSpeed, false);
+                }
             }
         }
+    }
+    setScore(player, "motion_d_reset", getScore(player, "motion_d_reset", 0) + 1)
+    if(getScore(player, "motion_d_reset", 0) > 120) {
+        setScore(player, "motion_d_reset", 0);
+        setScore(player, "motion_d_buffer", 0);
     }
     lastUpdateTime.set(player, Date.now());
     lastpos.set(player, {x: player.location.x, y: player.location.y, z: player.location.z});
