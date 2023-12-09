@@ -211,14 +211,3 @@ Old speed check
     //     );
     // } catch (e) {console.log(e)}
 
-	# __Isolate Anticheat__
-## v7.0.2
-
-> Isolate Anticheat v7.0.2 has fixed many bypasses and false flags
-
-This release still has false flags, tho by default, they won't autokick
-I needed to get this release out because it fixed some false flags and bypasses (I also kept saying I would release then not doing it)
-
-**__Things that were added__**
-
-[+] Motion/D (e)

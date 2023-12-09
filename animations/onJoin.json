@@ -93,6 +93,8 @@
 					"/scoreboard objectives add scaffoldb_reset dummy",
 					"/scoreboard objectives add killauraF_buffer dummy",
 					"/scoreboard objectives add killauraF_reset dummy",
+					"/scoreboard objectives add motion_d_buffer dummy",
+					"/scoreboard objectives add motion_d_reset dummy",
 					// If enabled from previous login then activate
 					"/ability @s[tag=flying,m=!c] mayfly true"
 					// alert the user if Gametest Framework is not enabled
