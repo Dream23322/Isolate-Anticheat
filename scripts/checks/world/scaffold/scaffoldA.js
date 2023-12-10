@@ -8,16 +8,13 @@ import config from "../../../data/config.js";
 // Initialize scaffold_a_map if not present
 const scaffold_a_map = new Map();
 function is_diag(current, old, oldest) {
-    // Check if the differences in X and Z coordinates form a diagonal pattern
     const diagonalX = Math.abs(current.x) !== Math.abs(old.x) && Math.abs(old.x) === Math.abs(oldest.x) && Math.abs(current.z) === Math.abs(old.z);
     const diagonalZ = Math.abs(current.z) !== Math.abs(old.z) && Math.abs(old.z) === Math.abs(oldest.z) && Math.abs(current.x) === Math.abs(old.x);
-
-    // Return true if either X or Z coordinates form a diagonal pattern
     return diagonalX || diagonalZ;
 }
 
 function is_below(player, current, old, oldest) {
-    return player.y - 1 === current.y && player.y - 1 === old.y && player.y - 1 === oldest.y;
+    return player.y > current.y && player.y > old.y && player.y > oldest.y;
 }
 export function scaffold_a(player, block) {
     if (config.modules.scaffoldA.enabled) {
@@ -35,21 +32,6 @@ export function scaffold_a(player, block) {
         const yaw_values = scaffold_a_map.get(player)?.yaw;
         const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.z - player.location.z, 2));
         if (last_place_location && old_place_location && pitch_values) {
-            if (Math.abs(old_place_location.x) === Math.abs(last_place_location.x) && Math.abs(last_place_location.x) !== Math.abs(place_location.x) && place_location.y < player.location.y && last_place_location.y < player.location.y && old_place_location.y === player.location.y -1) {
-                if (Math.abs(pitch_values.old - pitch_values.mid) < 3 && Math.abs(pitch_values.mid - player.getRotation().x) > 30) {
-                    flag(player, "Scaffold", "A", "World", "pitch", player.getRotation().x, false);
-                }
-                
-                // if(Math.abs(pitch_values.mid - player.getRotation().x) < 5 && Math.abs(yaw_values.mid - player.getRotation().y) > 30) {
-                //     flag(player, "Scaffold", "A", "World", "yaw", Math.abs(yaw_values.mid - player.getRotation().y), false);
-                // }          z`
-            }
-            if (Math.abs(old_place_location.z) === Math.abs(last_place_location.z) && Math.abs(last_place_location.z) !== Math.abs(place_location.z) && place_location.y < player.location.y && last_place_location.y < player.location.y && old_place_location.y === player.location.y -1) {
-                if (Math.abs(pitch_values.old - pitch_values.mid) < 3 && Math.abs(pitch_values.mid - player.getRotation().x) > 30) {
-                    flag(player, "Scaffold", "A", "World", "pitch", player.getRotation().x, false);
-                }
-
-            }
             if(Math.abs(place_location.x) === Math.abs(last_place_location.x) && Math.abs(last_place_location.x) === Math.abs(old_place_location.x) || Math.abs(place_location.z) === Math.abs(last_place_location.z) && Math.abs(place_location.z) === Math.abs(old_place_location.z)) {
                 if(Math.abs(pitch_values.new - pitch_values.mid) > 0.05 && Math.abs(pitch_values.mid - pitch_values.old) > 0.05) {
                     if(Math.abs(yaw_values.new - yaw_values.mid) === 0 && Math.abs(yaw_values.mid - yaw_values.old) === 0) {
@@ -73,6 +55,12 @@ export function scaffold_a(player, block) {
                 }
                 if(distance > 3) {
                     flag(player, "Scaffold", "A", "World", "distance", distance, false);
+                }
+                if (Math.abs(pitch_values.old - pitch_values.mid) < 3 && Math.abs(pitch_values.mid - player.getRotation().x) > 30) {
+                    flag(player, "Scaffold", "A", "World", "pitch", player.getRotation().x, false);
+                }
+                if (Math.abs(pitch_values.old - pitch_values.mid) < 3 && Math.abs(pitch_values.mid - player.getRotation().x) > 30) {
+                    flag(player, "Scaffold", "A", "World", "pitch", player.getRotation().x, false);
                 }
             }
             
