@@ -24,7 +24,7 @@ export function fly_a(player) {
             if(!player.hasTag("nofly") && !player.hasTag("nofly") && (!player.hasTag("damaged") && !player.hasTag("fall_damage")) && !player.isGliding) {
                 //const simYPos = Math.abs(currentYPos - oldY) <= config.modules.flyF.diff && Math.abs(currentYPos - oldOldY) <= config.modules.flyF.diff;
                 
-                const prediction = (playerVelocity.y > max_v_up && aroundAir(player) === true && playerVelocity.y !== 1 || playerVelocity.y < -4.92 && aroundAir(player) === true) && playerVelocity.y !== -1 && playerVelocity.y > -9
+                const prediction = (playerVelocity.y > max_v_up && aroundAir(player) === true && playerVelocity.y !== 1 || playerVelocity.y < -4.92 - player.fallDistance && aroundAir(player) === true) && playerVelocity.y !== -1 && playerVelocity.y > -9
                 
                 if(prediction && getScore(player, "tick_counter2", 0) > 3 && player.fallDistance < 25 && !player.hasTag("placing")) {
                     flag(player, "Fly", "A", "Movement", "y-velocity", playerVelocity.y, false);
