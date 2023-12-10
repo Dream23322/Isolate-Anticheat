@@ -9,8 +9,8 @@ import config from "../../../data/config.js";
 const scaffold_a_map = new Map();
 function is_diag(current, old, oldest) {
     // Check if the differences in X and Z coordinates form a diagonal pattern
-    const diagonalX = Math.abs(current.x - old.x) === Math.abs(old.x - oldest.x);
-    const diagonalZ = Math.abs(current.z - old.z) === Math.abs(old.z - oldest.z);
+    const diagonalX = Math.abs(current.x) !== Math.abs(old.x) && Math.abs(old.x) === Math.abs(oldest.x) && Math.abs(current.z) === Math.abs(old.z);
+    const diagonalZ = Math.abs(current.z) !== Math.abs(old.z) && Math.abs(old.z) === Math.abs(oldest.z) && Math.abs(current.x) === Math.abs(old.x);
 
     // Return true if either X or Z coordinates form a diagonal pattern
     return diagonalX || diagonalZ;
@@ -33,6 +33,7 @@ export function scaffold_a(player, block) {
         const old_place_location = scaffold_a_map.get(player)?.b;
         const pitch_values = scaffold_a_map.get(player)?.pitch;
         const yaw_values = scaffold_a_map.get(player)?.yaw;
+        const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.z - player.location.z, 2));
         if (last_place_location && old_place_location && pitch_values) {
             if (Math.abs(old_place_location.x) === Math.abs(last_place_location.x) && Math.abs(last_place_location.x) !== Math.abs(place_location.x) && place_location.y < player.location.y && last_place_location.y < player.location.y && old_place_location.y === player.location.y -1) {
                 if (Math.abs(pitch_values.old - pitch_values.mid) < 3 && Math.abs(pitch_values.mid - player.getRotation().x) > 30) {
@@ -69,6 +70,9 @@ export function scaffold_a(player, block) {
                     if(!player.isSneaking) {
                         flag(player, "Scaffold", "A", "World", "diag", true, false);
                     }
+                }
+                if(distance > 3) {
+                    flag(player, "Scaffold", "A", "World", "distance", distance, false);
                 }
             }
             
