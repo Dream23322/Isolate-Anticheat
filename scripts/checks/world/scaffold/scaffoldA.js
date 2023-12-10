@@ -7,7 +7,18 @@ import config from "../../../data/config.js";
 
 // Initialize scaffold_a_map if not present
 const scaffold_a_map = new Map();
+function is_diag(current, old, oldest) {
+    // Check if the differences in X and Z coordinates form a diagonal pattern
+    const diagonalX = Math.abs(current.x - old.x) === Math.abs(old.x - oldest.x);
+    const diagonalZ = Math.abs(current.z - old.z) === Math.abs(old.z - oldest.z);
 
+    // Return true if either X or Z coordinates form a diagonal pattern
+    return diagonalX || diagonalZ;
+}
+
+function is_below(player, current, old, oldest) {
+    return player.y - 1 === current.y && player.y - 1 === old.y && player.y - 1 === oldest.y;
+}
 export function scaffold_a(player, block) {
     if (config.modules.scaffoldA.enabled) {
         const playerRotation = player.getRotation();
@@ -27,9 +38,10 @@ export function scaffold_a(player, block) {
                 if (Math.abs(pitch_values.old - pitch_values.mid) < 3 && Math.abs(pitch_values.mid - player.getRotation().x) > 30) {
                     flag(player, "Scaffold", "A", "World", "pitch", player.getRotation().x, false);
                 }
+                
                 // if(Math.abs(pitch_values.mid - player.getRotation().x) < 5 && Math.abs(yaw_values.mid - player.getRotation().y) > 30) {
                 //     flag(player, "Scaffold", "A", "World", "yaw", Math.abs(yaw_values.mid - player.getRotation().y), false);
-                // }          
+                // }          z`
             }
             if (Math.abs(old_place_location.z) === Math.abs(last_place_location.z) && Math.abs(last_place_location.z) !== Math.abs(place_location.z) && place_location.y < player.location.y && last_place_location.y < player.location.y && old_place_location.y === player.location.y -1) {
                 if (Math.abs(pitch_values.old - pitch_values.mid) < 3 && Math.abs(pitch_values.mid - player.getRotation().x) > 30) {
@@ -44,7 +56,22 @@ export function scaffold_a(player, block) {
                     }
                 }
             }
-
+            if (
+                is_diag(place_location, last_place_location, old_place_location) &&
+                is_below(player, place_location, last_place_location, old_place_location)
+            ) {
+                if (
+                    Math.abs(pitch_values.new - pitch_values.mid) == 0 &&
+                    Math.abs(pitch_values.new - pitch_values.old) == 0 ||
+                    Math.abs(yaw_values.x - yaw_values.mid) == 0 &&
+                    Math.abs(yaw_values.new - yaw_values.old) == 0
+                ) {
+                    if(!player.isSneaking) {
+                        flag(player, "Scaffold", "A", "World", "diag", true, false);
+                    }
+                }
+            }
+            
         }
     }
 
