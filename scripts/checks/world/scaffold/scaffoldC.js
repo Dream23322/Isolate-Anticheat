@@ -19,5 +19,9 @@ export function scaffold_c(player, block) {
                 }
             }   
         }
+        const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.z - player.location.z, 2));
+        if(angleCalc(player, block) && distance > 3) {
+            flag(player, "Scaffold", "C", "Movement", "distance", `${distance},angle=${angleCalc(player, block)}`, false);
+        }
     }
 }
