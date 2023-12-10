@@ -56,8 +56,11 @@ export function speed_c(player, tick_counter, speedCLog) {
             if(player.hasTag("speedC")) {
                 console.log(`player xz: ${xz_bps} xyz: ${xyz_bps} y_bps: ${y_bps}`);
             }
+            if(current_pos.y > last_pos.y) {
+                player.addTag("speedC_bypass");
+            }
             if(playerVelocity.y > 5) {
-                player.addTag("speedC_bypass")
+                player.addTag("speedC_bypass");
             }
             // Calculate the max XYZ bps
             const max_xyz_bps = Math.abs((max_bps_h + max_bps_v) / 2);
