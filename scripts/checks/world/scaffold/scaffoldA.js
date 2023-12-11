@@ -46,7 +46,7 @@ export function scaffold_a(player, block) {
                 if (
                     Math.abs(pitch_values.new - pitch_values.mid) == 0 &&
                     Math.abs(pitch_values.new - pitch_values.old) == 0 ||
-                    Math.abs(yaw_values.x - yaw_values.mid) == 0 &&
+                    Math.abs(yaw_values.new - yaw_values.mid) == 0 &&
                     Math.abs(yaw_values.new - yaw_values.old) == 0
                 ) {
                     if(!player.isSneaking) {
@@ -59,7 +59,7 @@ export function scaffold_a(player, block) {
                 if (Math.abs(pitch_values.old - pitch_values.mid) < 3 && Math.abs(pitch_values.mid - player.getRotation().x) > 30) {
                     flag(player, "Scaffold", "A", "World", "pitch", player.getRotation().x, false);
                 }
-                if (Math.abs(pitch_values.old - pitch_values.mid) < 3 && Math.abs(pitch_values.mid - player.getRotation().x) > 30) {
+                if (Math.abs(yaw_values.new - getRotation().z) < 2) {
                     flag(player, "Scaffold", "A", "World", "pitch", player.getRotation().x, false);
                 }
             }
