@@ -56,6 +56,7 @@ import { killaura_d } from "./checks/combat/killaura/killauraD.js";
 import { hitbox_a } from "./checks/combat/hitbox/hitboxA.js";
 import { reach_a } from "./checks/combat/reach/reachA.js";
 import { killaura_e } from "./checks/combat/killaura/killauraE.js";
+import { sprint_a } from "./checks/movement/sprint/sprintA.js";
 
 
 const world = Minecraft.world;
@@ -350,12 +351,7 @@ Minecraft.system.runInterval(() => {
 			} else config.modules.bedrockValidate.enabled = false;
 		}
 
-		if(config.generalModules.sprint) {
-			// invalidsprint/a = checks for sprinting with the blindness effect
-			if(config.modules.invalidsprintA.enabled && player.getEffect("blindness") && player.isSprinting)
-				flag(player, "InvalidSprint", "A", "Movement", undefined, undefined, true);
-				currentVL++;
-		}
+
 
 		// ==================================
 		//                    Utilities
@@ -473,7 +469,7 @@ Minecraft.system.runInterval(() => {
 			strafe_a(player, lastXZv);
 			noslow_a(player);
 			noslow_b(player);
-
+			sprint_a(player);
 		}
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
 		if(config.modules.scaffoldF.enabled && !player.hasTag("noscaffold")) {
