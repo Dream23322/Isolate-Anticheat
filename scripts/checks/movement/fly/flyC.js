@@ -18,7 +18,7 @@ export function fly_c(player) {
         // Stopping false flags
         if(!player.isJumping && !player.isGliding && !player.isFlying && !player.hasTag("jump") && !player.hasTag("op")) {
             
-            if(aroundAir(player) === true && Math.abs(playerVelocity.y) > 0.1) {
+            if(aroundAir(player) === true && Math.abs(playerVelocity.y) > 0.1 && !player.hasTag("elytra")) {
                 flag(player, "Fly", "C", "Movement", "fallDistance", player.fallDistance, false);
             }	
         }

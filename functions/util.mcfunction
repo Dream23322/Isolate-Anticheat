@@ -12,3 +12,9 @@ tag @a[m=!c] remove gmc
 tag @a[m=!s] remove gms 
 tag @a[m=!a] remove gma 
 tag @a[m=!spectator] remove spec 
+
+# remove tags
+tag @a remove elytra
+
+# add tags
+tag @a[hasitem={item=elytra}] add elytra

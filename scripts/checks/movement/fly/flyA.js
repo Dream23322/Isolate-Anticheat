@@ -13,7 +13,7 @@ This check works by looking for a player having a high y velocity, this works be
 export function fly_a(player) {
     // Fly/A = Velocity Check
     const playerVelocity = player.getVelocity();
-    if(config.modules.flyA.enabled) {
+    if(config.modules.flyA.enabled && !player.hasTag("elytra")) {
         if(aroundAir(player) === true && !player.getEffect("jump_boost") || !player.isOnGround && Math.abs(playerVelocity.y) > 3 && player.getEffect("jump_boost")) {
 
 

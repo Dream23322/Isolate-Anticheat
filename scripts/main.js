@@ -455,7 +455,7 @@ Minecraft.system.runInterval(() => {
 			motion_a(player);
 			motion_b(player);
 			motion_c(player);
-			motion_d(player);
+			//motion_d(player);
 		}
 		if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
 			badpackets_d(player, lastPlayerYawRotations, lastYawDiff);
