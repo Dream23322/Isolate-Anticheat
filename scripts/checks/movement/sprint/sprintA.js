@@ -7,6 +7,5 @@ export function sprint_a(player) {
         // invalidsprint/a = checks for sprinting with the blindness effect
         if(config.modules.invalidsprintA.enabled && player.getEffect("blindness") && player.isSprinting)
             flag(player, "InvalidSprint", "A", "Movement", undefined, undefined, true);
-
     }
 }
