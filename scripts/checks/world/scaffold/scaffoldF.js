@@ -1,5 +1,4 @@
 import * as Minecraft from "@minecraft/server";
-import { flag } from "../../../util";
 import config from "../../../data/config.js";
 
 import { getScore, setScore } from "../../../util";
