@@ -371,7 +371,7 @@ export default
         */
         "exploitA": {
             "enabled": true,
-            "description": "Checks for lag machines",
+            "description": "Checks for invalid skins",
             "punishment": "kick",
             "minVlbeforePunishment": 0
         },
@@ -447,6 +447,15 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 30
         },
+        "timerA": {
+            "enabled": true,
+            "description": "Checks for Timer",
+            "timer_level": 27,
+            "timer_level_low": 15,
+            "strict": true,
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
+        },
 
         /*
         Combat Checks - Checks that look for pvp cheats (reach, killaura, etc)
@@ -501,6 +510,20 @@ export default
             "minVlbeforePunishment": 0,
             "checkCPSAfter": 1000 // Adjust this value to change the interval for CPS checks (in milliseconds)
         },
+		"killauraA": {
+            "enabled": true,
+            "description": "Checks for funny killaura rotations (Detects Prax Killaura very fast)",
+            "punishment": "kick",
+            "minVlbeforePunishment": 5
+		},
+		"killauraB": {
+			"enabled": true,
+            "description": "Checks for no-swing (Detects toolbox killaura instantly)",
+			"wait_ticks": 20,
+			"max_swing_delay": 2000,
+			"punishment": "kick",
+			"minVlbeforePunishment": 2
+		},        
         "killauraC": {
             "enabled": true,
             "description": "Checks for hitting multiple entities at once",
@@ -508,6 +531,20 @@ export default
             "punishment": "kick",
             "punishmentLength": "3m",
             "minVlbeforePunishment": 5
+        },
+        "killauraD": {
+            "enabled": true,
+            "description": "Checks for looking down when attacking something out of range",
+            "punishment": "kick",
+            "punishmentLength": "3d",
+            "minVlbeforePunishment": 3
+        },
+        "killauraE": {
+			"enabled": true,
+            "description": "Checks for hitting entities while using an item",
+			"rightTicks": 3,
+			"punishment": "kick",
+			"minVlbeforePunishment": 5
         },
         "killauraF": {
             "enabled": true,
@@ -522,19 +559,6 @@ export default
             "checkCPSAfter": 1000,
             "punishment": "none",
             "minVlbeforePunishment": 0
-        },
-        "killauraD": {
-            "enabled": true,
-            "description": "Checks for looking down when attacking something out of range",
-            "punishment": "kick",
-            "punishmentLength": "3d",
-            "minVlbeforePunishment": 3
-        },
-        "killauraE": {
-            "enabled": true,
-            "description": "Killaura Bot check (Spawns a fake player and if gets attacked it flags)",
-            "punishment": "kick",
-            "minVlbeforePunishment": 2
         },
         "hitboxA": {
             "enabled": true,
@@ -573,12 +597,12 @@ export default
         },
         "speedA": {
             "enabled": true,
-            "description":"Checks for impossible speeds",
-            "speed": 2.953,
+            "description":"Checks for un-natural speeds",
+            "speed": 2.963,
             "checkForSprint": false,
             "checkForJump": true,
             "punishment": "kick",
-            "minVlbeforePunishment": 20
+            "minVlbeforePunishment": 10
         },     
         "speedB": {
             "enabled": true,
@@ -594,9 +618,9 @@ export default
             "enabled": true,
             "velocity": 0.412,
             "max_bps_h": 8,
-            "max_bps_v": 12,
+            "max_bps_v": 36.2,
             "punishment": "kick",
-            "minVlbeforePunishment":7
+            "minVlbeforePunishment":3
         },
         "flyA": {
             "enabled": true,
@@ -608,11 +632,11 @@ export default
             "minVlbeforePunishment": 10
         },    
         "flyB": {
-            "enabled": true,
+            "enabled": false,
             "description": "Checks for a player not going into the predicted location (y)",
             "punishment": "kick",
             "punishmentLength": "5m",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 30
         },
         "flyC": {
             "enabled": true,
@@ -638,7 +662,7 @@ export default
             "minVlbeforePunishment": 100
         },
         "motionC": {
-            "enabled": true,
+            "enabled": false,
             "description": "Checks for fly or bhop like velocity",
             "punishment": "kick",
             "minVlbeforePunishment": 15
@@ -692,7 +716,7 @@ export default
         },
         "scaffoldA": {
             "enabled": true,
-            "description": "Checks for scaffold rotation",
+            "description": "Checks for scaffold rotation (mainly while diag scaffolding)",
             "punishment": "kick",
             "minVlbeforePunishment": 3
         },
@@ -712,7 +736,7 @@ export default
         },
         "scaffoldD": {
             "enabled": true,
-            "description":"Checks for pitch differences",
+            "description":"Checks for funny rotations",
             "punishment": "kick",
             "minVlbeforePunishment": 20
         },
@@ -753,6 +777,13 @@ export default
             "undoPlace": false,
             "punishment": "kick",
             "minVlbeforePunishment": 15
+        },
+        "towerB": {
+            "enabled": true,
+            "max_y_pos_diff": 0.35,
+            "description": "Checks for funny velocity while towering up",
+            "punishment": "kick",
+            "minVlbeforePunishment": 5
         },
         "reachB": {
             "enabled": false,

@@ -18,3 +18,8 @@ tag @a remove elytra
 
 # add tags
 tag @a[hasitem={item=elytra}] add elytra
+
+
+# scoreboard handling
+scoreboard players add @a[tag=right,scores={right=..1000}] right 1
+scoreboard players add @a[tag=!moving,scores={last_move=..1000}] last_move 1

@@ -1,13 +1,13 @@
-import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
-import { setScore } from "../../../util";
-
+import { getScore } from "../../../util";
 export function killaura_e(player, entity) {
-    if(config.modules.killauraE.enabled) {
-        if(entity.typeId === "isolate:killaura") {
-            flag(player, "Killaura", "E", "Combat", "Attacking Bot", "true", false);
-            setScore(player, "tick_counter", 290);
+    const rightTicks = getScore(player, "right");
+    // Killaura/E = Check if a player attacks an entity while using an item (scythe check)
+	if(config.modules.killauraE.enabled && player.hasTag("right")) {
+        if(rightTicks > config.modules.killauraE.rightTicks) {
+            flag(player, "Killaura", "E", "Combat", `ticks=${rightTicks}`);
         }
+        console.log("running");
     }
 }

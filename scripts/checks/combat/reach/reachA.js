@@ -8,7 +8,7 @@ export function reach_a(player, entity) {
 	if((config.modules.reachA.enabled || config.generalModules.reach) && !player.hasTag("noreach")) {
 		// get the difference between 2 three dimensional coordinates
 		
-		const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
+		let distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
 		if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}\nPlayer Tags: ${player.getTags()}`);
 		const entityVelocity = entity.getVelocity();
 		

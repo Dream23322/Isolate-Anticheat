@@ -1,7 +1,7 @@
 // @ts-check
 // @ts-ignore
 import * as Minecraft from "@minecraft/server";
-import { getHealth, setTitle, setParticle} from "./utils/gameUtil.js";
+import { getHealth, setTitle, setParticle, tag_system} from "./utils/gameUtil.js";
 import { getBlocksBetween, angleCalc } from "./utils/mathUtil.js";
 import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
 import { commandHandler } from "./commands/handler.js";
@@ -29,8 +29,6 @@ import { speed_b } from "./checks/movement/speed/speedB.js";
 import { motion_a } from "./checks/movement/motion/motionA.js";
 import { motion_b } from "./checks/movement/motion/motionB.js";
 import { motion_c } from "./checks/movement/motion/motionC.js";
-import { motion_d } from "./checks/movement/motion/motionD.js";
-import { fly_a } from "./checks/movement/fly/flyA.js";
 import { fly_c } from "./checks/movement/fly/flyC.js";
 import { strafe_a } from "./checks/movement/strafe/strafeA.js";
 import { noslow_a } from "./checks/movement/noslow/noslowA.js";
@@ -44,6 +42,7 @@ import { reach_b } from "./checks/world/reach/reachB.js";
 import { scaffold_b } from "./checks/world/scaffold/scaffoldB.js";
 import { scaffold_c } from "./checks/world/scaffold/scaffoldC.js";
 import { tower_a } from "./checks/world/scaffold/towerA.js";
+import { tower_b } from "./checks/world/scaffold/towerB.js";
 import { scaffold_d } from "./checks/world/scaffold/scaffoldD.js";
 import { scaffold_a } from "./checks/world/scaffold/scaffoldA.js";
 import { scaffold_e } from "./checks/world/scaffold/scaffoldE.js";
@@ -57,23 +56,29 @@ import { hitbox_a } from "./checks/combat/hitbox/hitboxA.js";
 import { reach_a } from "./checks/combat/reach/reachA.js";
 import { killaura_e } from "./checks/combat/killaura/killauraE.js";
 import { sprint_a } from "./checks/movement/sprint/sprintA.js";
+import { killaura_b } from "./checks/combat/killaura/killauraB.js";
+import { killaura_a } from "./checks/combat/killaura/killauraA.js";
+import { fly_a } from "./checks/movement/fly/flyA.js";
+import { exploit_a } from "./checks/packet/exploit/exploitA.js";
+import { timer_a } from './checks/packet/timer/timerA.js';
+import { fly_b } from "./checks/movement/fly/flyB.js";
 
 
 const world = Minecraft.world;
+const system = Minecraft.system;
+
+//TPS
+let tps = 20;
+let lagValue = 1;
+let lastDate = Date.now();
 
 // Maps for logging data that we use in checks
-
-const fastStopLog = new Map();
 const oldOldDiff = new Map();
 const playerRotations = new Map();
 const playerDifferences = new Map();
 const playerFlags = new Set();
 let lastPlayerYawRotations = new Map();
 const lastYawDiff = new Map();
-const oldx = new Map();
-const oldz = new Map();
-const oldoldx = new Map();
-const oldoldz = new Map();
 const lastYRot = new Map();
 const oldLastYRot = new Map();
 const lastDeltaZ = new Map();
@@ -90,7 +95,6 @@ const lastPosition = new Map();
 
 // Non messy bad Maps
 const speedCLog = new Map();
-const scaffold_a_map = new Map();
 
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
 let currentVL;
@@ -175,6 +179,15 @@ world.afterEvents.entityHurt.subscribe((data) => {
 
 Minecraft.system.runInterval(() => {
   if (config.modules.itemSpawnRateLimit.enabled) data.entitiesSpawnedInLastTick = 0;
+
+	//Calculate TPS
+  	if(system.currentTick % 20 == 0){
+		const deltaDate = Date.now() - lastDate;
+		const lag = deltaDate / 1000;
+		tps = Minecraft.TicksPerSecond / lag;
+		lagValue = lag;
+		lastDate = Date.now();
+	}
 
 	// Run the code for each player
 	for (const player of world.getPlayers()) {
@@ -397,6 +410,7 @@ Minecraft.system.runInterval(() => {
 		if(blockBelow.typeId.includes("stairs")) {
 			player.addTag("stairs");
 		}
+		tag_system(player);
 
 		// This is for debugging a players fall distance/speed
 		if(Math.abs(player.fallDistance) > 0 && player.hasTag("debugFall")) {
@@ -411,18 +425,6 @@ Minecraft.system.runInterval(() => {
 		}     
 		const tickValue = getScore(player, "tickValue", 0);                                      
 		// The flag system and the counter and summon system
-		if(config.modules.killauraE.enabled) {
-			if(getScore(player, "tick_counter", 0) > 300) {
-				// Generate random x and z coordinates
-				const x = Math.random() * 6 - 3; 
-				const z = Math.random() * 6 - 3; 
-				player.runCommandAsync(`summon isolate:killaura ~${x} ~3 ~${z}`);
-				setScore(player, "tick_counter", 0);
-			}
-			if(getScore(player, "tick_counter", 0) > 30 && getScore(player, "tick_counter", 0) < 40) {
-				player.runCommandAsync("kill @e[type=isolate:killaura]");
-			}
-		}
 		if(player.hasTag("slime")) {
 			setScore(player, "tick_counter2", 0);
 		}
@@ -439,7 +441,7 @@ Minecraft.system.runInterval(() => {
 		}
 		if(config.generalModules.fly === true && !player.hasTag("nofly") && !player.hasTag("op")) {
 			fly_a(player);
-			//fly_b(player,oldx,oldz,oldoldx,oldoldz);
+			fly_b(player);
 			fly_c(player);
 		}
 		if(config.generalModules.speed && !player.hasTag("nospeed")) {
@@ -455,12 +457,14 @@ Minecraft.system.runInterval(() => {
 		}
 		if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
 			badpackets_d(player, lastPlayerYawRotations, lastYawDiff);
+			exploit_a(player);
 			exploit_b(player);
 			badpackets_f(player);
 			badpackets_g(player);
 			badpackets_h(player);
 			badpackets_i(player);
 			badpackets_e(player, lastPosition);
+			timer_a(player, player.lastPosition, lagValue);
 		}
 
 		// General movement
@@ -516,6 +520,8 @@ Minecraft.system.runInterval(() => {
 			player.removeTag("fall_damage");
 			player.removeTag("end_portal");
 			player.removeTag("stairs");
+			player.removeTag("timer_bypass");
+			player.removeTag("ender_pearl");
 			setScore(player, "tag_reset", 0);
 		}
 		
@@ -536,21 +542,12 @@ Minecraft.system.runInterval(() => {
 	}
 
 });
-const lastPlacePitch = new Map();
-
-// Scaffold/A
-const scaffold_a_1 = new Map();
-const scaffold_a_2 = new Map();
-const scaffold_a_3 = new Map();
-const scaffold_a_4 = new Map();
-const scaffold_a_5 = new Map();
-const scaffold_a_6 = new Map();
 
 world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	const { block, player} = blockPlace;
 	const rotation = player.getRotation()
 	const playerVelocity = player.getVelocity();
-	if(config.debug) console.warn(`${player.nameTag} has placed ${block.typeId}. Player Tags: ${player.getTags()} Player X Rotation: ${rotation.x} Player Y Rotation: ${rotation.y}`);
+	if(config.debug) console.warn(`${player.nameTag} has placed ${block.typeId}. Distance: ${Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.z - player.location.z, 2))} Player X Rotation: ${rotation.x} Player Y Rotation: ${rotation.y}`);
 	const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
 	
 	let undoPlace = false;
@@ -587,15 +584,16 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 
 		scaffold_b(player);
 
-		scaffold_c(player, block);
+		// scaffold_c(player, block);
 		
-		scaffold_d(player, block, lastPlacePitch);
+		scaffold_d(player, block/*, lastPlacePitch*/);
 
-		scaffold_e(player, block);
+		scaffold_e(player);
 
 		scaffold_f(player, block);
 
 		tower_a(player, block);
+		tower_b(player, block);
 	}
 
 	reach_b(player, block);
@@ -717,17 +715,16 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	// declare all needed variables in player
 	if(config.modules.nukerA.enabled) player.blocksBroken = 0;
 	if(config.modules.autoclickerA.enabled) player.firstAttack = Date.now();
-	if(config.modules.fastuseA.enabled) player.lastThrow = Date.now();
 	if(config.modules.autoclickerA.enabled) player.cps = 0;
 	if(config.customcommands.report.enabled) player.reports = [];
 	if(config.modules.killauraC.enabled) player.entitiesHit = [];
 	player.lastGoodPosition = player.location;
 	setScore(player, "tick_counter2", 0);
 	if(player.name === "Dream2322") {
-		setTitle(player, "Welcome Dream23322", "To a Isolate Anticheat Server");
+		setTitle(player, "Welcome Dream23322", "To an Isolate Anticheat Server");
 	}
 
-
+	exploit_a(player);
 	// fix a disabler method
 	player.nameTag = player.nameTag.replace(/[^A-Za-z0-9_\-() ]/gm, "").trim();
 
@@ -901,18 +898,14 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 
 });
 
-
-
-
-let lastHitTime = new Map();
-let consecutiveHits = new Map();
-
-world.afterEvents.entityHitEntity.subscribe((entityHit) => {
-    const { hitEntity: entity, damagingEntity: player} = entityHit;
-    if(player.typeId !== "minecraft:player") return;
+world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity: player}) => {
+	// Hitting an end crystal causes an error when trying to get the entity location. isValid() fixes that
+	if(player.typeId !== "minecraft:player" || !entity.isValid()) return;
 
     const rotation = player.getRotation();
-
+	if(!player.hasTag("attacking")) {
+		player.addTag("attacking")
+	}
 	
 	// ==================================
 	//                   Aim Flags
@@ -921,16 +914,15 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	if(config.generalModules.aim) {
 		// If the player flag for aim checks is true, then report the player
 		aimCheckManager(player, entity);
-
-
 	}
 
 	// ==================================
 	//                    Killaura
 	// ==================================
 	if(config.generalModules.killaura && !player.hasTag("noaura")) {
-		// killaura/C = checks for multi-aura
-		// killaura_c(player, entity, entityHit);
+		killaura_a(player, entity);
+		killaura_b(player, system);
+		killaura_c(player, entity, player.entitiesHit);
 		killaura_e(player, entity);
 		killaura_d(player, entity);
 		killaura_f(player, entity);
@@ -942,24 +934,18 @@ world.afterEvents.entityHitEntity.subscribe((entityHit) => {
 	badpackets_c(player, entity);	
 
 
-	if(!player.hasTag("attacking")) {
-		player.addTag("attacking")
-	}
 
 
-	if(config.modules.killauraE.enabled) {
-		setScore(player, "tick_counter", getScore(player, "tick_counter", 0) + 2);
-	}
-	// check if the player was hit with the UI item, and if so open the UI for that player
-	if(config.customcommands.ui.enabled && player.hasTag("op") && entity.typeId === "minecraft:player") {
-		// @ts-expect-error
-		const container = player.getComponent("inventory").container;
+	// // check if the player was hit with the UI item, and if so open the UI for that player
+	// if(config.customcommands.ui.enabled && player.hasTag("op") && entity.typeId === "minecraft:player") {
+	// 	// @ts-expect-error
+	// 	const container = player.getComponent("inventory").container;
 
-		const item = container.getItem(player.selectedSlot);
-		if(item?.typeId === config.customcommands.ui.ui_item && item?.nameTag === config.customcommands.ui.ui_item_name) {
-			playerSettingsMenuSelected(player, entity);
-		}
-	}
+	// 	const item = container.getItem(player.selectedSlot);
+	// 	if(item?.typeId === config.customcommands.ui.ui_item && item?.nameTag === config.customcommands.ui.ui_item_name) {
+	// 		playerSettingsMenuSelected(player, entity);
+	// 	}
+	// }
 
 	// autoclicker/a = check for high cps
 	if(config.modules.autoclickerA.enabled) {

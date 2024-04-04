@@ -1,8 +1,6 @@
 # Run all the checks
 function checks/angle
 execute @a ~~~ function checks/cbe
-function checks/others
-function checks/killaura
 execute @a[tag=isBanned,scores={gametestapi=..0}] ~~~ function checks/ban
 
 # Optional checks

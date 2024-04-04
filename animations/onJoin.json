@@ -40,6 +40,7 @@
 					"/scoreboard players add scythe:config invalidsprint 0",
 					"/scoreboard objectives add fly dummy",
 					"/scoreboard players add scythe:config fly 0",
+					
 					// Setting Operations For Objective Types
 					"/scoreboard players operation @a npc = scythe:config npc",
 					"/scoreboard players operation @a commandblocks = scythe:config commandblocks",
@@ -95,6 +96,7 @@
 					"/scoreboard objectives add killauraF_reset dummy",
 					"/scoreboard objectives add motion_d_buffer dummy",
 					"/scoreboard objectives add motion_d_reset dummy",
+					"/scoreboard objectives add timervl dummy",
 					// If enabled from previous login then activate
 					"/ability @s[tag=flying,m=!c] mayfly true"
 					// alert the user if Gametest Framework is not enabled

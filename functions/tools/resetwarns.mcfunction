@@ -29,3 +29,4 @@ scoreboard players set @s[type=player,scores={aimvl=1..}] aimvl 0
 scoreboard players set @s[type=player,scores={strafevl=1..}] strafevl 0
 scoreboard players set @s[type=player,scores={hitboxvl=1..}] hitboxvl 0
 scoreboard players set @s[type=player,scores={predictionvl=1..}] predictionvl 0
+scoreboard players set @s[type=player,scores={timervl=1..}] timervl 0
