@@ -18,13 +18,18 @@ export function timer_a(player, lastPosition, Value){
         const duped = ServerSpeed / ClientSpeed;
         if(player.timerHold == null) player.timerHold = [];
         player.timerHold.push(duped * 20 / Value);
+	if(duped == 0) return;
         if(player.timerHold.length >= 20){
             let timer = 0;
             for(const currentTH of player.timerHold){
                 timer += currentTH;
             }
+            let timerValue = timer / player.timerHold.length / Value;
+            if(player.timerHold.length >= 24){
+		timerValue += 2;
+            }
             if(player.hasTag("timer-debug")) {
-                player.runCommandAsync(`title @s actionbar timer:${timer / player.timerHold.length}: M:${Value}`);
+                player.runCommandAsync(`title @s actionbar timer:${timerValue}: V:${Value}`);
             }    
             if(timerData.has(player)) {
                 let timer_lev = config.modules.timerA.timer_level;
@@ -33,7 +38,7 @@ export function timer_a(player, lastPosition, Value){
                     timer_lev--;
                     timer_lev_low++;
                 }
-                if(timerData.get(player) > timer_lev && (timer / player.timerHold.length) > timer_lev || timerData.get(player) < timer_lev_low && (timer / player.timerHold.length) < timer_lev_low) {
+                if(timerData.get(player) > timer_lev && (timerValue) > timer_lev || timerData.get(player) < timer_lev_low && (timerValue) < timer_lev_low) {
                     const playerVelocity = player.getVelocity();
                     if(Math.abs(player.lastPosition.y - player.location.y) > 5) {
                         timerData.set(player, 20);
@@ -45,7 +50,7 @@ export function timer_a(player, lastPosition, Value){
                 }
             }
             if(!player.hasTag("timer_bypass")) {
-                timerData.set(player, timer / player.timerHold.length);
+                timerData.set(player, timerValue);
             }
             player.timerHold.splice(0);
         }
