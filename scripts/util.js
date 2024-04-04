@@ -237,12 +237,6 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     const punishment = checkData.punishment?.toLowerCase();
     if(typeof punishment !== "string") throw TypeError(`Error: punishment is type of ${typeof punishment}. Expected "string"`);
     if(punishment === "none" || punishment === "") return;
-    if(currentVl > checkData.minVlbeforePunishment - 2 && currentVl < checkData.minVlbeforePunishment - 1) {
-        player.runCommandAsync("title @s title §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
-        player.runCommandAsync("title @s subtitle §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
-        player.runCommandAsync("title @s actionbar §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");        
-    }
-    // Fancy calculation for the violation system
 
     // This was requested by Duckie Jam (1078815334871617556) from Appy's Practice Network (Code: KC2AfnqpLPo )
     if(config.fancy_kick_calculation.on === true) {
@@ -257,10 +251,6 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
             const message = `§u${player.name} §hwas §pkicked §hby §nIsolate Anticheat §j[§n${check}§j]`;
 
             data.recentLogs.push(message)
-            
-            
-            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically kicked by Isolate Anticheat for Unfair Advantage. Reason: Cheating}]}`);
-            player.runCommandAsync(`tellraw @a {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been removed from your game for using an §6unfair advantage!"}]}`);
             player.runCommandAsync(`kick "${player.name}" §r§uIsolate >> §6Unfair Advantage (Cheating)`);
         }
     }
@@ -279,7 +269,6 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     player.addTag(`time:${Date.now() + banLength2}`);
                     player.addTag("isBanned");
                     setScore(player, "kickvl", 0);
-                    setSound(player, "raid:horn");
                     console.warn(`${new Date().toISOString()} |${player.name} was banned by Isolate Anticheat for ${check}/${checkType}`);
                     const message = `§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat §j[§n${check}§j]`;
     
@@ -287,12 +276,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     
                 }
                 player.runCommandAsync("function tools/resetwarns");
-                
-                for (let i = 0; i < 3; i++) {
-                    player.sendMessage("§4§klakjfdal;skdjfa;lskdjf;alskjdfa;lskjdfa;lksjdf;laskjdf;laskjdf;laskjdf;alskjdfa;lksjdf;alsjkfdla;skjdfa;lskdjfa;lsdjf;lasjdfl;aksjdfl;aksjdf;laksjdfl;kajsd;flkjaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-                }
                 player.addTag("strict");
-                setSound(player, "mob.endermen.death");
                 console.warn(`${new Date().toISOString()} |${player.name} was kicked by Isolate Anticheat for ${check}/${checkType}`);
                 const message = `§u${player.name} §hwas §pkicked §hby §nIsolate Anticheat §j[§n${check}§j]`;
     
@@ -537,17 +521,20 @@ export function getScore(player, objective, defaultValue = 0) {
 }
 
 /**
- * @name setScore
+ * @name setScore   
  * @param {Minecraft.Entity} player - The player to set the score for
- * @param {string} objective - The scoreboard objective
+ * @param {string} objectiveName - The scoreboard objective
  * @param {number} value - The new value of the scoreboard objective
  * @example getScore(player, "cbevl", 0)
  * @remarks Sets the scoreboard objective value for a player
  */
-export function setScore(player, objective, value) {
+export function setScore(player, objectiveName, value) {
     if(typeof player !== "object") throw TypeError(`Error: player is type of ${typeof player}. Expected "object"`);
-    if(typeof objective !== "string") throw TypeError(`Error: objective is type of ${typeof objective}. Expected "string"`);
+    if(typeof objectiveName !== "string") throw TypeError(`Error: objective is type of ${typeof objectiveName}. Expected "string"`);
     if(typeof value !== "number") throw TypeError(`Error: value is type of ${typeof value}. Expected "number"`);
 
-    world.scoreboard.getObjective(objective).setScore(player, value);
+    const objective = world.scoreboard.getObjective(objectiveName);
+    if(!objective) throw Error(`Objective "${objectiveName}" does not exist`);
+
+    objective.setScore(player, value);
 }

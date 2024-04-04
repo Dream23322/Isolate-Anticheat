@@ -53,6 +53,5 @@ tellraw @s {"rawtext":[{"text":"§u!tag <nametag>§r - Adds tag to username in c
 tellraw @s {"rawtext":[{"text":"§u!tag <player> <nametag>§r - Adds tag to username in chat window for specific users (use \"reset\" to get rid of it)."}]}
 tellraw @s {"rawtext":[{"text":"§u!report <player> [reason]§r - Report a player."}]}
 tellraw @s {"rawtext":[{"text":"§u!ui§r - Opens the Isolate Management UI."}]}
-tellraw @s {"rawtext":[{"text":"§u!testaura <player>§r - Entity killaura test on player."}]}
 tellraw @s {"rawtext":[{"text":"§u!invsee <player>§r - View another players inventory."}]}
 tellraw @s {"rawtext":[{"text":"§u!resetwarns <player>§r - Reset a players violations."}]}

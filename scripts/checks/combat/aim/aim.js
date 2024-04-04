@@ -3,6 +3,7 @@ Aim check manager
 This is needed because the aim checks run in a different event loop than the flag.
 */
 import { angleCalc } from "../../../utils/mathUtil";
+import { flag } from "../../../util";
 export function aimCheckManager(player, entity) {
     if(player.hasTag("a")) {
         const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));

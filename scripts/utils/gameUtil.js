@@ -18,6 +18,11 @@ export function setParticle(player, particleName) {
     player.runCommandAsync(`particle minecraft:${particleName} ~~~`);
 }
 
+// Add Tags 
+export function tag_system(player) {
+    player.runCommandAsync(`tag @a[hasitem={item=ender_pearl,location=slot.weapon.mainhand}] add ender_pearl`);
+}
+
 // Check is a player is surrounded by air
 
 /**

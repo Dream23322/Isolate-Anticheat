@@ -4,7 +4,7 @@ import config from "../../../data/config.js";
 import { getSpeed } from "../../../utils/mathUtil.js";
 
 // Probs gonna recode this
-export function scaffold_e(player, block) {
+export function scaffold_e(player) {
     const playerSpeed = getSpeed(player);
     // Scaffold/E = Speed limit check
     if(config.modules.scaffoldE.enabled) {
