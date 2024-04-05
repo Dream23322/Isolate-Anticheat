@@ -46,34 +46,26 @@ export function scaffold_a(player, block) {
                         flag(player, "Scaffold", "A", "World", "no-rot-diff", "true", false);
                     }
                 }
+                const rotx = player.getRotation().x;
                 if(distance > 3.5 && !is_decrease(player, place_location, last_place_location, old_place_location)) {
                     flag(player, "Scaffold", "A", "World", "distance", distance, false);
                 }
                 if (Math.abs(yaw_values.new - player.getRotation().z) < 2) {
-                    flag(player, "Scaffold", "A", "World", "pitch", player.getRotation().x, false);
+                    flag(player, "Scaffold", "A", "World", "yaw", player.getRotation().z, false);
                 }
-
-                /*
-                New scaffold checks
-                ---------------------
-                These checks come with Isolate 8.0
-                These checks are designed to combat Prax Clients diag scaffold rotations. In doing so, they my look like previous checks in this file. They are like this because I have not read through the old check in my time off and have not seen them work in-game.
-                -4urxra
-                */
-               
                 if(yaw_values.new < -141 && yaw_values.new > -142) {
                     flag(player, "Scaffold", "A", "World", "Yaw", yaw_values.new, false);
                 }
                 if(yaw_values.new == yaw_values.mid) {
                     flag(player, "Scaffold", "A", "World", "Yaw_Diff", 0, false);
                 }
-                if(player.getRotation().x < 44.5 && pitch_values.mid < 44.5 && distance < 1) {
+                if(rotx < 44.5 && pitch_values.mid < 44.5 && distance < 1) {
                     flag(player, "Scaffold", "A", "World", "Pitch", pitch_values.new, false);
                 }
-                if(player.getRotation().x < 54 && pitch_values.mid < 54 && distance < 0.4) {
-                    flag(player, "Scaffold", "A", "World", "Pitch", player.getRotation().x, false);
+                if(rotx < 54 && pitch_values.mid < 54 && distance < 0.4) {
+                    flag(player, "Scaffold", "A", "World", "Pitch", rotx, false);
                 }
-                if(player.getRotation().x > 60 && pitch_values.mid > 60 && distance > 1.9) {
+                if(rotx > 60 && pitch_values.mid > 60 && distance > 1.9) {
                     flag(player, "Scaffold", "A", "World", "dist", distance, false);
                 }
                 if(player.getRotation().y > 70 && pitch_values.mid > 70 && distance > 1.5) {

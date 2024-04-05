@@ -26,11 +26,9 @@ export function timer_a(player, lastPosition, Value){
             }
             let timerValue = timer / player.timerHold.length / Value;
             if(player.timerHold.length >= 24){
-		timerValue += 2;
+		        timerValue += 2;
             }
-            if(player.hasTag("timer-debug")) {
-                player.runCommandAsync(`title @s actionbar timer:${timerValue}: V:${Value}`);
-            }    
+            if(player.hasTag("timer-debug")) player.runCommandAsync(`title @s actionbar timer:${timerValue}: V:${Value}`);
             if(timerData.has(player)) {
                 let timer_lev = config.modules.timerA.timer_level;
                 let timer_lev_low = config.modules.timerA.timer_level_low;
@@ -54,11 +52,9 @@ export function timer_a(player, lastPosition, Value){
             }
             player.timerHold.splice(0);
         }
-
     }
     player.lastPosition = player.location;
 }
-
 function isMovingWithVelocity(velocity){
 	return Math.abs(Math.hypot(velocity.x, velocity.z)) > 0.01;
 }
