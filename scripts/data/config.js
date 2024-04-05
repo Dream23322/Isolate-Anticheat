@@ -452,7 +452,13 @@ export default
             "description": "Checks for Timer",
             "timer_level": 27,
             "timer_level_low": 15,
-            "strict": true,
+            "strict": false,
+            "safe": {
+                "swimming": false,
+                "placing": true
+            },
+            // mode: "average" or "all"
+            "mode": "all",
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },

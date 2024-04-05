@@ -65,12 +65,10 @@ export function scaffold_a(player, block) {
                 if(rotx < 54 && pitch_values.mid < 54 && distance < 0.4) {
                     flag(player, "Scaffold", "A", "World", "Pitch", rotx, false);
                 }
-                if(rotx > 60 && pitch_values.mid > 60 && distance > 1.9) {
+                if(rotx > 60 && pitch_values.mid < 60 && distance > 1.9) {
                     flag(player, "Scaffold", "A", "World", "dist", distance, false);
                 }
-                if(player.getRotation().y > 70 && pitch_values.mid > 70 && distance > 1.5) {
-                    flag(player, "Scaffold", "A", "World", "dist2", distance, false);
-                }
+   
                 if(Math.abs(yaw_values.new + yaw_values.mid + yaw_values.old) / 3 < 3 || Math.abs(pitch_values.new + pitch_values.mid + pitch_values.old) / 3 < 4) {
                     flag(player, "Scaffold", "A", "World", "Rot Diff", Math.abs(Math.abs(yaw_values.new + yaw_values.mid + yaw_values.old) / 3 + Math.abs(pitch_values.new + pitch_values.mid + pitch_values.old) / 3) / 2, false);
                 }
