@@ -458,7 +458,7 @@ export default
                 "placing": true
             },
             // mode: "average" or "all"
-            "mode": "all",
+            "mode": "average",
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },
@@ -638,7 +638,7 @@ export default
             "minVlbeforePunishment": 10
         },    
         "flyB": {
-            "enabled": false,
+            "enabled": true,
             "description": "Checks for a player not going into the predicted location (y)",
             "punishment": "kick",
             "punishmentLength": "5m",
