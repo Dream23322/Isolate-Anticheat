@@ -1,7 +1,7 @@
 // @ts-check
 // @ts-ignore
 import * as Minecraft from "@minecraft/server";
-import { getHealth, setTitle, setParticle, tag_system} from "./utils/gameUtil.js";
+import { getHealth, setTitle, setParticle, tag_system, aroundAir} from "./utils/gameUtil.js";
 import { getBlocksBetween, angleCalc } from "./utils/mathUtil.js";
 import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
 import { commandHandler } from "./commands/handler.js";
@@ -191,355 +191,361 @@ Minecraft.system.runInterval(() => {
 
 	// Run the code for each player
 	for (const player of world.getPlayers()) {
-		try {
-			// Gud calculations :fire:
-			const rotation = player.getRotation();
-			const playerVelocity = player.getVelocity();
-			const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(4));
 
-			// To reduce false flags we do this
-			if(player.hasTag("a") || player.hasTag("b") || player.hasTag("c")) {
-				// Remove all tags every tick
-				player.removeTag("a");
-				player.removeTag("b");
-				player.removeTag("c");
+		// Gud calculations :fire:
+		const rotation = player.getRotation();
+		const playerVelocity = player.getVelocity();
+		const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(4));
+
+		// To reduce false flags we do this
+		if(player.hasTag("a") || player.hasTag("b") || player.hasTag("c")) {
+			// Remove all tags every tick
+			player.removeTag("a");
+			player.removeTag("b");
+			player.removeTag("c");
+		}
+		player.removeTag("noPitchDiff");
+
+		const prevRotation = playerRotations.get(player);
+		const prevDiff = playerDifferences.get(player);
+		
+		// ==================================
+		//                   Aim Checks
+		// ==================================
+		if(config.generalModules.aim && !player.hasTag("noaim")) {
+			// Reset the buffer for Aim/C
+			if(getScore(player, "aimc_reset") > 20) {
+				setScore(player, "aimc_reset", 0);
+				setScore(player, "aimc_buffer", 0);
 			}
-			player.removeTag("noPitchDiff");
+			// If there is a previous rotation stored
+			if (prevRotation && lastDeltPitch.get(player) && lastDeltYaw.get(player)) {
+				// Maths go brrrrrrrr
+				const deltaYaw = rotation.y - prevRotation.y;
+				const deltaPitch = rotation.x - prevRotation.x;
 
-			const prevRotation = playerRotations.get(player);
-			const prevDiff = playerDifferences.get(player);
-			
-			// ==================================
-			//                   Aim Checks
-			// ==================================
-			if(config.generalModules.aim && !player.hasTag("noaim")) {
-				// Reset the buffer for Aim/C
-				if(getScore(player, "aimc_reset") > 20) {
-					setScore(player, "aimc_reset", 0);
-					setScore(player, "aimc_buffer", 0);
+
+				const lastDY = lastDeltYaw.get(player) || 0;
+				const lastDP = lastDeltPitch.get(player) || 0;
+
+				const ROTATION_SPEED_THRESHOLD = config.modules.aimA.rotSpeed;
+				
+				if(deltaPitch < 0.1) {
+					player.addTag("noPitchDiff");
 				}
-				// If there is a previous rotation stored
-				if (prevRotation && lastDeltPitch.get(player) && lastDeltYaw.get(player)) {
-					// Maths go brrrrrrrr
-					const deltaYaw = rotation.y - prevRotation.y;
-					const deltaPitch = rotation.x - prevRotation.x;
-
-
-					const lastDY = lastDeltYaw.get(player) || 0;
-					const lastDP = lastDeltPitch.get(player) || 0;
-
-					const ROTATION_SPEED_THRESHOLD = config.modules.aimA.rotSpeed;
-					
-					if(deltaPitch < 0.1) {
-						player.addTag("noPitchDiff");
+				if(deltaPitch > 0.1) {
+					player.removeTag("noPitchDiff");
+				}
+				
+				// Aim/A = Checks for fast head snap movements
+				// This check is easy to false flag, so you need to have the tag strict on you for it to do anything
+				if (config.modules.aimA.enabled && player.hasTag("strict")) {
+					// If the rotation speed exceeds the threshold
+					if (Math.abs(deltaYaw) < ROTATION_SPEED_THRESHOLD - ROTATION_SPEED_THRESHOLD / 3 && Math.abs(lastDY) > ROTATION_SPEED_THRESHOLD || Math.abs(deltaPitch) < ROTATION_SPEED_THRESHOLD - ROTATION_SPEED_THRESHOLD / 3 && Math.abs(lastDP) > ROTATION_SPEED_THRESHOLD) {
+						// Set the player flag as true
+						playerFlags.add(player);
+						player.addTag("a");
+					} else {
+						playerFlags.delete(player);
 					}
-					if(deltaPitch > 0.1) {
-						player.removeTag("noPitchDiff");
-					}
-					
-					// Aim/A = Checks for fast head snap movements
-					// This check is easy to false flag, so you need to have the tag strict on you for it to do anything
-					if (config.modules.aimA.enabled && player.hasTag("strict")) {
-						// If the rotation speed exceeds the threshold
-						if (Math.abs(deltaYaw) < ROTATION_SPEED_THRESHOLD - ROTATION_SPEED_THRESHOLD / 3 && Math.abs(lastDY) > ROTATION_SPEED_THRESHOLD || Math.abs(deltaPitch) < ROTATION_SPEED_THRESHOLD - ROTATION_SPEED_THRESHOLD / 3 && Math.abs(lastDP) > ROTATION_SPEED_THRESHOLD) {
-							// Set the player flag as true
-							playerFlags.add(player);
-							player.addTag("a");
-						} else {
-							playerFlags.delete(player);
-						}
-					}
+				}
 
-					// Aim/B = Checks for perfect mouse movements
-					if (config.modules.aimB.enabled) {
-						if (deltaYaw === deltaPitch && deltaPitch !== 0 && deltaYaw !== 0 || Math.abs(deltaPitch) < 1 && Math.abs(deltaYaw) > 1 || Math.abs(deltaYaw) < 1  && Math.abs(deltaPitch) > 1) {
-							playerFlags.add(player);
-							flag(player, "Aim", "B", "Combat", "diff", deltaYaw, false);
-						} else {
-							playerFlags.delete(player);
-						}
-						if(lastYRot.get(player) !== rotation.y && rotation.y === oldLastYRot.get(player)) {
-							playerFlags.add(player);
-							player.addTag("b");
-						}
-						// Make sure to set the new values! (I always forget this lol)
-						oldLastYRot.set(player, lastYRot.get(player));
-						lastYRot.set(player, rotation.y);
+				// Aim/B = Checks for perfect mouse movements
+				if (config.modules.aimB.enabled) {
+					if (deltaYaw === deltaPitch && deltaPitch !== 0 && deltaYaw !== 0 || Math.abs(deltaPitch) < 1 && Math.abs(deltaYaw) > 1 || Math.abs(deltaYaw) < 1  && Math.abs(deltaPitch) > 1) {
+						playerFlags.add(player);
+						flag(player, "Aim", "B", "Combat", "diff", deltaYaw, false);
+					} else {
+						playerFlags.delete(player);
 					}
-					
-					// Aim/C = Checks for smoothed rotation
-					if (config.modules.aimC.enabled && player.hasTag("strict")) {
-						const oldDiff = oldOldDiff.get(player) || 0;
-						const currentDiff = Math.sqrt(deltaYaw**2 + deltaPitch**2);
-					
-						// Check if the player's rotation has changed
-						if (deltaYaw > 2 || deltaPitch > 2) {
-							const smoothRotation = Math.abs(currentDiff - oldDiff) <= 0.06 && Math.abs(currentDiff - oldDiff) >= 0;
+					if(lastYRot.get(player) !== rotation.y && rotation.y === oldLastYRot.get(player)) {
+						playerFlags.add(player);
+						player.addTag("b");
+					}
+					// Make sure to set the new values! (I always forget this lol)
+					oldLastYRot.set(player, lastYRot.get(player));
+					lastYRot.set(player, rotation.y);
+				}
+				
+				// Aim/C = Checks for smoothed rotation
+				if (config.modules.aimC.enabled && player.hasTag("strict")) {
+					const oldDiff = oldOldDiff.get(player) || 0;
+					const currentDiff = Math.sqrt(deltaYaw**2 + deltaPitch**2);
+				
+					// Check if the player's rotation has changed
+					if (deltaYaw > 2 || deltaPitch > 2) {
+						const smoothRotation = Math.abs(currentDiff - oldDiff) <= 0.06 && Math.abs(currentDiff - oldDiff) >= 0;
+						
+						if (smoothRotation) {
+							setScore(player, "aimc_buffer", getScore(player, "aimc_buffer", 0) + 1);
+							const buffer = getScore(player, "aimc_buffer", 0);
 							
-							if (smoothRotation) {
-								setScore(player, "aimc_buffer", getScore(player, "aimc_buffer", 0) + 1);
-								const buffer = getScore(player, "aimc_buffer", 0);
-								
-								if(buffer > config.modules.aimC.buffer) {
-									player.addTag("c");
-									setScore(player, "aimc_buffer", 0);
-									setScore(player, "aimc_reset", 0);
-								}
-								
-							} 
+							if(buffer > config.modules.aimC.buffer) {
+								player.addTag("c");
+								setScore(player, "aimc_buffer", 0);
+								setScore(player, "aimc_reset", 0);
+							}
 							
-							oldOldDiff.set(player, currentDiff);
-						}
-					}
-					if(config.modules.aimD) {
-
-						const lastDeltaYaw = lastDeltaZ.get(player) || 0;
-						const deltaZ = Math.abs(rotation.z - lastYRot.get(player) || 0);
-						// The check
-						if(deltaZ > 320 && lastDeltaYaw > 30) {
-							flag(player, "Aim", "D", "Combat", "deltaZ", deltaZ);
-						}
-						// Reset the values
-						lastDeltaZ.set(player, deltaZ);
-					}
-	
-				}
-				playerRotations.set(player, rotation);
-				lastDeltPitch.set(player, rotation.x - prevRotation.x);	
-				lastDeltYaw.set(player, rotation.y - prevRotation.y);
-			}
-					
-			const selectedSlot = player.selectedSlot;
-
-			if(player.isGlobalBanned || player.nameTag in banplayer) {
-				setParticle(player, "totem_particle");
-				player.addTag("by:Isolate Anticheat");
-				player.addTag("reason:You are in a hacker database!");
-				player.addTag("isBanned");
-			}
-
-			// sexy looking ban message
-			if(player.hasTag("isBanned")) banMessage(player);
-
-			if(player.blocksBroken >= 1 && config.modules.nukerA.enabled) player.blocksBroken = 0;
-			if(player.entitiesHit?.length >= 1 && config.modules.killauraC.enabled) player.entitiesHit = [];
-			if(Date.now() - player.startBreakTime < config.modules.autotoolA.startBreakDelay && player.lastSelectedSlot !== selectedSlot) {
-				player.flagAutotoolA = true;
-				player.autotoolSwitchDelay = Date.now() - player.startBreakTime;
-			}
-
-			// anti-namespoof
-			// these values are set in the playerJoin event
-			if(player.flagNamespoofA) {
-				flag(player, "Namespoof", "A", "Exploit", "nameLength", player.name.length);
-				player.flagNamespoofA = false;
-				currentVL++;
-			}
-			if(player.flagNamespoofB) {
-				flag(player, "Namespoof", "B", "Exploit");
-				player.flagNamespoofB = false;
-				currentVL++;
-			}
-
-
-			// player position shit
-			if(player.hasTag("moving")) {
-				player.runCommandAsync(`scoreboard players set @s xPos ${Math.floor(player.location.x)}`);
-				player.runCommandAsync(`scoreboard players set @s yPos ${Math.floor(player.location.y)}`);
-				player.runCommandAsync(`scoreboard players set @s zPos ${Math.floor(player.location.z)}`);
-			}
-
-			if(config.modules.bedrockValidate.enabled) {
-				if(getScore(player, "bedrock") >= 1) {
-					if(config.modules.bedrockValidate.overworld && player.dimension.id === "minecraft:overworld") {
-						player.runCommandAsync("fill ~-5 -64 ~-5 ~5 -64 ~5 bedrock");
-						player.runCommandAsync("fill ~-4 -59 ~-4 ~4 319 ~4 air 0 replace bedrock");
-					}
-
-					if(config.modules.bedrockValidate.nether && player.dimension.id === "minecraft:nether") { 
-						player.runCommandAsync("fill ~-5 0 ~-5 ~5 0 ~5 bedrock");
-						player.runCommandAsync("fill ~-5 127 ~-5 ~5 127 ~5 bedrock");
-						player.runCommandAsync("fill ~-5 5 ~-5 ~5 120 ~5 air 0 replace bedrock");
-					}
-				} else config.modules.bedrockValidate.enabled = false;
-			}
-
-
-
-			// ==================================
-			//                    Utilities
-			// ==================================
-
-			// Im currently adding more management for the strict system, it wont be a full system it will just be there to help prevent false flags
-			if(getScore(player, "kickvl", 0) > config.ViolationsBeforeBan / 2 && !player.hasTag("strict")) {
-				//Try add the tag
-				try {
-					player.addTag("strict");
-				} catch (error) {
-					// If .addTag() fails we use commands
-					player.runCommandAsync(`tag "${player.name}" add strict`);
-				}
-			}
-			
-			if(config.autoReset) {
-				if(getScore(player, "tick_counter2", 0) > 300) {
-					if(!player.hasTag("reported") && player.hasTag("strict")) {
-						player.removeTag("strict");
-					}
-					player.runCommandAsync("function tools/resetwarns");
-					setScore(player, "tick_counter2", 0);
-				}
-			}
-			if(player.hasTag("moving") && config.debug && player.hasTag("log")) {
-				console.warn(`${player.nameTag} speed is ${playerSpeed} Velocity.X ${playerVelocity.x}, Y ${playerVelocity.y}, Z ${playerVelocity.z}`);
-			}
-
-			const blockBelow = player.dimension.getBlock({x: player.location.x, y: player.location.y - 1, z: player.location.z}) ?? {typeId: "minecraft:air"};
-			if(blockBelow.typeId.includes("ice")) {
-				player.addTag("ice");
-			}
-			if(blockBelow.typeId.includes("slime")) {
-				player.addTag("slime");
-			}
-			if(player.hasTag("trident")) {
-				setScore(player, "right", 0);
-			}
-			if(blockBelow.typeId.includes("end_portal")) {
-				player.addTag("end_portal");
-			}
-			if(blockBelow.typeId.includes("stairs")) {
-				player.addTag("stairs");
-			}
-			tag_system(player);
-
-			// This is for debugging a players fall distance/speed
-			if(Math.abs(player.fallDistance) > 0 && player.hasTag("debugFall")) {
-				if(lastFallDistance.get(player)) {
-					const fallSpeed = player.fallDistance - lastFallDistance.get(player);
-					console.log(player, "fallSpeed: " + fallSpeed);
-					if(fallSpeed === -0.5125312805175781) {
-						flag(player, "Speed", "B", "Movement", "fallSpeed", fallSpeed);
+						} 
+						
+						oldOldDiff.set(player, currentDiff);
 					}
 				}
-				lastFallDistance.set(player, player.fallDistance);
-			}     
-			const tickValue = getScore(player, "tickValue", 0);                                      
-			// The flag system and the counter and summon system
-			if(player.hasTag("slime")) {
+				if(config.modules.aimD) {
+
+					const lastDeltaYaw = lastDeltaZ.get(player) || 0;
+					const deltaZ = Math.abs(rotation.z - lastYRot.get(player) || 0);
+					// The check
+					if(deltaZ > 320 && lastDeltaYaw > 30) {
+						flag(player, "Aim", "D", "Combat", "deltaZ", deltaZ);
+					}
+					// Reset the values
+					lastDeltaZ.set(player, deltaZ);
+				}
+
+			}
+			playerRotations.set(player, rotation);
+			lastDeltPitch.set(player, rotation.x - prevRotation.x);	
+			lastDeltYaw.set(player, rotation.y - prevRotation.y);
+		}
+				
+		const selectedSlot = player.selectedSlot;
+
+		if(player.isGlobalBanned || player.nameTag in banplayer) {
+			setParticle(player, "totem_particle");
+			player.addTag("by:Isolate Anticheat");
+			player.addTag("reason:You are in a hacker database!");
+			player.addTag("isBanned");
+		}
+
+		// sexy looking ban message
+		if(player.hasTag("isBanned")) banMessage(player);
+
+		if(player.blocksBroken >= 1 && config.modules.nukerA.enabled) player.blocksBroken = 0;
+		if(player.entitiesHit?.length >= 1 && config.modules.killauraC.enabled) player.entitiesHit = [];
+		if(Date.now() - player.startBreakTime < config.modules.autotoolA.startBreakDelay && player.lastSelectedSlot !== selectedSlot) {
+			player.flagAutotoolA = true;
+			player.autotoolSwitchDelay = Date.now() - player.startBreakTime;
+		}
+
+		// anti-namespoof
+		// these values are set in the playerJoin event
+		if(player.flagNamespoofA) {
+			flag(player, "Namespoof", "A", "Exploit", "nameLength", player.name.length);
+			player.flagNamespoofA = false;
+			currentVL++;
+		}
+		if(player.flagNamespoofB) {
+			flag(player, "Namespoof", "B", "Exploit");
+			player.flagNamespoofB = false;
+			currentVL++;
+		}
+
+
+		// player position shit
+		if(player.hasTag("moving")) {
+			player.runCommandAsync(`scoreboard players set @s xPos ${Math.floor(player.location.x)}`);
+			player.runCommandAsync(`scoreboard players set @s yPos ${Math.floor(player.location.y)}`);
+			player.runCommandAsync(`scoreboard players set @s zPos ${Math.floor(player.location.z)}`);
+		}
+
+		if(config.modules.bedrockValidate.enabled) {
+			if(getScore(player, "bedrock") >= 1) {
+				if(config.modules.bedrockValidate.overworld && player.dimension.id === "minecraft:overworld") {
+					player.runCommandAsync("fill ~-5 -64 ~-5 ~5 -64 ~5 bedrock");
+					player.runCommandAsync("fill ~-4 -59 ~-4 ~4 319 ~4 air 0 replace bedrock");
+				}
+
+				if(config.modules.bedrockValidate.nether && player.dimension.id === "minecraft:nether") { 
+					player.runCommandAsync("fill ~-5 0 ~-5 ~5 0 ~5 bedrock");
+					player.runCommandAsync("fill ~-5 127 ~-5 ~5 127 ~5 bedrock");
+					player.runCommandAsync("fill ~-5 5 ~-5 ~5 120 ~5 air 0 replace bedrock");
+				}
+			} else config.modules.bedrockValidate.enabled = false;
+		}
+
+
+
+		// ==================================
+		//                    Utilities
+		// ==================================
+
+		// Im currently adding more management for the strict system, it wont be a full system it will just be there to help prevent false flags
+		if(getScore(player, "kickvl", 0) > config.ViolationsBeforeBan / 2 && !player.hasTag("strict")) {
+			//Try add the tag
+			try {
+				player.addTag("strict");
+			} catch (error) {
+				// If .addTag() fails we use commands
+				player.runCommandAsync(`tag "${player.name}" add strict`);
+			}
+		}
+		
+		if(config.autoReset) {
+			if(getScore(player, "tick_counter2", 0) > 300) {
+				if(!player.hasTag("reported") && player.hasTag("strict")) {
+					player.removeTag("strict");
+				}
+				player.runCommandAsync("function tools/resetwarns");
 				setScore(player, "tick_counter2", 0);
 			}
-			// Store the players last good position
-			// When a movement-related check flags the player, they will be teleported to this position
-			// xRot and yRot being 0 means the player position was modified from player.teleport, which we should ignore
-			if(rotation.x !== 0 && rotation.y !== 0 && player.isOnGround) {
-				const pos1 = {x: player.location.x, y: player.location.y, z: player.location.z};
-				const pos2 = {x: player.location.x, y: player.location.y + 1, z: player.location.z};
-				const isInAir = !getBlocksBetween(pos1, pos2).some((block) => player.dimension.getBlock(block)?.typeId !== "minecraft:air");
-				if(isInAir) {
-					player.lastGoodPosition = player.location;
-				}
-			}
-			if(config.generalModules.fly === true && !player.hasTag("nofly") && !player.hasTag("op")) {
-				fly_a(player);
-				fly_b(player);
-				fly_c(player);
-			}
-			if(config.generalModules.speed && !player.hasTag("nospeed")) {
-				speed_a(player);
-				speed_b(player);
-				speed_c(player, tickValue, speedCLog);
-			}
-			if(config.generalModules.motion && !player.hasTag("nomotion") && !player.hasTag("end_portal")) {
-				motion_a(player);
-				motion_b(player);
-				motion_c(player);
-				//motion_d(player);
-			}
-			if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
-				badpackets_d(player, lastPlayerYawRotations, lastYawDiff);
-				exploit_a(player);
-				exploit_b(player);
-				badpackets_f(player);
-				badpackets_g(player);
-				badpackets_h(player);
-				badpackets_i(player);
-				badpackets_e(player, lastPosition);
-				timer_a(player, player.lastPosition, lagValue);
-			}
-
-			// General movement
-			if(config.generalModules.movement) {
-				// Strafe/A looks for a player changing their x or z velocity while in the air (Under most conditions this isnt possible by large amounts)
-				strafe_a(player, lastXZv);
-				noslow_a(player);
-				noslow_b(player);
-				sprint_a(player);
-			}
-			// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
-			if(config.modules.scaffoldF.enabled && !player.hasTag("noscaffold")) {
-				const valueOfBlocks = getScore(player, "scaffoldAmount", 0);
-				if (tickValue > 20 - 2.67e-11 && playerVelocity.y < 0.3) {
-					let maxBlocks = config.modules.scaffoldF.blocksPerSecond;
-					if(player.getEffect("speed")) {
-						maxBlocks = config.modules.scaffoldF.blocksPerSecond + player.getEffect("speed").amplifier;
-					}
-					if(valueOfBlocks > maxBlocks && !player.getEffect("speed")) {
-						flag(player, "Scaffold", "F", "Limit", "amount", valueOfBlocks, false);
-					} 
-					setScore(player, "scaffoldAmount", 0);
-					setScore(player, "tickValue", 0);
-				} else {
-					if(valueOfBlocks > 0 && player.hasTag("debugBlock")) {
-						if(config.debug) console.warn(`${new Date().toISOString()} | ${player.name} has placed ${valueOfBlocks} in ${tickValue} tick's`);
-					}
-					setScore(player, "tickValue", tickValue + 1);
-				}
-			}
-
-			// Remove tags for checks :D
-			player.removeTag("attacking");
-			player.removeTag("usingItem");
-			player.removeTag("breaking");
-			
-
-			if(tickValue > 19) {
-				const currentCounter = getScore(player, "tick_counter", 0);
-				setScore(player, "tick_counter", currentCounter + 1);
-				setScore(player, "tick_counter2", getScore(player, "tick_counter2", 0) + 1);
-				setScore(player, "tag_reset", getScore(player, "tag_reset", 0) + 1);
-				setScore(player, "aimc_reset", getScore(player, "aimc_reset", 0) + 1);
-				player.removeTag("snow");
-
-			}
-			if(getScore(player, "tag_reset", 0) > 5) {
-				player.removeTag("slime")
-				player.removeTag("placing");
-				player.removeTag("ice");
-				player.removeTag("damaged");
-				player.removeTag("fall_damage");
-				player.removeTag("end_portal");
-				player.removeTag("stairs");
-				player.removeTag("timer_bypass");
-				player.removeTag("ender_pearl");
-				setScore(player, "tag_reset", 0);
-			}
-			
-			
-
-			if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
-				player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
-				// autoclicker/A = checks for high cps
-				if(player.cps > config.modules.autoclickerA.maxCPS) flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
-				if(lastCPS.get(player)) {
-					if(Math.abs(player.cps - lastCPS.get(player)) < 0.95 && player.cps > 12) flag(player, "Autoclicker", "B", "Combat", "CPS", player.cps);
-				}
-				lastCPS.set(player, player.cps);
-				player.firstAttack = Date.now();
-				player.cps = 0;
-			}
-		} catch {
-			player.runCommand("function scoreboard");
 		}
+		if(player.hasTag("moving") && config.debug && player.hasTag("log")) {
+			console.warn(`${player.nameTag} speed is ${playerSpeed} Velocity.X ${playerVelocity.x}, Y ${playerVelocity.y}, Z ${playerVelocity.z}`);
+		}
+
+		const blockBelow = player.dimension.getBlock({x: player.location.x, y: player.location.y - 1, z: player.location.z}) ?? {typeId: "minecraft:air"};
+		if(blockBelow.typeId.includes("ice")) {
+			player.addTag("ice");
+		}
+		if(blockBelow.typeId.includes("slime")) {
+			player.addTag("slime");
+		}
+		if(player.hasTag("trident")) {
+			setScore(player, "right", 0);
+		}
+		if(blockBelow.typeId.includes("end_portal")) {
+			player.addTag("end_portal");
+		}
+		if(blockBelow.typeId.includes("stairs")) {
+			player.addTag("stairs");
+		}
+		tag_system(player);
+		// AirTime (Used for Fly[B]) 
+		const flyTime = getScore(player, "airTime");
+		if(!player.isOnGround && !player.hasTag("ground") && !aroundAir(player)) {
+			setScore(player, "airTime", flyTime + 1);
+		} else {
+			setScore(player, "airTime", 0)
+		}
+
+	
+		// This is for debugging a players fall distance/speed
+		if(Math.abs(player.fallDistance) > 0 && player.hasTag("debugFall")) {
+			if(lastFallDistance.get(player)) {
+				const fallSpeed = player.fallDistance - lastFallDistance.get(player);
+				console.log(player, "fallSpeed: " + fallSpeed);
+				if(fallSpeed === -0.5125312805175781) {
+					flag(player, "Speed", "B", "Movement", "fallSpeed", fallSpeed);
+				}
+			}
+			lastFallDistance.set(player, player.fallDistance);
+		}     
+		const tickValue = getScore(player, "tickValue", 0);                                      
+		// The flag system and the counter and summon system
+		if(player.hasTag("slime")) {
+			setScore(player, "tick_counter2", 0);
+		}
+		// Store the players last good position
+		// When a movement-related check flags the player, they will be teleported to this position
+		// xRot and yRot being 0 means the player position was modified from player.teleport, which we should ignore
+		if(rotation.x !== 0 && rotation.y !== 0 && player.isOnGround) {
+			const pos1 = {x: player.location.x, y: player.location.y, z: player.location.z};
+			const pos2 = {x: player.location.x, y: player.location.y + 1, z: player.location.z};
+			const isInAir = !getBlocksBetween(pos1, pos2).some((block) => player.dimension.getBlock(block)?.typeId !== "minecraft:air");
+			if(isInAir) {
+				player.lastGoodPosition = player.location;
+			}
+		}
+		if(config.generalModules.fly === true && !player.hasTag("nofly") && !player.hasTag("op")) {
+			fly_a(player);
+			fly_b(player);
+			fly_c(player);
+		}
+		if(config.generalModules.speed && !player.hasTag("nospeed")) {
+			speed_a(player);
+			speed_b(player);
+			speed_c(player, tickValue, speedCLog);
+		}
+		if(config.generalModules.motion && !player.hasTag("nomotion") && !player.hasTag("end_portal")) {
+			motion_a(player);
+			motion_b(player);
+			motion_c(player);
+			//motion_d(player);
+		}
+		if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
+			badpackets_d(player, lastPlayerYawRotations, lastYawDiff);
+			exploit_a(player);
+			exploit_b(player);
+			badpackets_f(player);
+			badpackets_g(player);
+			badpackets_h(player);
+			badpackets_i(player);
+			badpackets_e(player, lastPosition);
+			timer_a(player, player.lastPosition, lagValue);
+		}
+
+		// General movement
+		if(config.generalModules.movement) {
+			// Strafe/A looks for a player changing their x or z velocity while in the air (Under most conditions this isnt possible by large amounts)
+			strafe_a(player, lastXZv);
+			noslow_a(player);
+			noslow_b(player);
+			sprint_a(player);
+		}
+		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
+		if(config.modules.scaffoldF.enabled && !player.hasTag("noscaffold")) {
+			const valueOfBlocks = getScore(player, "scaffoldAmount", 0);
+			if (tickValue > 20 - 2.67e-11 && playerVelocity.y < 0.3) {
+				let maxBlocks = config.modules.scaffoldF.blocksPerSecond;
+				if(player.getEffect("speed")) {
+					maxBlocks = config.modules.scaffoldF.blocksPerSecond + player.getEffect("speed").amplifier;
+				}
+				if(valueOfBlocks > maxBlocks && !player.getEffect("speed")) {
+					flag(player, "Scaffold", "F", "Limit", "amount", valueOfBlocks, false);
+				} 
+				setScore(player, "scaffoldAmount", 0);
+				setScore(player, "tickValue", 0);
+			} else {
+				if(valueOfBlocks > 0 && player.hasTag("debugBlock")) {
+					if(config.debug) console.warn(`${new Date().toISOString()} | ${player.name} has placed ${valueOfBlocks} in ${tickValue} tick's`);
+				}
+				setScore(player, "tickValue", tickValue + 1);
+			}
+		}
+
+		// Remove tags for checks :D
+		player.removeTag("attacking");
+		player.removeTag("usingItem");
+		player.removeTag("breaking");
+		
+
+		if(tickValue > 19) {
+			const currentCounter = getScore(player, "tick_counter", 0);
+			setScore(player, "tick_counter", currentCounter + 1);
+			setScore(player, "tick_counter2", getScore(player, "tick_counter2", 0) + 1);
+			setScore(player, "tag_reset", getScore(player, "tag_reset", 0) + 1);
+			setScore(player, "aimc_reset", getScore(player, "aimc_reset", 0) + 1);
+			player.removeTag("snow");
+
+		}
+		if(getScore(player, "tag_reset", 0) > 5) {
+			player.removeTag("slime")
+			player.removeTag("placing");
+			player.removeTag("ice");
+			player.removeTag("damaged");
+			player.removeTag("fall_damage");
+			player.removeTag("end_portal");
+			player.removeTag("stairs");
+			player.removeTag("timer_bypass");
+			player.removeTag("ender_pearl");
+			setScore(player, "tag_reset", 0);
+		}
+		
+		
+
+		if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
+			player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
+			// autoclicker/A = checks for high cps
+			if(player.cps > config.modules.autoclickerA.maxCPS) flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
+			if(lastCPS.get(player)) {
+				if(Math.abs(player.cps - lastCPS.get(player)) < 0.95 && player.cps > 12) flag(player, "Autoclicker", "B", "Combat", "CPS", player.cps);
+			}
+			lastCPS.set(player, player.cps);
+			player.firstAttack = Date.now();
+			player.cps = 0;
+		}
+
 	}
 });
 
