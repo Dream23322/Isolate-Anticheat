@@ -13,8 +13,8 @@ export function timer_a(player, lastPosition, Value){
         const velocity = player.getVelocity();
         const calcVelocity = new Minecraft.Vector(player.location.x - lastPosition.x, player.location.y - lastPosition.y, player.location.z - lastPosition.z);
         if(!isMovingWithVelocity(velocity)) return;
-        const ServerSpeed = Math.hypot(Math.hypot(calcVelocity.x, calcVelocity.z), calcVelocity.y);
-        const ClientSpeed = Math.hypot(Math.hypot(velocity.x, velocity.z), velocity.y);
+        const ServerSpeed = Math.abs(Math.hypot(Math.hypot(calcVelocity.x, calcVelocity.z), calcVelocity.y));
+        const ClientSpeed = Math.abs(Math.hypot(Math.hypot(velocity.x, velocity.z), velocity.y));
         const duped = ServerSpeed / ClientSpeed;
         if(player.timerHold == null) player.timerHold = [];
         player.timerHold.push(duped * 20 / Value);
