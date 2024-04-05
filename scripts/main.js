@@ -540,9 +540,7 @@ Minecraft.system.runInterval(() => {
 		} catch {
 			player.runCommand("function scoreboard");
 		}
-	
 	}
-
 });
 
 world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
