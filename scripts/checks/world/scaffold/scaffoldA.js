@@ -13,12 +13,12 @@ function is_diag_recode(neww, player, old) {
 function is_decrease(player, one, two, three) {
     const distance_one = Math.sqrt(Math.pow(one.x - player.location.x, 2) + Math.pow(one.z - player.location.z, 2));
     const distance_two = Math.sqrt(Math.pow(two.x - player.location.x, 2) + Math.pow(two.z - player.location.z, 2));
-    const distance_three = Math.sqrt(Math.pow(three.x - player.location.x, 2) + Math.power(three.z - player.location.z, 2));
+    const distance_three = Math.sqrt(Math.pow(three.x - player.location.x, 2) + Math.pow(three.z - player.location.z, 2));
     const one_three = Math.sqrt(Math.pow(one.x - three.x, 2) + Math.pow(one.z - three.z, 2)) == 1;
     return one_three && distance_one > distance_two && distance_one > distance_two && distance_two > distance_three;
 }
 export function scaffold_a(player, block) {
-    if (config.modules.scaffoldA.enabled && scaffold_a_map.has(player)) {
+    if (config.modules.scaffoldA.enabled && scaffold_a_map.has(player) && !player.hasTag("gmc") && !player.hasTag("op")) {
         const place_location = { x: block.location.x, y: block.location.y, z: block.location.z };
         const last_place_location = scaffold_a_map.get(player)?.a;
         const old_place_location = scaffold_a_map.get(player)?.b;

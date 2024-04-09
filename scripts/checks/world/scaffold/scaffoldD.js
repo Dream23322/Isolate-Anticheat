@@ -36,7 +36,7 @@ export function scaffold_d(player, block, lastPlacePitch) {
             // Check rotation for aim/killaura cheats
             if((rotation.x % 1 == 0 || (rotation.y % 1 == 0 && Math.abs(rotation.y) != 90)) && rotation.x != 0 && rotation.y != 0) {
                 // Flag the player
-                flag(player, "Scaffold", "D", "Combat", "rotation-y%5", 0, false);
+                flag(player, "Scaffold", "D", "Placement", "rotation-y%5", 0, false);
             }
         }
     }
