@@ -6,8 +6,6 @@ import { getSpeed } from "../../../utils/mathUtil.js";
 export function motion_b(player) {
     const playerSpeed = getSpeed(player);
     if(config.modules.motionB.enabled) {
-        if(player.isFlying && playerSpeed > 9) {
-            flag(player, "Motion", "B", "Movement", "speed", playerSpeed, true);
-        }
+        return;
     }
 }
