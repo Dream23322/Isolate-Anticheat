@@ -265,6 +265,18 @@ export default
         }
     },
     "modules": {
+        //How to config modules
+        "examplemoduleA": {
+            "enabled": true, // If the modules is going to be running or not
+            "description": "The example module", // You can ignore this
+            "punishment": "kick", // What punishment the modules gives,
+            // "none" = does nothing
+            // "kick" = kicks the player temporarily
+            // "ban" = ban the player
+            "punishmentLength": "7d", // How long a player wil be banned. This only matters when the punishment is set to ban
+            "minVlBeforePunishment": 10 // How many times the player has to flag the modules before action is taken on them.
+            // If you have any other questions, please ask in the discord server.
+        },
         "itemSpawnRateLimit": {
             "enabled": false,
             "entitiesBeforeRateLimit": 45
@@ -668,8 +680,9 @@ export default
             "minVlbeforePunishment": 100
         },
         "motionC": {
-            "enabled": false,
-            "description": "Checks for fly or bhop like velocity",
+            "enabled": true,
+            "description": "Checks for not moving when having velocity",
+            "min_velocity": 2.5,
             "punishment": "kick",
             "minVlbeforePunishment": 15
         },
@@ -680,7 +693,7 @@ export default
             "minVlbeforePunishment": 10
         },
         "strafeA": {
-            "enabled": true,
+            "enabled": false,
             "description": "Checks for drastically changing xz velocity whilst in air",
             "pos_diff": 0.09,
             "time_int": 0.5,
