@@ -692,19 +692,13 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },
-        "strafeA": {
+        "predictionA": {
             "enabled": false,
             "description": "Checks for drastically changing xz velocity whilst in air",
             "pos_diff": 0.09,
             "time_int": 0.5,
             "punishment": "kick",
             "minVlbeforePunishment": 3
-        },
-        "strafeB": {
-            "enabled": true,
-            "description": "Checks for pattern's in a player y velocity",
-            "punishment": "kick",
-            "minVlbeforePunishment": 5
         },
 
 
