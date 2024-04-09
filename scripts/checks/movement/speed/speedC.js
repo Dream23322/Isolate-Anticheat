@@ -43,20 +43,19 @@ export function speed_c(player, tick_counter, speedCLog) {
                 max_bps_v = Math.abs(jump_boost_value + old_max_bps_2);
             }
             if(player.hasTag("placing")) {
-                max_bps_h++;
-                max_bps_h++;
-                max_bps_h++;
+                max_bps_h+= 3;
             }
 
-            // Calculate the BPS of the player
+            // Calculate the BPS of the player  
             const xz_bps = Math.abs((current_pos.x - last_pos.x) + (current_pos.z - last_pos.z) / 2);
             const y_bps = Math.abs((current_pos.y - last_pos.y));
+            const y_bps_2 = (last_pos.y - current_pos.y);
             if(current_pos.y < 0 || last_pos.y < 0) return;
             const xyz_bps = Math.abs((current_pos.x - last_pos.x) + (current_pos.y - last_pos.y) + (current_pos.z - last_pos.z) / 3);
             if(player.hasTag("speedC")) {
                 console.log(`player xz: ${xz_bps} xyz: ${xyz_bps} y_bps: ${y_bps}`);
             }
-            if(current_pos.y > last_pos.y) {
+            if(y_bps_2 < -10) {
                 player.addTag("speedC_bypass");
             }
             if(playerVelocity.y > 5) {
@@ -66,7 +65,7 @@ export function speed_c(player, tick_counter, speedCLog) {
             const max_xyz_bps = Math.abs((max_bps_h + max_bps_v) / 2);
             // Check if the player is under conditions that could cause the player to flag the check even if they are not cheating or using client mods
             if(!player.hasTag("ice") && !player.isFlying && !player.isGliding && (!player.hasTag('damaged') || player.hasTag("fall_damage")) && !player.hasTag("no_speed_c") && !player.hasTag("stairs")) {
-                player.removeTag("speedC_bypass");
+                //player.removeTag("speedC_bypass");
                 // Check for xz bps being too high
                 if(xz_bps > max_bps_h && !player.hasTag("speedC_bypass")) {
                     flag(player, "Speed", "C", "Movement", "xz_bps", xz_bps, false);
