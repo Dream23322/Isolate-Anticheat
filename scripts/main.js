@@ -516,6 +516,7 @@ Minecraft.system.runInterval(() => {
 			setScore(player, "tick_counter2", getScore(player, "tick_counter2", 0) + 1);
 			setScore(player, "tag_reset", getScore(player, "tag_reset", 0) + 1);
 			setScore(player, "aimc_reset", getScore(player, "aimc_reset", 0) + 1);
+			setScore(player, "motion_c_data", 0);
 			player.removeTag("snow");
 
 		}

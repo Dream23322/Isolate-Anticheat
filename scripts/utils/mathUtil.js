@@ -47,3 +47,7 @@ export function angleCalc(player, entityHit) {
 export function hVelocity(player) {
     return (player.getVelocity().x + player.getVelocity().z) / 2
 }
+
+export function hVelocity_2(player) {
+    return Math.abs(player.getVelocity().x - player.getVelocity().z);
+}
