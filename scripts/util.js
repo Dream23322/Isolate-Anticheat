@@ -298,7 +298,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
             if(getScore(player, "autoban") >= 0) {
 
                 const punishmentLength = checkData.punishmentLength?.toLowerCase();
-                setSound(player, "mob.enderdragon.death");
+                //setSound(player, "mob.enderdragon.death");
                 console.warn(`${new Date().toISOString()} |${player.name} was banned by Isolate Anticheat for ${check}/${checkType}`);
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been banned by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
 
@@ -537,4 +537,8 @@ export function setScore(player, objectiveName, value) {
     if(!objective) throw Error(`Objective "${objectiveName}" does not exist`);
 
     objective.setScore(player, value);
+}
+
+export function capitalizeFirstLetter(string) {
+	return string[0].toUpperCase() + string.slice(1);
 }

@@ -1,6 +1,6 @@
 import * as Minecraft from "@minecraft/server";
 import config from "../../data/config.js";
-
+import { capitalizeFirstLetter } from "../../util.js";
 const world = Minecraft.world;
 
 // found the inventory viewing scipt in the bedrock addons discord, unsure of the original owner (not my code)
@@ -27,36 +27,64 @@ export function invsee(message, args) {
     
     if(!member) return player.sendMessage("§r§j[§uIsolate§j]§r Couldn't find that player.");
 
-    const container = member.getComponent('inventory').container;
-  
-    if(container.emptySlotsCount === 36) {
-        return player.sendMessage(`§r§j[§uIsolate§j]§r ${member.nameTag}'s inventory is empty.`);
-    }
+    player.sendMessage(getInvseeMsg(member));
+}
+export function getInvseeMsg(player) {
+	const container = player.getComponent("inventory")?.container;
 
-    let inventory = `§r§j[§uIsolate§j]§r ${member.nameTag}'s inventory:\n\n`;
-    
-    for (let i = 0; i < 36; i++) {
-        const item = container.getItem(i);
-        if(!item) continue;
+	let inventory = `§r§j[§uIsolate§j]§r ${player.name}'s inventory:\n\n`;
 
-        inventory += `§r§j[§uIsolate§j]§r Slot ${i}: ${item.typeId} x${item.amount}\n`;
+	// This function loops through every enchantment on the item and then adds it to the inventory string. It is used if show_enchantments is enabled in the config
+	const loopEnchants = (allEnchantments = []) => {
+		for(const enchantment of allEnchantments) {
+			const id = enchantment.type.id;
+			const level = enchantment.level;
 
-        if(config.customcommands.invsee.show_enchantments) {
-            const loopIterator = (iterator) => {
-                const iteratorResult = iterator.next();
-                if(iteratorResult.done) return;
-                const enchantData = iteratorResult.value;
+			const enchantmentName = capitalizeFirstLetter(id);
 
-                let enchantmentName = enchantData.type.id;
-                enchantmentName = enchantmentName.charAt(0).toUpperCase() + enchantmentName.slice(1);
+			inventory += `    | ${enchantmentName} ${level}\n`;
+		}
+	};
 
-                inventory += `    | ${enchantmentName} ${enchantData.level}\n`;
+	// Loop through every armor slot
+	let foundItem = false;
+	if(config.customcommands.invsee.show_armor) {
+		const armor = player.getComponent("equippable");
 
-                loopIterator(iterator);
-            };
-            loopIterator(item.getComponent("enchantments").enchantments[Symbol.iterator]());
-        }
-    }
+		for(const equipment of Object.keys(equipmentList)) {
+			// @ts-expect-error
+			const item = armor?.getEquipment(equipment);
+			if(!item) continue;
 
-    player.sendMessage(inventory);
+			foundItem = true;
+
+			inventory += `§r§6[§aScythe§6]§r ${equipmentList[equipment]}: ${item.typeId} x${item.amount}\n`;
+
+			if(config.customcommands.invsee.show_enchantments) {
+				loopEnchants(item.getComponent("enchantable")?.getEnchantments());
+			}
+		}
+
+		if(foundItem) inventory += `\n`;
+	}
+
+	// Loop through every item in the player's inventory
+	for(let i = 0; i < 36; i++) {
+		if(!container) break;
+
+		const item = container.getItem(i);
+		if(!item) continue;
+
+		foundItem = true;
+
+		inventory += `§r§6[§aScythe§6]§r Slot ${i}: ${item.typeId} x${item.amount}\n`;
+
+		if(config.customcommands.invsee.show_enchantments) {
+			loopEnchants(item.getComponent("enchantable")?.getEnchantments());
+		}
+	}
+
+	if(!foundItem) return `§r§6[§aScythe§6]§r ${player.name}'s inventory is empty.`;
+
+	return inventory.replace(/\n+$/, "");
 }
