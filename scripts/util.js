@@ -246,7 +246,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
         const other_vl = getScore(player, "badpacketsvl", 0) + getScore(player, "crashervl", 0) + getScore(player, "spammervl", 0) + getScore(player, "autototemvl", 0) + getScore(player, "autosheildvl", 0) + getScore(player, "illegalitemvl", 0);
         if(movement_vl > config.fancy_kick_calculation.movement && combat_vl > config.fancy_kick_calculation.combat && block_vl > config.fancy_kick_calculation.block && other_vl > config.fancy_kick_calculation.other) {
             player.addTag("strict");
-            setSound(player, "mob.endermen.death");
+            //setSound(player, "mob.endermen.death");
             console.warn(`${new Date().toISOString()} |${player.name} was kicked by Isolate Anticheat for ${check}/${checkType}`);
             const message = `§u${player.name} §hwas §pkicked §hby §nIsolate Anticheat §j[§n${check}§j]`;
 
@@ -310,7 +310,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 let banLength;
 
                 
-                const message = `§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat`;
+                const message = `§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat§b [§s${check}§b]`;
     
                 data.recentLogs.push(message)
                 
