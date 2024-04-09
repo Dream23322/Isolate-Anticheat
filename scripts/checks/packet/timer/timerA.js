@@ -9,7 +9,7 @@ Check made by _ieroo (@yellowworld777)
 Flag Logic made by 4urxra (@Dream23322)
 */
 export function timer_a(player, lastPosition, Value){
-    if(player.lastPosition && config.modules.timerA.enabled && (!config.modules.timerA.safe.placing || !player.hasTag("placing"))) {
+    if(player.lastPosition && config.modules.timerA.enabled && (!config.modules.timerA.safe.placing || !player.hasTag("placing")) && !player.hasTag("op") && !player.hasTag("gmc")) {
         const velocity = player.getVelocity();
         const calcVelocity = new Minecraft.Vector(player.location.x - lastPosition.x, player.location.y - lastPosition.y, player.location.z - lastPosition.z);
         if(!isMovingWithVelocity(velocity)) return;
@@ -37,12 +37,11 @@ export function timer_a(player, lastPosition, Value){
                     timer_lev_low++;
                 }
                 if(timerData.get(player) > timer_lev && (timerValue) > timer_lev || timerData.get(player) < timer_lev_low && (timerValue) < timer_lev_low) {
-                    const playerVelocity = player.getVelocity();
                     if(Math.abs(player.lastPosition.y - player.location.y) > 5) {
                         timerData.set(player, 20);
                         player.addTag("timer_bypass");
                     }
-                    if(!player.hasTag("timer_bypass") && !player.hasTag("ender_pearl")) {
+                    if(!player.hasTag("timer_bypass") && !player.hasTag("ender_pearl") && timerValue < 1000 && Math.abs(timerData.get(player) - timerValue) < 15) {
                         flag(player, "Timer", "A", "Packet", "timer", timerData.get(player), false);
                     }
                 }
