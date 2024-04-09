@@ -1,8 +1,3 @@
-scoreboard players add aura_timer 0
-scoreboard players add kickvl 0
-scoreboard players add aimvl dummy
-ability @s[tag=flying,m=!c] mayfly true
-
 
 scoreboard objectives add banvl dummy
 scoreboard objectives add fastusevl dummy
