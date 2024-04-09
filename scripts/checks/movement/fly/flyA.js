@@ -8,13 +8,13 @@ import { getScore } from "../../../util";
 Fly/A
 Flight Check - Checks for fly cheats
 
-This check works by looking for a player having a high y velocity, this works beacuse in the game, 99% of fly cheats are corrected by the game, this causes the player to basically jump up and down really fast, causing you to have a high velocity.
+This check works by looking for a player having a high y velocity, this works beacuse in the game, 99% of fly cheats are corrected by the game (BDS Prediction), this causes the player to basically jump up and down really fast, causing you to have a high velocity.
 */
 export function fly_a(player) {
     // Fly/A = Velocity Check
     const playerVelocity = player.getVelocity();
     if(config.modules.flyA.enabled && !player.hasTag("elytra")) {
-        if(aroundAir(player) === true && !player.getEffect("jump_boost") || !player.isOnGround && Math.abs(playerVelocity.y) > 3 && player.getEffect("jump_boost") && getScore(player, "airTime") > 15) {
+        if(aroundAir(player) === true && !player.getEffect("jump_boost") || !player.isOnGround && Math.abs(playerVelocity.y) > 3 && player.getEffect("jump_boost") && getScore(player, "airTime") > 10) {
 
 
             let max_v_up = 0.62;

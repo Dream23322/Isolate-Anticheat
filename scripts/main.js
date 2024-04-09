@@ -30,7 +30,7 @@ import { motion_a } from "./checks/movement/motion/motionA.js";
 import { motion_b } from "./checks/movement/motion/motionB.js";
 import { motion_c } from "./checks/movement/motion/motionC.js";
 import { fly_c } from "./checks/movement/fly/flyC.js";
-import { strafe_a } from "./checks/movement/strafe/strafeA.js";
+import { prediction_a } from "./checks/movement/prediction/predictionA.js";
 import { noslow_a } from "./checks/movement/noslow/noslowA.js";
 import { noslow_b } from "./checks/movement/noslow/noslowB.js";
 
@@ -478,7 +478,7 @@ Minecraft.system.runInterval(() => {
 		// General movement
 		if(config.generalModules.movement) {
 			// Strafe/A looks for a player changing their x or z velocity while in the air (Under most conditions this isnt possible by large amounts)
-			strafe_a(player, lastXZv);
+			prediction_a(player, lastXZv);
 			noslow_a(player);
 			noslow_b(player);
 			sprint_a(player);
