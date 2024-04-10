@@ -21,6 +21,7 @@ export default
     },
     "ViolationsBeforeBan": 30,
     "autoReset": true,
+    "hiveRegen": false,
     // Having the silent mode on will stop the anticheat from lagging the flagged player back
     "silent": true,
     // If you dont really know how to config the anticheat, use this... lol
