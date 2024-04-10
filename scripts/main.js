@@ -1,7 +1,7 @@
 // @ts-check
 // @ts-ignore
 import * as Minecraft from "@minecraft/server";
-import { getHealth, setTitle, setParticle, tag_system, aroundAir} from "./utils/gameUtil.js";
+import { getHealth, setTitle, setParticle, tag_system, aroundAir, add_effect} from "./utils/gameUtil.js";
 import { getBlocksBetween, angleCalc } from "./utils/mathUtil.js";
 import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
 import { commandHandler } from "./commands/handler.js";
@@ -635,6 +635,13 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 	let revertBlock = false;
 	if(!player.hasTag("breaking")) {
 		player.addTag("breaking");
+	}
+
+	// Hive regen
+	if(config.hiveRegen) {
+		if(brokenBlockId === "minecraft:redstone_ore" || brokenBlockId === "minecraft:lit_redstone_ore") {
+			add_effect(player, "absorption", 10, 1);
+		}
 	}
 
 	if(config.debug) console.warn(`${player.nameTag} has broken the block ${blockBreak.brokenBlockPermutation.type.id}`);
