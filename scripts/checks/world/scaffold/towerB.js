@@ -4,7 +4,7 @@ import config from "../../../data/config.js";
 
 export function tower_b(player, block) {
     const rotation = player.getRotation()
-    // Tower/A = Checks for 90 degree rotation
+    // Tower/B = Checks for tower like yPos differences
     if(config.modules.towerB.enabled) {
         // get block under player
         if(

@@ -3,12 +3,12 @@
 	"header": {
 		"name": "Isolate AntiCheat v8.1",
 		"description": "Isolate - The anticheat that seperates your server from hackers (BETA-API REQUIRED)",
-		"uuid": "38e1d348-ded8-4a75-94f9-52c5be5b0508",
+		"uuid": "2d692482-3912-44cd-b0a7-1614ab9767a0",
 		"version": [8, 1, 0],
 		"min_engine_version": [1, 19, 0]
 	},
 	"metadata": {
-		"authors": ["MrDiamond64", "Dream23322"],
+		"authors": ["MrDiamond64", "Dream23322/4urxra"],
 		"url": "https://github.com/Dream23322/Isolate-Anticheat"
 	},
 	"modules": [{
