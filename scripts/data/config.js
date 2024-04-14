@@ -659,11 +659,11 @@ export default
         },
         "flyC": {
             "enabled": true,
-            "description": "Checks for invalid Y movements (Scythe Check So Bad)",
+            "description": "Checks for invalid Y movements (Scythe Check So... no comment.)",
             "fallDistance": -1,
             "punishment": "kick",
             "punishmentLength": "1m",
-            "minVlbeforePunishment": 100
+            "minVlbeforePunishment": 50
         }, 
         "motionA": {
             "enabled": true,

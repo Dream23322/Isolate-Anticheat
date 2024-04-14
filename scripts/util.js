@@ -273,7 +273,8 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     const message = `§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat §j[§n${check}§j]`;
     
                     data.recentLogs.push(message)
-                    
+                    player.runCommandAsync(`kick "${player.name}"`);
+                    return;
                 }
                 player.runCommandAsync("function tools/resetwarns");
                 player.addTag("strict");
