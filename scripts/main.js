@@ -62,6 +62,7 @@ import { fly_a } from "./checks/movement/fly/flyA.js";
 import { exploit_a } from "./checks/packet/exploit/exploitA.js";
 import { timer_a } from './checks/packet/timer/timerA.js';
 import { fly_b } from "./checks/movement/fly/flyB.js";
+import { nuker_d } from "./checks/world/nuker/nukerD.js";
 
 
 const world = Minecraft.world;
@@ -671,9 +672,10 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 	}
 	nuker_b(player, block, brokenBlockId);
 
-	//nuker_c(player, block, brokenBlockId);
+	nuker_c(player, block, brokenBlockId);
 
-
+	nuker_d(player, block, brokenBlockId);
+	
 	if(brokenBlockId === "minecraft:snow" || brokenBlockId === "minecraft:snow_layer") {
 		player.addTag("snow");
 	}

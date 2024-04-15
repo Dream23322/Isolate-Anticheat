@@ -728,6 +728,12 @@ export default
             "score": -1,
             "minVlbeforePunishment": 1
         },
+        "nukerD": {
+            "enabled": true,
+            "description":"Checks for regen cheats (Hive style)",
+            "punishment": "kick",
+            "minVlbeforePunishment": 3
+        },
         "scaffoldA": {
             "enabled": true,
             "description": "Checks for scaffold rotation (mainly while diag scaffolding)",
