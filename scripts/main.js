@@ -592,7 +592,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 
 		scaffold_b(player);
 
-		// scaffold_c(player, block);
+		scaffold_c(player, block);
 		
 		scaffold_d(player, block/*, lastPlacePitch*/);
 
