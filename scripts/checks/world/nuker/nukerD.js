@@ -1,8 +1,8 @@
 import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util.js";
 import config from "../../../data/config.js";
-import { angleCalc } from "../../../utils/mathUtil.js";
-
+import { angleCalc, getSpeed } from "../../../utils/mathUtil.js";
+import { getBlocksBetween } from "../../../utils/mathUtil.js";
 /*
 Different style nuker checks
 */
@@ -35,7 +35,7 @@ export function nuker_d(player, block, brokenBlockId) {
         if(distance > 1.5 && angleCalc(player, block) > 90) {
             flag(player, "Nuker", "D", "World", "angle", angleCalc(player, block));
         }
-        if(angleCalc(player, block) < 0.3) {
+        if(angleCalc(player, block) < 0.3 && getSpeed(player) > 2) {
             flag(player, "Nuker", "D", "World", "angle", angleCalc(player, block));
         }
     }
