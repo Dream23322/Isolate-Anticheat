@@ -7,7 +7,7 @@ import config from "../../../data/config.js";
 const scaffold_a_map = new Map();
 
 function is_diag_recode(neww, player, old) {
-    return Math.abs(neww.x) !== Math.abs(old.x) && Math.abs(neww.z) !== Math.abs(old.z) && (Math.abs(neww.x - old.x) < 2) && (Math.abs(neww.z - old.z) < 2) && Math.abs(neww.y < player.location.y)
+    return Math.abs(neww.x) !== Math.abs(old.x) && Math.abs(neww.z) !== Math.abs(old.z) && (Math.abs(neww.x - old.x) < 2) && (Math.abs(neww.z - old.z) < 2) && Math.abs(neww.y < player.location.y) && old.y === neww.y
 }
 
 function is_decrease(player, one, two, three) {
@@ -36,6 +36,7 @@ export function scaffold_a(player, block) {
             if (
                 is_diag_recode(place_location, player, old_place_location)
             ) {
+                
                 if (
                     Math.abs(pitch_values.new - pitch_values.mid) == 0 &&
                     Math.abs(pitch_values.new - pitch_values.old) == 0 &&
