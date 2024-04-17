@@ -51,3 +51,24 @@ export function hVelocity(player) {
 export function hVelocity_2(player) {
     return Math.abs(player.getVelocity().x - player.getVelocity().z);
 }
+
+export function angleCalcRecode(player, entityHit) {
+    const deltaX = entityHit.location.x - player.location.x;
+    const deltaZ = entityHit.location.z - player.location.z;
+
+    // Calculate the angle in radians
+    let angleRad = Math.atan2(deltaZ, deltaX);
+
+    // Convert radians to degrees
+    let angleDeg = (angleRad * 180) / Math.PI;
+
+    // Adjust for player rotation
+    angleDeg -= player.getRotation().y + 90;
+
+    // Normalize the angle to be between 0 and 360 degrees
+    if (angleDeg < 0) {
+        angleDeg += 360;
+    }
+
+    return angleDeg;
+}
