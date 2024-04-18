@@ -45,16 +45,15 @@ export function scaffold_a(player, block) {
                 is_diag_recode(place_location, player, old_place_location)
             ) {
                 
-                if (
-                    Math.abs(pitch_values.new - pitch_values.mid) == 0 &&
-                    Math.abs(pitch_values.new - pitch_values.old) == 0 &&
-                    Math.abs(yaw_values.new - yaw_values.mid) !== 0 &&
-                    Math.abs(yaw_values.new - yaw_values.old) !== 0 ||
-                    Math.abs(yaw_values.new - yaw_values.mid) == 0 &&
-                    Math.abs(yaw_values.new - yaw_values.old) == 0 &&
-                    Math.abs(pitch_values.new - pitch_values.mid) !== 0 &&
-                    Math.abs(pitch_values.new - pitch_values.old) !== 0
-                ) {
+                const isPitchEqual = Math.abs(pitch_values.new - pitch_values.mid) === 0
+                                    && Math.abs(pitch_values.new - pitch_values.old) === 0;
+                const isYawEqual = Math.abs(yaw_values.new - yaw_values.mid) === 0
+                                 && Math.abs(yaw_values.new - yaw_values.old) === 0;
+                const arePitchAndYawDifferent = Math.abs(pitch_values.new - pitch_values.mid) !== 0 
+                                           && Math.abs(yaw_values.new - yaw_values.mid) !== 0;
+                const isDiagonalConditionMet = isPitchEqual && isYawEqual ||
+                                              isYawEqual && isPitchEqual && arePitchAndYawDifferent;
+                if (isDiagonalConditionMet) {
                     if(!player.isSneaking) {
                         flag(player, "Scaffold", "A", "World", "no-rot-diff", "true", false);
                     }
