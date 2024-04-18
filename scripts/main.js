@@ -590,11 +590,9 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	if(config.generalModules.scaffold && !player.hasTag("noscaffold")) {
 		scaffold_a(player, block);
 
-		scaffold_b(player);
+		scaffold_b(player, block);
 
-		scaffold_c(player, block);
-		
-		
+		scaffold_c(player, block)
 
 		scaffold_e(player);
 
