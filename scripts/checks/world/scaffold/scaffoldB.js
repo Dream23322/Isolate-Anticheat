@@ -2,7 +2,7 @@ import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
 
-export function scaffoldB(player, block) {
+export function scaffold_b(player, block) {
     const rotation = player.getRotation();
     const velocity = player.getVelocity();
 
