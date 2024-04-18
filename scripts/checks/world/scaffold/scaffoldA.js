@@ -10,12 +10,25 @@ function is_diag_recode(neww, player, old) {
     return Math.abs(neww.x) !== Math.abs(old.x) && Math.abs(neww.z) !== Math.abs(old.z) && (Math.abs(neww.x - old.x) < 2) && (Math.abs(neww.z - old.z) < 2) && Math.abs(neww.y < player.location.y) && old.y === neww.y
 }
 
-function is_decrease(player, one, two, three) {
-    const distance_one = Math.sqrt(Math.pow(one.x - player.location.x, 2) + Math.pow(one.z - player.location.z, 2));
-    const distance_two = Math.sqrt(Math.pow(two.x - player.location.x, 2) + Math.pow(two.z - player.location.z, 2));
-    const distance_three = Math.sqrt(Math.pow(three.x - player.location.x, 2) + Math.pow(three.z - player.location.z, 2));
-    const one_three = Math.sqrt(Math.pow(one.x - three.x, 2) + Math.pow(one.z - three.z, 2)) == 1;
-    return one_three && distance_one > distance_two && distance_one > distance_two && distance_two > distance_three;
+function is_decrease(origin, point1, point2, point3) {
+    const distance1 = calculateDistance(origin, point1);
+    const distance2 = calculateDistance(origin, point2);
+    const distance3 = calculateDistance(origin, point3);
+    const isOneThreeDistanceEqual = calculateDistance(point1, point3) === 1;
+    
+    return (
+        isOneThreeDistanceEqual &&
+        distance1 > distance2 &&
+        distance1 > distance3 &&
+        distance2 > distance3
+    );
+}
+
+function calculateDistance(origin, point) {
+    const dx = point.x - origin.x;
+    const dz = point.z - origin.z;
+    
+    return Math.hypot(dx, dz);
 }
 export function scaffold_a(player, block) {
     if (config.modules.scaffoldA.enabled && scaffold_a_map.has(player) && !player.hasTag("gmc") && !player.hasTag("op")) {

@@ -24,6 +24,8 @@ export default
     "hiveRegen": false,
     // Having the silent mode on will stop the anticheat from lagging the flagged player back
     "silent": true,
+    "autoKick": true,
+    "autoBan": true,
     // If you dont really know how to config the anticheat, use this... lol
     "generalModules": {
         "fly": true,

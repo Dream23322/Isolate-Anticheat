@@ -3,7 +3,7 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getSpeed } from "../../../utils/mathUtil.js";
 
-export function checkPlayerSpeedB(player) {
+export function speed_b(player) {
     const speed = getSpeed(player);
     const velocity = player.getVelocity();
 

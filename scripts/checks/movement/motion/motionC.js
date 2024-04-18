@@ -4,7 +4,7 @@ import config from "../../../data/config.js";
 import { getBlocksBetween, hVelocity, hVelocity_2 } from "../../../utils/mathUtil.js";
 import { aroundAir } from "../../../utils/gameUtil.js";
 const motion_c_map = new Map();
-export function motionCheckC(player) {
+export function motion_c(player) {
     if (!config.modules.motionC.enabled || player.isOnGround || getScore(player, "tick_counter2") <= 5) {
         return;
     }

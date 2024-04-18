@@ -271,7 +271,9 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     setScore(player, "kickvl", 0);
                     console.warn(`${new Date().toISOString()} |${player.name} was banned by Isolate Anticheat for ${check}/${checkType}`);
                     const message = `§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat §j[§n${check}§j]`;
-    
+                    player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been banned by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage! (Won't be seeing them for 7 days!)"}]}`);
+            
                     data.recentLogs.push(message)
                     player.runCommandAsync(`kick "${player.name}"`);
                     return;
