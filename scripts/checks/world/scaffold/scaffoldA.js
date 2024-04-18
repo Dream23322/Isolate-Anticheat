@@ -26,11 +26,19 @@ export function scaffold_a(player, block) {
         const yaw_values = scaffold_a_map.get(player)?.yaw;
         const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.z - player.location.z, 2));
         if (last_place_location && old_place_location && pitch_values) {
-            if(Math.abs(place_location.x) === Math.abs(last_place_location.x) && Math.abs(last_place_location.x) === Math.abs(old_place_location.x) || Math.abs(place_location.z) === Math.abs(last_place_location.z) && Math.abs(place_location.z) === Math.abs(old_place_location.z)) {
-                if(Math.abs(pitch_values.new - pitch_values.mid) > 0.05 && Math.abs(pitch_values.mid - pitch_values.old) > 0.05) {
-                    if(Math.abs(yaw_values.new - yaw_values.mid) === 0 && Math.abs(yaw_values.mid - yaw_values.old) === 0) {
-                        flag(player, "Scaffold", "A", "World", "yaw", player.getRotation().y, false);
-                    }
+            const xDist = Math.abs(place_location.x) - Math.abs(last_place_location.x);
+            const zDist = Math.abs(place_location.z) - Math.abs(last_place_location.z);
+            const isSameX = xDist === 0 && xDist === Math.abs(old_place_location.x);
+            const isSameZ = zDist === 0 && zDist === Math.abs(old_place_location.z);
+
+            if (isSameX || isSameZ) {
+                const isPitchChange = Math.abs(pitch_values.new - pitch_values.mid) > 0.05 &&
+                                       Math.abs(pitch_values.mid - pitch_values.old) > 0.05;
+                const isYawSame = Math.abs(yaw_values.new - yaw_values.mid) === 0 &&
+                                  Math.abs(yaw_values.mid - yaw_values.old) === 0;
+
+                if (isPitchChange && isYawSame) {
+                    flag(player, "Scaffold", "A", "World", "yaw", player.getRotation().y, false);
                 }
             }
             if (
