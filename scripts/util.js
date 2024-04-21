@@ -180,7 +180,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
 
 
-    if(shouldTP && config.silent === false) player.teleport(check === "Crasher" ? {x: 30000000, y: 30000000, z: 30000000} : player.lastGoodPosition, {dimension: player.dimension, rotation: {x: rotation.x, y: rotation.y}, keepVelocity: false});
+    if(shouldTP && config.modules.settings.silent === false) player.teleport(check === "Crasher" ? {x: 30000000, y: 30000000, z: 30000000} : player.lastGoodPosition, {dimension: player.dimension, rotation: {x: rotation.x, y: rotation.y}, keepVelocity: false});
 
    
 
@@ -212,7 +212,6 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     const checkData = config.modules[check.toLowerCase() + checkType.toUpperCase()];
     if(!checkData) throw Error(`No valid check data found for ${check}/${checkType}.`);
     const kickvl = getScore(player, "kickvl", 0);
-    const kickvlValue = kickvl; 
     if(!checkData.enabled) throw Error(`${check}/${checkType} was flagged but the module was disabled.`);
     const message = `§u${player.name} §hwas flagged for §p${check}§r/§n${checkType}§j [§2x§n${currentVl}§j]`;
 
@@ -239,6 +238,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     if(punishment === "none" || punishment === "") return;
 
     // This was requested by Duckie Jam (1078815334871617556) from Appy's Practice Network (Code: KC2AfnqpLPo )
+    // That realm is ded btw
     if(config.fancy_kick_calculation.on === true) {
         const movement_vl = getScore(player, "motionvl", 0) + getScore(player, "flyvl", 0) + getScore(player, "speedvl", 0) + getScore(player, "strafevl", 0) + getScore(player, "noslowvl", 0) + getScore(player, "predictionvl", 0) + getScore(player, "invalidsprintvl", 0);
         const combat_vl = getScore(player, "reachvl", 0) + getScore(player, "killauravl", 0) + getScore(player, "aimvl", 0) + getScore(player, "autoclickervl", 0) + getScore(player, "hitboxvl", 0);
@@ -257,12 +257,12 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     if(currentVl > checkData.minVlbeforePunishment) {
 
 
-        if (punishment === "kick") {
+        if (punishment === "kick" && config.modules.settings.autoKick) {
             let banLength2;
             try {
                 //banAnimation(player, "type2");
                 setScore(player, "kickvl", kickvl + 1);
-                if(kickvl > config.kicksBeforeBan) {
+                if(kickvl > config.modules.settings.kicksBeforeBan) {
                     player.addTag("by:§d Isolate Anticheat");
                     player.addTag(`reason:§c Isolate Anticheat caught you cheating!`);
                     banLength2 = parseTime("7d");
@@ -298,7 +298,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
         };
         if(punishment === "ban") {
             // Check if auto-banning is disabled
-            if(getScore(player, "autoban") >= 0) {
+            if(config.modules.settings.autoBan) {
 
                 const punishmentLength = checkData.punishmentLength?.toLowerCase();
                 //setSound(player, "mob.enderdragon.death");

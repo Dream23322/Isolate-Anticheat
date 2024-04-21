@@ -372,7 +372,7 @@ Minecraft.system.runInterval(() => {
 		// ==================================
 
 		// Im currently adding more management for the strict system, it wont be a full system it will just be there to help prevent false flags
-		if(getScore(player, "kickvl", 0) > config.ViolationsBeforeBan / 2 && !player.hasTag("strict")) {
+		if(getScore(player, "kickvl", 0) > config.modules.settings.ViolationsBeforeBan / 2 && !player.hasTag("strict")) {
 			//Try add the tag
 			try {
 				player.addTag("strict");
@@ -382,7 +382,7 @@ Minecraft.system.runInterval(() => {
 			}
 		}
 		
-		if(config.autoReset) {
+		if(config.modules.settings.autoReset) {
 			if(getScore(player, "tick_counter2", 0) > 300) {
 				if(!player.hasTag("reported") && player.hasTag("strict")) {
 					player.removeTag("strict");
@@ -555,8 +555,9 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	const { block, player} = blockPlace;
 	const rotation = player.getRotation()
 	const playerVelocity = player.getVelocity();
-	if(config.debug) console.warn(`${player.nameTag} has placed ${block.typeId}. Distance: ${Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.z - player.location.z, 2))} Player X Rotation: ${rotation.x} Player Y Rotation: ${rotation.y}`);
 	const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
+	if(config.debug) console.warn(`${player.nameTag} has placed ${block.typeId}. Speed: ${playerSpeed} Distance: ${Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.z - player.location.z, 2))} Player X Rotation: ${rotation.x} Player Y Rotation: ${rotation.y}`);
+	
 	
 	let undoPlace = false;
 
@@ -592,8 +593,8 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 
 		scaffold_b(player, block);
 
-		scaffold_c(player, block)
-
+		scaffold_c(player, block);
+		scaffold_d(player, block);
 		scaffold_e(player);
 
 		scaffold_f(player, block);
@@ -637,7 +638,7 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 	}
 
 	// Hive regen
-	if(config.hiveRegen) {
+	if(config.modules.settings.hiveRegen) {
 		if(brokenBlockId === "minecraft:redstone_ore" || brokenBlockId === "minecraft:lit_redstone_ore") {
 			add_effect(player, "absorption", 10, 1);
 		}
@@ -672,7 +673,7 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 
 	nuker_c(player, block, brokenBlockId);
 
-	nuker_d(player, block, brokenBlockId);
+	nuker_d(player, block, brokenBlockId, blockBreak.brokenBlockPermutation);
 	
 	if(brokenBlockId === "minecraft:snow" || brokenBlockId === "minecraft:snow_layer") {
 		player.addTag("snow");

@@ -14,18 +14,12 @@ export default
     },
     "flagWhitelist": [],
     // Amount of anticheat kicks a player needs to get before getting perm banned
-    "kicksBeforeBan": 10,
+
     "clientSpam": {
         // Change to mute if you want to mute the player who used the horion/zephyr spam message
         "punishment": "mute"
     },
-    "ViolationsBeforeBan": 30,
-    "autoReset": true,
-    "hiveRegen": false,
     // Having the silent mode on will stop the anticheat from lagging the flagged player back
-    "silent": true,
-    "autoKick": true,
-    "autoBan": true,
     // If you dont really know how to config the anticheat, use this... lol
     "generalModules": {
         "fly": true,
@@ -279,6 +273,16 @@ export default
             "punishmentLength": "7d", // How long a player wil be banned. This only matters when the punishment is set to ban
             "minVlBeforePunishment": 10 // How many times the player has to flag the modules before action is taken on them.
             // If you have any other questions, please ask in the discord server.
+        },
+        "settings": {
+            "autoKick": true,
+            "autoBan": true,
+            "silent": true,
+            "kicksBeforeBan": 7,
+            // Wait why is this here?
+            "ViolationsBeforeBan": 30,
+            "autoReset": true,
+            "hiveRegen": false
         },
         "itemSpawnRateLimit": {
             "enabled": false,
@@ -618,7 +622,7 @@ export default
         },
         "speedA": {
             "enabled": true,
-            "description":"Checks for un-natural speeds",
+            "description":"Checks for un-natural speeds (Velocity based)",
             "speed": 2.963,
             "checkForSprint": false,
             "checkForJump": true,
@@ -627,7 +631,7 @@ export default
         },     
         "speedB": {
             "enabled": true,
-            "description": "Checks for keeping speed while turning",
+            "description": "Checks for known B-Hop velocities",
             "speed": 2.45,
             "velocity": 0.412,
             "checkForSprint": false,
@@ -637,6 +641,7 @@ export default
         },  
         "speedC": {
             "enabled": true,
+            "desciprtion": "Checks for un-natural speeds (Distance based)",
             "velocity": 0.412,
             "max_bps_h": 8,
             "max_bps_v": 36.2,
@@ -661,7 +666,7 @@ export default
         },
         "flyC": {
             "enabled": true,
-            "description": "Checks for invalid Y movements (Scythe Check So... no comment.)",
+            "description": "Checks for up and down motion fly does with BDS prediction",
             "fallDistance": -1,
             "punishment": "kick",
             "punishmentLength": "1m",
@@ -677,7 +682,7 @@ export default
         },
         "motionB": {
             "enabled": true,
-            "description": "Checks for invalid jumping",
+            "description": "Checks for really high Y velocity",
             "height": -1.11,
             "punishment": "kick",
             "minVlbeforePunishment": 100
@@ -697,7 +702,7 @@ export default
         },
         "predictionA": {
             "enabled": false,
-            "description": "Checks for drastically changing xz velocity whilst in air",
+            "description": "Checks for failing BDS Prediction (strafe)",
             "pos_diff": 0.09,
             "time_int": 0.5,
             "punishment": "kick",
@@ -751,14 +756,14 @@ export default
         },
         "scaffoldC": {
             "enabled": true,
-            "description": "Checks for not looking where a player is placing",
+            "description": "Checks for not placing what your holding",
             "punishment": "kick", 
             "angle": 45,
             "minVlbeforePunishment": 5
         },
         "scaffoldD": {
             "enabled": true,
-            "description":"Checks for funny rotations",
+            "description":"Checks for a pattern in place distance that prax client can use",
             "punishment": "kick",
             "minVlbeforePunishment": 20
         },
