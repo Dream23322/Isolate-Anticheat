@@ -6,6 +6,6 @@ import { getSpeed } from "../../../utils/mathUtil.js";
 export function motion_b(player) {
     const yVelocity = player.getVelocity().y;
     if(config.modules.motionB.enabled && Math.abs(yVelocity) > 40) {
-        flag(player, "Motion", "B", "Movement", "yVelocity", yVelocity, false);
+        flag(player, "Motion", "B", "Movement", "yVelocity", yVelocity, true);
     }
 }
