@@ -14,7 +14,7 @@ export function badpackets_d(player, lastRotations, lastDiff) {
     (yawDiff === 2 && lastDiff.get(player) === 2);
 
   if (isDerpRotation) {
-    flag(player, "BadPackets", "D", "Rotation", "yawDiff", yawDiff, false);
+    flag(player, "BadPackets", "D", "Rotation", "yawDiff", yawDiff, true);
   }
 
   lastRotations.set(player, currentRotation);

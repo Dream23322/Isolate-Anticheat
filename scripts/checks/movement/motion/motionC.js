@@ -30,7 +30,7 @@ export function motion_c(player) {
         if (hVelocity_2(player) > minVelocity) {
             setScore(player, "motion_c_data", getScore(player, "motion_c_data") + 1);
             if (getScore(player, "motion_c_data") > 5) {
-                flag(player, "Motion", "C", "Movement", "velocity", `X ${velocity.x} Y ${velocity.y} Z ${velocity.z}`, false);
+                flag(player, "Motion", "C", "Movement", "velocity", `X ${velocity.x} Y ${velocity.y} Z ${velocity.z}`, true);
             }
         }
     }

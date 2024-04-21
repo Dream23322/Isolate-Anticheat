@@ -16,7 +16,7 @@ export function fly_b(player) {
         const velocityY = player.getVelocity().y;
         if(fly_b_map.has(player)) {
             if(fly_b_map.get(player) == 0 && velocityY == 0 && getScore(player, "tick_counter2", 0) > 3 && !player.isOnGround && hVelocity(player) !== 0 && getScore(player, "airTime") >= 30) {
-                flag(player, "Fly", "B", "Movement", "Velocity", velocityY, false);
+                flag(player, "Fly", "B", "Movement", "Velocity", velocityY, true);
             }
         }
         fly_b_map.set(player, velocityY);
