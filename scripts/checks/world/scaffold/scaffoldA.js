@@ -1,6 +1,7 @@
 import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
+import { getSpeed } from "../../../utils/mathUtil.js";
 
 // Thank you Visual1mpact for helping me with the Map's
 // Initialize scaffold_a_map if not present
@@ -96,6 +97,9 @@ export function scaffold_a(player, block) {
    
                 if(Math.abs(yaw_values.new + yaw_values.mid + yaw_values.old) / 3 < 3 || Math.abs(pitch_values.new + pitch_values.mid + pitch_values.old) / 3 < 4) {
                     flag(player, "Scaffold", "A", "World", "Rot Diff", Math.abs(Math.abs(yaw_values.new + yaw_values.mid + yaw_values.old) / 3 + Math.abs(pitch_values.new + pitch_values.mid + pitch_values.old) / 3) / 2, false);
+                }
+                if(getSpeed(player) > 1.6) {
+                    flag(player, "Scaffold", "A", "World", "Speed", getSpeed(player), false);
                 }
             }
             

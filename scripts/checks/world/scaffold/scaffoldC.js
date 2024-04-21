@@ -10,7 +10,7 @@ export function scaffold_c(player, block) {
         const container = player.getComponent("inventory")?.container;
         const selectedSlot = player.selectedSlot;
         const item = container.getItem(selectedSlot);
-        if(item.typeId !== block.typeId) {
+        if(item.typeId !== block.typeId || item.typeId === undefined) {
             flag(player, "Scaffold", "C", "Placement", "item", item.typeId, false);
         }
     }
