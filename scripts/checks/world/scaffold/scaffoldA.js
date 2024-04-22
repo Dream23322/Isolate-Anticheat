@@ -52,7 +52,7 @@ export function scaffold_a(player, block) {
                                   Math.abs(yaw_values.mid - yaw_values.old) === 0;
 
                 if (isPitchChange && isYawSame) {
-                    flag(player, "Scaffold", "A", "World", "yaw", player.getRotation().y, false);
+                    flag(player, "Scaffold", "A", "World", "yaw(1)", player.getRotation().y, false);
                 }
             }
             if (
@@ -73,49 +73,47 @@ export function scaffold_a(player, block) {
                     }
                 }
                 const rotx = player.getRotation().x;
-                if(distance > 3.5 && !is_decrease(player, place_location, last_place_location, old_place_location)) {
-                    flag(player, "Scaffold", "A", "World", "distance", distance, false);
+
+                const diff_1 = Math.abs(yaw_values.mid - yaw_values.new);   
+                const diff_2 = Math.abs(yaw_values.new - player.getRotation().y);
+                console.warn("Diff1" + diff_1 + "Diff2 " + diff_2);
+                if(diff_2 < 10 && diff_1 < 10 && !is_decrease(player, place_location, last_place_location, old_place_location)) {
+                    flag(player, "Scaffold", "A", "World", "Yaw Diff (2)", (diff_1 + diff_2) / 2, false);
                 }
-                if (Math.abs(yaw_values.new - player.getRotation().z) < 2) {
-                    flag(player, "Scaffold", "A", "World", "yaw", player.getRotation().z, false);
+
+                const fixedYawValues = yaw_values.mid.toFixed(0);
+                const fixedPlayerRotation = player.getRotation().y.toFixed(0);
+                if (fixedYawValues === fixedPlayerRotation && yaw_values.new.toFixed(0) !== fixedPlayerRotation) {
+                    flag(player, "Scaffold", "A", "World", "Yaw(4)", yaw_values.mid, false);
                 }
-                if(yaw_values.new < -141 && yaw_values.new > -142) {
-                    flag(player, "Scaffold", "A", "World", "Yaw", yaw_values.new, false);
-                }
-                if(yaw_values.new == yaw_values.mid) {
-                    flag(player, "Scaffold", "A", "World", "Yaw_Diff", 0, false);
-                }
+
+                // if(distance > 3.5 && !is_decrease(player, place_location, last_place_location, old_place_location)) {
+                //     flag(player, "Scaffold", "A", "World", "distance", distance, false);
+                // }
                 if(rotx < 44.5 && pitch_values.mid < 44.5 && distance < 1) {
-                    flag(player, "Scaffold", "A", "World", "Pitch", pitch_values.new, false);
-                }
-                if(rotx < 54 && pitch_values.mid < 54 && distance < 0.4) {
-                    flag(player, "Scaffold", "A", "World", "Pitch", rotx, false);
-                }
-                if(rotx > 60 && pitch_values.mid < 60 && distance > 1.9) {
-                    flag(player, "Scaffold", "A", "World", "dist", distance, false);
-                }
-   
-                if(Math.abs(yaw_values.new + yaw_values.mid + yaw_values.old) / 3 < 3 || Math.abs(pitch_values.new + pitch_values.mid + pitch_values.old) / 3 < 4) {
-                    flag(player, "Scaffold", "A", "World", "Rot Diff", Math.abs(Math.abs(yaw_values.new + yaw_values.mid + yaw_values.old) / 3 + Math.abs(pitch_values.new + pitch_values.mid + pitch_values.old) / 3) / 2, false);
-                }
-                if(getSpeed(player) > 1.6) {
+                    flag(player, "Scaffold", "A", "World", "Pitch(1)", pitch_values.new, false);
+                } 
+                // if(rotx > 60 && pitch_values.mid < 60 && distance > 1.9) {
+                //     flag(player, "Scaffold", "A", "World", "dist", distance, false);
+                // }
+                if(getSpeed(player) > 1) {
                     flag(player, "Scaffold", "A", "World", "Speed", getSpeed(player), false);
                 }
             }
             
         }
     }
-
+    const rotation = player.getRotation();
     scaffold_a_map.set(player, {
         a: { x: block.location.x, y: block.location.y, z: block.location.z },
         b: scaffold_a_map.get(player)?.a || { x: 0, y: 0, z: 0 },
         pitch: {
-            new: player.getRotation().x,
+            new: rotation.x,
             mid: scaffold_a_map.get(player)?.pitch?.new || 0,
             old: scaffold_a_map.get(player)?.pitch?.mid || 0
         },
         yaw: {
-            new: player.getRotation().z,
+            new: rotation.y,
             mid: scaffold_a_map.get(player)?.yaw?.new || 0,
             old: scaffold_a_map.get(player)?.yaw?.mid || 0
         }
