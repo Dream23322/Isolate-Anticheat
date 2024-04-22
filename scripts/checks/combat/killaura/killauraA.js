@@ -6,7 +6,7 @@ import { getScore } from "../../../util";
 export function killaura_a(player, entity) {
 	// Idea from Matrix Anticheat
 
-    if(config.modules.killauraE.enabled) {
+    if(config.modules.killauraA.enabled) {
         const playerVelocity = player.getVelocity();
         const rot = player.getRotation();
         // Stop false flags
