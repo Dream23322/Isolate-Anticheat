@@ -10,7 +10,7 @@ export function prediction_a(player, lastXZv) {
             const x_diff = Math.abs(lastXZv.get(player).x - playerVelocity.x);
             const z_diff = Math.abs(lastXZv.get(player).z - playerVelocity.z);
             if(hVelocity(player) > 1 && (x_diff > 0.1 || z_diff > 0.1) && !player.getEffect("speed") && !player.hasTag("placing")) {
-                flag(player, "Predicition", "A", "Movement", "x_diff", `${x_diff}, z_diff=${z_diff}`, true);
+                flag(player, "Prediction", "A", "Movement", "x_diff", `${x_diff}, z_diff=${z_diff}`, true);
             }
         }
         lastXZv.set(player, {x: playerVelocity.x, z: playerVelocity.z});

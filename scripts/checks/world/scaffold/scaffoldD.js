@@ -35,7 +35,7 @@ export function scaffold_d(player, block) {
     
         for (const block of blocks) {
             const blockY = block.y;
-            if (blockY >= playerY || blockY < playerY - 2) {
+            if (blockY <= playerY || blockY > playerY - 2) {
                 allBelowPlayer = false;
                 allNotLowEnough = false;
                 break;
@@ -48,12 +48,12 @@ export function scaffold_d(player, block) {
     }
     function checkDistance(player, block1, block2, block3, block4, block5) {
         const distances = [block1, block2, block3, block4, block5]
-            .map(block => Math.hypot(block.location.x - player.location.x, block.location.z - player.location.z));
+            .map(block => Math.hypot(block.x - player.location.x, block.z - player.location.z));
 
         const [distance5, distance4, distance3, distance2, distance1] = distances.sort((a, b) => a - b);
 
         return (
-            distance5 > distance4 + 0.45 &&
+            distance5 > distance4 + 0.1 &&
             distance3 > distance4 &&
             distance3 < distance2 &&
             distance2 > distance1
