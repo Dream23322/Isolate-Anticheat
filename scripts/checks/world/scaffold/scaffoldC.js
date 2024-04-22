@@ -14,8 +14,6 @@ export function scaffold_c(player, block) {
             if(item.typeId !== block.typeId) {
                 flag(player, "Scaffold", "C", "Placement", "item", item.typeId, false);
             }
-        } catch (e) {
-            flag(player, "Scaffold", "C", "Placement", "item", "nothing!", false);
-        }
+        } catch (e) {}
     }
 }
