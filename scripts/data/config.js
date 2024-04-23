@@ -425,7 +425,7 @@ export default
         "badpacketsE": {
             "enabled": true,
             "description": "Checks for high amount of packets",
-            "min_packets": 50,
+            "min_packets": 30,
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },
