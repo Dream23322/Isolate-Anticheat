@@ -758,7 +758,8 @@ export default
             "enabled": true,
             "description": "Checks for not placing what your holding",
             "punishment": "kick", 
-            "angle": 45,
+            "buffer": 10,
+            "reset": 2,
             "minVlbeforePunishment": 5
         },
         "scaffoldD": {

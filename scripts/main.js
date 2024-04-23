@@ -517,6 +517,7 @@ Minecraft.system.runInterval(() => {
 			setScore(player, "tick_counter2", getScore(player, "tick_counter2", 0) + 1);
 			setScore(player, "tag_reset", getScore(player, "tag_reset", 0) + 1);
 			setScore(player, "aimc_reset", getScore(player, "aimc_reset", 0) + 1);
+			setScore(player, "scaffold_c_reset", getScore(player, "scaffold_c_reset", 0) + 1);
 			setScore(player, "motion_c_data", 0);
 			player.removeTag("snow");
 
@@ -531,6 +532,7 @@ Minecraft.system.runInterval(() => {
 			player.removeTag("stairs");
 			player.removeTag("timer_bypass");
 			player.removeTag("ender_pearl");
+			player.removeTag("useItem");
 			setScore(player, "tag_reset", 0);
 		}
 		
@@ -985,17 +987,16 @@ world.afterEvents.entityHitBlock.subscribe((entityHit) => {
 	player.lastSelectedSlot = player.selectedSlot;
 	player.startBreakTime = Date.now();
 	player.autotoolSwitchDelay = 0;
-});
-world.beforeEvents.itemUse.subscribe((itemUse) => {
+});world.beforeEvents.itemUse.subscribe((itemUse) => {
 	const { source: player } = itemUse;
 
+	if(player.typeId !== "minecraft:player") return;
 
-
-	if(!player.hasTag("usingItem")) {
-		player.addTag("usingItem");
+	if(!player.hasTag("useItem")) {
+		Minecraft.system.run(() => player.addTag("useItem"));
 	}
 
-	// patch bypasses for the freeze system
+	// Patch bypasses for the freeze system
 	if(player.hasTag("freeze")) itemUse.cancel = true;
 });
 
