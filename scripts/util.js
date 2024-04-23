@@ -524,8 +524,8 @@ export function getScore(player, objective, defaultValue = 0) {
 }
 
 /**
- * @name setScore   
- * @param {Minecraft.Entity} player - The player to set the score for
+ * @name setScore
+ * @param {import("@minecraft/server").Entity} player - The player to set the score for
  * @param {string} objectiveName - The scoreboard objective
  * @param {number} value - The new value of the scoreboard objective
  * @example getScore(player, "cbevl", 0)
@@ -537,8 +537,9 @@ export function setScore(player, objectiveName, value) {
     if(typeof value !== "number") throw TypeError(`Error: value is type of ${typeof value}. Expected "number"`);
 
     const objective = world.scoreboard.getObjective(objectiveName);
-    if(!objective) throw Error(`Objective "${objectiveName}" does not exist`);
-
+    if(!objective) {
+        player.runCommandAsync(`scoreboard objectives add ${objectiveName}`)
+    }
     objective.setScore(player, value);
 }
 
