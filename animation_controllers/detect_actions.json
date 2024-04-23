@@ -9,7 +9,8 @@
 					}],
 					"on_entry": [
 						"/tag @s remove jump",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aJUMP§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aJUMP§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				},
 				"jump": {
@@ -19,7 +20,8 @@
 					"on_entry": [
 						"/tag @s add jump",
 						"/tp @s[tag=freeze] ~~-0.5~",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aJUMP§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aJUMP§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				}
 			}
@@ -32,7 +34,8 @@
 					}],
 					"on_entry": [
 						"/tag @s remove gliding",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aGLIDE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aGLIDE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				},
 				"glide": {
@@ -41,7 +44,8 @@
 					}],
 					"on_entry": [
 						"/tag @s add gliding",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aGLIDE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aGLIDE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				}
 			}
@@ -54,7 +58,8 @@
 					}],
 					"on_entry": [
 						"/tag @s remove levitating",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aLEVITATE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aLEVITATE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				},
 				"levitate": {
@@ -63,7 +68,8 @@
 					}],
 					"on_entry": [
 						"/tag @s add levitating",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aLEVITATE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aLEVITATE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				}
 			}
@@ -76,7 +82,8 @@
 					}],
 					"on_entry": [
 						"/tag @s remove ground",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aGROUND§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aGROUND§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				},
 				"ground": {
@@ -85,7 +92,8 @@
 					}],
 					"on_entry": [
 						"/tag @s add ground",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aGROUND§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aGROUND§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				}
 			}
@@ -98,7 +106,8 @@
 					}],
 					"on_entry": [
 						"/tag @s remove dead",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aDEATH§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aDEATH§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				},
 				"dead": {
@@ -108,7 +117,8 @@
 					"on_entry": [
 						"/tag @s add dead",
 						"/tag @s remove right",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aDEATH§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aDEATH§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				}
 			}
@@ -121,7 +131,8 @@
 					}],
 					"on_entry": [
 						"/tag @s remove riding",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aRIDE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aRIDE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				},
 				"ride": {
@@ -131,7 +142,8 @@
 					"on_entry": [
 						"/tag @s add riding",
 						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aRIDE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}",
-						"/tag @s remove moving"
+						"/tag @s remove moving",
+						"/scoreboard players add @s packets 1"
 					]
 				}
 			}
@@ -145,7 +157,9 @@
 					"on_entry": [
 						"/tag @s remove left",
 						"/scoreboard players set @s last_attack 0",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aLEFT§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aLEFT§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}",
+						"/scoreboard players add @s packets 1"
+					
 					]
 				},
 				"left": {
@@ -155,7 +169,8 @@
 					"on_entry": [
 						"/tag @s add left",
 						"/scoreboard players set @s last_attack 0",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aLEFT§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aLEFT§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				}
 			}
@@ -170,7 +185,8 @@
 					"on_entry": [
 						"/tag @s remove right",
 						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aRIGHT§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop,ticks=\"},{\"score\":{\"name\":\"@s\",\"objective\":\"right\"}},{\"text\":\")\"}]}",
-						"/scoreboard players set @s right 0"
+						"/scoreboard players set @s right 0",
+						"/scoreboard players add @s packets 1"
 					]
 				},
 				"right": {
@@ -180,7 +196,8 @@
 					"on_entry": [
 						"/tag @s add right",
 						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aRIGHT§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start,ticks=0)\"}]}",
-						"/execute @s[tag=hasGUIopen] ~~~ function checks/alerts/invmove"
+						"/execute @s[tag=hasGUIopen] ~~~ function checks/alerts/invmove",
+						"/scoreboard players add @s packets 1"
 					]
 				}
 			}
@@ -193,7 +210,8 @@
 					}],
 					"on_entry": [
 						"/tag @s remove sneak",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aSNEAK§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aSNEAK§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				},
 				"sneak": {
@@ -202,7 +220,8 @@
 					}],
 					"on_entry": [
 						"/tag @s add sneak",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aSNEAK§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aSNEAK§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				}
 			}
@@ -216,7 +235,8 @@
 					"on_entry": [
 						"/tag @s remove moving",
 						"/execute @s[scores={worldborder=1..,gametestapi=1..}] ~~~ function checks/optional/worldborder",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aMOVE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aMOVE§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				},
 				"move": {
@@ -229,7 +249,8 @@
 						"/execute @s[scores={worldborder=1..,gametestapi=1..}] ~~~ function checks/optional/worldborder",
 						"/tp @s[tag=freeze] ~~~",
 						"/tp @s[y=-105,dy=-205] ~ -104 ~",
-						"/scoreboard players set @s last_move 0"
+						"/scoreboard players set @s last_move 0",
+						"/scoreboard players add @s packets 1"
 					]
 				}
 			}
@@ -242,7 +263,8 @@
 					}],
 					"on_entry": [
 						"/tag @s remove swimming",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aSWIM§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aSWIM§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				},
 				"swim": {
@@ -251,7 +273,8 @@
 					}],
 					"on_entry": [
 						"/tag @s add swimming",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aSWIM§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aSWIM§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				}
 			}
@@ -264,7 +287,8 @@
 					}],
 					"on_entry": [
 						"/tag @s remove sleeping",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aSLEEP§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aSLEEP§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				},
 				"sleeping": {
@@ -273,7 +297,8 @@
 					}],
 					"on_entry": [
 						"/tag @s add sleeping",
-						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aSLEEP§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§j[§uIsolate§j]§r §bReceived §aSLEEP§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}",
+						"/scoreboard players add @s packets 1"
 					]
 				}
 			}
