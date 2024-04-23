@@ -11,8 +11,10 @@ if(dpConfig) {
 	for(const item of Object.keys(parsedConfig)) {
 		config[item] = parsedConfig[item];
 	}
-	console.warn("Loaded Config Correctly");
+	console.warn("[Isolate] >> Loaded Config Correctly");
 }
 
+// Setup report system
+
 import "./main.js";
-console.warn("Isolate Setup Correctly");
+console.warn("[Isolate] >> Setup Correctly");
