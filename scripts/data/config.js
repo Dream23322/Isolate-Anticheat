@@ -758,7 +758,7 @@ export default
             "enabled": true,
             "description": "Checks for not placing what your holding",
             "punishment": "kick", 
-            "buffer": 10,
+            "buffer": 18,
             "reset": 2,
             "minVlbeforePunishment": 5
         },

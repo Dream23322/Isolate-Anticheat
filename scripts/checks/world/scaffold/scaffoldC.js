@@ -9,7 +9,7 @@ export function scaffold_c(player, block) {
         if(!player.hasTag("useItem")) {
             setScore(player, "scaffold_c_buffer", getScore(player, "scaffold_c_buffer", 0) + 1);
             if(getScore(player, "scaffold_c_buffer", 0) > config.modules.scaffoldC.buffer) {
-                flag(player, "Scaffold", "C", "World", "packet!", "useItem", false);
+                flag(player, "Scaffold", "C", "World", "buffer", getScore(player, "scaffold_c_buffer", 0), false);
             }
 
         }
