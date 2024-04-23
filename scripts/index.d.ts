@@ -12,7 +12,7 @@ declare module "@minecraft/server" {
 
 		// Numbers
 		pitch: number
-		blocksBroken: number
+		blocksBroken: number	
 		startBreakTime: number
 		lastSelectedSlot: number
 		autotoolSwitchDelay: number

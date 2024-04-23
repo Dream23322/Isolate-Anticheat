@@ -472,7 +472,6 @@ Minecraft.system.runInterval(() => {
 			badpackets_g(player);
 			badpackets_h(player);
 			badpackets_i(player);
-			badpackets_e(player, lastPosition);
 			timer_a(player, player.lastPosition, lagValue);
 		}
 
@@ -519,6 +518,9 @@ Minecraft.system.runInterval(() => {
 			setScore(player, "aimc_reset", getScore(player, "aimc_reset", 0) + 1);
 			setScore(player, "scaffold_c_reset", getScore(player, "scaffold_c_reset", 0) + 1);
 			setScore(player, "motion_c_data", 0);
+			badpackets_e(player);
+			if(player.hasTag("packetlogger")) player.runCommandAsync(`title @s actionbar packets:${getScore(player, "packets", 0)}`);
+			setScore(player, "packets", 0);
 			player.removeTag("snow");
 
 		}

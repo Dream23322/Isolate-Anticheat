@@ -424,7 +424,8 @@ export default
         },
         "badpacketsE": {
             "enabled": true,
-            "description": "Patches a disabler for Isolate on Vector client (Changing location without velocity)",
+            "description": "Checks for high amount of packets",
+            "min_packets": 50,
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },

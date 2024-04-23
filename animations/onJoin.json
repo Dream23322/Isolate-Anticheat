@@ -99,6 +99,9 @@
 					"/scoreboard objectives add timervl dummy",
 					"/scoreboard objectives add airTime dummy",
 					"/scoreboard objectives add motion_c_data dummy",
+					"/scoreboard objectives add scaffold_c_buffer dummy",
+					"/scoreboard objectives add scaffold_c_reset dummy",
+					"/scoreboard objectives add packets dummy",
 					// If enabled from previous login then activate
 					"/ability @s[tag=flying,m=!c] mayfly true"
 					// alert the user if Gametest Framework is not enabled

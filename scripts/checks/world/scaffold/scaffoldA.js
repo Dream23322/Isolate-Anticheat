@@ -81,11 +81,6 @@ export function scaffold_a(player, block) {
                     flag(player, "Scaffold", "A", "World", "Yaw Diff (2)", (diff_1 + diff_2) / 2, false);
                 }
 
-                const fixedYawValues = yaw_values.mid.toFixed(0);
-                const fixedPlayerRotation = player.getRotation().y.toFixed(0);
-                if (fixedYawValues === fixedPlayerRotation && yaw_values.new.toFixed(0) !== fixedPlayerRotation) {
-                    flag(player, "Scaffold", "A", "World", "Yaw(4)", yaw_values.mid, false);
-                }
 
                 // if(distance > 3.5 && !is_decrease(player, place_location, last_place_location, old_place_location)) {
                 //     flag(player, "Scaffold", "A", "World", "distance", distance, false);
