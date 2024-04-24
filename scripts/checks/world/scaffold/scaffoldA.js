@@ -86,6 +86,9 @@ export function scaffold_a(player, block) {
                 if(getSpeed(player) > 1) {
                     flag(player, "Scaffold", "A", "World", "Speed", getSpeed(player), false);
                 }
+                if(!player.hasTag("useItem") && !is_decrease(player, place_location, last_place_location, old_place_location) && diff_1 > 2 && diff_2 > 2 && getSpeed(player) > 0.5) {
+                    flag(player, "Scaffold", "A", "World", "UseItem", "false", true);
+                }
             }
             
         }
