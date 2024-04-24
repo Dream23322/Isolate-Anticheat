@@ -36,16 +36,7 @@ import config from "../../data/config.js";
 
     const item = new Minecraft.ItemStack(itemType, 1);
 
-    item.nameTag = config.customcommands.ui.ui_item_name;
-
-    // enchant it since why not
-    /*
-    const enchantments = item.getComponent("enchantments").enchantments;
-    enchantments.addEnchantment(new Minecraft.Enchantment(Minecraft.MinecraftEnchantmentTypes.unbreaking, 3));
-    
-    item.getComponent("enchantments").enchantments = enchantments;
-    */
-   
+    item.nameTag = config.customcommands.ui.ui_item_name;   
     container.addItem(item);
 
     player.sendMessage(`§r§j[§uIsolate§j]§r The UI item has been added to your inventory.${didError === true ? "\n§4[§cWARNING§4]§r There was an error trying to create the custom UI item. The UI item has been defaulted to a wooden axe." : ""}`);
