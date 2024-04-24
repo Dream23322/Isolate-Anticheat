@@ -653,7 +653,7 @@ export default
             "minVlbeforePunishment": 10
         },
         "predictionA": {
-            "enabled": false,
+            "enabled": true,
             "description": "Checks for failing BDS Prediction (strafe)",
             "pos_diff": 0.09,
             "time_int": 0.5,
