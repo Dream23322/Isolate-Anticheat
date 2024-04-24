@@ -80,17 +80,9 @@ export function scaffold_a(player, block) {
                 if(diff_2 < 10 && diff_1 < 10 && !is_decrease(player, place_location, last_place_location, old_place_location) && diff_1 > 2 && diff_2 > 2) {
                     flag(player, "Scaffold", "A", "World", "Yaw Diff (2)", (diff_1 + diff_2) / 2, false);
                 }
-
-
-                // if(distance > 3.5 && !is_decrease(player, place_location, last_place_location, old_place_location)) {
-                //     flag(player, "Scaffold", "A", "World", "distance", distance, false);
-                // }
                 if(rotx < 44.5 && pitch_values.mid < 44.5 && distance < 1) {
                     flag(player, "Scaffold", "A", "World", "Pitch(1)", pitch_values.new, false);
                 } 
-                // if(rotx > 60 && pitch_values.mid < 60 && distance > 1.9) {
-                //     flag(player, "Scaffold", "A", "World", "dist", distance, false);
-                // }
                 if(getSpeed(player) > 1) {
                     flag(player, "Scaffold", "A", "World", "Speed", getSpeed(player), false);
                 }

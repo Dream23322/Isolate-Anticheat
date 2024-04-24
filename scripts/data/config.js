@@ -68,67 +68,18 @@ export default
             "enabled": true,
             "requiredTags": []
         },
-        "antigma": {
-            "enabled": true,
-            "requiredTags": ["op"],
-            "aliases": ["allowgma","agma"]
-        },
-        "antigmc": {
-            "enabled": true,
-            "requiredTags": ["op"],
-            "aliases": ["allowgmc","agmc"]
-        },
-        "antigms": {
-            "enabled": true,
-            "requiredTags": ["op"],
-            "aliases": ["allowgms","agms"]
-        },
-        "bedrockvalidate": {
-            "enabled": true,
-            "requiredTags": ["op"],
-            "aliases": ["bedrock","bv"]
-        },
         "modules": {
             "enabled": true,
             "requiredTags": ["op"]
         },
-        "npc": {
+        "reset": {
             "enabled": true,
             "requiredTags": ["op"]
-        },
-        "overridecommandblocksenabled": {
-            "enabled": true,
-            "requiredTags": ["op"],
-            "aliases": ["overidecbe","overidecommandblocksenabled","ocbe"]
         },
         "removecommandblocks": {
             "enabled": true,
             "requiredTags": ["op"],
             "aliases": ["removecb","rcb"]
-        },
-        "worldborder": {
-            "enabled": true,
-            "requiredTags": ["op"],
-            "aliases": ["wb"]
-        },
-        "xray": {
-            "enabled": true,
-            "requiredTags": ["op"]
-        },
-        "autoclicker": {
-            "enabled": true,
-            "requiredTags": ["op"],
-            "aliases": ["ac"]
-        },
-        "autoban": {
-            "enabled": true,
-            "requiredTags": ["op"],
-            "aliases": ["ab"]
-        },
-        "invalidsprint": {
-            "enabled": true,
-            "requiredTags": ["op"],
-            "aliases": ["is"]
         },
         "ecwipe": {
             "enabled": true,
