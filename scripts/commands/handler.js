@@ -11,7 +11,6 @@ import { mute } from "./moderation/mute.js";
 import { unmute } from "./moderation/unmute.js";
 import { credits } from "./other/credits.js";
 import { modules } from "./settings/modules.js";
-import { npc } from "./settings/npc.js";
 import { tag } from "./utility/tag.js";
 import { ecwipe } from "./utility/ecwipe.js";
 import { freeze } from "./utility/freeze.js";

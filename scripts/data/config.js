@@ -695,6 +695,7 @@ export default
         },
         "scaffoldA": {
             "enabled": true,
+            "nofalse": false,
             "description": "Checks for scaffold rotation (mainly while diag scaffolding)",
             "punishment": "kick",
             "minVlbeforePunishment": 3
