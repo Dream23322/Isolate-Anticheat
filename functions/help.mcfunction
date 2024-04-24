@@ -23,19 +23,8 @@ tellraw @s {"rawtext":[{"text":"\n§l§dOptional Features"}]}
 
 # Gametest enabled
 tellraw @s {"rawtext":[{"text":"§u!modules§r - View all enabled or disabled modules."}]}
-tellraw @s {"rawtext":[{"text":"§u!antiGMA§r - Enables/disables gamemode 2 (Adventure) to be used."}]}
-tellraw @s {"rawtext":[{"text":"§u!antiGMC§r - Enables/disables gamemode 1 (Creative) to be used."}]}
-tellraw @s {"rawtext":[{"text":"§u!antiGMS§r - Enables/disables gamemode 0 (Survival) to be used."}]}
-tellraw @s {"rawtext":[{"text":"§u!autoban§r - Enables/disables auto-banning."}]}
-tellraw @s {"rawtext":[{"text":"§u!autoclicker§r - Enables/disables anti-autoclicker."}]}
-tellraw @s {"rawtext":[{"text":"§u!bedrockValidate§r - Enables/disables validation of bedrock (Such as in the nether roof or at y=-64)."}]}
-tellraw @s {"rawtext":[{"text":"§u!invalidsprint§r - Enables/disables anti-invalidsprint."}]}
-tellraw @s {"rawtext":[{"text":"§u!npc§r - Enables/disables killing all NPCs."}]}
-tellraw @s {"rawtext":[{"text":"§u!overideCommandBlocksEnabled§r - Forces the commandblocksenabled gamerule to be enabled or disabled at all times."}]}
-tellraw @s {"rawtext":[{"text":"§u!removeCommandBlocks§r - Enables/disables clearing nearby command blocks."}]}
-tellraw @s {"rawtext":[{"text":"§u!worldborder§r - Enables/disables the world border and its size."}]}
-tellraw @s {"rawtext":[{"text":"§u!xray§r - Enables/disables anti-xray."}]}
-
+tellraw @s {"rawtext":[{"text":"§u!module <module> <setting> <newValue>§r - Change a modules settings."}]}
+tellraw @s {"rawtext":[{"text":"§u!reset§r - Resets config."}]}
 
 tellraw @s {"rawtext":[{"text":"\n§l§dTools and Utilites"}]}
 
