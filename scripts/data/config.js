@@ -10,7 +10,7 @@ export default
         "movement": 5,
         "combat": 3,
         "block": 0,
-        "other": 1
+        "other": 0
     },
     "flagWhitelist": [],
     // Amount of anticheat kicks a player needs to get before getting perm banned

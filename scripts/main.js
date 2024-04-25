@@ -295,7 +295,7 @@ Minecraft.system.runInterval(() => {
 				if(config.modules.aimD) {
 
 					const lastDeltaYaw = lastDeltaZ.get(player) || 0;
-					const deltaZ = Math.abs(rotation.z - lastYRot.get(player) || 0);
+					const deltaZ = Math.abs(rotation.y - lastYRot.get(player) || 0);
 					// The check
 					if(deltaZ > 320 && lastDeltaYaw > 30) {
 						flag(player, "Aim", "D", "Combat", "deltaZ", deltaZ);
