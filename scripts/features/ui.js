@@ -4,7 +4,7 @@ import * as MinecraftUI from "@minecraft/server-ui";
 
 import config from "../data/config.js";
 import data from "../data/data.js";
-import { parseTime } from "../util.js";
+import { parseTime, capitalizeFirstLetter } from "../util.js";
 import { addOp, removeOp } from "../commands/moderation/op.js";
 
 const world = Minecraft.world;
@@ -13,7 +13,36 @@ const playerIcons = [
     "textures/ui/icon_alex.png",
     "textures/ui/icon_steve.png",
 ];
+const icons = {
+    back: "textures/ui/arrow_left.png",
+    anvil: "textures/ui/anvil_icon.png",
+    member: "textures/ui/permissions_member_star.png",
+    op: "textures/ui/op.png",
+    info: "textures/ui/infobulb.png",
+    mute_off: "textures/ui/mute_off.png",
+    mute_on: "textures/ui/mute_on.png",
+    debug: "textures/ui/debug_glyph_color.png",
+    arrow: "textures/ui/arrow.png"
+};
+const moduleList = Object.keys(config.modules).concat(Object.keys(config.misc_modules));
+const modules = [];
 
+for(const fullModule of moduleList) {
+    if(fullModule.startsWith("example")) continue;
+    const module = fullModule[fullModule.length - 1].toUpperCase() === fullModule[fullModule.length - 1] ? fullModule.slice(0, fullModule.length - 1) : fullModule;
+
+    if(modules.includes(module)) continue;
+    modules.push(module);
+}
+
+const punishments = {
+    none: 0,
+    mute: 1,
+    kick: 2,
+    ban: 3
+};
+
+const punishmentSettings = ["punishment","punishmentLength","minVlbeforePunishment"];
 // this is the function that will be called when the player wants to open the GUI
 // all other GUI functions will be called from here
 export function mainGui(player, error) {
@@ -220,46 +249,111 @@ function unbanPlayerMenu(player) {
 // ====================== //
 function settingsMenu(player) {
     player.playSound("mob.chicken.plop");
+
+    const settings_menu = new MinecraftUI.ActionFormData()
+        .title("Module Settings")
+        .body("Please select a sub-check to edit.");
+
+    for(const subModule of modules) {
+        settings_menu.button(capitalizeFirstLetter(subModule));
+    }
+
+    settings_menu.button("Back", icons.back);
+
+    settings_menu.show(player).then((response) => {
+        if(!modules[response.selection ?? -1]) return mainGui(player);
+
+        settingsCheckSelectMenu(player, response.selection);
+    });
+}
+
+function settingsCheckSelectMenu(player, selection) {
+    player.playSound("mob.chicken.plop");
+    const subCheck = modules[selection];
+
     const menu = new MinecraftUI.ActionFormData()
-        .title("§0Settings Menu")
-        .body("Please Select A Setting To Toggle")
-        .button("§bNotifications", "textures/ui/gear.png")
-        .button("§bAnti-Autoclicker", "textures/ui/gear.png")
-        .button("§bAnti-GMC", "textures/ui/gear.png")
-        .button("§bAnti-GMS", "textures/ui/gear.png")
-        .button("§bAnti-GMA", "textures/ui/gear.png")
-        .button("§bAnti-NPC", "textures/ui/gear.png")
-        .button("§bBedrock-Validate", "textures/ui/gear.png")
-        .button("§bInvalidSprint", "textures/ui/gear.png")
-        .button("§bAutoBan", "textures/ui/gear.png")
-        .button("§bxray", "textures/ui/gear.png")
-        .button("§cBack", "textures/ui/arrow_left.png")
-    menu.show(player).then((response) => {    
-        if (response.selection === 0) {
-            player.runCommandAsync("function notify")
-        } else if(response.selection === 1) {
-            player.runCommandAsync("function settings/autoclicker");
-        } else if (response.selection === 2) {
-            player.runCommandAsync("function settings/antiGMC");
-        } else if (response.selection === 3) {  
-            player.runCommandAsync("function settings/antiGMS");
-        } else if (response.selection === 4) {
-            player.runCommandAsync("function settings/antiGMA");
-        } else if (response.selection === 5) {
-            player.runCommandAsync("function settings/npc");
-        } else if (response.selection === 6) {
-            player.runCommandAsync("function settings/bedrockValidate");
-        } else if (response.selection === 7) {
-            player.runCommandAsync("function settings/invalidsprint");
-        } else if (response.selection === 8) {
-            player.runCommandAsync("function settings/autoban");
-        } else if (response.selection === 9) {
-            player.runCommandAsync("function settings/xray")
-        } else if (response.selection === 10 || response.canceled) {
-            mainGui(player);
-        
+        .title("Configure Settings")
+        .body("Please select a check to edit.");
+
+    const checks = [];
+    for(const module of moduleList) {
+        if(!module.startsWith(subCheck)) continue;
+        checks.push(module);
+
+        const checkData = config.modules[module] ?? config.misc_modules[module];
+        menu.button(`${capitalizeFirstLetter(subCheck)}/${module[module.length - 1]}\n${checkData.enabled ? "§a(Enabled)" : "§4(Disabled)"}`);
+    }
+
+    if(checks.length === 1) return editSettingMenu(player, checks[0]);
+
+    menu.button("Back", icons.back);
+
+    menu.show(player).then((response) => {
+        const selection = response.selection ?? - 1;
+
+        if(!checks[selection]) return settingsMenu(player);
+
+        editSettingMenu(player, checks[selection]);
+    });
+}
+
+function editSettingMenu(player, check) {
+    player.playSound("mob.chicken.plop");
+    const checkData = config.modules[check] ?? config.misc_modules[check];
+
+    let optionsMap = [];
+
+    const menu = new MinecraftUI.ModalFormData()
+        .title(`Editing check: ${capitalizeFirstLetter(check)}`);
+
+    for(const key of Object.keys(checkData)) {
+        if(punishmentSettings.includes(key)) continue;
+
+        // Friendly setting name. Changes "multi_protection" to "Multi Protection"
+        const settingName = capitalizeFirstLetter(key).replace(/_./g, (match) => " " + match[1].toUpperCase());
+
+        switch(typeof checkData[key]) {
+            case "number":
+                menu.slider(settingName, 0, 100, Number.isInteger(checkData[key]) ? 1 : 0.01, checkData[key]);
+                optionsMap.push(key);
+                break;
+            case "boolean":
+                menu.toggle(settingName, checkData[key]);
+                optionsMap.push(key);
+                break;
+            case "string":
+                menu.textField(settingName, "Enter text here", checkData[key]);
+                optionsMap.push(key);
+                break;
         }
-    });    
+    }
+
+    // Check if the module supports punishments
+    if(checkData.punishment) {
+        menu.dropdown("Punishment", Object.keys(punishments), punishments[checkData.punishment]);
+        menu.textField("Punishment Length", "Enter a ban length (ex: 12d, 1d, 1m, 30s", checkData["punishmentLength"]);
+        menu.slider("Minimum Violations (flags) Before Punishment", 0, 20, 1, checkData["minVlbeforePunishment"]);
+
+        optionsMap = optionsMap.concat(punishmentSettings);
+    }
+
+    menu.show(player).then((response) => {
+        if(response.canceled) return;
+
+        const formValues = response.formValues ?? [];
+
+        for(const optionid in optionsMap) {
+            const name = optionsMap[optionid];
+
+            // @ts-expect-error
+            checkData[name] = name === "punishment" ? Object.keys(punishments)[formValues[optionid]] : formValues[optionid];
+        }
+
+        // Save config
+        world.setDynamicProperty("config", JSON.stringify(config));
+
+        player.sendMessage(`§r§j[§uIsolate§j]r Successfully updated the settings for ${check}.\n§r§j[§uIsolate§j]§r New Data:\n${JSON.stringify(checkData, null, 2)}`);
+    });
 }
 
 // ====================== //
