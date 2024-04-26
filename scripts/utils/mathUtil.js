@@ -72,3 +72,15 @@ export function angleCalcRecode(player, entityHit) {
 
     return angleDeg;
 }
+
+
+export function getDistanceXZ(one, two) {
+    return Math.sqrt(Math.pow(two.location.x - one.location.x, 2) + Math.pow(two.location.z - one.location.z, 2));
+}
+export function getDistanceXYZ(one, two) {
+    return Math.sqrt(Math.pow(two.location.x - one.location.x, 2) + Math.pow(two.location.y - one.location.y, 2) + Math.pow(two.location.z - one.location.z, 2));
+}
+export function getDistanceY(one, two) {
+    return Math.sqrt(Math.pow(two.location.y - one.location.y, 2));
+}
+
