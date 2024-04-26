@@ -1,14 +1,14 @@
 import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
-import { getSpeed, hVelocity } from "../../../utils/mathUtil.js";
+import { getDistanceXZ, getSpeed, hVelocity } from "../../../utils/mathUtil.js";
 export function reach_a(player, entity) {
 	
 	// reach/A = check if a player hits an entity more then 5.1 blocks away
 	if((config.modules.reachA.enabled || config.generalModules.reach) && !player.hasTag("noreach")) {
 		// get the difference between 2 three dimensional coordinates
 		
-		let distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
+		let distance = getDistanceXZ(player, entity);
 		if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}\nPlayer Tags: ${player.getTags()}`);
 		const entityVelocity = entity.getVelocity();
 		
