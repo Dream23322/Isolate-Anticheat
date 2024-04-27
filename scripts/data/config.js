@@ -234,7 +234,8 @@ export default
             "ViolationsBeforeBan": 30,
             "autoReset": true,
             "hiveRegen": false,
-            "smartNotify": true
+            "smartNotify": true,
+            "smartOnly": false
         },
         "itemSpawnRateLimit": {
             "enabled": false,
@@ -444,6 +445,9 @@ export default
             "enabled": true,
             "description": "Checks for invalid reach",
             "reach": 6.2,
+            "dynamicReach": true,
+            "smartReach": true,
+            "buffer": 5,
             "entities_blacklist": [
                 "minecraft:enderman",
                 "minecraft:fireball",
@@ -456,7 +460,8 @@ export default
         },
         "aimA": {
             "enabled": true,
-            "description":"Checks for Aim ",
+            "description":"Checks for Aim",
+            "buffer": 15,
             "punishment": "kick",
             "minVlbeforePunishment": 20
         },
@@ -521,9 +526,7 @@ export default
         "hitboxA": {
             "enabled": true,
             "description": "Checks for hitting a player off screen",
-            "angleMobile": 90,
-            "anglePC": 10,
-            "hits": 15,
+            "buffer": 5,
             "punishment": "kick",
             "minVlbeforePunishment": 5
         },

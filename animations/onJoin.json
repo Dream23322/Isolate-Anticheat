@@ -102,6 +102,12 @@
 					"/scoreboard objectives add scaffold_c_buffer dummy",
 					"/scoreboard objectives add scaffold_c_reset dummy",
 					"/scoreboard objectives add packets dummy",
+					"/scoreboard objectives add reach_a_buffer dummy",
+					"/scoreboard objectives add reach_a_reset dummy",
+					"/scoreboard objectives add hitbox_a_buffer dummy",
+					"/scoreboard objectives add hitbox_a_reset dummy",
+					"/scoreboard objectives add aim_a_buffer dummy",
+					"/scoreboard objectives add aim_a_reset dummy",
 					// If enabled from previous login then activate
 					"/ability @s[tag=flying,m=!c] mayfly true"
 					// alert the user if Gametest Framework is not enabled
