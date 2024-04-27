@@ -233,7 +233,8 @@ export default
             // Wait why is this here?
             "ViolationsBeforeBan": 30,
             "autoReset": true,
-            "hiveRegen": false
+            "hiveRegen": false,
+            "smartNotify": true
         },
         "itemSpawnRateLimit": {
             "enabled": false,
@@ -455,29 +456,9 @@ export default
         },
         "aimA": {
             "enabled": true,
-            "rotSpeed": 100,
-            "description":"Checks for fast head snaps",
+            "description":"Checks for Aim ",
             "punishment": "kick",
             "minVlbeforePunishment": 20
-        },
-        "aimB": {
-            "enabed": true,
-            "description":"Checks for perfect x,y movement",
-            "punishment": "kick",
-            "minVlbeforePunishment": 10
-        },
-        "aimC": {
-            "enabled": true,
-            "description": "Checks for smooth rotation",
-            "buffer": 3,
-            "punishment": "kick",
-            "minVlbeforePunishment": 15,
-        },
-        "aimD": {
-            "enabled": true,
-            "description": "Checks for un-legitimate pitch acceleration",
-            "punishment": "kick",
-            "minVlbeforePunishment": 15
         },
         "autoclickerB": {
             "enabled": false,

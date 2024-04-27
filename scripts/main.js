@@ -48,7 +48,6 @@ import { scaffold_a } from "./checks/world/scaffold/scaffoldA.js";
 import { scaffold_e } from "./checks/world/scaffold/scaffoldE.js";
 
 // Import Combat checks
-import { aimCheckManager } from "./checks/combat/aim/aim.js";
 import { killaura_c } from "./checks/combat/killaura/killauraC.js";
 import { killaura_f } from "./checks/combat/killaura/killauraF.js";
 import { killaura_d } from "./checks/combat/killaura/killauraD.js";
@@ -204,111 +203,8 @@ Minecraft.system.runInterval(() => {
 			player.removeTag("a");
 			player.removeTag("b");
 			player.removeTag("c");
-		}
+		}	
 		player.removeTag("noPitchDiff");
-
-		const prevRotation = playerRotations.get(player);
-		const prevDiff = playerDifferences.get(player);
-		
-		// ==================================
-		//                   Aim Checks
-		// ==================================
-		if(config.generalModules.aim && !player.hasTag("noaim")) {
-			// Reset the buffer for Aim/C
-			if(getScore(player, "aimc_reset") > 20) {
-				setScore(player, "aimc_reset", 0);
-				setScore(player, "aimc_buffer", 0);
-			}
-			// If there is a previous rotation stored
-			if (prevRotation && lastDeltPitch.get(player) && lastDeltYaw.get(player)) {
-				// Maths go brrrrrrrr
-				const deltaYaw = rotation.y - prevRotation.y;
-				const deltaPitch = rotation.x - prevRotation.x;
-
-
-				const lastDY = lastDeltYaw.get(player) || 0;
-				const lastDP = lastDeltPitch.get(player) || 0;
-
-				const ROTATION_SPEED_THRESHOLD = config.modules.aimA.rotSpeed;
-				
-				if(deltaPitch < 0.1) {
-					player.addTag("noPitchDiff");
-				}
-				if(deltaPitch > 0.1) {
-					player.removeTag("noPitchDiff");
-				}
-				
-				// Aim/A = Checks for fast head snap movements
-				// This check is easy to false flag, so you need to have the tag strict on you for it to do anything
-				if (config.modules.aimA.enabled && player.hasTag("strict")) {
-					// If the rotation speed exceeds the threshold
-					if (Math.abs(deltaYaw) < ROTATION_SPEED_THRESHOLD - ROTATION_SPEED_THRESHOLD / 3 && Math.abs(lastDY) > ROTATION_SPEED_THRESHOLD || Math.abs(deltaPitch) < ROTATION_SPEED_THRESHOLD - ROTATION_SPEED_THRESHOLD / 3 && Math.abs(lastDP) > ROTATION_SPEED_THRESHOLD) {
-						// Set the player flag as true
-						playerFlags.add(player);
-						player.addTag("a");
-					} else {
-						playerFlags.delete(player);
-					}
-				}
-
-				// Aim/B = Checks for perfect mouse movements
-				if (config.modules.aimB.enabled) {
-					if (deltaYaw === deltaPitch && deltaPitch !== 0 && deltaYaw !== 0 || Math.abs(deltaPitch) < 1 && Math.abs(deltaYaw) > 1 || Math.abs(deltaYaw) < 1  && Math.abs(deltaPitch) > 1) {
-						playerFlags.add(player);
-						flag(player, "Aim", "B", "Combat", "diff", deltaYaw, false);
-					} else {
-						playerFlags.delete(player);
-					}
-					if(lastYRot.get(player) !== rotation.y && rotation.y === oldLastYRot.get(player)) {
-						playerFlags.add(player);
-						player.addTag("b");
-					}
-					// Make sure to set the new values! (I always forget this lol)
-					oldLastYRot.set(player, lastYRot.get(player));
-					lastYRot.set(player, rotation.y);
-				}
-				
-				// Aim/C = Checks for smoothed rotation
-				if (config.modules.aimC.enabled && player.hasTag("strict")) {
-					const oldDiff = oldOldDiff.get(player) || 0;
-					const currentDiff = Math.sqrt(deltaYaw**2 + deltaPitch**2);
-				
-					// Check if the player's rotation has changed
-					if (deltaYaw > 2 || deltaPitch > 2) {
-						const smoothRotation = Math.abs(currentDiff - oldDiff) <= 0.06 && Math.abs(currentDiff - oldDiff) >= 0;
-						
-						if (smoothRotation) {
-							setScore(player, "aimc_buffer", getScore(player, "aimc_buffer", 0) + 1);
-							const buffer = getScore(player, "aimc_buffer", 0);
-							
-							if(buffer > config.modules.aimC.buffer) {
-								player.addTag("c");
-								setScore(player, "aimc_buffer", 0);
-								setScore(player, "aimc_reset", 0);
-							}
-							
-						} 
-						
-						oldOldDiff.set(player, currentDiff);
-					}
-				}
-				if(config.modules.aimD) {
-
-					const lastDeltaYaw = lastDeltaZ.get(player) || 0;
-					const deltaZ = Math.abs(rotation.y - lastYRot.get(player) || 0);
-					// The check
-					if(deltaZ > 320 && lastDeltaYaw > 30) {
-						flag(player, "Aim", "D", "Combat", "deltaZ", deltaZ);
-					}
-					// Reset the values
-					lastDeltaZ.set(player, deltaZ);
-				}
-
-			}
-			playerRotations.set(player, rotation);
-			lastDeltPitch.set(player, rotation.x - prevRotation.x);	
-			lastDeltYaw.set(player, rotation.y - prevRotation.y);
-		}
 				
 		const selectedSlot = player.selectedSlot;
 
@@ -929,11 +825,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 	// ==================================
 	//                   Aim Flags
 	// ==================================
-                                                                     
-	if(config.generalModules.aim) {
-		// If the player flag for aim checks is true, then report the player
-		aimCheckManager(player, entity);
-	}
+                                                                    
 
 	// ==================================
 	//                    Killaura
