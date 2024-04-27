@@ -28,11 +28,15 @@ import { speed_a } from "./checks/movement/speed/speedA.js";
 import { speed_b } from "./checks/movement/speed/speedB.js";
 import { motion_a } from "./checks/movement/motion/motionA.js";
 import { motion_b } from "./checks/movement/motion/motionB.js";
-import { motion_c } from "./checks/movement/motion/motionC.js";
 import { fly_c } from "./checks/movement/fly/flyC.js";
 import { prediction_a } from "./checks/movement/prediction/predictionA.js";
 import { noslow_a } from "./checks/movement/noslow/noslowA.js";
 import { noslow_b } from "./checks/movement/noslow/noslowB.js";
+import { sprint_a } from "./checks/movement/sprint/sprintA.js";
+import { fly_a } from "./checks/movement/fly/flyA.js";
+import { exploit_a } from "./checks/packet/exploit/exploitA.js";
+import { timer_a } from './checks/packet/timer/timerA.js';
+import { fly_b } from "./checks/movement/fly/flyB.js";
 
 // Import World Checks
 import { scaffold_f } from "./checks/world/scaffold/scaffoldF.js";
@@ -46,6 +50,7 @@ import { tower_b } from "./checks/world/scaffold/towerB.js";
 import { scaffold_d } from "./checks/world/scaffold/scaffoldD.js";
 import { scaffold_a } from "./checks/world/scaffold/scaffoldA.js";
 import { scaffold_e } from "./checks/world/scaffold/scaffoldE.js";
+import { nuker_d } from "./checks/world/nuker/nukerD.js";
 
 // Import Combat checks
 import { killaura_c } from "./checks/combat/killaura/killauraC.js";
@@ -54,14 +59,12 @@ import { killaura_d } from "./checks/combat/killaura/killauraD.js";
 import { hitbox_a } from "./checks/combat/hitbox/hitboxA.js";
 import { reach_a } from "./checks/combat/reach/reachA.js";
 import { killaura_e } from "./checks/combat/killaura/killauraE.js";
-import { sprint_a } from "./checks/movement/sprint/sprintA.js";
 import { killaura_b } from "./checks/combat/killaura/killauraB.js";
 import { killaura_a } from "./checks/combat/killaura/killauraA.js";
-import { fly_a } from "./checks/movement/fly/flyA.js";
-import { exploit_a } from "./checks/packet/exploit/exploitA.js";
-import { timer_a } from './checks/packet/timer/timerA.js';
-import { fly_b } from "./checks/movement/fly/flyB.js";
-import { nuker_d } from "./checks/world/nuker/nukerD.js";
+import { aim_a } from "./checks/combat/aim/aimA.js";
+
+
+
 
 
 const world = Minecraft.world;
@@ -73,19 +76,10 @@ let lagValue = 1;
 let lastDate = Date.now();
 
 // Maps for logging data that we use in checks
-const oldOldDiff = new Map();
-const playerRotations = new Map();
-const playerDifferences = new Map();
-const playerFlags = new Set();
 let lastPlayerYawRotations = new Map();
 const lastYawDiff = new Map();
-const lastYRot = new Map();
-const oldLastYRot = new Map();
-const lastDeltaZ = new Map();
 const lastMessage = new Map();
 const lastFallDistance = new Map();
-const lastDeltPitch = new Map();
-const lastDeltYaw = new Map();
 const lastCPS = new Map();
 
 const lastXZv = new Map();
@@ -196,15 +190,6 @@ Minecraft.system.runInterval(() => {
 		const rotation = player.getRotation();
 		const playerVelocity = player.getVelocity();
 		const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(4));
-
-		// To reduce false flags we do this
-		if(player.hasTag("a") || player.hasTag("b") || player.hasTag("c")) {
-			// Remove all tags every tick
-			player.removeTag("a");
-			player.removeTag("b");
-			player.removeTag("c");
-		}	
-		player.removeTag("noPitchDiff");
 				
 		const selectedSlot = player.selectedSlot;
 
@@ -344,6 +329,10 @@ Minecraft.system.runInterval(() => {
 				player.lastGoodPosition = player.location;
 			}
 		}
+
+		
+
+
 		if(config.generalModules.fly === true && !player.hasTag("nofly") && !player.hasTag("op")) {
 			fly_a(player);
 			fly_b(player);
@@ -357,8 +346,6 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.motion && !player.hasTag("nomotion") && !player.hasTag("end_portal")) {
 			motion_a(player);
 			motion_b(player);
-			motion_c(player);
-			//motion_d(player);
 		}
 		if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
 			badpackets_d(player, lastPlayerYawRotations, lastYawDiff);
@@ -378,6 +365,10 @@ Minecraft.system.runInterval(() => {
 			noslow_a(player);
 			noslow_b(player);
 			sprint_a(player);
+		}
+
+		if(config.generalModules.aim) {
+			aim_a(player);
 		}
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
 		if(config.modules.scaffoldF.enabled && !player.hasTag("noscaffold")) {
@@ -404,8 +395,6 @@ Minecraft.system.runInterval(() => {
 		player.removeTag("attacking");
 		player.removeTag("usingItem");
 		player.removeTag("breaking");
-		
-
 		if(tickValue > 19) {
 			const currentCounter = getScore(player, "tick_counter", 0);
 			setScore(player, "tick_counter", currentCounter + 1);
@@ -421,16 +410,12 @@ Minecraft.system.runInterval(() => {
 
 		}
 		if(getScore(player, "tag_reset", 0) > 5) {
-			player.removeTag("slime")
-			player.removeTag("placing");
-			player.removeTag("ice");
-			player.removeTag("damaged");
-			player.removeTag("fall_damage");
-			player.removeTag("end_portal");
-			player.removeTag("stairs");
-			player.removeTag("timer_bypass");
-			player.removeTag("ender_pearl");
-			player.removeTag("useItem");
+			const removalTags = [
+				"slime", "placing", "ice", "damaged", "fall_damage", 
+				"end_portal", "stairs", "timer_bypass", "ender_pearl", 
+				"useItem"
+			];
+			removalTags.forEach(tag => player.removeTag(tag));
 			setScore(player, "tag_reset", 0);
 		}
 		
@@ -490,15 +475,11 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 
 	if(config.generalModules.scaffold && !player.hasTag("noscaffold")) {
 		scaffold_a(player, block);
-
 		scaffold_b(player, block);
-
 		scaffold_c(player, block);
 		scaffold_d(player, block);
 		scaffold_e(player);
-
 		scaffold_f(player, block);
-
 		tower_a(player, block);
 		tower_b(player, block);
 	}
@@ -509,7 +490,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 		player.addTag("placing");
 	}
 
-	if(undoPlace === true) {
+	if(undoPlace) {
 		try {
 			block.setType(Minecraft.MinecraftBlockTypes.air);
 			console.warn(`${player.nameTag} had their placed block reverted!`);
