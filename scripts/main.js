@@ -62,6 +62,8 @@ import { killaura_e } from "./checks/combat/killaura/killauraE.js";
 import { killaura_b } from "./checks/combat/killaura/killauraB.js";
 import { killaura_a } from "./checks/combat/killaura/killauraA.js";
 import { aim_a } from "./checks/combat/aim/aimA.js";
+import { autoclicker_a } from "./checks/combat/autoclicker/autoclickerA.js";
+import { autoclicker_b } from "./checks/combat/autoclicker/autoclickerB.js";
 
 
 
@@ -421,14 +423,9 @@ Minecraft.system.runInterval(() => {
 		
 		
 
-		if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
-			player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
-			// autoclicker/A = checks for high cps
-			if(player.cps > config.modules.autoclickerA.maxCPS) flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
-			if(lastCPS.get(player)) {
-				if(Math.abs(player.cps - lastCPS.get(player)) < 0.95 && player.cps > 12) flag(player, "Autoclicker", "B", "Combat", "CPS", player.cps);
-			}
-			lastCPS.set(player, player.cps);
+		autoclicker_a(player);
+		autoclicker_b(player);
+		if(player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
 			player.firstAttack = Date.now();
 			player.cps = 0;
 		}
@@ -840,15 +837,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 	// }
 
 	// autoclicker/a = check for high cps
-	if(config.modules.autoclickerA.enabled) {
-		// if anti-autoclicker is disabled in game then disable it in config.js
-		if(!data.checkedModules.autoclicker) {
-			if(getScore(player, "autoclicker", 1) >= 1) {
-				config.modules.autoclickerA.enabled = false;
-			}
-			data.checkedModules.autoclicker = true;
-		}
-
+	if(config.modules.autoclickerA.enabled ||config.modules.autoclickerB.enabled) {
 		player.cps++;
 	}
 	
