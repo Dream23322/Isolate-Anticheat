@@ -7,5 +7,6 @@ export function autoclicker_a(player) {
         if(lastCPS.get(player.name)) {
             if(lastCPS.get(player.name) > config.modules.autoclickerA.maxCPS && player.cps > config.modules.autoclickerA.maxCPS) flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
         }
+        lastCPS.set(player.name, player.cps);
     }
 }
