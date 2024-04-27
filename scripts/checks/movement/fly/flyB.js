@@ -12,7 +12,7 @@ Fly/B Checks for patterns in a players y velocity
 */
 const fly_b_map = new Map();
 export function fly_b(player) {
-    if(config.modules.flyB.enabled && aroundAir(player)) {
+    if(config.modules.flyB.enabled && aroundAir(player) && !player.hasTag("elytra")) {
         const velocityY = player.getVelocity().y;
         if(fly_b_map.has(player)) {
             if(fly_b_map.get(player) == 0 && velocityY == 0 && getScore(player, "tick_counter2", 0) > 3 && !player.isOnGround && hVelocity(player) !== 0 && getScore(player, "airTime") >= 30) {
