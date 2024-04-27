@@ -24,6 +24,13 @@ declare module "@minecraft/server" {
 		// Arrays
 		entitiesHit: Array<String>
 		reports: Array<String>
+	
+		// Rotation Data
+		lastRotation: {x: number, y: number}
+		deltaPitch: number
+		deltaYaw: number
+		pitchAccel: number
+		yawAccel: number
 		
 		// Objects
 		lastGoodPosition: Vector3

@@ -25,8 +25,7 @@ tellraw @s {"rawtext":[{"text":"§u!modules§r - View all enabled or disabled mo
 tellraw @s {"rawtext":[{"text":"§u!module <module> <setting> <newValue>§r - Change a modules settings."}]}
 tellraw @s {"rawtext":[{"text":"§u!reset§r - Resets config."}]}
 tellraw @s {"rawtext":[{"text":"§u!notify§r - Enables/Disables cheat notifications."}]}
-t
-ellraw @s {"rawtext":[{"text":"\n§l§dTools and Utilites"}]}
+tellraw @s {"rawtext":[{"text":"\n§l§dTools and Utilites"}]}
 
 # Gametest enabled
 tellraw @s {"rawtext":[{"text":"§u!about <module>§r - Gives info on a modules (!about scaffoldA !about killauraF)."}]}
