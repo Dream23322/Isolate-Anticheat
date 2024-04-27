@@ -5,8 +5,8 @@ import { aroundAir, inAir } from "../../../utils/gameUtil.js";
 const fly_c_data = new Map();
 export function fly_c(player) {
     const y_velocity = player.getVelocity().y;	
-    if(config.modules.flyC.enabled && inAir(player) && aroundAir(player)) {
-        const fly_data = {a: fly_c_data.get(player)?.a, b: fly_c_data.get(player)?.b};
+    if(config.modules.flyC.enabled && inAir(player) && aroundAir(player) && !player.hasTag("elytra") && !player.isGliding) {
+        const fly_data = {a: fly_c_data.get(player.name)?.a, b: fly_c_data.get(player.name)?.b};
         const invalid_movement = (
             fly_data.b <= fly_data.a &&
             fly_data.a <= y_velocity
@@ -18,7 +18,7 @@ export function fly_c(player) {
         // Update maps
         fly_c_data.set({
             a: y_velocity,
-            b: fly_c_data.get(player)?.a
+            b: fly_c_data.get(player.name)?.a
         });
     }
 }

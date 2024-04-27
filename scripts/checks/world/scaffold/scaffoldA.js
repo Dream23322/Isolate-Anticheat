@@ -1,7 +1,7 @@
 import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
-import { getSpeed } from "../../../utils/mathUtil.js";
+import { getDistanceXZ, getSpeed } from "../../../utils/mathUtil.js";
 
 // Thank you Visual1mpact for helping me with the Map's
 // Initialize scaffold_a_map if not present
@@ -32,13 +32,13 @@ function calculateDistance(origin, point) {
     return Math.hypot(dx, dz);
 }
 export function scaffold_a(player, block) {
-    if (config.modules.scaffoldA.enabled && scaffold_a_map.has(player) && !player.hasTag("gmc") && !player.hasTag("op")) {
+    if (config.modules.scaffoldA.enabled && scaffold_a_map.has(player.name) && !player.hasTag("gmc") && !player.hasTag("op")) {
         const place_location = { x: block.location.x, y: block.location.y, z: block.location.z };
-        const last_place_location = scaffold_a_map.get(player)?.a;
-        const old_place_location = scaffold_a_map.get(player)?.b;
-        const pitch_values = scaffold_a_map.get(player)?.pitch;
-        const yaw_values = scaffold_a_map.get(player)?.yaw;
-        const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.z - player.location.z, 2));
+        const last_place_location = scaffold_a_map.get(player.name)?.a;
+        const old_place_location = scaffold_a_map.get(player.name)?.b;
+        const pitch_values = scaffold_a_map.get(player.name)?.pitch;
+        const yaw_values = scaffold_a_map.get(player.name)?.yaw;
+        const distance = getDistanceXZ(player, block);
         if (last_place_location && old_place_location && pitch_values) {
             const xDist = Math.abs(place_location.x) - Math.abs(last_place_location.x);
             const zDist = Math.abs(place_location.z) - Math.abs(last_place_location.z);
@@ -94,18 +94,18 @@ export function scaffold_a(player, block) {
         }
     }
     const rotation = player.getRotation();
-    scaffold_a_map.set(player, {
+    scaffold_a_map.set(player.name, {
         a: { x: block.location.x, y: block.location.y, z: block.location.z },
-        b: scaffold_a_map.get(player)?.a || { x: 0, y: 0, z: 0 },
+        b: scaffold_a_map.get(player.name)?.a || { x: 0, y: 0, z: 0 },
         pitch: {
             new: rotation.x,
-            mid: scaffold_a_map.get(player)?.pitch?.new || 0,
-            old: scaffold_a_map.get(player)?.pitch?.mid || 0
+            mid: scaffold_a_map.get(player.name)?.pitch?.new || 0,
+            old: scaffold_a_map.get(player.name)?.pitch?.mid || 0
         },
         yaw: {
             new: rotation.y,
-            mid: scaffold_a_map.get(player)?.yaw?.new || 0,
-            old: scaffold_a_map.get(player)?.yaw?.mid || 0
+            mid: scaffold_a_map.get(player.name)?.yaw?.new || 0,
+            old: scaffold_a_map.get(player.name)?.yaw?.mid || 0
         }
     });
 }
