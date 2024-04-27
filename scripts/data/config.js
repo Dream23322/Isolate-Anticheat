@@ -448,6 +448,11 @@ export default
             "dynamicReach": true,
             "smartReach": true,
             "buffer": 5,
+            "dynamicData": {
+                "water": 3.5,
+                "still": 3.5,
+                "speed": 5.4
+            },
             "entities_blacklist": [
                 "minecraft:enderman",
                 "minecraft:fireball",
