@@ -4,11 +4,11 @@ import config from "../../../data/config.js";
 const scaffold_d_map = new Map();
 export function scaffold_d(player, block) {
     if(config.modules.scaffoldD.enabled) {
-        if(scaffold_d_map.get(player)) {
-            const one = scaffold_d_map.get(player)?.one;
-            const two = scaffold_d_map.get(player)?.two;
-            const three = scaffold_d_map.get(player)?.three;
-            const four = scaffold_d_map.get(player)?.four;
+        if(scaffold_d_map.get(player.name)) {
+            const one = scaffold_d_map.get(player.name)?.one;
+            const two = scaffold_d_map.get(player.name)?.two;
+            const three = scaffold_d_map.get(player.name)?.three;
+            const four = scaffold_d_map.get(player.name)?.four;
             //check that these values arent null
             if(
                 one && two && three && four
@@ -20,7 +20,7 @@ export function scaffold_d(player, block) {
             }
         }
         // set map
-        scaffold_d_map.set(player, {
+        scaffold_d_map.set(player.name, {
             one: { x: block.location.x, y: block.location.y, z: block.location.z },
             two: scaffold_d_map.get(player)?.one,
             three: scaffold_d_map.get(player)?.two,
