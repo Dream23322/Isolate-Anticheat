@@ -465,19 +465,27 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 20
         },
+        "autoclickerA": {
+            "enabled": true,
+            "maxCPS": 19.5,
+            "description":"Checks for CPS over config amount",
+            "checkCPSAfter": 1000,
+            "punishment": "none",
+            "minVlbeforePunishment": 0
+        },
         "autoclickerB": {
             "enabled": false,
-            "minCPS": 3,
-            "maxDeviation": 0.5, // Adjust this value based on your desired maximum CPS deviation
+            "minCPS": 12,
+            "maxDeviation": 0.3,
             "punishment": "none",
             "minVlbeforePunishment": 0,
-            "checkCPSAfter": 1000 // Adjust this value to change the interval for CPS checks (in milliseconds)
+            "checkCPSAfter": 1000
         },
 		"killauraA": {
             "enabled": true,
             "description": "Checks for funny killaura rotations (Detects Prax Killaura very fast)",
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 3
 		},
 		"killauraB": {
 			"enabled": true,
@@ -514,14 +522,6 @@ export default
             "description": "Checks for looking at the exact center of a player",
             "punishment": "kick",
             "minVlbeforePunishment": 2
-        },
-        "autoclickerA": {
-            "enabled": true,
-            "maxCPS": 18,
-            "description":"Checks for CPS over config amount",
-            "checkCPSAfter": 1000,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
         },
         "hitboxA": {
             "enabled": true,
