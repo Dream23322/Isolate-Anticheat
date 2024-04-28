@@ -447,7 +447,7 @@ export default
             "reach": 6.2,
             "dynamicReach": true,
             "smartReach": true,
-            "buffer": 5,
+            "buffer": 7,
             "dynamicData": {
                 "water": 3.5,
                 "still": 3.5,
@@ -469,6 +469,12 @@ export default
             "buffer": 15,
             "punishment": "kick",
             "minVlbeforePunishment": 20
+        },
+        "aimB": {
+            "enabled": true,
+            "description":"Checks for Aim",
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
         },
         "autoclickerA": {
             "enabled": true,

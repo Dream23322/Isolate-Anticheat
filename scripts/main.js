@@ -64,6 +64,7 @@ import { killaura_a } from "./checks/combat/killaura/killauraA.js";
 import { aim_a } from "./checks/combat/aim/aimA.js";
 import { autoclicker_a } from "./checks/combat/autoclicker/autoclickerA.js";
 import { autoclicker_b } from "./checks/combat/autoclicker/autoclickerB.js";
+import { aim_b } from "./checks/combat/aim/aimB.js";
 
 
 
@@ -371,6 +372,7 @@ Minecraft.system.runInterval(() => {
 
 		if(config.generalModules.aim) {
 			aim_a(player);
+			aim_b(player);
 		}
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
 		if(config.modules.scaffoldF.enabled && !player.hasTag("noscaffold")) {
