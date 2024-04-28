@@ -83,4 +83,19 @@ export function getDistanceXYZ(one, two) {
 export function getDistanceY(one, two) {
     return Math.sqrt(Math.pow(two.location.y - one.location.y, 2));
 }
+export function getAbsoluteGcd(current, last) {
+    const EXPANDER = 1.6777216E7; // Adjusted to the provided value
 
+    let currentExpanded = Math.floor(current * EXPANDER);
+    let lastExpanded = Math.floor(last * EXPANDER);
+
+    return gcd(currentExpanded, lastExpanded);
+}
+
+export function gcd(a, b) {
+    if (!b) {
+        return a;
+    }
+
+    return gcd(b, a % b);
+}
