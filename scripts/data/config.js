@@ -613,9 +613,8 @@ export default
         },
         "flyC": {
             "enabled": true,
-            "description": "Checks for up and down motion fly does with BDS prediction",
-            "fallDistance": -1,
-            "punishment": "kick",
+            "description": "Checks for groundspoof (BETA - ONLY PUNISH IF NO TP BLOCKS IN WORLD)",
+            "punishment": "none",
             "punishmentLength": "1m",
             "minVlbeforePunishment": 50
         }, 
