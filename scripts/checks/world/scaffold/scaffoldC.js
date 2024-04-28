@@ -6,15 +6,15 @@ export function scaffold_c(player, block) {
    // Patched all scaffold hacks for minecraft bedrock edition
     if(config.modules.scaffoldC.enabled) {
         // Get what item the player is holding
-        if(!player.hasTag("useItem") && !player.getEffect("speed")) {
-            setScore(player, "scaffold_c_buffer", getScore(player, "scaffold_c_buffer", 0) + 1);
-            if(getScore(player, "scaffold_c_buffer", 0) > config.modules.scaffoldC.buffer) {
-                flag(player, "Scaffold", "C", "World", "buffer", getScore(player, "scaffold_c_buffer", 0), false);
-            }
-        }
-        if(getScore(player, "scaffold_c_reset", 0) > config.modules.scaffoldC.reset) {
-            setScore(player, "scaffold_c_buffer", 0);
-            setScore(player, "scaffold_c_reset", 0);
-        }
+        // if(!player.hasTag("useItem") && !player.getEffect("speed")) {
+        //     setScore(player, "scaffold_c_buffer", getScore(player, "scaffold_c_buffer", 0) + 1);
+        //     if(getScore(player, "scaffold_c_buffer", 0) > config.modules.scaffoldC.buffer) {
+        //         flag(player, "Scaffold", "C", "World", "buffer", getScore(player, "scaffold_c_buffer", 0), false);
+        //     }
+        // }
+        // if(getScore(player, "scaffold_c_reset", 0) > config.modules.scaffoldC.reset) {
+        //     setScore(player, "scaffold_c_buffer", 0);
+        //     setScore(player, "scaffold_c_reset", 0);
+        // }
     }
 }
