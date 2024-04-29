@@ -10,11 +10,16 @@ export function aim_a(player) {
         if(data_yaw.one !== 0 && data_yaw.two !== 0 && data_yaw.three !== 0 && data_pitch.one !== 0 && data_pitch.two !== 0 && data_pitch.three !== 0) {
             const deltaPitch = Math.abs(rot.x - data_pitch.one);
             const deltaYaw = Math.abs(rot.y - data_yaw.one);
+
             const deltaPitch2 = Math.abs(data_pitch.one - data_pitch.two);
             const deltaYaw2 = Math.abs(data_yaw.one - data_yaw.two);
+
             const yawAccel = Math.abs(deltaYaw - deltaYaw2);
             const pitchAccel = Math.abs(deltaPitch - deltaPitch2);
+
+            // Make sure that the player has moved their head.
             if(yawAccel == 0 || yawAccel == 0) return;
+
             if(yawAccel > 10 && pitchAccel < 0.1 || yawAccel < 0.1 && pitchAccel > 10) {
                 setScore(player, "aim_a_buffer", getScore(player, "aim_a_buffer", 0) + 1);
             }
