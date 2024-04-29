@@ -34,6 +34,7 @@ function checkDistance(player, xy_distance, y_distance) {
 		if(getSpeed(player) > 0.6) min_reach + 0.3;
 		if(player.hasTag("damaged")) min_reach + 0.04;
 		if(player.isSprinting) min_reach - 0.2;
+		min_reach - y_distance / 10;
 	}
 	if(xy_distance > min_reach && !config.modules.reachA.entities_blacklist.includes(entity.typeId)) {
 		setScore(player, "reach_a_buffer", getScore(player, "reach_a_buffer", 0) + 1);
