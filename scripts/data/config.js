@@ -487,7 +487,7 @@ export default
         "autoclickerB": {
             "enabled": false,
             "minCPS": 12,
-            "maxDeviation": 0.3,
+            "maxDeviation": 0.2500,
             "punishment": "none",
             "minVlbeforePunishment": 0,
             "checkCPSAfter": 1000
@@ -587,7 +587,7 @@ export default
             "minVlbeforePunishment": 3
         },  
         "speedC": {
-            "enabled": true,
+            "enabled": false,
             "desciprtion": "Checks for un-natural speeds (Distance based)",
             "velocity": 0.412,
             "max_bps_h": 8,
@@ -647,7 +647,7 @@ export default
             "minVlbeforePunishment": 10
         },
         "predictionA": {
-            "enabled": true,
+            "enabled": false,
             "description": "Checks for failing BDS Prediction (strafe)",
             "pos_diff": 0.09,
             "time_int": 0.5,
