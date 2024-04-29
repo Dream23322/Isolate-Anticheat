@@ -329,7 +329,7 @@ Minecraft.system.runInterval(() => {
 			const pos2 = {x: player.location.x, y: player.location.y + 1, z: player.location.z};
 			const isInAir = !getBlocksBetween(pos1, pos2).some((block) => player.dimension.getBlock(block)?.typeId !== "minecraft:air");
 			if(isInAir) {
-				player.lastGoodPosition = player.location;
+				player.lastGoodPosition = player.location;	
 			}
 		}
 
@@ -362,8 +362,7 @@ Minecraft.system.runInterval(() => {
 		}
 
 		// General movement
-		if(config.generalModules.movement) {
-			// Strafe/A looks for a player changing their x or z velocity while in the air (Under most conditions this isnt possible by large amounts)
+		if(config.generalModules.movement) {	
 			prediction_a(player, lastXZv);
 			noslow_a(player);
 			noslow_b(player);
