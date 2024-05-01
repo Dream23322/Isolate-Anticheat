@@ -1,6 +1,7 @@
 import * as Minecraft from "@minecraft/server";
 import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
+import { setTitle } from "../../../utils/gameUtil.js";
 const data = new Map();
 export function aim_a(player) {
     if(config.modules.aimA.enabled && data.get(player.name)) {
@@ -23,6 +24,7 @@ export function aim_a(player) {
             if(yawAccel > 10 && pitchAccel < 0.1 || yawAccel < 0.1 && pitchAccel > 10) {
                 setScore(player, "aim_a_buffer", getScore(player, "aim_a_buffer", 0) + 1);
             }
+            if(player.hasTag("aim_debug")) setTitle(player, "Yaw Accel: " + yawAccel.toFixed(4), "Pitch Accel: " + pitchAccel.toFixed(5));
             setScore(player, "aim_a_reset", getScore(player, "aim_a_reset", 0) + 1);
             if(getScore(player, "aim_a_reset", 0) == 100) {
                 if(getScore(player, "aim_a_buffer", 0) > config.modules.aimA.buffer) flag(player, "Aim", "A", "Combat", "buffer", getScore(player, "aim_a_buffer", 0), false);

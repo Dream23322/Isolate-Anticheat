@@ -171,6 +171,7 @@ function runCommand(msg, commandName, args) {
                 else if(commandName === "logs") logs(message);
                 else if(commandName === "module") module(message, args);
                 else if(commandName === "reset") reset(message);
+                else if(commandName === "irc") irc(message, args);
                 else throw Error(`Command ${commandName} was found in config.js but no handler for it was found.`);
         } catch (error) {
             console.error(`${new Date().toISOString()} | ${error} ${error.stack}`);
