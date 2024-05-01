@@ -210,6 +210,11 @@ export default
             "enabled": true,
             "requiredTags": ["op"],
             "aliases": ["m", "settings", "setting"]
+        },
+        "irc": {
+            "enabled": true,
+            "requiredTags": ["op"],
+            "aliases": ["i"]
         }
     },
     "modules": {

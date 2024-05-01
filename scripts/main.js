@@ -598,8 +598,8 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 	}
 });
 world.afterEvents.playerLeave.subscribe((playerLeave) => {
-    const player = playerLeave.player;
-    const message = `${player.name} §jhas §pleft§j the server`;
+    const player = playerLeave.playerName;
+    const message = `${player} §jhas §pleft§j the server`;
     data.recentLogs.push(message);
 });
 world.afterEvents.playerSpawn.subscribe((playerJoin) => {

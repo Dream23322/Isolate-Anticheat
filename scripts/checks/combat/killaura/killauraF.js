@@ -6,7 +6,6 @@ import { angleCalc } from "../../../utils/mathUtil.js";
 
 export function killaura_f(player, entity) {
     if(config.modules.killauraF.enabled) {
-        // Havent tested this yet but it should be able to detect horion client
         if(angleCalc(player, entity) < 1) {
             setScore(player, "killauraF_buffer", getScore(player, "killauraF_buffer", 0) + 1);
         }
