@@ -426,7 +426,7 @@ export default
             "minVlbeforePunishment": 30
         },
         "timerA": {
-            "enabled": true,
+            "enabled": false,
             "description": "Checks for Timer",
             "timer_level": 27,
             "timer_level_low": 15,
@@ -543,7 +543,7 @@ export default
         "hitboxA": {
             "enabled": true,
             "description": "Checks for hitting a player off screen",
-            "buffer": 5,
+            "buffer": 6,
             "punishment": "kick",
             "minVlbeforePunishment": 5
         },
@@ -619,7 +619,7 @@ export default
         },
         "flyC": {
             "enabled": true,
-            "description": "Checks for groundspoof (BETA - ONLY PUNISH IF NO TP BLOCKS IN WORLD)",
+            "description": "Checks for groundspoof (BETA)",
             "punishment": "none",
             "punishmentLength": "1m",
             "minVlbeforePunishment": 50
