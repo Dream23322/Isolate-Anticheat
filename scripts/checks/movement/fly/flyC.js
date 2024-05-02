@@ -11,7 +11,7 @@ export function fly_c(player) {
         if(aroundAir(player) && !player.hasTag("elytra") && !player.isGliding) {
             const posDiff = Math.abs(player.location.x - data2.get(player.name).x) + Math.abs(player.location.z - data2.get(player.name).z);
             if((player.hasTag("ground") || player.isOnGround) && posDiff < 8 && posDiff !== 0) {
-                flag(player, "Fly", "C", "Spoof", "onGround", "invalid", false);
+                flag(player, "Fly", "C", "Spoof (BETA)", "onGround", "invalid", false);
             }
         }
     }

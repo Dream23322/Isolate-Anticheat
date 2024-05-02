@@ -10,5 +10,5 @@ export function irc(message, args) {
     const player = message.sender;
     if(!args.length) return player.sendMessage("§r§j[§uIsolate§j]§r You need to have a message to send");
 
-    player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} >> ${args.slice(0).join(" ")}"}]}`);
+    player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate-IRC§j]§r ${player.nameTag} >> ${args.slice(0).join(" ")}"}]}`);
 } 
