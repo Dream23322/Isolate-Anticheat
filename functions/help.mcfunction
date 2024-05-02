@@ -1,7 +1,7 @@
 # sometimes the gametestapi scoreboard value doesnt apply correctly so we apply it again
 
 
-tellraw @s {"rawtext":[{"text":"\n§l§uIsolate AntiCheat Command Help"}]}
+tellraw @s {"rawtext":[{"text":"\n§l§uIsolate AntiCheat v8.4 Command Help"}]}
 tellraw @s {"rawtext":[{"text":"\n§l§u------------------------------------"}]}
 
 tellraw @s {"rawtext":[{"text":"\n§l§dModeration Commands"}]}
@@ -21,11 +21,13 @@ tellraw @s {"rawtext":[{"text":"§u!resetwarns <player>§r - Reset a players vio
 tellraw @s {"rawtext":[{"text":"\n§l§dOptional Features"}]}
 
 # Gametest enabled
+tellraw @s {"rawtext":[{"text":"§u!irc, aka !i or !t§r - Talk to other admins without other players seeing!."}]}
 tellraw @s {"rawtext":[{"text":"§u!modules§r - View all enabled or disabled modules."}]}
 tellraw @s {"rawtext":[{"text":"§u!module <module> <setting> <newValue>§r - Change a modules settings."}]}
 tellraw @s {"rawtext":[{"text":"§u!reset§r - Resets config."}]}
 tellraw @s {"rawtext":[{"text":"§u!notify§r - Enables/Disables cheat notifications."}]}
 tellraw @s {"rawtext":[{"text":"\n§l§dTools and Utilites"}]}
+
 
 # Gametest enabled
 tellraw @s {"rawtext":[{"text":"§u!about <module>§r - Gives info on a modules (!about scaffoldA !about killauraF)."}]}
@@ -42,3 +44,4 @@ tellraw @s {"rawtext":[{"text":"§u!tag <player> <nametag>§r - Adds tag to user
 tellraw @s {"rawtext":[{"text":"§u!report <player> [reason]§r - Report a player."}]}
 tellraw @s {"rawtext":[{"text":"§u!ui§r - Opens the Isolate Management UI."}]}
 tellraw @s {"rawtext":[{"text":"§u!credits§r - Shows credits, that's it."}]}
+tellraw @s {"rawtext":[{"text":"§r\n§rTip: Use !t to talk to other admins without other people seeing your message!\nDo !ui to get access to the UI in Isolate"}]}
