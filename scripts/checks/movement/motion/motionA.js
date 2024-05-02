@@ -10,7 +10,7 @@ export function motion_a(player) {
             if(player.getEffect("speed")) {
                 if(player.getEffect("speed").amplifier > 5) return;
             }
-            if(player.hasTag("ground")) {
+            if(player.hasTag("ground") && !player.hasTag("trident") && !player.hasTag("elytra")) {
                 flag(player, "Motion", "A", "Movement", "speed", playerSpeed, true);
                 player.addTag("strict");
             }
