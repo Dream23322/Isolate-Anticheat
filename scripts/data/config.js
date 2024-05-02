@@ -472,6 +472,7 @@ export default
             "enabled": true,
             "description":"Checks for Aim",
             "buffer": 15,
+            "diff": 0.3,
             "punishment": "kick",
             "minVlbeforePunishment": 20
         },

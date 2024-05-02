@@ -33,6 +33,7 @@ import { about } from "./utility/about.js";
 import { logs } from "./utility/logs.js";
 import { module } from "./settings/module.js";
 import { reset } from "./settings/reset.js";
+import { irc } from "./other/irc.js";
 
 const prefix = config.customcommands.prefix;
 

@@ -18,18 +18,13 @@ export function aim_a(player) {
             const yawAccel = Math.abs(deltaYaw - deltaYaw2);
             const pitchAccel = Math.abs(deltaPitch - deltaPitch2);
 
-            // Make sure that the player has moved their head.
-            if(yawAccel == 0 || yawAccel == 0) return;
-
             if(yawAccel > 10 && pitchAccel < 0.1 || yawAccel < 0.1 && pitchAccel > 10) {
                 setScore(player, "aim_a_buffer", getScore(player, "aim_a_buffer", 0) + 1);
             }
-            if(player.hasTag("aim_debug")) setTitle(player, "Yaw Accel: " + yawAccel.toFixed(4), "Pitch Accel: " + pitchAccel.toFixed(5));
-            setScore(player, "aim_a_reset", getScore(player, "aim_a_reset", 0) + 1);
-            if(getScore(player, "aim_a_reset", 0) == 100) {
-                if(getScore(player, "aim_a_buffer", 0) > config.modules.aimA.buffer) flag(player, "Aim", "A", "Combat", "buffer", getScore(player, "aim_a_buffer", 0), false);
+            if(player.hasTag("aim_debug")) player.sendMessage("Yaw Accel: " + yawAccel.toFixed(4) + " Pitch Accel: " + pitchAccel.toFixed(5));
+            if(getScore(player, "aim_a_buffer", 0) > config.modules.aimA.buffer) {
+                flag(player, "Aim", "A", "Combat", "buffer", getScore(player, "aim_a_buffer", 0), false);
                 setScore(player, "aim_a_buffer", 0);
-                setScore(player, "aim_a_reset", 0);
             }
         }
 

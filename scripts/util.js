@@ -538,7 +538,7 @@ export function setScore(player, objectiveName, value) {
 
     const objective = world.scoreboard.getObjective(objectiveName);
     if(!objective) {
-        player.runCommandAsync(`scoreboard objectives add ${objectiveName}`)
+        player.runCommandAsync(`scoreboard objectives add ${objectiveName} dummy`)
     }
     objective.setScore(player, value);
 }
