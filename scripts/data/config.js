@@ -214,7 +214,7 @@ export default
         "irc": {
             "enabled": true,
             "requiredTags": ["op"],
-            "aliases": ["i"]
+            "aliases": ["i", "t"]
         }
     },
     "modules": {

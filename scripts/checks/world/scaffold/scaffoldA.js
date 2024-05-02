@@ -67,7 +67,7 @@ export function scaffold_a(player, block) {
                                            && Math.abs(yaw_values.new - yaw_values.mid) !== 0;
                 const isDiagonalConditionMet = isPitchEqual && isYawEqual ||
                                               isYawEqual && isPitchEqual && arePitchAndYawDifferent;
-                if (isDiagonalConditionMet) {
+                if (isDiagonalConditionMet && getSpeed(player) > 0.3) {
                     if(!player.isSneaking) {
                         flag(player, "Scaffold", "A", "World", "no-rot-diff", "true", false);
                     }
