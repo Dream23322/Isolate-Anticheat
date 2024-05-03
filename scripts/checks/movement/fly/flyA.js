@@ -17,7 +17,7 @@ export function fly_a(player) {
         // Stop false flags layer 1.
         if(aroundAir(player) && !player.isOnGround && !player.hasTag("op") && !player.isGliding) {
             // Stop bypasses and false flags for Pos Velocity
-            if(getScore(player, "airTime") < 10) return;
+            //if(getScore(player, "airTime") < 10) return;
             let max_v_up = 0.62;
             if(player.isJumping) max_v_up = 0.8;
             if(player.getEffect("jump_boost")) max_v_up + player.getEffect("jump_boost").amplifier * 1.5 + 0.1;
