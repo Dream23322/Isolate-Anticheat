@@ -621,6 +621,12 @@ export default
             "punishmentLength": "1m",
             "minVlbeforePunishment": 50
         }, 
+        "flyD": {
+            "enabled": true,
+            "description": "Checks for starting to jump mid air (BETA)",
+            "punishment": "none",
+            "minVlbeforePunishment": 10
+        },
         "motionA": {
             "enabled": true,
             "speed": 11.5,
