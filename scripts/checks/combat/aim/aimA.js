@@ -8,24 +8,27 @@ export function aim_a(player) {
         const rot = player.getRotation();
         const data_yaw = data.get(player.name).yaw;
         const data_pitch = data.get(player.name).pitch;
-        if(data_yaw.one !== 0 && data_yaw.two !== 0 && data_yaw.three !== 0 && data_pitch.one !== 0 && data_pitch.two !== 0 && data_pitch.three !== 0) {
+        if(data_yaw && data_pitch) {
             const deltaPitch = Math.abs(rot.x - data_pitch.one);
             const deltaYaw = Math.abs(rot.y - data_yaw.one);
 
             const deltaPitch2 = Math.abs(data_pitch.one - data_pitch.two);
             const deltaYaw2 = Math.abs(data_yaw.one - data_yaw.two);
-
+            
             const yawAccel = Math.abs(deltaYaw - deltaYaw2);
             const pitchAccel = Math.abs(deltaPitch - deltaPitch2);
 
-            if(yawAccel > 10 && pitchAccel < 0.1 || yawAccel < 0.1 && pitchAccel > 10) {
+            if(deltaYaw == 0 && deltaPitch == 0) return;
+
+            if(deltaPitch > 15 && config.modules.aimA.diff < 0.05 || deltaPitch < config.modules.aimA.diff && deltaYaw > 15) {
                 setScore(player, "aim_a_buffer", getScore(player, "aim_a_buffer", 0) + 1);
             }
-            if(player.hasTag("aim_debug")) player.sendMessage("Yaw Accel: " + yawAccel.toFixed(4) + " Pitch Accel: " + pitchAccel.toFixed(5));
+            if(player.hasTag("aim_debug")) player.sendMessage("Yaw: " + deltaYaw.toFixed(4) + " Pitch: " + deltaPitch.toFixed(5));
             if(getScore(player, "aim_a_buffer", 0) > config.modules.aimA.buffer) {
-                flag(player, "Aim", "A", "Combat", "buffer", getScore(player, "aim_a_buffer", 0), false);
+                flag(player, "Aim", "A", "Combat", "Delta", `${deltaYaw},${deltaPitch}`, false);
                 setScore(player, "aim_a_buffer", 0);
             }
+            // Might make a new check with the other Data we have access to
         }
 
     }
