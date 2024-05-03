@@ -65,6 +65,8 @@ import { aim_a } from "./checks/combat/aim/aimA.js";
 import { autoclicker_a } from "./checks/combat/autoclicker/autoclickerA.js";
 import { autoclicker_b } from "./checks/combat/autoclicker/autoclickerB.js";
 import { aim_b } from "./checks/combat/aim/aimB.js";
+import { fly_d } from "./checks/movement/fly/flyD.js";
+import { aim_c } from "./checks/combat/aim/aimC.js";
 
 
 
@@ -333,9 +335,6 @@ Minecraft.system.runInterval(() => {
 			}
 		}
 
-		
-
-
 		if(config.generalModules.fly === true && !player.hasTag("nofly") && !player.hasTag("op")) {
 			fly_a(player);
 			fly_b(player);
@@ -372,6 +371,7 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.aim) {
 			aim_a(player);
 			aim_b(player);
+			aim_c(player);
 		}
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
 		if(config.modules.scaffoldF.enabled && !player.hasTag("noscaffold")) {
@@ -599,7 +599,7 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 });
 world.afterEvents.playerLeave.subscribe((playerLeave) => {
     const player = playerLeave.playerName;
-    const message = `${player} §jhas §pleft§j the server`;
+    const message = `§u${player} §hhas §pleft§j the server`;
     data.recentLogs.push(message);
 });
 world.afterEvents.playerSpawn.subscribe((playerJoin) => {
