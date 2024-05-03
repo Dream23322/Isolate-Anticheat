@@ -1,1 +1,1 @@
-tellraw @s {"rawtext":[{"text":"§r§j[§uIsolate§j]§r Isolate is currently at version v8.4"}]}
+tellraw @s {"rawtext":[{"text":"§r§j[§uIsolate§j]§r Isolate is currently at version v8.4.1"}]}
