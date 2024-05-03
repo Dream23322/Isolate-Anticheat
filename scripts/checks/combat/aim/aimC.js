@@ -24,7 +24,8 @@ export function aim_c(player) {
                     lastLastDeltaYaw < 1.5 ||
                     deltaPitch < 1.5 &&
                     lastDeltaPitch > 50 &&
-                    lastLastDeltaPitch < 1.5
+                    lastLastDeltaPitch < 1.5 && 
+                    Maths.abs(deltaPitch) > 60
                 ) {
                     setScore(player, "aim_c_buffer", bufferVal + 1);
                     console.warn(`${player.name} | Aim C Buffer: ${getScore(player, "aim_c_buffer", 0)}`);
