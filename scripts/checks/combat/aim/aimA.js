@@ -4,7 +4,7 @@ import config from "../../../data/config.js";
 import { setTitle } from "../../../utils/gameUtil.js";
 const data = new Map();
 export function aim_a(player) {
-    if(config.modules.aimA.enabled && data.get(player.name)) {
+    if(config.modules.aimA.enabled && data.has(player.name)) {
         const rot = player.getRotation();
         const data_yaw = data.get(player.name).yaw;
         const data_pitch = data.get(player.name).pitch;
