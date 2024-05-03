@@ -99,3 +99,126 @@ export function gcd(a, b) {
 
     return gcd(b, a % b);
 }
+
+
+export const EXPANDER = Math.pow(2, 24);
+
+export function getVariance(data) {
+    let count = 0;
+    let sum = 0.0;
+    let variance = 0.0;
+    let average;
+
+    data.forEach(number => {
+        sum += number;
+        ++count;
+    });
+
+    average = sum / count;
+
+    data.forEach(number => {
+        variance += Math.pow(number - average, 2.0);
+    });
+
+    return variance;
+}
+
+export function getStandardDeviation(data) {
+    const variance = getVariance(data);
+    return Math.sqrt(variance);
+}
+
+export function isScientificNotation(num) {
+    return num.toString().includes("E");
+}
+
+export function mathOnGround(posY) {
+    return posY % 0.015625 === 0;
+}
+
+export function getOutliers(collection) {
+    const values = Array.from(collection);
+    const half = Math.floor(values.length / 2);
+    const q1 = getMedian(values.slice(0, half));
+    const q3 = getMedian(values.slice(half, values.length));
+    const iqr = Math.abs(q1 - q3);
+    const lowThreshold = q1 - 1.5 * iqr;
+    const highThreshold = q3 + 1.5 * iqr;
+    const outliers = {
+        lower: [],
+        upper: []
+    };
+
+    values.forEach(value => {
+        if (value < lowThreshold) {
+            outliers.lower.push(value);
+        } else if (value > highThreshold) {
+            outliers.upper.push(value);
+        }
+    });
+
+    return outliers;
+}
+
+export function getSkewness(data) {
+    let sum = 0;
+    let count = 0;
+    const numbers = Array.from(data);
+
+    numbers.forEach(number => {
+        sum += number;
+        ++count;
+    });
+
+    numbers.sort((a, b) => a - b);
+
+    const mean = sum / count;
+    const median = (count % 2 !== 0) ? numbers[Math.floor(count / 2)] : (numbers[count / 2 - 1] + numbers[count / 2]) / 2;
+    const variance = getVariance(data);
+
+    return 3 * (mean - median) / Math.sqrt(variance);
+}
+
+export function getAverage(data) {
+    return data.reduce((acc, val) => acc + val, 0) / data.length;
+}
+
+export function getKurtosis(data) {
+    let sum = 0.0;
+    let count = 0;
+
+    data.forEach(number => {
+        sum += number;
+        ++count;
+    });
+
+    if (count < 3) {
+        return 0.0;
+    }
+
+    const efficiencyFirst = count * (count + 1) / ((count - 1) * (count - 2) * (count - 3));
+    const efficiencySecond = 3 * Math.pow(count - 1, 2) / ((count - 2) * (count - 3));
+    const average = sum / count;
+
+    let variance = 0.0;
+    let varianceSquared = 0.0;
+
+    data.forEach(number => {
+        variance += Math.pow(average - number, 2.0);
+        varianceSquared += Math.pow(average - number, 4.0);
+    });
+
+    return efficiencyFirst * (varianceSquared / Math.pow(variance / sum, 2.0)) - efficiencySecond;
+}
+
+// Helper function to calculate median
+export function getMedian(values) {
+    const sortedValues = values.slice().sort((a, b) => a - b);
+    const middleIndex = Math.floor(sortedValues.length / 2);
+
+    if (sortedValues.length % 2 === 0) {
+        return (sortedValues[middleIndex - 1] + sortedValues[middleIndex]) / 2;
+    } else {
+        return sortedValues[middleIndex];
+    }
+}
