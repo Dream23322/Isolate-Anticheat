@@ -467,16 +467,25 @@ export default
         },
         "aimA": {
             "enabled": true,
-            "description":"Checks for Aim",
-            "buffer": 15,
-            "diff": 0.3,
-            "punishment": "kick",
+            "description":"Simple delta check",
+            "buffer": 1,
+            "diff": 0.05,
+            "punishment": "none",
             "minVlbeforePunishment": 20
         },
         "aimB": {
             "enabled": true,
-            "description":"Checks for Aim",
+            "description":"Checks for invalid rotations",
             "punishment": "kick",
+            "minVlbeforePunishment": 10
+        },
+        "aimC": {
+            "enabled": true,
+            "description": "Checks for head snaps",
+            "buffer": 10,
+            "small": 1.5,
+            "big": 50,
+            "punishment": "none",
             "minVlbeforePunishment": 10
         },
         "autoclickerA": {
