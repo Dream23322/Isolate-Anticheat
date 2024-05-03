@@ -18,6 +18,9 @@ export function aim_b(player) {
                 const constantYaw = getAbsoluteGcd(deltaYaw, deltaYaw2);
                 const constantPitch = getAbsoluteGcd(deltaPitch, deltaPitch2);
 
+                // Checks for rounded rotation
+                if(deltaPitch % 1 == 0 || deltaYaw % 1 == 0) flag(player, "Aim", "B", "Rotation", "rounded", `${deltaYaw},${deltaPitch}`, false);
+
                 // Invalid part 1
                 const divisorX = deltaYaw % constantYaw;
                 const divisorY = deltaPitch % constantPitch;

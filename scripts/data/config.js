@@ -13,13 +13,10 @@ export default
         "other": 0
     },
     "flagWhitelist": [],
-    // Amount of anticheat kicks a player needs to get before getting perm banned
-
     "clientSpam": {
         // Change to mute if you want to mute the player who used the horion/zephyr spam message
         "punishment": "mute"
     },
-    // Having the silent mode on will stop the anticheat from lagging the flagged player back
     // If you dont really know how to config the anticheat, use this... lol
     "generalModules": {
         "fly": true,
@@ -36,7 +33,7 @@ export default
 
     'ViolationsForKick': 15,
     /*
-    By enabling this toggle, you can prevent anybody will scythe op from getting flagged from the anticheat
+    By enabling this toggle, you can prevent anybody will isolate op from getting flagged from the anticheat
     Although this may be a useful feature, it can be exploited by hackers to completely disable the anticheat for themselves.
     Enable with caution.
     */
