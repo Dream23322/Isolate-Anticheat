@@ -17,16 +17,16 @@ export function aim_b(player) {
                 const deltaYaw2 = Math.abs(yawDat.one - yawDat.two);
                 const constantYaw = getAbsoluteGcd(deltaYaw, deltaYaw2);
                 const constantPitch = getAbsoluteGcd(deltaPitch, deltaPitch2);
-
+                if(player.hasTag("aim_debug2")) player.sendMessage("constantYaw" + constantYaw + "constantPitch" + constantPitch);
                 // Checks for rounded rotation
-                if(deltaPitch % 1 == 0 || deltaYaw % 1 == 0) flag(player, "Aim", "B", "Rotation", "rounded", `${deltaYaw},${deltaPitch}`, false);
-
+                if((deltaPitch % 1 == 0 || deltaYaw % 1 == 0) && deltaPitch !== 0 && deltaYaw !== 0 ) flag(player, "Aim", "B", "Rotation", "rounded", `${deltaYaw},${deltaPitch}`, false);
+                if((Number.isInteger(deltaPitch) || Number.isInteger(deltaYaw)) && deltaPitch !== 0 && deltaYaw !== 0) flag(player, "Aim", "B", "Rotation (BETA)", "int", `${deltaYaw},${deltaPitch}`, false);
                 // Invalid part 1
                 const divisorX = deltaYaw % constantYaw;
                 const divisorY = deltaPitch % constantPitch;
                 const invalidX = deltaYaw > 0 && !Number.isFinite(divisorX);
                 const invalidY = deltaPitch > 0 && !Number.isFinite(divisorY);
-                if(invalidX || invalidY) flag(player, "Aim", "B", "Rotation", "divX", `${divisorX},divY=${divisorY}`, false);
+                if(invalidX || invalidY) flag(player, "Aim", "B", "Rotation (BETA)", "divX", `${divisorX},divY=${divisorY}`, false);
 
                 // Invalid part 2
                 const currentYaw = deltaYaw / constantYaw;
@@ -39,7 +39,7 @@ export function aim_b(player) {
                 const moduloY = Math.abs(currentPitch - floorPitch);
                 const invalidX2 = moduloX > 0.5 && !Number.isFinite(moduloX);
                 const invalidY2 = moduloY > 0.5 && !Number.isFinite(moduloY);
-                if(invalidX2 || invalidY2) flag(player, "Aim", "B", "Rotation", "modX", `${moduloX},modY=${moduloY}`, false);
+                if(invalidX2 || invalidY2) flag(player, "Aim", "B", "Rotation (BETA)", "modX", `${moduloX},modY=${moduloY}`, false);
             }
         }
         data.set(player.name, {
