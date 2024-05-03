@@ -9,7 +9,7 @@ export function reach_a(player, entity) {
 		let xz_distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
 		if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${xz_distance}\nPlayer Tags: ${player.getTags()}`);
 		let y_distance = getDistanceY(player, entity);
-		checkDistance(player, xz_distance, y_distance);
+		checkDistance(player, xz_distance, y_distance, entity);
 		if(getScore(player, "reach_a_reset", 0) > 10) {
 			if(getScore(player, "reach_a_buffer", 0) > config.modules.reachA.buffer) {
 				flag(player, "Reach", "A", "Combat", "distance", xz_distance, false);
@@ -28,7 +28,7 @@ function failedTags(player) {
 	return false;
 }
 
-function checkDistance(player, xy_distance, y_distance) {
+function checkDistance(player, xy_distance, y_distance, entity) {
 	let min_reach = config.modules.reachA.reach;
 	if(config.modules.reachA.smartReach) {
 		if(getSpeed(player) > 0.6) min_reach + 0.3;
