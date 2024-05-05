@@ -267,6 +267,10 @@ Minecraft.system.runInterval(() => {
 				player.runCommandAsync(`tag "${player.name}" add strict`);
 			}
 		}
+		if(player.hasTag("runUI")) {
+			player.removeTag("runUI")
+			mainGui(player);
+		}
 		
 		if(config.modules.settings.autoReset) {
 			if(getScore(player, "tick_counter2", 0) > 300) {
