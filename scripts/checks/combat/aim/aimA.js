@@ -20,7 +20,7 @@ export function aim_a(player) {
 
             if(deltaYaw == 0 && deltaPitch == 0) return;
 
-            if(deltaPitch > 15 && config.modules.aimA.diff < 0.05 || deltaPitch < config.modules.aimA.diff && deltaYaw > 15) {
+            if(deltaPitch > 15 && config.modules.aimA.diff < 0.05 || deltaPitch < config.modules.aimA.diff && (deltaYaw > 15 && deltaYaw < 25 || deltaYaw > 250)) {
                 setScore(player, "aim_a_buffer", getScore(player, "aim_a_buffer", 0) + 1);
             }
             if(player.hasTag("aim_debug")) player.sendMessage("Yaw: " + deltaYaw.toFixed(4) + " Pitch: " + deltaPitch.toFixed(5));
