@@ -35,7 +35,7 @@ import { module } from "./settings/module.js";
 import { reset } from "./settings/reset.js";
 import { irc } from "./other/irc.js";
 
-const prefix = config.customcommands.prefix;
+const prefix = config.modules.settings.prefix;
 
 /**
  * @name commandHandler

@@ -39,7 +39,6 @@ export default
     */
     "disable_flags_from_isolate_op": false,
     "customcommands": {
-        "prefix": "!",
         "sendInvalidCommandMsg": false,
         "ban": {
             "enabled": true,
@@ -237,7 +236,8 @@ export default
             "autoReset": true,
             "hiveRegen": false,
             "smartNotify": true,
-            "smartOnly": false
+            "smartOnly": false,
+            "prefix": "!"
         },
         "itemSpawnRateLimit": {
             "enabled": false,
