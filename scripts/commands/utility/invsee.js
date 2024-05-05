@@ -58,7 +58,7 @@ export function getInvseeMsg(player) {
 
 			foundItem = true;
 
-			inventory += `§r§6[§aScythe§6]§r ${equipmentList[equipment]}: ${item.typeId} x${item.amount}\n`;
+			inventory += `§r§j[§uIsolate§j]§r ${equipmentList[equipment]}: ${item.typeId} x${item.amount}\n`;
 
 			if(config.customcommands.invsee.show_enchantments) {
 				loopEnchants(item.getComponent("enchantable")?.getEnchantments());
@@ -77,14 +77,14 @@ export function getInvseeMsg(player) {
 
 		foundItem = true;
 
-		inventory += `§r§6[§aScythe§6]§r Slot ${i}: ${item.typeId} x${item.amount}\n`;
+		inventory += `§r§j[§uIsolate§j]§r Slot ${i}: ${item.typeId} x${item.amount}\n`;
 
 		if(config.customcommands.invsee.show_enchantments) {
 			loopEnchants(item.getComponent("enchantable")?.getEnchantments());
 		}
 	}
 
-	if(!foundItem) return `§r§6[§aScythe§6]§r ${player.name}'s inventory is empty.`;
+	if(!foundItem) return `§r§j[§uIsolate§j]§r ${player.name}'s inventory is empty.`;
 
 	return inventory.replace(/\n+$/, "");
 }
