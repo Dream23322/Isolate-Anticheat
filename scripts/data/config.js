@@ -641,7 +641,7 @@ export default
             "speed": 11.5,
             "description": "Checks for really high speed",
             "punishment": "ban",
-            "punishmentLength": "1m",
+            "punishmentLength": "1h",
             "minVlbeforePunishment": 1
         },
         "motionB": {

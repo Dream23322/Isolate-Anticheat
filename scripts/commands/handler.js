@@ -35,7 +35,7 @@ import { module } from "./settings/module.js";
 import { reset } from "./settings/reset.js";
 import { irc } from "./other/irc.js";
 
-const prefix = config.modules.settings.prefix;
+
 
 /**
  * @name commandHandler
@@ -43,6 +43,7 @@ const prefix = config.modules.settings.prefix;
  * @param {object} message - Message data
  */
 export function commandHandler(message) {
+    const prefix = config.modules.settings.prefix;
     // validate that required params are defined
     if(typeof message !== "object") throw TypeError(`message is type of ${typeof message}. Expected "object"`);
     if(typeof message !== "object") throw TypeError(`message is type of ${typeof message}. Expected "object"`);
