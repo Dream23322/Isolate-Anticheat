@@ -20,12 +20,12 @@ export function aim_a(player) {
 
             if(deltaYaw == 0 && deltaPitch == 0) return;
 
-            if(deltaPitch > 15 && config.modules.aimA.diff < 0.05 || deltaPitch < config.modules.aimA.diff && (deltaYaw > 15 && deltaYaw < 25 || deltaYaw > 250)) {
+            if(deltaPitch > 15 && config.modules.aimA.diff < 0.05 || deltaPitch < config.modules.aimA.diff && (deltaYaw > 15 && deltaYaw < 25 || deltaYaw > 250) && deltaYaw2 > 15 && deltaPitch2 < 0) {
                 setScore(player, "aim_a_buffer", getScore(player, "aim_a_buffer", 0) + 1);
             }
             if(player.hasTag("aim_debug")) player.sendMessage("Yaw: " + deltaYaw.toFixed(4) + " Pitch: " + deltaPitch.toFixed(5));
-            if(getScore(player, "aim_a_buffer", 0) > config.modules.aimA.buffer) {
-                flag(player, "Aim", "A", "Combat", "Delta", `${deltaYaw},${deltaPitch}`, false);
+            if(getScore(player, "aim_a_buffer", 0) > config.modules.aimA.buffer && player.hasTag("strict")) {
+                flag(player, "Aim", "A", "Combat (BETA)", "Delta", `${deltaYaw},${deltaPitch}`, false);
                 setScore(player, "aim_a_buffer", 0);
             }
             // Might make a new check with the other Data we have access to
