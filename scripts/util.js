@@ -546,3 +546,11 @@ export function setScore(player, objectiveName, value) {
 export function capitalizeFirstLetter(string) {
 	return string[0].toUpperCase() + string.slice(1);
 }
+
+/**
+ * @name debug
+ * @remarks Tells specified player debug data
+ */
+export function debug(player, data) {
+    player.sendMessage("[DEBUG] " + data);
+}

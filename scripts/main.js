@@ -67,6 +67,7 @@ import { autoclicker_b } from "./checks/combat/autoclicker/autoclickerB.js";
 import { aim_b } from "./checks/combat/aim/aimB.js";
 import { fly_d } from "./checks/movement/fly/flyD.js";
 import { aim_c } from "./checks/combat/aim/aimC.js";
+import { autoclicker_c } from "./checks/combat/autoclicker/autoclickerC.js";
 
 
 
@@ -430,6 +431,7 @@ Minecraft.system.runInterval(() => {
 
 		autoclicker_a(player);
 		autoclicker_b(player);
+		autoclicker_c(player);
 		if(player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
 			player.firstAttack = Date.now();
 			player.cps = 0;
