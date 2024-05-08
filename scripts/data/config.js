@@ -497,9 +497,18 @@ export default
             "minVlbeforePunishment": 0
         },
         "autoclickerB": {
-            "enabled": false,
+            "enabled": true,
             "minCPS": 12,
             "maxDeviation": 0.2500,
+            "punishment": "none",
+            "minVlbeforePunishment": 0,
+            "checkCPSAfter": 1000
+        },
+        "autoclickerC": {
+            "enabled": false,
+            "minCPS": 6,
+            "buffer": 5,
+            "min_diff": 0.001,
             "punishment": "none",
             "minVlbeforePunishment": 0,
             "checkCPSAfter": 1000

@@ -28,7 +28,10 @@ export function aim_a(player) {
                 flag(player, "Aim", "A", "Combat (BETA)", "Delta", `${deltaYaw},${deltaPitch}`, false);
                 setScore(player, "aim_a_buffer", 0);
             }
-            // Might make a new check with the other Data we have access to
+            // Some extra Aim Checks that might be useful for Killaura
+            if(deltaYaw > 35 && yawAccel < 0.01) {
+                flag(player, "Aim", "A", "Combat (BETA)", "Yaw", `${deltaYaw},Accel=${yawAccel}`, false);
+            }
         }
 
     }

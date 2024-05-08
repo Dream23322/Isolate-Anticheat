@@ -40,6 +40,23 @@ export function aim_b(player) {
                 const invalidX2 = moduloX > 0.5 && !Number.isFinite(moduloX);
                 const invalidY2 = moduloY > 0.5 && !Number.isFinite(moduloY);
                 if(invalidX2 || invalidY2) flag(player, "Aim", "B", "Rotation (BETA)", "modX", `${moduloX},modY=${moduloY}`, false);
+
+                const currentY = deltaYaw / constantYaw;
+                const currentX = deltaPitch / constantPitch;
+                const previousY = deltaYaw2 / constantYaw;
+                const previousX = deltaPitch2 / constantPitch;
+                if(deltaYaw > 0 && deltaPitch > 0 && deltaYaw < 20 && deltaPitch < 20) {
+                    const moduloY = currentY % previousY;
+                    const moduloX = currentX % previousX;
+
+                    const floorModuloY = Math.abs(Math.floor(moduloY) - moduloY);
+                    const floorModuloX = Math.abs(Math.floor(moduloX) - moduloX);
+
+                    const invalidY3 = moduloY > 90 && floorModuloY > 0.1;
+                    const invalidX3 = moduloX > 90 && floorModuloX > 0.1;
+
+                    if(invalidX3 && invalidY3) flag(player, "Aim", "B", "Combat", "modulo", `y=${moduloY},x=${moduloX}`)
+                }
             }
         }
         data.set(player.name, {
