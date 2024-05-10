@@ -5,13 +5,22 @@ import { aroundAir } from "../../../utils/gameUtil";
 
 const data = new Map();
 export function fly_d(player) {
+    // TODO make this a NON BDS prediction based fly check for that one "realm" that doesnt use prediction
     if(config.modules.flyD.enabled) {
-        if(data.has(player.name)) {
-            if(data.get(player.name).inAir && !data.get(player.name).isJumping && aroundAir(player) && player.isJumping) flag(player, "Fly", "D", "Movement", "jumping", "true", true);
+        if(
+            !player.hasTag("isFlying") && 
+            !player.isFlying && 
+            !player.isOnGround && 
+            !player.isJumping &&
+            getScore(player, "airTime", 0) > 10 &&
+            aroundAir(player) &&
+            player.fallDistance < config.modules.flyD.dist &&
+            !player.getEffect("jump_boost") &&
+            !player.getEffect("levitation") &&
+            !player.getEffect("slow_falling")
+        ) {
+            flag(player, "Fly", "D", "Movement", "fallDistance", player.fallDistance, true);
         }
-        data.set(player.name, {
-            inAir: aroundAir(player),
-            isJumping: player.isJumping
-        })
+            
     }
 }

@@ -488,6 +488,20 @@ export default
             "punishment": "none",
             "minVlbeforePunishment": 10
         },
+        "aimD": {
+            "enabled": true,
+            "buffer": 8,
+            "description": "Checks for extrememly smooth rotation",
+            "punishment": "none",
+            "minVlbeforePunishment": 10
+        },
+        "aimE": {
+            "enabled": true,
+            "buffer": 10,
+            "description": "Checks for a valid sensitivity in the rotation",
+            "punishment": "none",
+            "minVlbeforePunishment": 10
+        },
         "autoclickerA": {
             "enabled": true,
             "maxCPS": 19.5,
@@ -505,13 +519,19 @@ export default
             "checkCPSAfter": 1000
         },
         "autoclickerC": {
-            "enabled": false,
+            "enabled": true,
             "minCPS": 6,
             "buffer": 5,
             "min_diff": 0.001,
             "punishment": "none",
             "minVlbeforePunishment": 0,
             "checkCPSAfter": 1000
+        },
+        "autoclickerD": {
+            "enabled": true,
+            "minCPS": 7,
+            "punishment": "none",
+            "minVlbeforePunishment": 0
         },
 		"killauraA": {
             "enabled": true,
@@ -640,8 +660,9 @@ export default
             "minVlbeforePunishment": 50
         }, 
         "flyD": {
-            "enabled": true,
-            "description": "Checks for starting to jump mid air (BETA)",
+            "enabled": false,
+            "dist": 2,
+            "description": "Checks for non BDS based fly (Only use if ur server doesnt use BDS Prediction - Not a realm)",
             "punishment": "none",
             "minVlbeforePunishment": 10
         },
@@ -679,6 +700,13 @@ export default
             "pos_diff": 0.09,
             "time_int": 0.5,
             "punishment": "kick",
+            "minVlbeforePunishment": 3
+        },
+        "velocityA": {
+            "enabled": false,
+            "description": "Checks for Velocity Cheats (Only for no prediciton servers)",
+            "diff": 0.2,
+            "punishment": "none",
             "minVlbeforePunishment": 3
         },
 
