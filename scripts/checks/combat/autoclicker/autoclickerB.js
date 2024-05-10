@@ -9,7 +9,7 @@ export function autoclicker_b(player) {
             const newCPS = lastCPS.get(player.name)?.new;
             if(oldCPS && player.cps > config.modules.autoclickerB.minCPS) {
                 const averageDif = Math.abs(Math.abs(player.cps - newCPS) + Math.abs(oldCPS - newCPS)) / 2;
-                if(averageDif < config.modules.autoclickerB.maxDeviation) flag(player, "Autoclicker", "B", "Combat", "AVG", averageDif);
+                if(averageDif < config.modules.autoclickerB.maxDeviation) flag(player, "Autoclicker", "B", "Combat", "AVG_DIFF", averageDif);
             }
         }
         lastCPS.set(player.name, {

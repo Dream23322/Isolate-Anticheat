@@ -68,6 +68,8 @@ import { aim_b } from "./checks/combat/aim/aimB.js";
 import { fly_d } from "./checks/movement/fly/flyD.js";
 import { aim_c } from "./checks/combat/aim/aimC.js";
 import { autoclicker_c } from "./checks/combat/autoclicker/autoclickerC.js";
+import { autoclicker_d } from "./checks/combat/autoclicker/autoclickerD.js";
+import { velocity_a } from "./checks/movement/velocity/velocityA.js";
 
 
 
@@ -304,8 +306,8 @@ Minecraft.system.runInterval(() => {
 		}
 		tag_system(player);
 		// AirTime (Used for Fly[B]) 
-		const flyTime = getScore(player, "airTime");
-		if(!player.isOnGround && !player.hasTag("ground") && !aroundAir(player)) {
+		const flyTime = getScore(player, "airTime", 0);
+		if(!player.isOnGround && !player.hasTag("ground") && aroundAir(player)) {
 			setScore(player, "airTime", flyTime + 1);
 		} else {
 			setScore(player, "airTime", 0)
@@ -344,6 +346,7 @@ Minecraft.system.runInterval(() => {
 			fly_a(player);
 			fly_b(player);
 			fly_c(player);
+			fly_d(player);
 		}
 		if(config.generalModules.speed && !player.hasTag("nospeed")) {
 			speed_a(player);
@@ -377,6 +380,7 @@ Minecraft.system.runInterval(() => {
 			aim_a(player);
 			aim_b(player);
 			aim_c(player);
+			aim_b(player);
 		}
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
 		if(config.modules.scaffoldF.enabled && !player.hasTag("noscaffold")) {
@@ -427,11 +431,12 @@ Minecraft.system.runInterval(() => {
 			setScore(player, "tag_reset", 0);
 		}
 		
-		
+		velocity_a(player);
 
 		autoclicker_a(player);
 		autoclicker_b(player);
 		autoclicker_c(player);
+		autoclicker_d(player);
 		if(player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
 			player.firstAttack = Date.now();
 			player.cps = 0;

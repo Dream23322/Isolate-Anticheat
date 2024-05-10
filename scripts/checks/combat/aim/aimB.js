@@ -19,8 +19,7 @@ export function aim_b(player) {
                 const constantPitch = getAbsoluteGcd(deltaPitch, deltaPitch2);
                 if(player.hasTag("aim_debug2")) player.sendMessage("constantYaw" + constantYaw + "constantPitch" + constantPitch);
                 // Checks for rounded rotation
-                if((deltaPitch % 1 == 0 || deltaYaw % 360 % 1 == 0) && deltaPitch !== 0 && deltaYaw !== 0 ) flag(player, "Aim", "B", "Rotation (BETA)", "rounded", `${deltaYaw},${deltaPitch}`, false);
-                if((Number.isInteger(deltaPitch) || Number.isInteger(deltaYaw)) && deltaPitch !== 0 && deltaYaw !== 0) flag(player, "Aim", "B", "Rotation (BETA)", "int", `${deltaYaw},${deltaPitch}`, false);
+                if((deltaPitch % 1 == 0 || deltaYaw % 360 % 1 == 0) && deltaPitch !== 0 && deltaYaw !== 0 ) flag(player, "Aim", "B", "Combat (BETA)", "rounded", `${deltaYaw},${deltaPitch}`, false);
                 // Invalid part 1
                 const divisorX = deltaYaw % constantYaw;
                 const divisorY = deltaPitch % constantPitch;
