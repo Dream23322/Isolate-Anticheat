@@ -17,7 +17,9 @@ export function fly_d(player) {
             player.fallDistance < config.modules.flyD.dist &&
             !player.getEffect("jump_boost") &&
             !player.getEffect("levitation") &&
-            !player.getEffect("slow_falling")
+            !player.getEffect("slow_falling") &&
+            getScore(player, "tick_counter2", 0) > 8 &&
+            !player.hasTag("damaged")
         ) {
             flag(player, "Fly", "D", "Movement", "fallDistance", player.fallDistance, true);
         }
