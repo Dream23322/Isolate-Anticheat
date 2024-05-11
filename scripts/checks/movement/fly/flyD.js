@@ -19,7 +19,8 @@ export function fly_d(player) {
             !player.getEffect("levitation") &&
             !player.getEffect("slow_falling") &&
             getScore(player, "tick_counter2", 0) > 8 &&
-            !player.hasTag("damaged")
+            !player.hasTag("damaged") &&
+            !player.hasTag("elytra")
         ) {
             flag(player, "Fly", "D", "Movement", "fallDistance", player.fallDistance, true);
         }
