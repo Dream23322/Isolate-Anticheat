@@ -194,13 +194,22 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     setScore(player, scoreboardObjective, currentVl + 1);
 
     currentVl++;
-    console.warn("[Flag]", player.name, check,"[",checkType,"]", hackType, "-", debugName, debug, "VL=", currentVl);
-    player.runCommandAsync(`tellraw @a[tag=notify,tag=debug,tag=theme2,tag=!theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j] §g ${player.nameTag}§r §jhas failed §a[§2${hackType}§a] §p${check}§r/§n${checkType.toUpperCase()} §3(${debugName}=${debug}§r§7)§j. [§2x§n${currentVl}§j]"}]}`);
-    player.runCommandAsync(`tellraw @a[tag=notify,tag=!debug,tag=theme2,tag=!theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j] §g ${player.nameTag}§r §jhas failed §a[§2${hackType}§a] §p${check}§r/§n${checkType.toUpperCase()}§j. [§2x§n${currentVl}§j]"}]}`);
-    player.runCommandAsync(`tellraw @a[tag=notify,tag=debug,tag=!theme2,tag=!theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§jx§9${currentVl}§h]"}]}`);
-    player.runCommandAsync(`tellraw @a[tag=notify,tag=!debug,tag=!theme2,tag=!theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}§h. [§jx§9${currentVl}§h]"}]}`);
-    player.runCommandAsync(`tellraw @a[tag=notify,tag=debug,tag=!theme2,tag=theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §2has failed §3[§a${hackType}§3] §n${check}§r/§q${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§j. [§2x§n${currentVl}§j]"}]}`);
-    player.runCommandAsync(`tellraw @a[tag=notify,tag=!debug,tag=!theme2,tag=theme3] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §2has failed §3[§a${hackType}§3] §n${check}§r/§q${checkType.toUpperCase()}§j. [§2x§n${currentVl}§j]"}]}`);
+    console.warn("[Isolate]", player.name, check,"[",checkType,"]", hackType, "-", debugName, debug, "VL=", currentVl);
+    const thememode = config.modules.settings.theme;
+    if(thememode == "1") {
+        if(config.modules.settings.debugflag) {
+            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§jx§9${currentVl}§h]"}]}`);
+
+        } else {
+            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}§h. [§jx§9${currentVl}§h]"}]}`);
+        }
+    } else if(thememode == "2") {
+        if(config.modules.settings.debugflag) {
+            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§dx§u${currentVl}§h]"}]}`);
+        } else {
+            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()}§h. [§dx§u${currentVl}§h]"}]}`);     
+        }
+    }
 
    
     
