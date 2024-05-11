@@ -237,6 +237,8 @@ export default
             "hiveRegen": false,
             "smartNotify": true,
             "smartOnly": false,
+            "theme": "1",
+            "debugflag": false,
             "prefix": "!"
         },
         "itemSpawnRateLimit": {
