@@ -280,8 +280,8 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     setScore(player, "kickvl", 0);
                     console.warn(`${new Date().toISOString()} |${player.name} was banned by Isolate Anticheat for ${check}/${checkType}`);
                     const message = `§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat §j[§n${check}§j]`;
-                    player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been banned by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
-                    player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage! (Won't be seeing them for 7 days!)"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} was §cpunished§r. (§cBan§r) [§u${check}§g/§9${checkType}§r]"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage! (7-Day)"}]}`);
             
                     data.recentLogs.push(message)
                     player.runCommandAsync(`kick "${player.name}"`);
@@ -294,9 +294,8 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     
                 data.recentLogs.push(message)
                 
-                
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically kicked by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
-                player.runCommandAsync(`tellraw @a {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been removed from your game for using an §6unfair advantage!"}]}`);
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} was §cpunished§r. (§6Kick§r) [§u${check}§g/§9${checkType}§r]"}]}`);
+                player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been removed from your game for using an §6unfair advantage!"}]}`);
                 player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r >> §6Unfair Advantage.§b §j[§n${check}§j]`);
                 // incase /kick fails, we despawn them from the world
             } catch (error) {
@@ -312,7 +311,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 const punishmentLength = checkData.punishmentLength?.toLowerCase();
                 //setSound(player, "mob.enderdragon.death");
                 console.warn(`${new Date().toISOString()} |${player.name} was banned by Isolate Anticheat for ${check}/${checkType}`);
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been banned by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} was §cpunished§r. (§cBan§r) [§u${check}§g/§9${checkType}§r]"}]}`);
 
                 // this removes old ban stuff
                 player.getTags().forEach(t => {
@@ -335,7 +334,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 } catch (error) {}
                 
                 player.addTag("isBanned");
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage!"}]}`);
+                player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage!"}]}`);
             }
 
         }
