@@ -663,7 +663,7 @@ export default
         }, 
         "flyD": {
             "enabled": false,
-            "dist": 2,
+            "dist": 1.45,
             "description": "Checks for non BDS based fly (Only use if ur server doesnt use BDS Prediction - Not a realm)",
             "punishment": "none",
             "minVlbeforePunishment": 10
