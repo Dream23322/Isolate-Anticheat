@@ -34,7 +34,6 @@ export function fly_a(player) {
             if(player.hasTag("damaged")) min_v_down = -4;
             if(player.hasTag("placing")) min_v_down = -7;
             if(playerVelocity.y < min_v_down) flag(player, "Fly", "A", "Movement", "y-velocity", playerVelocity.y, true);
-
         }  
     }
 }
