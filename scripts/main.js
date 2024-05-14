@@ -70,6 +70,8 @@ import { aim_c } from "./checks/combat/aim/aimC.js";
 import { autoclicker_c } from "./checks/combat/autoclicker/autoclickerC.js";
 import { autoclicker_d } from "./checks/combat/autoclicker/autoclickerD.js";
 import { velocity_a } from "./checks/movement/velocity/velocityA.js";
+import { speed_d } from "./checks/movement/speed/speedD.js";
+import { strafe_a } from "./checks/movement/strafe/strafeA.js";
 
 
 
@@ -352,6 +354,7 @@ Minecraft.system.runInterval(() => {
 			speed_a(player);
 			speed_b(player);
 			speed_c(player, tickValue, speedCLog);
+			speed_d(player);
 		}
 		if(config.generalModules.motion && !player.hasTag("nomotion") && !player.hasTag("end_portal")) {
 			motion_a(player);
@@ -371,6 +374,7 @@ Minecraft.system.runInterval(() => {
 		// General movement
 		if(config.generalModules.movement) {	
 			prediction_a(player, lastXZv);
+			strafe_a(player);
 			noslow_a(player);
 			noslow_b(player);
 			sprint_a(player);
