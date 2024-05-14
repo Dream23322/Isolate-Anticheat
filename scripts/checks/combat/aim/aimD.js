@@ -6,9 +6,9 @@ const data = new Map();
 const buffer = new Map();
 export function aim_d(player) {
     // TODO: Get this thing working properly
-    const yASamples = new EvicitingList(20);
+    const yASamples = new EvictingList(20);
     const pASamples = new EvictingList(20);
-    if(config.modules.aimD.enabled && data.get(player)) {
+    if(config.modules.aimD.enabled && data.get(player.name)) {
         const data_yaw = data.get(player.name).yaw;
         const data_pitch = data.get(player.name).pitch;
         if(data_yaw && data_pitch) {
@@ -29,7 +29,7 @@ export function aim_d(player) {
 
                 const yawAccelDeviation = getStandardDeviation(yASamples);
                 const pitchAccelDeviation = getStandardDeviation(pASamples);
-                if(player.hasTag("aimd_debug")) debug(player, `Yaw: ${yawAccelAverage.toFixed(4)} Pitch: ${pitchAccelAverage.toFixed(5)}`);
+                if(player.hasTag("aimd_debug")) player.sendMessage(`Yaw: ${yawAccelAverage.toFixed(4)} Pitch: ${pitchAccelAverage.toFixed(5)}`);
                 const exemptRotation = deltaYaw < 1.5;
 
                 const averageInvalid = yawAccelAverage < 1 || pitchAccelAverage && !exemptRotation;
