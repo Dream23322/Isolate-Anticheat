@@ -5,6 +5,7 @@ const EvictingList = require("../../../utils/data/evlist");
 const data = new Map();
 const buffer = new Map();
 export function aim_d(player) {
+    // TODO: Get this thing working properly
     const yASamples = new EvicitingList(20);
     const pASamples = new EvictingList(20);
     if(config.modules.aimD.enabled && data.get(player)) {
