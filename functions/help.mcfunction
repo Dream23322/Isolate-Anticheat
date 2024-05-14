@@ -1,7 +1,7 @@
 # sometimes the gametestapi scoreboard value doesnt apply correctly so we apply it again
 
 
-tellraw @s {"rawtext":[{"text":"\n§l§uIsolate AntiCheat v8.5.1 Command Help"}]}
+tellraw @s {"rawtext":[{"text":"\n§l§uIsolate AntiCheat v8.5.2 Command Help"}]}
 tellraw @s {"rawtext":[{"text":"\n§l§u--------------------------------------"}]}
 
 tellraw @s {"rawtext":[{"text":"\n§l§dModeration Commands"}]}
