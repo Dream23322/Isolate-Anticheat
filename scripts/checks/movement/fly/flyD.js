@@ -5,7 +5,6 @@ import { aroundAir } from "../../../utils/gameUtil";
 
 const data = new Map();
 export function fly_d(player) {
-    // TODO make this a NON BDS prediction based fly check for that one "realm" that doesnt use prediction
     if(config.modules.flyD.enabled) {
         if(
             !player.hasTag("isFlying") && !player.isFlying && !player.isOnGround && !player.isJumping &&
@@ -18,7 +17,8 @@ export function fly_d(player) {
             !player.getEffect("slow_falling") &&
             getScore(player, "tick_counter2", 0) > 8 &&
             !player.hasTag("elytra") &&
-            !player.hasTag("placing")
+            !player.hasTag("placing") &&
+            !player.hasTag("trident")
         ) {
             flag(player, "Fly", "D", "Movement", "fallDistance", player.fallDistance, true);
         }

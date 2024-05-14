@@ -10,7 +10,6 @@ Flight Check - Checks for fly cheats
 
 This check works by looking for a player having a high y velocity, this works beacuse in the game, 99% of fly cheats are corrected by the game (BDS Prediction), this causes the player to basically jump up and down really fast, causing you to have a high velocity.
 */
-// TODO: Recode Fly/A, the code is really messy right now.
 export function fly_a(player) {
     const playerVelocity = player.getVelocity();
     if(config.modules.flyA.enabled) {

@@ -11,7 +11,7 @@ export function aim_e(player) {
                 const expandedDeltaPitch = (deltaPitch * EXPANDER);
                 const expandedLastDeltaPitch = (lastDeltaPitch * EXPANDER);
                 const gcd = gcd(expandedDeltaPitch, expandedLastDeltaPitch);
-                debug(player, `GCD: ${gcd}, EXPAND1: ${expandedDeltaPitch}, EXPAND2: ${expandedLastDeltaPitch}`);
+                if(player.hasTag("aimE_debug")) debug(player, `GCD: ${gcd}, EXPAND1: ${expandedDeltaPitch}, EXPAND2: ${expandedLastDeltaPitch}`);
                 if(gcd < 1311072) flag(player, "Aim", "E", "Combat (BETA)", "GCD", `${gcd}`, false);
             }
         }
