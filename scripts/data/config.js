@@ -631,12 +631,18 @@ export default
         },  
         "speedC": {
             "enabled": false,
-            "desciprtion": "Checks for un-natural speeds (Distance based)",
+            "description": "Checks for un-natural speeds (Distance based)",
             "velocity": 0.412,
             "max_bps_h": 8,
             "max_bps_v": 36.2,
             "punishment": "kick",
             "minVlbeforePunishment":3
+        },
+        "speedD": {
+            "enabled": true,
+            "description": "Checks for B-Hop cheats",
+            "punishment": "kick",
+            "minVlbeforePunishment": 20
         },
         "flyA": {
             "enabled": true,
@@ -697,12 +703,18 @@ export default
             "minVlbeforePunishment": 10
         },
         "predictionA": {
-            "enabled": false,
+            "enabled": true,
             "description": "Checks for failing BDS Prediction (strafe)",
             "pos_diff": 0.09,
             "time_int": 0.5,
+            "punishment": "none",
+            "minVlbeforePunishment": 10
+        },
+        "strafeA": {
+            "enabled": true,
+            "description": "Checks for strafing mid-air",
             "punishment": "kick",
-            "minVlbeforePunishment": 3
+            "minVlbeforePunishment": 10
         },
         "velocityA": {
             "enabled": false,

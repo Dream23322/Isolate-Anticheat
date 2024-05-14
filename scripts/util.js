@@ -248,7 +248,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
     // This was requested by Duckie Jam (1078815334871617556) from Appy's Practice Network (Code: KC2AfnqpLPo )
     // That realm is ded btw
-    if(config.fancy_kick_calculation.on === true) {
+    if(config.fancy_kick_calculation.on === true && config.modules.settings.autoKick == true) {
         const movement_vl = getScore(player, "motionvl", 0) + getScore(player, "flyvl", 0) + getScore(player, "speedvl", 0) + getScore(player, "predicitionvl", 0) + getScore(player, "noslowvl", 0) + getScore(player, "predictionvl", 0) + getScore(player, "invalidsprintvl", 0);
         const combat_vl = getScore(player, "reachvl", 0) + getScore(player, "killauravl", 0) + getScore(player, "aimvl", 0) + getScore(player, "autoclickervl", 0) + getScore(player, "hitboxvl", 0);
         const block_vl = getScore(player, "scaffoldvl", 0) + getScore(player, "nukervl", 0) + getScore(player, "towervl", 0);
@@ -280,8 +280,8 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     setScore(player, "kickvl", 0);
                     console.warn(`${new Date().toISOString()} |${player.name} was banned by Isolate Anticheat for ${check}/${checkType}`);
                     const message = `§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat §j[§n${check}§j]`;
-                    player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} was §cpunished§r. (§cBan§r) [§u${check}§g/§9${checkType}§r]"}]}`);
-                    player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage! (7-Day)"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been §cpunished§r (§cBan§r) for ${check}/${checkType}"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage! (7-Day)"}]}`);
             
                     data.recentLogs.push(message)
                     player.runCommandAsync(`kick "${player.name}"`);
@@ -294,7 +294,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     
                 data.recentLogs.push(message)
                 
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} was §cpunished§r. (§6Kick§r) [§u${check}§g/§9${checkType}§r]"}]}`);
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been §cpunished§r (§cKick§r) for ${check}/${checkType}"}]}`);
                 player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been removed from your game for using an §6unfair advantage!"}]}`);
                 player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r >> §6Unfair Advantage.§b §j[§n${check}§j]`);
                 // incase /kick fails, we despawn them from the world
@@ -311,7 +311,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 const punishmentLength = checkData.punishmentLength?.toLowerCase();
                 //setSound(player, "mob.enderdragon.death");
                 console.warn(`${new Date().toISOString()} |${player.name} was banned by Isolate Anticheat for ${check}/${checkType}`);
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} was §cpunished§r. (§cBan§r) [§u${check}§g/§9${checkType}§r]"}]}`);
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been §cpunished§r (§cBan§r) for ${check}/${checkType}"}]}`);
 
                 // this removes old ban stuff
                 player.getTags().forEach(t => {
