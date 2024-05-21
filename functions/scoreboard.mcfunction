@@ -39,7 +39,7 @@ scoreboard objectives add killauraF_reset dummy
 scoreboard objectives add motion_d_buffer dummy
 scoreboard objectives add motion_d_reset dummy
 scoreboard objectives add timervl dummy
-scoreboard objectives add packets dummy
+scoreboard objectives add packets dummy 
 scoreboard objectives add airTime
 
 

@@ -37,6 +37,10 @@ import { fly_a } from "./checks/movement/fly/flyA.js";
 import { exploit_a } from "./checks/packet/exploit/exploitA.js";
 import { timer_a } from './checks/packet/timer/timerA.js';
 import { fly_b } from "./checks/movement/fly/flyB.js";
+import { velocity_a } from "./checks/movement/velocity/velocityA.js";
+import { speed_d } from "./checks/movement/speed/speedD.js";
+import { strafe_a } from "./checks/movement/strafe/strafeA.js";
+import { fly_d } from "./checks/movement/fly/flyD.js";
 
 // Import World Checks
 import { scaffold_f } from "./checks/world/scaffold/scaffoldF.js";
@@ -65,13 +69,11 @@ import { aim_a } from "./checks/combat/aim/aimA.js";
 import { autoclicker_a } from "./checks/combat/autoclicker/autoclickerA.js";
 import { autoclicker_b } from "./checks/combat/autoclicker/autoclickerB.js";
 import { aim_b } from "./checks/combat/aim/aimB.js";
-import { fly_d } from "./checks/movement/fly/flyD.js";
 import { aim_c } from "./checks/combat/aim/aimC.js";
 import { autoclicker_c } from "./checks/combat/autoclicker/autoclickerC.js";
 import { autoclicker_d } from "./checks/combat/autoclicker/autoclickerD.js";
-import { velocity_a } from "./checks/movement/velocity/velocityA.js";
-import { speed_d } from "./checks/movement/speed/speedD.js";
-import { strafe_a } from "./checks/movement/strafe/strafeA.js";
+import { joinData } from "./utils/acUtil.js";
+
 
 
 
@@ -661,7 +663,7 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	data.recentLogs.push(message)
 	// load custom nametag
 	const { mainColor, borderColor, playerNameColor } = config.customcommands.tag;
-
+	joinData(player);
 	player.getTags().forEach(t => {
 		// load custom nametag
 		if(t.includes("tag:")) {

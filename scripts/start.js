@@ -14,7 +14,6 @@ if(dpConfig) {
 	console.warn("[Isolate] >> Loaded Config Correctly");
 }
 
-// Setup report system
 
 import "./main.js";
 console.warn("[Isolate] >> Setup Correctly");
