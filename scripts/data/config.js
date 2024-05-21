@@ -239,7 +239,8 @@ export default
             "smartOnly": false,
             "theme": "1",
             "debugflag": false,
-            "prefix": "!"
+            "prefix": "!",
+            "chatRanks": false
         },
         "itemSpawnRateLimit": {
             "enabled": false,

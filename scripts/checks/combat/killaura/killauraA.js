@@ -9,7 +9,6 @@ export function killaura_a(player, entity) {
     if(config.modules.killauraA.enabled) {
         const playerVelocity = player.getVelocity();
         const rot = player.getRotation();
-        // Stop false flags
         // github.com/jasonlaubb/Matrix-Anticheat/
         // good anticheat tbh
         if(!player.isGliding && Math.hypot(playerVelocity.x, playerVelocity.z) > 0.2) {
