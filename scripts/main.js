@@ -205,7 +205,7 @@ Minecraft.system.runInterval(() => {
 				
 		const selectedSlot = player.selectedSlot;
 
-		if(player.isGlobalBanned || player.nameTag in banplayer) {
+		if((player.isGlobalBanned || player.nameTag in banplayer) && config.modules.globalBan.enabled) {
 			setParticle(player, "totem_particle");
 			player.addTag("by:Isolate Anticheat");
 			player.addTag("reason:You are in a hacker database!");
