@@ -246,6 +246,9 @@ export default
             "enabled": false,
             "entitiesBeforeRateLimit": 45
         },
+        "globalBan": {
+            "enabled": true,
+        }
         /*
         Enabling this module is highly discouraged, as it breaks items names, enchantments, durability
         and item data relating to it.
