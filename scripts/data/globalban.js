@@ -59,7 +59,6 @@ export const banList = [
    "StayHoly2009",
    "dead W",
    "Silver Ox7261",
-   "zqevc",
    "CheezyCrackers2",
    "NotDeanLsBad",
    "baquiiz",
