@@ -21,7 +21,7 @@ export function fly_a(player) {
             if(player.isJumping) max_v_up = 0.8;
             if(player.getEffect("jump_boost")) max_v_up + player.getEffect("jump_boost").amplifier * 1.5 + 0.1;
             if(player.hasTag("placing")) max_v_up + 7;
-            if(player.hasTag("damaged")) max_v_up + 4;
+            if(player.hasTag("damaged")) max_v_up + 6;
             if(player.hasTag("elytra")) max_v_up + 20;
             if(getScore(player, "tick_counter2", 0) < 8) return;
             if(player.fallDistance > 25) return;

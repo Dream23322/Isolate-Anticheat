@@ -248,7 +248,7 @@ export default
         },
         "globalBan": {
             "enabled": true,
-        }
+        },
         /*
         Enabling this module is highly discouraged, as it breaks items names, enchantments, durability
         and item data relating to it.
