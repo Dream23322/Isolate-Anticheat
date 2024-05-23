@@ -266,10 +266,10 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     if(config.modules.settings.smartNotify) {
         const total_vL = movement_vl + combat_vl + block_vl + other_vl;
         if(movement_vl > 20) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of movement cheat! (Specate with !v)"}]}`);
-            else if(combat_vl > 10) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of combat cheat! (Specate with !v)"}]}`);
-            else if(block_vl > 5) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of place/break cheat! (Specate with !v)"}]}`);
-            else if(other_vl > 15) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of Misc cheat!"}]}`);
-            else if(total_vL > 20) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using an Unfair Advantage! (Specate with !v)"}]}`);
+            else if(combat_vl == 10) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of combat cheat! (Specate with !v)"}]}`);
+            else if(block_vl == 5) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of place/break cheat! (Specate with !v)"}]}`);
+            else if(other_vl == 15) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of Misc cheat!"}]}`);
+            else if(total_vL == 20) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using an Unfair Advantage! (Specate with !v)"}]}`);
       }
     if(currentVl > checkData.minVlbeforePunishment) {
 
