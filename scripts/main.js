@@ -73,6 +73,7 @@ import { aim_c } from "./checks/combat/aim/aimC.js";
 import { autoclicker_c } from "./checks/combat/autoclicker/autoclickerC.js";
 import { autoclicker_d } from "./checks/combat/autoclicker/autoclickerD.js";
 import { joinData } from "./utils/acUtil.js";
+import { autoclicker_e } from "./checks/combat/autoclicker/autoclickerE.js";
 
 
 
@@ -101,7 +102,7 @@ const lastPosition = new Map();
 
 // Non messy bad Maps
 const speedCLog = new Map();
-
+const dmg_data = new Map();
 if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
 let currentVL;
 world.beforeEvents.chatSend.subscribe((msg) => {
@@ -179,6 +180,7 @@ world.afterEvents.entityHurt.subscribe((data) => {
 	if(data.damageSource.cause === "fall") {
 		player.addTag("fall_damage");
 	}
+	dmg_data.set(player.name, Date.now());
 	if(config.debug) console.warn(`${new Date().toISOString()} |${player.name} was damaged!`);
 	
 });
@@ -429,12 +431,16 @@ Minecraft.system.runInterval(() => {
 		}
 		if(getScore(player, "tag_reset", 0) > 5) {
 			const removalTags = [
-				"slime", "placing", "ice", "damaged", "fall_damage", 
+				"slime", "placing", "ice", "fall_damage", 
 				"end_portal", "stairs", "timer_bypass", "ender_pearl", 
 				"useItem"
 			];
 			removalTags.forEach(tag => player.removeTag(tag));
 			setScore(player, "tag_reset", 0);
+		}
+
+		if(player.hasTag("damaged") && Date.now() - dmg_data.get(player.name) >= 2000) {
+			player.removeTag("damaged");
 		}
 		
 		velocity_a(player);
@@ -839,7 +845,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 	reach_a(player, entity);
 	
 	badpackets_c(player, entity);	
-
+	autoclicker_e(player);
 
 
 
