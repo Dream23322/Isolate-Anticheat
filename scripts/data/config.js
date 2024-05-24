@@ -539,6 +539,11 @@ export default
             "punishment": "none",
             "minVlbeforePunishment": 0
         },
+        "autoclickerE": {
+            "enabled": true,
+            "punishment": "none",
+            "minVlbeforePunishment": 0
+        },
 		"killauraA": {
             "enabled": true,
             "description": "Checks for funny killaura rotations (Detects Prax Killaura very fast)",

@@ -6,19 +6,7 @@ import { angleCalc } from "../../../utils/mathUtil.js";
 
 export function killaura_f(player, entity) {
     if(config.modules.killauraF.enabled) {
-        if(angleCalc(player, entity) < 1) {
-            setScore(player, "killauraF_buffer", getScore(player, "killauraF_buffer", 0) + 1);
-        }
-        setScore(player, "killauraF_reset", getScore(player, "killauraF_reset", 0) + 1);
-        if(getScore(player, "killauraF_reset", 0) > 30) {
-            
-            setScore(player, "killauraF_reset", 0);
-            if(getScore(player, "killauraF_buffer", 0) > 10) {
-                
-                flag(player, "Killaura", "F", "Combat", "accuracy", getScore(player, "killauraF_buffer", 0), false);	
-                setScore(player, "killauraF_buffer", 0);
-            }
-            setScore(player, "killauraF_buffer", 0);
-        }
+        // Turn this into rotation checks.
+        return;
     }  
 }
