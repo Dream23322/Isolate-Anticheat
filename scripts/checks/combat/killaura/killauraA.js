@@ -24,6 +24,14 @@ export function killaura_a(player, entity) {
         if(!Number.isInteger(rot.x) && (Number.isInteger(rot.x) || Number.isInteger(rot.y))) {
             flag(player, "Killaura", "A", "Combat", "rotation", -90, false);
         }
+        
+        const rotation = player.getRotation()
+        const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
+        if(Math.abs(rotation.x) > 79 && distance > 3.5) {
+            if(!player.hasTag("trident") && !player.hasTag("bow")) {
+                flag(player, "Killaura", "A", "Combat", "angle", `${rotation.x},distance=${distance}`, false);
+            }
+        }
     }
 	
 }

@@ -1,5 +1,6 @@
 import * as Minecraft from "@minecraft/server";
 import { parseTime } from "../../util.js";
+import data from "../../data/data.js";
 
 const world = Minecraft.world;
 
@@ -19,7 +20,7 @@ export function ban(message, args) {
 
     const time = args[1] ? parseTime(args[1]) : undefined;
 
-    if(!time) args.splice(1, 1);
+    //if(!time) args.splice(1, 1);
 
     const reason = args.slice(1).join(" ").replace(/"|\\/g, "") || "No reason specified";
     
@@ -48,6 +49,9 @@ export function ban(message, args) {
     member.addTag(`by:${player.nameTag}`);
     if(typeof time === "number") member.addTag(`time:${Date.now() + time}`);
     member.addTag("isBanned");
+    const banList = JSON.parse(world.getDynamicProperty("banList"));
+    banList[member.name] = [member.nameTag, reason, player.nameTag];
+    world.setDynamicProperty("banList", JSON.stringify(banList));
 
     player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has banned ${member.nameTag} for ${reason}"}]}`);
 }

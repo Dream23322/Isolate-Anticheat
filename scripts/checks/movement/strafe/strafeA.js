@@ -11,10 +11,10 @@ export function strafe_a(player) {
             const invalid = (
                 Math.abs(velocity.x) > 0.01 &&
                 Math.abs(lastVelocity.x) > 0.01 &&
-                (lastVelocity.x < 0 && velocity.x > 0.28 || lastVelocity.x > 0.28 && velocity.x < 0) ||
+                (lastVelocity.x < 0 && velocity.x > 0.3 || lastVelocity.x > 0.3 && velocity.x < 0) ||
                 Math.abs(velocity.z) > 0.01 &&
                 Math.abs(lastVelocity.z) > 0.01 &&
-                (lastVelocity.z < 0 && velocity.z > 0.28 || lastVelocity.z > 0.28 && velocity.z < 0)
+                (lastVelocity.z < 0 && velocity.z > 0.3 || lastVelocity.z > 0.3 && velocity.z < 0)
             )
             const diff = {x: Math.abs(velocity.x) - Math.abs(lastVelocity.x), z: Math.abs(velocity.z) - Math.abs(lastVelocity.z)}
             const allow = !player.hasTag("jumping") && !player.hasTag("swimming") && !player.hasTag("trident") && velocity.y > 0 && !player.hasTag("elytra") && !player.hasTag("slime") && !player.getEffect("speed") && !player.hasTag("damaged") && !player.hasTag("placing");

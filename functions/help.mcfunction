@@ -1,7 +1,7 @@
 # sometimes the gametestapi scoreboard value doesnt apply correctly so we apply it again
 
 
-tellraw @s {"rawtext":[{"text":"\n§l§uIsolate AntiCheat v8.5.2 Command Help"}]}
+tellraw @s {"rawtext":[{"text":"\n§l§uIsolate AntiCheat v8.5.3 Command Help"}]}
 tellraw @s {"rawtext":[{"text":"\n§l§u--------------------------------------"}]}
 
 tellraw @s {"rawtext":[{"text":"\n§l§dModeration Commands"}]}
@@ -25,16 +25,18 @@ tellraw @s {"rawtext":[{"text":"§u!irc, aka !i or !t§r - Talk to other admins 
 tellraw @s {"rawtext":[{"text":"§u!modules§r - View all enabled or disabled modules."}]}
 tellraw @s {"rawtext":[{"text":"§u!module <module> <setting> <newValue>§r - Change a modules settings."}]}
 tellraw @s {"rawtext":[{"text":"§u!reset§r - Resets config."}]}
+tellraw @s {"rawtext":[{"text":"§u!seecps§r - Shows players CPS."}]}
 tellraw @s {"rawtext":[{"text":"§u!notify§r - Enables/Disables cheat notifications."}]}
 tellraw @s {"rawtext":[{"text":"\n§l§dTools and Utilites"}]}
 
 
 # Gametest enabled
+tellraw @s {"rawtext":[{"text":"§u!banlist§r - Shows a list of banned players on the server."}]}
 tellraw @s {"rawtext":[{"text":"§u!about <module>§r - Gives info on a modules (!about scaffoldA !about killauraF)."}]}
 tellraw @s {"rawtext":[{"text":"§u!logs§r - Shows server and Isolate anticheat logs."}]}
 tellraw @s {"rawtext":[{"text":"§u!crash <username>§r - Tried to crash a player (If crash failed, it will kick them from the server)."}]}
 tellraw @s {"rawtext":[{"text":"§u!ecwipe <username>§r - Clears a player's ender chest."}]}
-tellraw @s {"rawtext":[{"text":"§u!fly [username]§r - Enables/disables the ability to fly in survival mode."}]}
+tellraw @s {"rawtext":[{"text":"§u!fly <username>§r - Enables/disables the ability to fly in survival mode."}]}
 tellraw @s {"rawtext":[{"text":"§u!freeze <username>§r - Freeze a player and make it so they can't move."}]}
 tellraw @s {"rawtext":[{"text":"§u!stats <username>§r - View a specific players anticheat logs."}]}
 tellraw @s {"rawtext":[{"text":"§u!fullreport§r - View everyones anticheat logs."}]}
