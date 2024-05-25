@@ -290,7 +290,9 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     const message = `§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat §j[§n${check}§j]`;
                     player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been §cpunished§r (§cBan§r) for ${check}/${checkType}"}]}`);
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage! (7-Day)"}]}`);
-            
+                    const banList = JSON.parse(world.getDynamicProperty("banList"));
+                    banList[player.name] = [player.nameTag, `Anticheat: ${check}/${checkType}`, "Isolate AC"];
+                    world.setDynamicProperty("banList", JSON.stringify(banList))
                     data.recentLogs.push(message)
                     player.runCommandAsync(`kick "${player.name}"`);
                     return;
@@ -328,7 +330,9 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
                 let banLength;
 
-                
+                const banList = JSON.parse(world.getDynamicProperty("banList"));
+                banList[player.name] = [player.nameTag, `Anticheat: ${check}/${checkType}`, "Isolate AC"];
+                world.setDynamicProperty("banList", JSON.stringify(banList))
                 const message = `§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat§b [§s${check}§b]`;
     
                 data.recentLogs.push(message)
@@ -391,6 +395,12 @@ export function banMessage(player) {
             if(data.unbanQueue[i] !== player.name.toLowerCase().split(" ")[0]) continue;
 
             data.unbanQueue.splice(i, 1);
+            break;
+        }
+        // Remove the player for the ban list
+        for (let i = -1; i < data.banList.length; i++) {
+            if(data.banList[i].ign !== player.name) continue;
+            data.banList.splice(i, 1);
             break;
         }
         return;

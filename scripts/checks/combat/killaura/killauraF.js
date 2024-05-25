@@ -6,7 +6,7 @@ import { angleCalc } from "../../../utils/mathUtil.js";
 
 export function killaura_f(player, entity) {
     if(config.modules.killauraF.enabled) {
-        // Turn this into rotation checks.
+        // Turn this into rotation checks or miss rate check.
         return;
     }  
 }

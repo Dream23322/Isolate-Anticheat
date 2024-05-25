@@ -211,6 +211,16 @@ export default
             "enabled": true,
             "requiredTags": ["op"],
             "aliases": ["i", "t"]
+        },
+        "seecps": {
+            "enabled": true,
+            "requiredTags": ["op"],
+            "aliases": ["cps"]
+        },
+        "banlist": {
+            "enabled": true,
+            "requiredTags": ["op"],
+            "aliases": ["bl"]
         }
     },
     "modules": {
@@ -540,7 +550,7 @@ export default
             "minVlbeforePunishment": 0
         },
         "autoclickerE": {
-            "enabled": true,
+            "enabled": false,
             "punishment": "none",
             "minVlbeforePunishment": 0
         },
@@ -555,6 +565,7 @@ export default
             "description": "Checks for no-swing (Detects toolbox killaura instantly)",
 			"wait_ticks": 20,
 			"max_swing_delay": 2000,
+            "rightTicks": 3,
 			"punishment": "kick",
 			"minVlbeforePunishment": 2
 		},        
@@ -576,7 +587,6 @@ export default
         "killauraE": {
 			"enabled": true,
             "description": "Checks for hitting entities while using an item",
-			"rightTicks": 3,
 			"punishment": "kick",
 			"minVlbeforePunishment": 5
         },
@@ -722,7 +732,8 @@ export default
         "strafeA": {
             "enabled": true,
             "description": "Checks for strafing mid-air",
-            "punishment": "kick",
+            "diff": 0.3,
+            "punishment": "none",
             "minVlbeforePunishment": 10
         },
         "velocityA": {

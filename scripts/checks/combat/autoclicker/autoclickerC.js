@@ -12,7 +12,7 @@ export function autoclicker_c(player) {
                 if(buffer > config.modules.autoclickerC.buffer && cps > 10) {
                     flag(player, "Autoclicker", "C", "Combat (BETA)", "cps", cps);
                     data.set(player.name, -1);
-                }
+                } 
             }
             data.set(player.name, (data.get(player.name) || 0) + 1);
         }

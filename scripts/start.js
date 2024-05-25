@@ -13,7 +13,14 @@ if(dpConfig) {
 	}
 	console.warn("[Isolate] >> Loaded Config Correctly");
 }
-
+// Banlist
+const banlist = world.getDynamicProperty("banList");
+if(!banlist) {
+	world.setDynamicProperty("banList", "{}");
+}
+if(banlist) {
+	console.warn("[Isolate] >> Loaded Banlist Correctly");
+}
 
 import "./main.js";
 console.warn("[Isolate] >> Setup Correctly");

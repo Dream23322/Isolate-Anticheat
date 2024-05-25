@@ -834,7 +834,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 	// ==================================
 	if(config.generalModules.killaura && !player.hasTag("noaura")) {
 		killaura_a(player, entity);
-		killaura_b(player, system);
+		killaura_b(player, system, entity);
 		killaura_c(player, entity, player.entitiesHit);
 		killaura_e(player, entity);
 		killaura_d(player, entity);
