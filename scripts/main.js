@@ -410,11 +410,14 @@ Minecraft.system.runInterval(() => {
 				setScore(player, "tickValue", tickValue + 1);
 			}
 		}
-
+		if(!player.hasTag("attacking")) {
+			killaura_f(player, 0);
+		}
 		// Remove tags for checks :D
 		player.removeTag("attacking");
 		player.removeTag("usingItem");
 		player.removeTag("breaking");
+		player.removeTag("leftv2");
 		if(tickValue > 19) {
 			const currentCounter = getScore(player, "tick_counter", 0);
 			setScore(player, "tick_counter", currentCounter + 1);
@@ -838,7 +841,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 		killaura_c(player, entity, player.entitiesHit);
 		killaura_e(player, entity);
 		killaura_d(player, entity);
-		killaura_f(player, entity);
+		killaura_f(player, 1);
 	}
 
 	hitbox_a(player, entity);
@@ -870,12 +873,14 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 });
 world.afterEvents.entityHitBlock.subscribe((entityHit) => {
 	const { damagingEntity: player} = entityHit;
-
+	console.warn("Running");
 	player.flagAutotoolA = false;
 	player.lastSelectedSlot = player.selectedSlot;
 	player.startBreakTime = Date.now();
 	player.autotoolSwitchDelay = 0;
-});world.beforeEvents.itemUse.subscribe((itemUse) => {
+	
+});
+world.beforeEvents.itemUse.subscribe((itemUse) => {
 	const { source: player } = itemUse;
 
 	if(player.typeId !== "minecraft:player") return;

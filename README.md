@@ -62,3 +62,16 @@ If you need to learn how to install isolate anticheat click [Here](https://githu
 I dont do shit apart from say 3 things in the discord join that by the way - 
 
 *thats all thanks*
+
+
+
+
+
+
+
+
+
+
+
+
+
