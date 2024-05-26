@@ -49,6 +49,8 @@ export function ban(message, args) {
     member.addTag(`by:${player.nameTag}`);
     if(typeof time === "number") member.addTag(`time:${Date.now() + time}`);
     member.addTag("isBanned");
+
+    // Add the player to the ban list
     const banList = JSON.parse(world.getDynamicProperty("banList"));
     banList[member.name] = [member.nameTag, reason, player.nameTag];
     world.setDynamicProperty("banList", JSON.stringify(banList));
