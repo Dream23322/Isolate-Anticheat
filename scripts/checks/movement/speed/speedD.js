@@ -21,7 +21,7 @@ export function speed_d(player) {
                     dY2 > 0.15 &&
                     dY3 < 0.1
                 )
-                const allow = !player.hasTag("elytra") && !player.hasTag("trident") && !player.isJumping && !player.hasTag("gliding") && !player.isGliding && !player.hasTag("jumping") && hVelocity(player) > 0.28 && !player.hasTag("placing") && !player.hasTag("slime")
+                const allow = !player.hasTag("elytra") && !player.hasTag("trident") && !player.isJumping && !player.hasTag("gliding") && !player.isGliding && !player.hasTag("jumping") && hVelocity(player) > 0.28 && !player.hasTag("placing") && !player.hasTag("slime") && !player.hasTag("damaged")
                 if((invalid || invalid2) && allow) {
                     flag(player, "Speed", "D", "Movement", "y-Velocity", currentY, true);
                 }

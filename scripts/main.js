@@ -443,7 +443,7 @@ Minecraft.system.runInterval(() => {
 			setScore(player, "tag_reset", 0);
 		}
 
-		if(player.hasTag("damaged") && Date.now() - dmg_data.get(player.name) >= 2000) {
+		if(player.hasTag("damaged") && Date.now() - dmg_data.get(player.name) >= 4000) {
 			player.removeTag("damaged");
 		}
 		
