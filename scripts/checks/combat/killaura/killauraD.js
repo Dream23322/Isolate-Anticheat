@@ -6,7 +6,7 @@ import { getBlocksBetween } from "../../../utils/mathUtil.js";
 export function killaura_d(player, entity) {
     if(config.modules.killauraD.enabled) {
         // Check if the player who was attacked is full boxed.
-        const playerlocaiton = player.location;
+        // TODO: Fix this shitbox lol
         const invalid = 0;
         const locations = [
             {x: 1, y: 0, z: 0},
@@ -21,10 +21,20 @@ export function killaura_d(player, entity) {
             {x: 0, y: 1, z: -1}
         ];
         if(entity.typeId == "minecraft:player") {
-            for(const pos in locations) {
-                if(getBlocksBetween(playerlocaiton.add(locations[pos]), playerlocaiton.add(locations[pos])).some((block) => block.typeId !== "minecraft:air")) {
-                    invalid += 1;
-                }
+            for(const dir in locations) {
+                const posX = entity.location.z;
+                const posY = entity.location.y;
+                const posZ = entity.location.x;
+
+                const pos = {
+                    x: posX + dir.x,
+                    y: posY + dir.y,
+                    z: posZ + dir.z
+                };
+                // If the position doesnt have air in it, add to the score
+                if (getBlocksBetween(pos, pos).some((blk) => player.dimension.getBlock(blk)?.typeId !== "minecraft:air")) {
+                    invalid++;
+                }   
             }
             if(invalid == 10) {
                 flag(player, "Killaura", "D", "Combat", "invalid", invalid, false);
