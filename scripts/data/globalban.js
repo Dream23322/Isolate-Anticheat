@@ -78,5 +78,7 @@ export const banList = [
    "Vexedu54",
    "Zempk",
    "Solid56ice",
-   "PianoTwo9017120"
+   "PianoTwo9017120",
+   "ReeKID9770",
+   "johnloka1235"
 ];
