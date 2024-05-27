@@ -18,7 +18,7 @@ export function killaura_f(player, value) {
             setScore(player, "ka_F_hits", hit + 1);
         }
         setScore(player, "killauraF_reset", reset + 1);
-        if(reset >= 100 && getSpeed) {
+        if(reset >= 100 && getSpeed(player) > 0.1) {
             // If the player hits above config amount, flag
             if(getScore(player, "ka_F_hits", 0) > config.modules.killauraF.hits) {
                 flag(player, "Killaura", "F", "Combat (BETA)", "hits", getScore(player, "ka_F_hits", 0), false);
