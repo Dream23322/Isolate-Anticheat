@@ -572,14 +572,14 @@ export default
         "killauraC": {
             "enabled": true,
             "description": "Checks for hitting multiple entities at once",
-            "entities": 2,
+            "entities": 3,
             "punishment": "kick",
             "punishmentLength": "3m",
             "minVlbeforePunishment": 5
         },
         "killauraD": {
             "enabled": true,
-            "description": "Checks for looking down when attacking something out of range",
+            "description": "Checks is the attacked player is surrounded by blocks",
             "punishment": "kick",
             "punishmentLength": "3d",
             "minVlbeforePunishment": 3
@@ -592,7 +592,7 @@ export default
         },
         "killauraF": {
             "enabled": true,
-            "description": "Checks for looking at the exact center of a player",
+            "description": "Checks for really high hit accuracy",
             "hits": 90,
             "timeMS": 45000,
             "punishment": "kick",

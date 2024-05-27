@@ -410,7 +410,7 @@ Minecraft.system.runInterval(() => {
 				setScore(player, "tickValue", tickValue + 1);
 			}
 		}
-		if(!player.hasTag("attacking") && player.hasTag("leftv2")) {
+		if(!player.hasTag("attacking") && player.hasTag("leftv2") && !player.hasTag("usingItem") && !player.hasTag("useItem") && !player.hasTag("interactBlock")) {
 			killaura_f(player, 0);
 		}
 		// Remove tags for checks :D
@@ -418,6 +418,7 @@ Minecraft.system.runInterval(() => {
 		player.removeTag("usingItem");
 		player.removeTag("breaking");
 		player.removeTag("leftv2");
+		
 		if(tickValue > 19) {
 			const currentCounter = getScore(player, "tick_counter", 0);
 			setScore(player, "tick_counter", currentCounter + 1);
@@ -430,13 +431,13 @@ Minecraft.system.runInterval(() => {
 			if(player.hasTag("packetlogger")) player.runCommandAsync(`title @s actionbar packets:${getScore(player, "packets", 0)}`);
 			setScore(player, "packets", 0);
 			player.removeTag("snow");
-
+			
 		}
 		if(getScore(player, "tag_reset", 0) > 5) {
 			const removalTags = [
 				"slime", "placing", "ice", "fall_damage", 
 				"end_portal", "stairs", "timer_bypass", "ender_pearl", 
-				"useItem"
+				"useItem", "interactBlock"
 			];
 			removalTags.forEach(tag => player.removeTag(tag));
 			setScore(player, "tag_reset", 0);
@@ -873,7 +874,6 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 });
 world.afterEvents.entityHitBlock.subscribe((entityHit) => {
 	const { damagingEntity: player} = entityHit;
-	console.warn("Running");
 	player.flagAutotoolA = false;
 	player.lastSelectedSlot = player.selectedSlot;
 	player.startBreakTime = Date.now();
@@ -903,7 +903,6 @@ world.afterEvents.itemUse.subscribe((itemUse) => {
 		mainGui(player);
 	}
 });
-
 // Minecraft.system.events.beforeWatchdogTerminate.subscribe((beforeWatchdogTerminate) => {
 // 	// We try to stop any watchdog crashes incase malicous users try to make the scripts lag
 // 	// and causing the server to crash
