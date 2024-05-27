@@ -593,7 +593,7 @@ export default
         "killauraF": {
             "enabled": true,
             "description": "Checks for looking at the exact center of a player",
-            "hits": 45,
+            "hits": 90,
             "timeMS": 45000,
             "punishment": "kick",
             "minVlbeforePunishment": 2
