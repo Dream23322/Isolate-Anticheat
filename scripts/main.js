@@ -410,7 +410,7 @@ Minecraft.system.runInterval(() => {
 				setScore(player, "tickValue", tickValue + 1);
 			}
 		}
-		if(!player.hasTag("attacking")) {
+		if(!player.hasTag("attacking") && player.hasTag("leftv2")) {
 			killaura_f(player, 0);
 		}
 		// Remove tags for checks :D
