@@ -289,9 +289,17 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     console.warn(`${new Date().toISOString()} |${player.name} was banned by Isolate Anticheat for ${check}/${checkType}`);
                     const message = `§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat §j[§n${check}§j]`;
                     player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been §cpunished§r (§cBan§r) for ${check}/${checkType}"}]}`);
-                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage! (7-Day)"}]}`);
+                    if(config.modules.settings.theme == "1") {
+                        player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage! (7-Day)"}]}`);
+                    } else if(config.modules.settings.theme == "2") {
+                        player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===========================================||"}]}`);
+                        player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u§l Isolate Anticheat"}]}`);
+                        player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u Player Banned:§t §n${player.name}"}]}`);
+                        player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u Reason: §dUnfair Advantage§t - 7 days"}]}`);
+                        player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===========================================||"}]}`);
+                    }
                     const banList = JSON.parse(world.getDynamicProperty("banList"));
-                    banList[player.name] = [player.nameTag, `Anticheat: ${check}/${checkType}`, "Isolate AC"];
+                    banList[player.name] = [player.nameTag, `Anticheat: ${check}/${checkType}`, "Isolate"];
                     world.setDynamicProperty("banList", JSON.stringify(banList))
                     data.recentLogs.push(message)
                     player.runCommandAsync(`kick "${player.name}"`);
@@ -305,7 +313,16 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 data.recentLogs.push(message)
                 
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been §cpunished§r (§cKick§r) for ${check}/${checkType}"}]}`);
-                player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been removed from your game for using an §6unfair advantage!"}]}`);
+                if(config.modules.settings.theme == "1") {
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been removed from your game for using an §6unfair advantage!"}]}`);
+                } else if(config.modules.settings.theme == "2") {
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===============================||"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u§l Isolate Anticheat"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u Player Kicked: §n${player.name}"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u Reason: §dUnfair Advantage §t(${check})"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===============================||"}]}`);
+                }
+                
                 player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r >> §6Unfair Advantage.§b §j[§n${check}§j]`);
                 // incase /kick fails, we despawn them from the world
             } catch (error) {
@@ -346,9 +363,17 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 } catch (error) {}
                 
                 player.addTag("isBanned");
-                player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage!"}]}`);
+                if(config.modules.settings.theme == "1") {
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage!"}]}`);
+        
+                } else if(config.modules.settings.theme == "2") {
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===========================================||"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u§l Isolate Anticheat"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u Player Banned: §n${player.name}"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u Reason: §dUnfair Advantage §t(${check})"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===========================================||"}]}`);
+                }
             }
-
         }
         if (punishment === "mute") {
             player.addTag("isMuted");

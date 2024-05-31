@@ -152,7 +152,7 @@ function kickPlayerMenu(player, playerSelected, lastMenu = 0) {
         .toggle("Silent", false);
     menu.show(player).then((response) => {
         if(response.canceled) {
-            switch (lastMenu) {
+            switch (lastMenu) { 
                 case 0: 
                     banMenuSelect(player, lastMenu);
                     break;
@@ -249,7 +249,7 @@ function unbanPlayerMenu(player) {
 // ====================== //
 function settingsMenu(player) {
     player.playSound("mob.chicken.plop");
-
+    if(player.hasTag("noUIAccess")) return player.sendMessage("§r§j[§uIsolate§j]§r §cYou do not have access to this menu!");
     const settings_menu = new MinecraftUI.ActionFormData()
         .title("Module Settings")
         .body("Please select a sub-check to edit.");

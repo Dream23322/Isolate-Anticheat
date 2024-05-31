@@ -15,7 +15,7 @@ export function banlist(message) {
     let i
     for (const data in banls) {
         i++;
-        playerTellraw(player, banls[data][0] + " | Reason: " + banls[data][1] + " | By: " + banls[data][2]);
+        playerTellraw(player, "§n" + banls[data][0] + " §r| §uReason: §d" + banls[data][1] + " §r| §uBy:§d " + banls[data][2] + "§r");
     }
     playerTellraw(player, "---------------\n");
 }
