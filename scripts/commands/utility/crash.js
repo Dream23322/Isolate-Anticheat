@@ -31,5 +31,5 @@ export function crash(message, args) {
         
     
 
-    member.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has attempted to crashed ${member.nameTag}."}]}`);
+    member.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has attempted to crash ${member.nameTag}."}]}`);
 }
