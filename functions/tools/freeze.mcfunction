@@ -12,6 +12,7 @@ inputpermission set @s[tag=!nofreeze] movement disabled
 event entity @s[tag=!nofreeze] scythe:freeze
 tag @s[tag=!nofreeze] add freeze
 effect @s[tag=!nofreeze] slowness 12345 255 true
+effect @s[tag=!nofreeze] resistance 12345 255 true
 execute @s[tag=freeze,tag=!nofreeze] ~~~ tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r "},{"selector":"@s"},{"text":" has been frozen."}]}
 title @s[tag=!nofreeze] title §b Bit cold?
 title @s[tag=!nofreeze] subtitle §b You have been frozen!
