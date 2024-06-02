@@ -14,7 +14,7 @@ export function fly_a(player) {
     const playerVelocity = player.getVelocity();
     if(config.modules.flyA.enabled) {
         // Stop false flags layer 1.
-        if(aroundAir(player) && !player.isOnGround && !player.hasTag("op") && !player.isGliding) {
+        if(aroundAir(player) && !player.isOnGround && !player.hasTag("op") && !player.isGliding && !player.getEffect("levitation")) {
             // Stop bypasses and false flags for Pos Velocity
             //if(getScore(player, "airTime") < 10) return;
             let max_v_up = 0.62;

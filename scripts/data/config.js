@@ -248,6 +248,7 @@ export default
             "smartNotify": true,
             "smartOnly": false,
             "theme": "1",
+            "flagstyle": "2",
             "debugflag": false,
             "prefix": "!",
             "chatRanks": false
@@ -493,7 +494,7 @@ export default
             "enabled": true,
             "description":"Checks for invalid rotations",
             "punishment": "kick",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 5
         },
         "aimC": {
             "enabled": true,
@@ -557,7 +558,8 @@ export default
 		"killauraA": {
             "enabled": true,
             "description": "Checks for funny killaura rotations (Detects Prax Killaura very fast)",
-            "punishment": "kick",
+            "punishment": "ban",
+            "punishmentLength": "7d",
             "minVlbeforePunishment": 3
 		},
 		"killauraB": {
@@ -595,7 +597,8 @@ export default
             "description": "Checks for really high hit accuracy",
             "hits": 90,
             "timeMS": 45000,
-            "punishment": "kick",
+            "punishment": "ban",
+            "punishmentLength": "1d",
             "minVlbeforePunishment": 2
         },
         "hitboxA": {
@@ -665,6 +668,13 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 20
         },
+        "speedE": {
+            "enabled":true,
+            "description": "Checks for high bpt (Blocks per tick) over a while",
+            "bpt": 0.26,
+            "punishment": "kick",
+            "minVlbeforePunishment": 40
+        },
         "flyA": {
             "enabled": true,
             "description": "In air velocity check",
@@ -712,23 +722,15 @@ export default
         },
         "motionC": {
             "enabled": true,
-            "description": "Checks for not moving when having velocity",
+            "description": "Checks for failing BDS Prediction (strafe)",
             "min_velocity": 2.5,
             "punishment": "kick",
             "minVlbeforePunishment": 15
         },
         "motionD": {
             "enabled": true,
-            "description": "Checks for invalid velocity",
+            "description": "Checks for invalid speed changes",
             "punishment": "kick",
-            "minVlbeforePunishment": 10
-        },
-        "predictionA": {
-            "enabled": true,
-            "description": "Checks for failing BDS Prediction (strafe)",
-            "pos_diff": 0.09,
-            "time_int": 0.5,
-            "punishment": "none",
             "minVlbeforePunishment": 10
         },
         "strafeA": {

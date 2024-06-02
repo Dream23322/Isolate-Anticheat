@@ -3,12 +3,19 @@ import { flag } from "../../../util.js";
 import config from "../../../data/config.js";
 import { angleCalc, angleCalcRecode, getSpeed } from "../../../utils/mathUtil.js";
 import { getBlocksBetween } from "../../../utils/mathUtil.js";
-/*
-Different style nuker checks
-*/
+import { add_effect } from "../../../utils/gameUtil.js";
+/**
+ * Different style nuker checks
+ * @param {Minecraft.Player} player - The player who broke the block
+ * @param {Minecraft.Block} block - The block that was broken
+ * @param {string} brokenBlockId - The ID of the broken block
+ * @param {Minecraft.BlockPermutation} resetValue - The block permutation to reset the block to
+ */
 export function nuker_d(player, block, brokenBlockId, resetValue) {
+    // Check if the nukerD module is enabled and the broken block is a redstone ore
     if(config.modules.nukerD.enabled && (brokenBlockId === "minecraft:redstone_ore" || brokenBlockId === "minecraft:lit_redstone_ore")) {
-        let score = 0;
+        let score = 0; // Initialize the score
+
         // List directions we will be checking
         const directions = [
             { x: 1, y: 0, z: 0 },
@@ -18,34 +25,49 @@ export function nuker_d(player, block, brokenBlockId, resetValue) {
             { x: 0, y: 1, z: 0 },
             { x: 0, y: -1, z: 0 }
         ];
+
+        // Check each direction
         for (const dir of directions) {
             const pos = {
                 x: block.location.x + dir.x,
                 y: block.location.y + dir.y,
                 z: block.location.z + dir.z
             };
-            // If the position doesnt have air in it, add to the score
+
+            // If the position doesn't have air in it, add to the score
             if (getBlocksBetween(pos, pos).some((blk) => player.dimension.getBlock(blk)?.typeId !== "minecraft:air")) {
                 score++;
-            }     
-        }   
+            }    
+        }
+
         let reset = false;
         console.warn(`${player.name} Score: ${score}`);
+
+        // Check if the score is 6, if so, flag the player and reset the block
         if(score == 6) {
             flag(player, "Nuker", "D", "World", "score", score, true);
             reset = true;
-        } 
+        }
+
+        // Calculate the distance between the player and the block
         const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.z - player.location.z, 2));
-        if(distance > 1.5 && angleCalcRecode(player, block) > 90 && player.hasTag("moving")) {
-            flag(player, "Nuker", "D", "World", "angle (1)", angleCalc(player, block));
+
+        // Check if the player is moving too fast and flag the player if true
+        if(getSpeed(player) > 0.26) {
+            flag(player, "Nuker", "D", "World", "Speed", getSpeed(player), true);
             reset = true;
         }
-        if(angleCalcRecode(player, block) < 0.3 && getSpeed(player) > 2) {
-            flag(player, "Nuker", "D", "World", "angle (2)", angleCalc(player, block));
+
+        // Check if the angle between the player and the block is greater than 90 degrees and flag the player if true
+        if(angleCalc(player, block) > 90 && distance > 1.3) {
+            flag(player, "Nuker", "D", "World", "angle", angleCalc(player, block), true);
             reset = true;
         }
+
+        // Reset the block and add an absorption effect to the player if reset is true
         if(reset == true) {
             block.setPermutation(resetValue);
+            add_effect(player, "minecraft:absorption", 1, 0);
         }
     }
 }  

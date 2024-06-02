@@ -10,7 +10,7 @@ import { banList } from "./data/globalban.js";
 import data from "./data/data.js";
 import { mainGui, playerSettingsMenuSelected } from "./features/ui.js";
 import { banplayer } from "./data/paradoxban.js";
-
+import { joinData } from "./utils/acUtil.js";
 
 // Import Packet Checks
 import { badpackets_f } from "./checks/packet/badpackets/badpacketsF.js";
@@ -28,8 +28,9 @@ import { speed_a } from "./checks/movement/speed/speedA.js";
 import { speed_b } from "./checks/movement/speed/speedB.js";
 import { motion_a } from "./checks/movement/motion/motionA.js";
 import { motion_b } from "./checks/movement/motion/motionB.js";
+import { motion_c } from "./checks/movement/motion/motionC.js";
+import { motion_d } from "./checks/movement/motion/motionD.js";
 import { fly_c } from "./checks/movement/fly/flyC.js";
-import { prediction_a } from "./checks/movement/prediction/predictionA.js";
 import { noslow_a } from "./checks/movement/noslow/noslowA.js";
 import { noslow_b } from "./checks/movement/noslow/noslowB.js";
 import { sprint_a } from "./checks/movement/sprint/sprintA.js";
@@ -72,8 +73,11 @@ import { aim_b } from "./checks/combat/aim/aimB.js";
 import { aim_c } from "./checks/combat/aim/aimC.js";
 import { autoclicker_c } from "./checks/combat/autoclicker/autoclickerC.js";
 import { autoclicker_d } from "./checks/combat/autoclicker/autoclickerD.js";
-import { joinData } from "./utils/acUtil.js";
 import { autoclicker_e } from "./checks/combat/autoclicker/autoclickerE.js";
+import { speed_e } from "./checks/movement/speed/speedE.js";
+
+
+
 
 
 
@@ -359,10 +363,13 @@ Minecraft.system.runInterval(() => {
 			speed_b(player);
 			speed_c(player, tickValue, speedCLog);
 			speed_d(player);
+			speed_e(player);
 		}
 		if(config.generalModules.motion && !player.hasTag("nomotion") && !player.hasTag("end_portal")) {
 			motion_a(player);
 			motion_b(player);
+			motion_c(player, lastXZv);
+			motion_d(player);
 		}
 		if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
 			badpackets_d(player, lastPlayerYawRotations, lastYawDiff);
@@ -376,8 +383,7 @@ Minecraft.system.runInterval(() => {
 		}
 
 		// General movement
-		if(config.generalModules.movement) {	
-			prediction_a(player, lastXZv);
+		if(config.generalModules.movement) {
 			strafe_a(player);
 			noslow_a(player);
 			noslow_b(player);
@@ -436,7 +442,7 @@ Minecraft.system.runInterval(() => {
 			const removalTags = [
 				"slime", "placing", "ice", "fall_damage", 
 				"end_portal", "stairs", "timer_bypass", "ender_pearl", 
-				"useItem", "interactBlock"
+				"useItem", "interactBlock", "speedE_pass"
 			];
 			removalTags.forEach(tag => player.removeTag(tag));
 			setScore(player, "tag_reset", 0);
