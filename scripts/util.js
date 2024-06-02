@@ -196,18 +196,109 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     currentVl++;
     console.warn("[Isolate]", player.name, check,"[",checkType,"]", hackType, "-", debugName, debug, "VL=", currentVl);
     const thememode = config.modules.settings.theme;
+    const maxVl = config.modules[check.toLowerCase() + checkType.toUpperCase()].minVlbeforePunishment;
     if(thememode == "1") {
         if(config.modules.settings.debugflag) {
-            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§jx§9${currentVl}§h]"}]}`);
+            if(config.modules.settings.flagstyle == "1") {
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§jx§9${currentVl}§h]"}]}`);
+            } else if(config.modules.settings.flagstyle == "2") {
+                let displ = "";
+                let filled, unfilled;
+                if(maxVl <= 10) {
+                    filled = currentVl;
+                    unfilled = maxVl - currentVl;
+                } else {
+                    let percent = currentVl / maxVl;
+                    filled = Math.round(percent * 10);
+                    unfilled = 10 - filled;
+                }
 
+                for (let i = 0; i < filled; i++) {
+                    displ += '§9|';
+                }
+
+                for (let i = 0; i < unfilled; i++) {
+                    displ += '§j|';
+                }
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [${displ}§h]"}]}`);
+            }
         } else {
-            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}§h. [§jx§9${currentVl}§h]"}]}`);
+            if(config.modules.settings.flagstyle == "1") {
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}§h. [§jx§9${currentVl}§h]"}]}`);
+            } else if(config.modules.settings.flagstyle == "2") {
+                let displ = "";
+                let filled, unfilled;
+                if(maxVl <= 10) {
+                    filled = currentVl;
+                    unfilled = maxVl - currentVl;
+                } else {
+                    let percent = currentVl / maxVl;
+                    filled = Math.round(percent * 10);
+                    unfilled = 10 - filled;
+                }
+
+                for (let i = 0; i < filled; i++) {
+                    displ += '§9|';
+                }
+
+                for (let i = 0; i < unfilled; i++) {
+                    displ += '§j|';
+                }
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}§h. [${displ}§h]"}]}`);
+            }
+            
         }
     } else if(thememode == "2") {
         if(config.modules.settings.debugflag) {
-            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§dx§u${currentVl}§h]"}]}`);
+            if(config.modules.settings.flagstyle == "1") {
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§dx§u${currentVl}§h]"}]}`);
+            } else if(config.modules.settings.flagstyle == "2") {
+                let displ = "";
+                let filled, unfilled;
+                if(maxVl <= 10) {
+                    filled = currentVl;
+                    unfilled = maxVl - currentVl;
+                } else {
+                    let percent = currentVl / maxVl;
+                    filled = Math.round(percent * 10);
+                    unfilled = 10 - filled;
+                }
+
+                for (let i = 0; i < filled; i++) {
+                    displ += '§u|';
+                }
+
+                for (let i = 0; i < unfilled; i++) {
+                    displ += '§d|';
+                }
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [${displ}§h]"}]}`);
+            }
+            
         } else {
-            player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()}§h. [§dx§u${currentVl}§h]"}]}`);     
+            if(config.modules.settings.flagstyle == "1") {
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()}§h. [§dx§u${currentVl}§h]"}]}`);     
+            } else if(config.modules.settings.flagstyle == "2") {
+                let displ = "";
+                let filled, unfilled;
+                if(maxVl <= 10) {
+                    filled = currentVl;
+                    unfilled = maxVl - currentVl;
+                } else {
+                    let percent = currentVl / maxVl;
+                    filled = Math.round(percent * 10);
+                    unfilled = 10 - filled;
+                }
+
+                for (let i = 0; i < filled; i++) {
+                    displ += '§u|';
+                }
+
+                for (let i = 0; i < unfilled; i++) {
+                    displ += '§d|';
+                }
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()}§h. [${displ}§h]"}]}`);
+
+            }
         }
     }
 
@@ -292,12 +383,15 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     if(config.modules.settings.theme == "1") {
                         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage! (7-Day)"}]}`);
                     } else if(config.modules.settings.theme == "2") {
+                        player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c "}]}`); 
                         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===========================================||"}]}`);
                         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u§l Isolate Anticheat"}]}`);
                         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u Player Banned:§t §n${player.name}"}]}`);
                         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u Reason: §dUnfair Advantage§t - 7 days"}]}`);
                         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===========================================||"}]}`);
+                        player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c "}]}`); 
                     }
+                    player.runCommandAsync("function tools/resetwarns");
                     const banList = JSON.parse(world.getDynamicProperty("banList"));
                     banList[player.name] = [player.nameTag, `Anticheat: ${check}/${checkType}`, "Isolate"];
                     world.setDynamicProperty("banList", JSON.stringify(banList))
@@ -316,11 +410,13 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 if(config.modules.settings.theme == "1") {
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been removed from your game for using an §6unfair advantage!"}]}`);
                 } else if(config.modules.settings.theme == "2") {
-                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===============================||"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c "}]}`);                    
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c\n||===============================||"}]}`);
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u§l Isolate Anticheat"}]}`);
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u Player Kicked: §n${player.name}"}]}`);
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u Reason: §dUnfair Advantage §t(${check})"}]}`);
-                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===============================||"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===============================||\n"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c "}]}`); 
                 }
                 
                 player.runCommandAsync(`kick "${player.name}" §r§j[§uIsolate§j]§r >> §6Unfair Advantage.§b §j[§n${check}§j]`);
@@ -348,7 +444,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 let banLength;
 
                 const banList = JSON.parse(world.getDynamicProperty("banList"));
-                banList[player.name] = [player.nameTag, `Anticheat: ${check}/${checkType}`, "Isolate AC"];
+                banList[player.name] = [player.nameTag, `Anticheat: ${check}/${checkType}`, "Isolate"];
                 world.setDynamicProperty("banList", JSON.stringify(banList))
                 const message = `§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat§b [§s${check}§b]`;
     
@@ -361,17 +457,19 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     banLength = parseTime(punishmentLength);
                     player.addTag(`time:${Date.now() + banLength}`);
                 } catch (error) {}
-                
+                player.runCommandAsync("function tools/resetwarns");
                 player.addTag("isBanned");
                 if(config.modules.settings.theme == "1") {
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage!"}]}`);
         
                 } else if(config.modules.settings.theme == "2") {
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c "}]}`); 
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===========================================||"}]}`);
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u§l Isolate Anticheat"}]}`);
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u Player Banned: §n${player.name}"}]}`);
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u Reason: §dUnfair Advantage §t(${check})"}]}`);
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===========================================||"}]}`);
+                    player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c "}]}`); 
                 }
             }
         }

@@ -25,6 +25,8 @@ export function speed_d(player) {
                 if((invalid || invalid2) && allow) {
                     flag(player, "Speed", "D", "Movement", "y-Velocity", currentY, true);
                 }
+
+
             }
         }
     }
