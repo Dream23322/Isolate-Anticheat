@@ -20,7 +20,7 @@ export function fly_d(player) {
             !player.hasTag("placing") &&
             !player.hasTag("trident")
         ) {
-            flag(player, "Fly", "D", "Movement", "fallDistance", player.fallDistance, true);
+            flag(player, "Fly", "D", "Movement", "fallDistance", player.fallDistance.toFixed(4), true);
         }
             
     }

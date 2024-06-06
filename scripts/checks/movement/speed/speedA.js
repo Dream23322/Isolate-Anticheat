@@ -23,19 +23,19 @@ export function speed_a(player) {
 
         // If the speed is higher than the max speed, flag the player for Speed/A
         if(playerSpeed > modifiedSpeed && !player.hasTag("damaged") && !player.hasTag("op") && !player.isFlying && !player.hasTag("trident") && !player.hasTag("ice") && !player.hasTag("slime")) {
-            flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
+            flag(player, "Speed", "A", "Movement", "speed", playerSpeed.toFixed(2), true);
         }
     } else {
         // If the player doesnt have the strict tag, be more tolerant
         if(!player.hasTag("strict")) {
             if(playerSpeed > config.modules.speedA.speed + 0.1 && !player.hasTag("strict") && !player.hasTag("damaged") && !player.hasTag("op") && !player.isFlying && !player.hasTag("trident") && !player.hasTag("ice") && !player.hasTag("slime")) {
-                flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
+                flag(player, "Speed", "A", "Movement", "speed", playerSpeed.toFixed(2), true);
             }
         
         } else {
             // If the player doesnt have the the strict tag, be lesss tolerant
             if(playerSpeed > config.modules.speedA.speed && !player.hasTag("damaged") && !player.hasTag("op") && !player.isFlying && !player.hasTag("trident") && !player.hasTag("ice") && !player.hasTag("slime")) {
-                flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
+                flag(player, "Speed", "A", "Movement", "speed", playerSpeed.toFixed(2), true);
             }
         }
     }

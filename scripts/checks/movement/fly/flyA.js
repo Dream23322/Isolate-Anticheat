@@ -25,14 +25,14 @@ export function fly_a(player) {
             if(player.hasTag("elytra")) max_v_up += 20;
             if(getScore(player, "tick_counter2", 0) < 8) return;
             if(player.fallDistance > 25) return;
-            if(playerVelocity.y > max_v_up) flag(player, "Fly", "A", "Movement", "y-velocity", `${playerVelocity.y},damaged=${player.hasTag("damaged")},maxup=${max_v_up}`, true);
+            if(playerVelocity.y > max_v_up) flag(player, "Fly", "A", "Movement", "y-velocity", `${playerVelocity.y.toFixed(2)},damaged=${player.hasTag("damaged")},maxup=${max_v_up}`, true);
             
             // Stop false flags for Negative Velocity
             let min_v_down = -5.2 - player.fallDistance;
             if(player.hasTag("elytra")) min_v_down = -20;
             if(player.hasTag("damaged")) min_v_down = -4;
             if(player.hasTag("placing")) min_v_down = -7;
-            if(playerVelocity.y < min_v_down) flag(player, "Fly", "A", "Movement", "y-velocity", playerVelocity.y, true);
+            if(playerVelocity.y < min_v_down) flag(player, "Fly", "A", "Movement", "y-velocity", `${playerVelocity.y.toFixed(2)},damaged=${player.hasTag("damaged")},mindown=${min_v_down}`, true);
         }  
     }
 }
