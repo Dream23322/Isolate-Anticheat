@@ -3,7 +3,7 @@
 import * as Minecraft from "@minecraft/server";
 import config from "./data/config.js";
 import data from "./data/data.js";
-import { setParticle, setSound } from "./utils/gameUtil.js";
+import { setParticle, setSound, setTitle } from "./utils/gameUtil.js";
 
 
 const world = Minecraft.world;
@@ -362,15 +362,15 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
             else if(other_vl == 15) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of Misc cheat!"}]}`);
             else if(total_vL == 20) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using an Unfair Advantage! (Specate with !v)"}]}`);
       }
-    if(currentVl > checkData.minVlbeforePunishment) {
+    if(currentVl >= checkData.minVlbeforePunishment) {
 
 
-        if (punishment === "kick" && config.modules.settings.autoKick) {
+        if (punishment === "kick" && (config.modules.settings.autoKick)) {
             let banLength2;
             try {
                 //banAnimation(player, "type2");
                 setScore(player, "kickvl", kickvl + 1);
-                if(kickvl > config.modules.settings.kicksBeforeBan) {
+                if(kickvl > config.modules.settings.kicksBeforeBan || config.modules.smartReport.enabled && config.modules.smartReport.kickBan && kickvl > config.modules.smartReport.minKicks && player.hasTag("reported")) {
                     player.addTag("by:§d Isolate Anticheat");
                     player.addTag(`reason:§c Isolate Anticheat caught you cheating!`);
                     banLength2 = parseTime("7d");
@@ -380,6 +380,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     console.warn(`${new Date().toISOString()} |${player.name} was banned by Isolate Anticheat for ${check}/${checkType}`);
                     const message = `§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat §j[§n${check}§j]`;
                     player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been §cpunished§r (§cBan§r) for ${check}/${checkType}"}]}`);
+                    
                     if(config.modules.settings.theme == "1") {
                         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage! (7-Day)"}]}`);
                     } else if(config.modules.settings.theme == "2") {
@@ -484,6 +485,17 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
         
         }
         
+
+        // Testing mode
+
+        if(punishment == "kick" && config.modules.settings.testingmode) {
+            setTitle(player, "You would have been kicked", `Check: ${check}/${checkType}`);
+            player.runCommandAsync("function tools/resetwarns");
+        }
+        if(punishment == "ban" && config.modules.settings.testingmode) {
+            setTitle(player, "You would have been banned", `Check: ${check}/${checkType}`);
+            player.runCommandAsync("function tools/resetwarns");
+        }
     }    
 }
 
