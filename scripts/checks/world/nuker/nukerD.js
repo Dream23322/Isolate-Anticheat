@@ -41,7 +41,6 @@ export function nuker_d(player, block, brokenBlockId, resetValue) {
         }
 
         let reset = false;
-        console.warn(`${player.name} Score: ${score}`);
 
         // Check if the score is 6, if so, flag the player and reset the block
         if(score == 6) {
@@ -59,7 +58,7 @@ export function nuker_d(player, block, brokenBlockId, resetValue) {
         }
 
         // Check if the angle between the player and the block is greater than 90 degrees and flag the player if true
-        if(angleCalc(player, block) > 90 && distance > 1.3) {
+        if(angleCalc(player, block) > 90 && distance > 2) {
             flag(player, "Nuker", "D", "World", "angle", angleCalc(player, block), true);
             reset = true;
         }
