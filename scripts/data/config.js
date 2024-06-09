@@ -251,48 +251,17 @@ export default
             "flagstyle": "2",
             "debugflag": false,
             "prefix": "!",
-            "chatRanks": false
+            "chatRanks": false,
+            "testingmode": false
         },
-        "itemSpawnRateLimit": {
+        "smartReport": {
             "enabled": false,
-            "entitiesBeforeRateLimit": 45
+            "infoCheck": true,
+            "kickBan": true,
+            "minKicks": 2,
+            "banLength": "7d"
         },
-        "globalBan": {
-            "enabled": true,
-        },
-        /*
-        Enabling this module is highly discouraged, as it breaks items names, enchantments, durability
-        and item data relating to it.
-        These items can contain large nbt data which can cause the world file size to dramatically increase.
-        In anarchy enviorments, this module can help greatly to prevent world corruption.
-        Your welcome, Carthe.
-        */
-        "resetItemData": {
-            "enabled": false,
-            "items": [
-                "minecraft:armor_stand",
-                "minecraft:barrel",
-                "minecraft:blast_furnace",
-                "minecraft:brewing_stand",
-                "minecraft:campfire",
-                "minecraft:soul_campfire",
-                "minecraft:cauldron",
-                "minecraft:chest",
-                "minecraft:trapped_chest",
-                "minecraft:dropper",
-                "minecraft:flower_pot",
-                "minecraft:hopper",
-                "minecraft:frame",
-                "minecraft:glow_frame",
-                "minecraft:jukebox",
-                "minecraft:lectern",
-                "minecraft:chest_minecart",
-                "minecraft:hopper_minecart",
-                "minecraft:smoker",
-                "minecraft:end_gateway",
-                "minecraft:sponge"
-            ]
-        },
+
         "filterUnicodeChat": true,
         /*
         // This exploit has been entirely patched out.
@@ -531,8 +500,8 @@ export default
             "enabled": true,
             "minCPS": 12,
             "maxDeviation": 0.2500,
-            "punishment": "none",
-            "minVlbeforePunishment": 0,
+            "punishment": "kick",
+            "minVlbeforePunishment": 3,
             "checkCPSAfter": 1000
         },
         "autoclickerC": {
@@ -618,7 +587,7 @@ export default
             "speed": 0.22,
             "maxSpeed": 0.36,
             "punishment": "kick",
-            "minVlbeforePunishment": 40
+            "minVlbeforePunishment": 30
         },
         "noslowB": {
             "enabled": true,
@@ -889,6 +858,46 @@ export default
             "enabled": true,
             "punishment": "kick",
             "minVlbeforePunishment": 1
+        },
+        "itemSpawnRateLimit": {
+            "enabled": false,
+            "entitiesBeforeRateLimit": 45
+        },
+        "globalBan": {
+            "enabled": true,
+        },
+        /*
+        Enabling this module is highly discouraged, as it breaks items names, enchantments, durability
+        and item data relating to it.
+        These items can contain large nbt data which can cause the world file size to dramatically increase.
+        In anarchy enviorments, this module can help greatly to prevent world corruption.
+        Your welcome, Carthe.
+        */
+        "resetItemData": {
+            "enabled": false,
+            "items": [
+                "minecraft:armor_stand",
+                "minecraft:barrel",
+                "minecraft:blast_furnace",
+                "minecraft:brewing_stand",
+                "minecraft:campfire",
+                "minecraft:soul_campfire",
+                "minecraft:cauldron",
+                "minecraft:chest",
+                "minecraft:trapped_chest",
+                "minecraft:dropper",
+                "minecraft:flower_pot",
+                "minecraft:hopper",
+                "minecraft:frame",
+                "minecraft:glow_frame",
+                "minecraft:jukebox",
+                "minecraft:lectern",
+                "minecraft:chest_minecart",
+                "minecraft:hopper_minecart",
+                "minecraft:smoker",
+                "minecraft:end_gateway",
+                "minecraft:sponge"
+            ]
         }
 
 
