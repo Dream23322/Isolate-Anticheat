@@ -1,7 +1,7 @@
 import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
-import { getDistanceXZ, getSpeed } from "../../../utils/mathUtil.js";
+import { getBlocksBetween, getDistanceXZ, getSpeed } from "../../../utils/mathUtil.js";
 
 // Thank you Visual1mpact for helping me with the Map's
 // Initialize scaffold_a_map if not present
@@ -31,6 +31,18 @@ function calculateDistance(origin, point) {
     
     return Math.hypot(dx, dz);
 }
+function isAirBelowAllBlocks(player, one, two, three) {
+    // Check that the block below the palaced block is air
+    const airone =  { x: one.x, y: one.y - 1, z: one.z };
+    const airtwo = { x: two.x, y: two.y - 1, z: two.z };
+    const airthree = { x: three.x, y: three.y - 1, z: three.z };
+    return (
+        player.dimension.getBlock(airone).typeId === "minecraft:air" &&
+        player.dimension.getBlock(airtwo).typeId === "minecraft:air" &&
+        player.dimension.getBlock(airthree).typeId === "minecraft:air"
+    );
+}
+
 export function scaffold_a(player, block) {
     if (config.modules.scaffoldA.enabled && scaffold_a_map.has(player.name) && !player.hasTag("gmc") && !player.hasTag("op")) {
         const place_location = { x: block.location.x, y: block.location.y, z: block.location.z };
@@ -56,7 +68,8 @@ export function scaffold_a(player, block) {
                 }
             }
             if (
-                is_diag_recode(place_location, player, old_place_location)
+                is_diag_recode(place_location, player, old_place_location) &&
+                isAirBelowAllBlocks(player, place_location, last_place_location, old_place_location)
             ) {
                 
                 const isPitchEqual = Math.abs(pitch_values.new - pitch_values.mid) === 0
