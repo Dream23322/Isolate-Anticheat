@@ -1,6 +1,5 @@
-import { flag, debug } from "../../../util";
+import { flag } from "../../../util";
 import config from "../../../data/config";
-import { hVelocity } from "../../../utils/mathUtil";
 const data = new Map();
 const data2 = new Map();
 export function speed_e(player) {

@@ -1,4 +1,3 @@
-import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
 
@@ -22,7 +21,7 @@ export function tower_b(player, block) {
         ) {
             const yPosDiff = Math.abs(player.location.y % 1);
     
-            if(yPosDiff > config.modules.towerB.max_y_pos_diff && player.gamemode !== "creative" && !player.hasTag("flying")) {
+            if(yPosDiff > config.modules.towerB.max_y_pos_diff && !player.hasTag("gmc") && !player.hasTag("flying")) {
                 flag(player, "Tower", "B", "World", `yPosDiff=${yPosDiff},block=${block.typeId}`, true);
                 block.setType("air");
             }

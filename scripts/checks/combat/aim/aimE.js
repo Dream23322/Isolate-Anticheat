@@ -1,4 +1,4 @@
-import { debug, flag } from "../../../util";
+import { flag } from "../../../util";
 import { getAverage, getStandardDeviation, gcd, EXPANDER } from "../../../utils/mathUtil";
 import config from "../../../data/config.js";
 const data = new Map();

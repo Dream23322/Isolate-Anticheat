@@ -1,15 +1,14 @@
 // @ts-check
 // @ts-ignore
 import * as Minecraft from "@minecraft/server";
-import { getHealth, setTitle, setParticle, tag_system, aroundAir, add_effect} from "./utils/gameUtil.js";
+import { tag_system, aroundAir, add_effect} from "./utils/gameUtil.js";
 import { getBlocksBetween, angleCalc } from "./utils/mathUtil.js";
 import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
 import { commandHandler } from "./commands/handler.js";
 import config from "./data/config.js";
 import { banList } from "./data/globalban.js";
 import data from "./data/data.js";
-import { mainGui, playerSettingsMenuSelected } from "./features/ui.js";
-import { banplayer } from "./data/paradoxban.js";
+import { mainGui } from "./features/ui.js";
 import { joinData } from "./utils/acUtil.js";
 
 // Import Packet Checks
@@ -33,12 +32,10 @@ import { motion_d } from "./checks/movement/motion/motionD.js";
 import { fly_c } from "./checks/movement/fly/flyC.js";
 import { noslow_a } from "./checks/movement/noslow/noslowA.js";
 import { noslow_b } from "./checks/movement/noslow/noslowB.js";
-import { sprint_a } from "./checks/movement/sprint/sprintA.js";
 import { fly_a } from "./checks/movement/fly/flyA.js";
 import { exploit_a } from "./checks/packet/exploit/exploitA.js";
 import { timer_a } from './checks/packet/timer/timerA.js';
 import { fly_b } from "./checks/movement/fly/flyB.js";
-import { velocity_a } from "./checks/movement/velocity/velocityA.js";
 import { speed_d } from "./checks/movement/speed/speedD.js";
 import { strafe_a } from "./checks/movement/strafe/strafeA.js";
 import { fly_d } from "./checks/movement/fly/flyD.js";
@@ -73,41 +70,23 @@ import { aim_b } from "./checks/combat/aim/aimB.js";
 import { aim_c } from "./checks/combat/aim/aimC.js";
 import { autoclicker_c } from "./checks/combat/autoclicker/autoclickerC.js";
 import { autoclicker_d } from "./checks/combat/autoclicker/autoclickerD.js";
-import { autoclicker_e } from "./checks/combat/autoclicker/autoclickerE.js";
 import { speed_e } from "./checks/movement/speed/speedE.js";
-
-
-
-
-
-
-
-
 
 const world = Minecraft.world;
 const system = Minecraft.system;
 
-//TPS
-let tps = 20;
 let lagValue = 1;
-let lastDate = Date.now();
 
 // Maps for logging data that we use in checks
 let lastPlayerYawRotations = new Map();
 const lastYawDiff = new Map();
 const lastMessage = new Map();
-const lastFallDistance = new Map();
-const lastCPS = new Map();
-
 const lastXZv = new Map();
-
-
-const lastPosition = new Map();
-
-// Non messy bad Maps
 const speedCLog = new Map();
 const dmg_data = new Map();
-if(config.debug) console.warn(`${new Date().toISOString()} | Im not a knob and this actually worked :sunglasses:`);
+
+
+if(config.debug) console.warn(`${new Date().toISOString()} | Isolate - Load success`);
 let currentVL;
 world.beforeEvents.chatSend.subscribe((msg) => {
 	const message = msg.message.toLowerCase();
@@ -125,7 +104,9 @@ world.beforeEvents.chatSend.subscribe((msg) => {
 			player.sendMessage("§cPlease do not repeat yourself");
 		}
 	}
+
 	lastMessage.set(player, message);
+
 	if(player.hasTag("isMuted")) {
 		msg.cancel = true;
 		player.sendMessage("§r§j[§uIsolate§j]§r §1§lNOPE! §r§cYou have been muted.");
@@ -191,15 +172,6 @@ world.afterEvents.entityHurt.subscribe((data) => {
 
 Minecraft.system.runInterval(() => {
   if (config.modules.itemSpawnRateLimit.enabled) data.entitiesSpawnedInLastTick = 0;
-	
-	//Calculate TPS
-  	if(system.currentTick % 20 == 0){
-		const deltaDate = Date.now() - lastDate;
-		const lag = deltaDate / 1000;
-		tps = Minecraft.TicksPerSecond / lag;
-		lagValue = lag;
-		lastDate = Date.now();
-	}
 
 	// Run the code for each player
 	for (const player of world.getPlayers()) {
@@ -211,8 +183,7 @@ Minecraft.system.runInterval(() => {
 				
 		const selectedSlot = player.selectedSlot;
 
-		if((player.isGlobalBanned || player.nameTag in banplayer) && config.modules.globalBan.enabled) {
-			setParticle(player, "totem_particle");
+		if(player.isGlobalBanned && config.modules.globalBan.enabled) {
 			player.addTag("by:Isolate Anticheat");
 			player.addTag("reason:You are in a hacker database!");
 			player.addTag("isBanned");
@@ -249,27 +220,6 @@ Minecraft.system.runInterval(() => {
 			player.runCommandAsync(`scoreboard players set @s zPos ${Math.floor(player.location.z)}`);
 		}
 
-		if(config.modules.bedrockValidate.enabled) {
-			if(getScore(player, "bedrock") >= 1) {
-				if(config.modules.bedrockValidate.overworld && player.dimension.id === "minecraft:overworld") {
-					player.runCommandAsync("fill ~-5 -64 ~-5 ~5 -64 ~5 bedrock");
-					player.runCommandAsync("fill ~-4 -59 ~-4 ~4 319 ~4 air 0 replace bedrock");
-				}
-
-				if(config.modules.bedrockValidate.nether && player.dimension.id === "minecraft:nether") { 
-					player.runCommandAsync("fill ~-5 0 ~-5 ~5 0 ~5 bedrock");
-					player.runCommandAsync("fill ~-5 127 ~-5 ~5 127 ~5 bedrock");
-					player.runCommandAsync("fill ~-5 5 ~-5 ~5 120 ~5 air 0 replace bedrock");
-				}
-			} else config.modules.bedrockValidate.enabled = false;
-		}
-
-
-
-		// ==================================
-		//                    Utilities
-		// ==================================
-
 		// Im currently adding more management for the strict system, it wont be a full system it will just be there to help prevent false flags
 		if(getScore(player, "kickvl", 0) > config.modules.settings.ViolationsBeforeBan / 2 && !player.hasTag("strict")) {
 			//Try add the tag
@@ -280,6 +230,7 @@ Minecraft.system.runInterval(() => {
 				player.runCommandAsync(`tag "${player.name}" add strict`);
 			}
 		}
+
 		if(player.hasTag("runUI")) {
 			player.removeTag("runUI")
 			mainGui(player);
@@ -299,23 +250,21 @@ Minecraft.system.runInterval(() => {
 		}
 
 		const blockBelow = player.dimension.getBlock({x: player.location.x, y: player.location.y - 1, z: player.location.z}) ?? {typeId: "minecraft:air"};
-		if(blockBelow.typeId.includes("ice")) {
-			player.addTag("ice");
-		}
-		if(blockBelow.typeId.includes("slime")) {
-			player.addTag("slime");
-		}
-		if(player.hasTag("trident")) {
+		const blockTags = ["ice", "slime", "end_portal", "stairs"];
+		blockTags.forEach(tag => {
+			if (blockBelow.typeId.includes(tag)) {
+				player.addTag(tag);
+			}
+		});
+		if (player.hasTag("trident")) {
 			setScore(player, "right", 0);
 		}
-		if(blockBelow.typeId.includes("end_portal")) {
-			player.addTag("end_portal");
-		}
-		if(blockBelow.typeId.includes("stairs")) {
-			player.addTag("stairs");
-		}
+
+
 		tag_system(player);
-		// AirTime (Used for Fly[B]) 
+
+
+		// AirTime 
 		const flyTime = getScore(player, "airTime", 0);
 		if(!player.isOnGround && !player.hasTag("ground") && aroundAir(player)) {
 			setScore(player, "airTime", flyTime + 1);
@@ -323,18 +272,7 @@ Minecraft.system.runInterval(() => {
 			setScore(player, "airTime", 0)
 		}
 
-	
-		// This is for debugging a players fall distance/speed
-		if(Math.abs(player.fallDistance) > 0 && player.hasTag("debugFall")) {
-			if(lastFallDistance.get(player)) {
-				const fallSpeed = player.fallDistance - lastFallDistance.get(player);
-				console.log(player, "fallSpeed: " + fallSpeed);
-				if(fallSpeed === -0.5125312805175781) {
-					flag(player, "Speed", "B", "Movement", "fallSpeed", fallSpeed);
-				}
-			}
-			lastFallDistance.set(player, player.fallDistance);
-		}     
+  
 		const tickValue = getScore(player, "tickValue", 0);                                      
 		// The flag system and the counter and summon system
 		if(player.hasTag("slime")) {
@@ -387,7 +325,6 @@ Minecraft.system.runInterval(() => {
 			strafe_a(player);
 			noslow_a(player);
 			noslow_b(player);
-			sprint_a(player);
 		}
 
 		if(config.generalModules.aim) {
@@ -397,23 +334,19 @@ Minecraft.system.runInterval(() => {
 			aim_b(player);
 		}
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
-		if(config.modules.scaffoldF.enabled && !player.hasTag("noscaffold")) {
-			const valueOfBlocks = getScore(player, "scaffoldAmount", 0);
-			if (tickValue > 20 - 2.67e-11 && playerVelocity.y < 0.3) {
-				let maxBlocks = config.modules.scaffoldF.blocksPerSecond;
-				if(player.getEffect("speed")) {
-					maxBlocks = config.modules.scaffoldF.blocksPerSecond + player.getEffect("speed").amplifier;
-				}
-				if(valueOfBlocks > maxBlocks && !player.getEffect("speed")) {
-					flag(player, "Scaffold", "F", "Limit", "amount", valueOfBlocks, false);
-				} 
+		if (config.modules.scaffoldF.enabled && !player.hasTag("noscaffold")) {
+			const blocksPlaced = getScore(player, "scaffoldAmount", 0);
+			const blocksPerSecond = config.modules.scaffoldF.blocksPerSecond + (player.getEffect("speed")?.amplifier ?? 0);
+
+			if (tickValue > 20 && playerVelocity.y < 0.3) {
 				setScore(player, "scaffoldAmount", 0);
 				setScore(player, "tickValue", 0);
 			} else {
-				if(valueOfBlocks > 0 && player.hasTag("debugBlock")) {
-					if(config.debug) console.warn(`${new Date().toISOString()} | ${player.name} has placed ${valueOfBlocks} in ${tickValue} tick's`);
-				}
 				setScore(player, "tickValue", tickValue + 1);
+			}
+
+			if (blocksPlaced > blocksPerSecond && !player.getEffect("speed")) {
+				flag(player, "Scaffold", "F", "Limit", "amount", blocksPlaced, false);
 			}
 		}
 		if(!player.hasTag("attacking") && player.hasTag("leftv2") && !player.hasTag("usingItem") && !player.hasTag("useItem") && !player.hasTag("interactBlock")) {
@@ -442,22 +375,22 @@ Minecraft.system.runInterval(() => {
 			const removalTags = [
 				"slime", "placing", "ice", "fall_damage", 
 				"end_portal", "stairs", "timer_bypass", "ender_pearl", 
-				"useItem", "interactBlock", "speedE_pass"
+				"useItem", "interactBlock", "speedE_pass", "fighting"
 			];
 			removalTags.forEach(tag => player.removeTag(tag));
 			setScore(player, "tag_reset", 0);
 		}
-
 		if(player.hasTag("damaged") && Date.now() - dmg_data.get(player.name) >= 4000) {
 			player.removeTag("damaged");
 		}
-		
-		velocity_a(player);
+
 
 		autoclicker_a(player);
 		autoclicker_b(player);
 		autoclicker_c(player);
 		autoclicker_d(player);
+		killaura_e(player);
+
 		if(player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
 			player.firstAttack = Date.now();
 			player.cps = 0;
@@ -474,30 +407,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	if(config.debug) console.warn(`${player.nameTag} has placed ${block.typeId}. Speed: ${playerSpeed} Distance: ${Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.z - player.location.z, 2))} Player X Rotation: ${rotation.x} Player Y Rotation: ${rotation.y}`);
 	
 	
-	let undoPlace = false;
-
-	if(config.modules.commandblockexploitH.enabled && block.typeId === "minecraft:hopper") {
-		const pos1 = {x: block.location.x + 2, y: block.location.y + 2, z: block.location.z + 2};
-		const pos2 = {x: block.location.x - 2, y: block.location.y - 2, z: block.location.z - 2};
-
-		let foundDispenser = false;
-		pos1.blocksBetween(pos2).some((block) => {
-			const blockType = player.dimension.getBlock(block);
-			// @ts-expect-error
-			if(blockType.typeId !== "minecraft:dispenser") return;
-
-			// @ts-expect-error
-			blockType.setType(Minecraft.MinecraftBlockTypes.air);
-			foundDispenser = true;
-		});
-
-		if(foundDispenser) {
-			// @ts-expect-error
-			player.dimension.getBlock({x:block.location.x, y: block.location.y, z: block.location.z}).setType(Minecraft.MinecraftBlockTypes.air);
-		}
-	}
-
- 
+	let undoPlace = false; 
 	// ==================================
 	//               Scaffold Checks
 	// ==================================
@@ -568,18 +478,16 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 		}
 	}
 
-
-
-	// nuker/a = checks if a player breaks more than 3 blocks in a tick
 	if(config.modules.nukerA.enabled) {
 		player.blocksBroken++;
 
 		if(player.blocksBroken > config.modules.nukerA.maxBlocks) {
 			revertBlock = true;
-			flag(player, "Nuker", "A", "Misc", "blocksBroken", player.blocksBroken, true);
-			
+			flag(player, "Nuker", "A", "Misc", "blocksBroken", player.blocksBroken, true);	
 		}
 	}
+
+
 	nuker_b(player, block, brokenBlockId);
 
 	nuker_c(player, block, brokenBlockId);
@@ -603,12 +511,8 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 		that can be used
 	*/
 	if(config.modules.instabreakA.enabled && config.modules.instabreakA.unbreakable_blocks.includes(blockBreak.brokenBlockPermutation.type.id)) {
-		const checkGmc = world.getPlayers({
-			excludeGameModes: [Minecraft.GameMode.creative],
-			name: player.name
-		});
 
-		if([...checkGmc].length !== 0) {
+		if(!player.hasTag("gmc")) {
 			revertBlock = true;
 			flag(player, "InstaBreak", "A", "Exploit", "block", blockBreak.brokenBlockPermutation.type.id, true);
 			currentVL++;
@@ -646,32 +550,15 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	if(config.modules.killauraC.enabled) player.entitiesHit = [];
 	player.lastGoodPosition = player.location;
 	setScore(player, "tick_counter2", 0);
-	if(player.name === "Dream2322") {
-		setTitle(player, "Welcome Dream23322", "To an Isolate Anticheat Server");
-	}
-
 	exploit_a(player);
+
 	// fix a disabler method
 	player.nameTag = player.nameTag.replace(/[^A-Za-z0-9_\-() ]/gm, "").trim();
 
-	if(!data.loaded) {
-		player.runCommandAsync("scoreboard players set scythe:config gametestapi 1");
-		data.loaded = true;
-	}
-	if(player.hasTag("notify")) {
-		player.runCommandAsync('execute at @a[tag=reported] run tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r "},{"selector":"@s"},{"text":" §chas been Reported while your were offline "}]}');
-	}
 
 	// remove tags
-	player.removeTag("attack");
-	player.removeTag("hasGUIopen");
-	player.removeTag("right");
-	player.removeTag("left");
-	player.removeTag("ground");
-	player.removeTag("gliding");
-	player.removeTag("sprinting");
-	player.removeTag("moving");
-	player.removeTag("sleeping");
+	const tagsToRemove = ["attack", "hasGUIopen", "right", "left", "ground", "gliding", "sprinting", "moving", "sleeping"];
+	tagsToRemove.forEach(tag => player.removeTag(tag));
 
 	const message = `§u${player.name} §hhas §pjoined§h the server`;
     
@@ -679,6 +566,7 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	// load custom nametag
 	const { mainColor, borderColor, playerNameColor } = config.customcommands.tag;
 	joinData(player);
+
 	player.getTags().forEach(t => {
 		// load custom nametag
 		if(t.includes("tag:")) {
@@ -688,18 +576,16 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	});
 
 	// Namespoof/A = username length check.
-	if(config.modules.namespoofA.enabled) {
-		// checks if 2 players are logged in with the same name
-		// minecraft adds a sufix to the end of the name which we detect
-		if(player.name.endsWith(')') && (player.name.length > config.modules.namespoofA.maxNameLength + 3 || player.name.length < config.modules.namespoofA.minNameLength))
-			player.flagNamespoofA = true;
+	if (config.modules.namespoofA.enabled) {
+		const isPlayerNameWithSuffix = player.name.endsWith(')');
+		const isPlayerNameTooLong = player.name.length > config.modules.namespoofA.maxNameLength + 3 || player.name.length < config.modules.namespoofA.minNameLength;
+		const isPlayerNameTooShort = player.name.length < config.modules.namespoofA.minNameLength || player.name.length > config.modules.namespoofA.maxNameLength;
 
-		if(!player.name.endsWith(')') && (player.name.length < config.modules.namespoofA.minNameLength || player.name.length > config.modules.namespoofA.maxNameLength))
-			player.flagNamespoofA = true;
+		player.flagNamespoofA = isPlayerNameWithSuffix && isPlayerNameTooLong || !isPlayerNameWithSuffix && isPlayerNameTooShort;
 
-		if(player.flagNamespoofA) {
+		if (player.flagNamespoofA) {
 			const extraLength = player.name.length - config.modules.namespoofA.maxNameLength;
-			player.nameTag = player.name.slice(0, -extraLength) + "...";
+			player.nameTag = player.name.slice(0, -extraLength) + '...';
 		}
 	}
 
@@ -722,105 +608,80 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 			entity.kill();
 		}
 	}
-	if(config.modules.commandblockexploitG.enabled) {
-		if(config.modules.commandblockexploitG.entities.includes(entity.typeId.toLowerCase())) {
-			flag(getClosestPlayer(entity), "CommandBlockExploit", "G", "Exploit", "entity", entity.typeId);
+	if (config.modules.commandblockexploitG.enabled) {
+		const entityTypeId = entity.typeId.toLowerCase();
+		const entitiesToCheck = config.modules.commandblockexploitG.entities;
+		const npcCheck = config.modules.commandblockexploitG.npc && entityTypeId === "minecraft:npc";
+		const blockSummonCheck = config.modules.commandblockexploitG.blockSummonCheck.includes(entityTypeId);
+
+		if (entitiesToCheck.includes(entityTypeId) || npcCheck) {
+			const closestPlayer = getClosestPlayer(entity);
+			flag(closestPlayer, "CommandBlockExploit", "G", "Exploit", "entity", entityTypeId);
 			currentVL++;
 			entity.kill();
-		} else if(config.modules.commandblockexploitG.npc && entity.typeId === "minecraft:npc") {
-			entity.runCommandAsync("scoreboard players operation @s npc = scythe:config npc");
-			entity.runCommandAsync("testfor @s[scores={npc=1..}]")
-				.then((commandResult) => {
-					if(commandResult.successCount < 1) return;
-					flag(getClosestPlayer(entity), "CommandBlockExploit", "G", "Exploit", "entity", entity.typeId);
-					currentVL++;
-					entity.kill();
-				});
 		}
 
-		if(config.modules.commandblockexploitG.blockSummonCheck.includes(entity.typeId)) {
-			const pos1 = {x: entity.location.x + 2, y: entity.location.y + 2, z: entity.location.z + 2};
-			const pos2 = {x: entity.location.x - 2, y: entity.location.y - 2, z: entity.location.z - 2};
+		if (npcCheck) {
+			entity.runCommandAsync("scoreboard players operation @s npc = scythe:config npc");
+			entity.runCommandAsync("testfor @s[scores={npc=1..}]").then((commandResult) => {
+				if (commandResult.successCount < 1) return;
+				const closestPlayer = getClosestPlayer(entity);
+				flag(closestPlayer, "CommandBlockExploit", "G", "Exploit", "entity", entityTypeId);
+				currentVL++;
+				entity.kill();
+			});
+		}
 
-			pos1.blocksBetween(pos2).some((block) => {
-				const blockType = block.dimension.getBlock(block);
-				if(!config.modules.commandblockexploitG.blockSummonCheck.includes(blockType.typeId)) return;
+		if (blockSummonCheck) {
+			const pos1 = { x: entity.location.x + 2, y: entity.location.y + 2, z: entity.location.z + 2 };
+			const pos2 = { x: entity.location.x - 2, y: entity.location.y - 2, z: entity.location.z - 2 };
+			const dimension = entity.dimension;
+
+			for (const block of pos1.blocksBetween(pos2)) {
+				const blockType = dimension.getBlock(block);
+				const blockTypeId = blockType.typeId.toLowerCase();
+
+				if (!config.modules.commandblockexploitG.blockSummonCheck.includes(blockTypeId)) continue;
 
 				blockType.setType(Minecraft.MinecraftBlockTypes.air);
 				entity.kill();
-			});
+				break;
+			}
 		}
 	}
 
 	
-	if(config.misc_modules.lag_machine.antiArmorStandCluster.enabled && entity.typeId === "minecraft:armor_stand") {
+	const checkEntityCluster = (entityType, maxCount) => {
 		const entities = [...entity.dimension.getEntities({
 			location: {x: entity.location.x, y: entity.location.y, z: entity.location.z},
 			maxDistance: config.misc_modules.lag_machine.antiArmorStandCluster.radius,
-			type: "armor_stand"
+			type: entityType
 		})];
 
-		if(entities.length > config.misc_modules.lag_machine.antiArmorStandCluster.max_armor_stand_count) {
-
-			// Tea-Protect is what flags for lag machine
-
-			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§n[§qTea-Protect§n]§r Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiArmorStandCluster.max_armor_stand_count} armor stands in this area! Possible Offender: ${getClosestPlayer(entity)}"}]}`);
-			flag(getClosestPlayer(entity), "Exploit", "A", "Lag", "machine", "armor_stand", false);
-			for(const entityLoop of entities) entityLoop.kill();
+		if (entities.length > maxCount) {
+			const offender = getClosestPlayer(entity);
+			const message = `§r§n[§qTea-Protect§n]§r Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${maxCount} ${entityType}s in this area! Possible Offender: ${offender}`;
+			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"${message}"}]}`);
+			flag(offender, "Exploit", "A", "Lag", "machine", entityType, false);
+			for (const entityLoop of entities) {
+				entityLoop.kill();
+			}
 		}
 	}
-	if(config.misc_modules.lag_machine.antiMinecartCluster.enabled && entity.typeId === "minecraft:minecart") {
-		const entities = [...entity.dimension.getEntities({
-			location: {x: entity.location.x, y: entity.location.y, z: entity.location.z},
-			maxDistance: config.misc_modules.lag_machine.antiMinecartCluster.radius,
-			type: "minecart"
-		})];
 
-		if(entities.length > config.misc_modules.lag_machine.antiMinecartCluster.max_count) {
-			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§n[§qTea-Protect§n]§rPotential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area! Possible Offender: ${getClosestPlayer(entity)}"}]}`);
-			flag(getClosestPlayer(entity), "Exploit", "A", "Lag", "machine", "minecart", false);
-			for(const entityLoop of entities) entityLoop.kill();
-		}
-	}	
-	if(config.misc_modules.lag_machine.antiMinecartCluster.enabled && entity.typeId === "minecraft:hopper_minecart") {
-		const entities = [...entity.dimension.getEntities({
-			location: {x: entity.location.x, y: entity.location.y, z: entity.location.z},
-			maxDistance: config.misc_modules.lag_machine.antiMinecartCluster.radius,
-			type: "tnt_minecart"
-		})];
+	if (config.misc_modules.lag_machine.antiArmorStandCluster.enabled && entity.typeId === "minecraft:armor_stand") {
+		checkEntityCluster("armor_stand", config.misc_modules.lag_machine.antiArmorStandCluster.max_armor_stand_count);
+	}
 
-		if(entities.length > config.misc_modules.lag_machine.antiMinecartCluster.max_count) {
-			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§n[§qTea-Protect§n]§r Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area! Possible Offender: ${getClosestPlayer(entity)}"}]}`);
-			flag(getClosestPlayer(entity), "Exploit", "A", "Lag", "machine", "minecart", false);
-			for(const entityLoop of entities) entityLoop.kill();
+	if (config.misc_modules.lag_machine.antiMinecartCluster.enabled) {
+		const minecartTypes = ["minecart", "hopper_minecart", "tnt_minecart", "chest_minecart"];
+		for (const type of minecartTypes) {
+			if (entity.typeId === `minecraft:${type}`) {
+				checkEntityCluster(type, config.misc_modules.lag_machine.antiMinecartCluster.max_count);
+				break;
+			}
 		}
-	}	
-	if(config.misc_modules.lag_machine.antiMinecartCluster.enabled && entity.typeId === "minecraft:tnt_minecart") {
-		const entities = [...entity.dimension.getEntities({
-			location: {x: entity.location.x, y: entity.location.y, z: entity.location.z},
-			maxDistance: config.misc_modules.lag_machine.antiMinecartCluster.radius,
-			type: "tnt_minecart"
-		})];
-
-		if(entities.length > config.misc_modules.lag_machine.antiMinecartCluster.max_count) {
-			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§n[§qTea-Protect§n]§r Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area! Possible Offender: ${getClosestPlayer(entity)}"}]}`);
-			flag(getClosestPlayer(entity), "Exploit", "A", "Lag", "machine", "minecart", false);
-			for(const entityLoop of entities) entityLoop.kill();
-		}
-	}	
-	if(config.misc_modules.lag_machine.antiMinecartCluster.enabled && entity.typeId === "minecraft:chest_minecart") {
-		const entities = [...entity.dimension.getEntities({
-			location: {x: entity.location.x, y: entity.location.y, z: entity.location.z},
-			maxDistance: config.misc_modules.lag_machine.antiMinecartCluster.radius,
-			type: "chest_minecart"
-		})];
-
-		if(entities.length > config.misc_modules.lag_machine.antiMinecartCluster.max_count) {
-			entity.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§n[§qTea-Protect§n]§r Potential lag machine detected at §aX§c: ${entity.location.x}, §aY§c: ${entity.location.y}, §aZ§c: ${entity.location.z}. There are ${entities.length}/${config.misc_modules.lag_machine.antiMinecartCluster.max_count} minecarts in this area! Possible Offender: ${getClosestPlayer(entity)}"}]}`);
-			flag(getClosestPlayer(entity), "Exploit", "A", "Lag", "machine", "minecart", false);
-			for(const entityLoop of entities) entityLoop.kill();
-		}
-	}	
+	}
 
 });
 
@@ -832,20 +693,15 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 	if(!player.hasTag("attacking")) {
 		player.addTag("attacking")
 	}
-	
-	// ==================================
-	//                   Aim Flags
-	// ==================================
-                                                                    
+	if(!player.hasTag("fighting")) {
+		player.addTag("fighting");
+	}
 
-	// ==================================
-	//                    Killaura
-	// ==================================
+	
 	if(config.generalModules.killaura && !player.hasTag("noaura")) {
 		killaura_a(player, entity);
 		killaura_b(player, system, entity);
 		killaura_c(player, entity, player.entitiesHit);
-		killaura_e(player, entity);
 		killaura_d(player, entity);
 		killaura_f(player, 1);
 	}
@@ -853,23 +709,8 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 	hitbox_a(player, entity);
 	reach_a(player, entity);
 	
-	badpackets_c(player, entity);	
-	autoclicker_e(player);
+	badpackets_c(player, entity);
 
-
-
-	// // check if the player was hit with the UI item, and if so open the UI for that player
-	// if(config.customcommands.ui.enabled && player.hasTag("op") && entity.typeId === "minecraft:player") {
-	// 	// @ts-expect-error
-	// 	const container = player.getComponent("inventory").container;
-
-	// 	const item = container.getItem(player.selectedSlot);
-	// 	if(item?.typeId === config.customcommands.ui.ui_item && item?.nameTag === config.customcommands.ui.ui_item_name) {
-	// 		playerSettingsMenuSelected(player, entity);
-	// 	}
-	// }
-
-	// autoclicker/a = check for high cps
 	if(config.modules.autoclickerA.enabled ||config.modules.autoclickerB.enabled) {
 		player.cps++;
 	}
@@ -908,14 +749,6 @@ world.afterEvents.itemUse.subscribe((itemUse) => {
 		mainGui(player);
 	}
 });
-// Minecraft.system.events.beforeWatchdogTerminate.subscribe((beforeWatchdogTerminate) => {
-// 	// We try to stop any watchdog crashes incase malicous users try to make the scripts lag
-// 	// and causing the server to crash
-// 	beforeWatchdogTerminate.cancel = true;
-
-// 	console.warn(`${new Date().toISOString()} | A Watchdog Exception has been detected and has been cancelled successfully. Reason: ${beforeWatchdogTerminate.terminateReason}`);
-// });
-
 // when using /reload, the variables defined in playerJoin don't persist
 if([...world.getPlayers()].length >= 1) {
 	for(const player of world.getPlayers()) {

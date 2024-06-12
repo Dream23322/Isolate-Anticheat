@@ -1,4 +1,3 @@
-import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getBlocksBetween } from "../../../utils/mathUtil.js";
@@ -7,7 +6,7 @@ export function killaura_d(player, entity) {
     if(config.modules.killauraD.enabled) {
         // Check if the player who was attacked is full boxed.
         // TODO: Fix this shitbox lol
-        const invalid = 0;
+        let invalid = 0;
         const locations = [
             {x: 1, y: 0, z: 0},
             {x: -1, y: 0, z: 0},
@@ -36,6 +35,7 @@ export function killaura_d(player, entity) {
                     invalid++;
                 }   
             }
+            if(player.hasTag("auraD_debug")) player.sendMessage(`Invalid Score: ${invalid}`);
             if(invalid == 10) {
                 flag(player, "Killaura", "D", "Combat", "invalid", invalid, false);
             }

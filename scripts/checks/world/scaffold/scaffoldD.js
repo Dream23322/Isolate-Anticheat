@@ -1,8 +1,9 @@
-import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
 const scaffold_d_map = new Map();
 export function scaffold_d(player, block) {
+
+    // TODO: Redo this because, its not working and now I look back at it, its useless lmao
     if(config.modules.scaffoldD.enabled) {
         if(scaffold_d_map.get(player.name)) {
             const one = scaffold_d_map.get(player.name)?.one;

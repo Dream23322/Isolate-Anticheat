@@ -1,3 +1,6 @@
+import * as Minecraft from "@minecraft/server";
+import { kickPlayer } from "../../utils/gameUtil";
+const world = Minecraft.world;
 /**
  * @name kickall
  * @param {object} message - Message object
@@ -8,5 +11,8 @@ export function kickall(message) {
 
     const player = message.sender;
 
-    player.runCommandAsync("event entity @a[tag=!op] scythe:kick");
+    const players = world.getPlayers();
+    for (const pl of players) {
+        if(!pl.hasTag("op")) kickPlayer(pl, `Kicked by ${player.name} (Mass Kick)`);
+    }
 }
