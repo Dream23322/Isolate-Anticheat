@@ -159,7 +159,6 @@ function runCommand(msg, commandName, args) {
                 else if(commandName === "fullreport") fullreport(message);
                 else if(commandName === "modules") modules(message);
                 else if(commandName === "help") help(message);
-                else if(commandName === "testaura") testaura(message, args);
                 else if(commandName === "credits") credits(message);
                 else if(commandName === "op") op(message, args);
                 else if(commandName === "deop") deop(message, args);

@@ -1,4 +1,3 @@
-import * as Minecraft from "@minecraft/server";
 import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { angleCalc, getDistanceXYZ } from "../../../utils/mathUtil.js";
@@ -12,7 +11,7 @@ export function hitbox_a(player, entity) {
         setScore(player, "hitbox_a_reset", getScore(player, "hitbox_a_reset", 0) + 1);
         if(getScore(player, "hitbox_a_reset", 0) > 20) {
             if(getScore(player, "hitbox_a_buffer", 0) > config.modules.hitboxA.buffer) {
-                flag(player, "Hitbox", "A", "Combat", "angle", "> 90", false);
+                flag(player, "Hitbox", "A", "Combat", "angle", `${angleCalc(player, entity)},score=${getScore(player, "hitbox_a_buffer", 0)}`, false);
             }
             setScore(player, "hitbox_a_buffer", 0);
             setScore(player, "hitbox_a_reset", 0);

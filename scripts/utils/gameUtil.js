@@ -1,3 +1,4 @@
+import { getBlocksBetween } from "./mathUtil";
 
 // setTitle 
 export function setTitle(player, title, subtitle) {
@@ -101,4 +102,25 @@ export function getHealth(player) {
  */
 export function setSound(player, id) {
     player.runCommandAsync(`playsound ${id} @a`);
+}
+
+
+/**
+ *  @name getBlock_one - Gets the block type in one position
+ *  @param {object} pos - The player running the function
+ *  @example getBlock_one({x: 10, y: 10, z: 10});
+ *  @remarks Gets the block type in one position
+ */
+export function getBlock_one(pos) {
+    return player.dimension.getBlock(pos);
+}
+
+/**
+ *  @name getBlock_two - Gets the block type between two positions
+ *  @param {object} pos - The player running the function
+ *  @example getBlock_two({x: 10, y: 10, z: 10}, {x: 10, y: 10, z: 10});
+ *  @remarks Gets the block type in two positions
+ */
+export function getBlock_two(pos1, pos2) {
+    return getBlocksBetween(pos1, pos2).some((blk) => player.dimension.getBlock(blk)?.typeId);
 }

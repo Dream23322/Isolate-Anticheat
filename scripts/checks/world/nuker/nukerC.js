@@ -1,4 +1,3 @@
-import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util.js";
 import config from "../../../data/config.js";
 import { getBlocksBetween } from "../../../utils/mathUtil.js";

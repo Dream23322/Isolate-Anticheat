@@ -11,23 +11,21 @@ export function crashPlayer(player) {
     player.runCommandAsync("title @s title §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
     player.runCommandAsync("title @s subtitle §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
     player.runCommandAsync("title @s actionbar §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
-    for(let i = 0; i < 5; i++) {
-        //player.runCommandAsync(`particle minecraft:huge_explosion_emitter ~ ~ ~`);
-        player.runCommandAsync(`particle minecraft:villager_angry ~ ~1 ~`);
-       // player.runCommandAsync(`particle minecraft:huge_explosion_emitter ~ ~2 ~`);
-        //player.runCommandAsync(`particle minecraft:huge_explosion_emitter ~ ~1 ~`);
-       // player.runCommandAsync(`particle minecraft:huge_explosion_emitter ~1 ~ ~`);
-        player.runCommandAsync(`particle minecraft:lava_particle ~ ~ ~`);
-        player.runCommandAsync(`particle minecraft:lava_particle ~ ~ ~`);
-        //player.runCommandAsync(`particle minecraft:huge_explosion_emitter ~ ~ ~`);
-        player.runCommandAsync(`particle minecraft:totem_particle ~ ~2 ~`);
-        player.runCommandAsync("particle minecraft:lava_particle ~ ~ ~");
-        player.runCommandAsync("particle minecraft:totem_particle ~ ~ ~");
-        player.runCommandAsync("particle minecraft:totem_particle ~ ~ ~");
-        player.runCommandAsync("particle minecraft:note_particle ~ ~ ~");
-        player.runCommandAsync("particle minecraft:explode ~ ~ ~");
-        player.runCommandAsync("particle minecraft:shriek_particle ~ ~ ~");
-        
+    const particles = [
+        "minecraft:villager_angry",
+        "minecraft:lava_particle",
+        "minecraft:totem_particle",
+        "minecraft:note_particle",
+        "minecraft:explode",
+        "minecraft:shriek_particle"
+    ];
+
+    for (let i = 0; i < 5; i++) {
+        particles.forEach(particle => {
+            player.runCommandAsync(`particle ${particle} ~ ~1 ~`);
+            player.runCommandAsync(`particle ${particle} ~ ~ ~`);
+            player.runCommandAsync(`particle ${particle} ~ ~2 ~`);
+        });
     }
 }
 
@@ -77,11 +75,10 @@ export async function banAnimation(player, type) {
         player.runCommandAsync(`particle minecraft:${banMessage.particle} ~1 ~ ~-1`);
         
     } else {
-        player.runCommandAsync(`particle minecraft:${banMessage.particle} ~ ~ ~`);
-        player.runCommandAsync(`particle minecraft:${banMessage.particle} ~ ~ ~`);
-        player.runCommandAsync(`particle minecraft:${banMessage.particle} ~ ~ ~`);
-        player.runCommandAsync(`particle minecraft:${banMessage.particle} ~ ~ ~`);
-        player.runCommandAsync(`particle minecraft:${banMessage.particle} ~ ~ ~`);
+        const particle = `minecraft:${banMessage.particle}`;
+        for (let i = 0; i < 6; i++) {
+            player.runCommandAsync(`particle ${particle} ~ ~ ~`);
+        }
         player.runCommandAsync(`particle minecraft:${banMessage.particle} ~ ~ ~`);
     }
 }
@@ -265,11 +262,11 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 }
 
                 for (let i = 0; i < filled; i++) {
-                    displ += '§u|';
+                    displ += '§d|';
                 }
 
                 for (let i = 0; i < unfilled; i++) {
-                    displ += '§d|';
+                    displ += '§u|';
                 }
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [${displ}§h]"}]}`);
             }
@@ -290,11 +287,11 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 }
 
                 for (let i = 0; i < filled; i++) {
-                    displ += '§u|';
+                    displ += '§d|';
                 }
 
                 for (let i = 0; i < unfilled; i++) {
-                    displ += '§d|';
+                    displ += '§u|';
                 }
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()}§h. [${displ}§h]"}]}`);
 

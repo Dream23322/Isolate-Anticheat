@@ -1,8 +1,6 @@
-import * as Minecraft from "@minecraft/server";
 import { flag, getScore } from "../../../util";
 import config from "../../../data/config.js";
-import { aroundAir, inAir } from "../../../utils/gameUtil.js";
-import { getSpeed } from "../../../utils/mathUtil.js";
+import { aroundAir } from "../../../utils/gameUtil.js";
 const data = new Map();
 const data2 = new Map();
 export function fly_c(player) {

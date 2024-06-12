@@ -1,7 +1,6 @@
-import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
-import { getBlocksBetween, getDistanceXZ, getSpeed } from "../../../utils/mathUtil.js";
+import { getDistanceXZ, getSpeed } from "../../../utils/mathUtil.js";
 
 // Thank you Visual1mpact for helping me with the Map's
 // Initialize scaffold_a_map if not present

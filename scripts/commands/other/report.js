@@ -62,7 +62,6 @@ export function report(message, args) {
             setScore(player, "kickvl", 0);
             console.warn(`${new Date().toISOString()} |${player.name} was banned by Isolate Anticheat for bad data when reported`);
             player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been §cpunished§r (§cBan§r) for cheating (REPORTED)"}]}`);
-            
         }
     }
 
