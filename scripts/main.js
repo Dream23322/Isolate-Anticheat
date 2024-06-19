@@ -181,7 +181,7 @@ Minecraft.system.runInterval(() => {
 		const playerVelocity = player.getVelocity();
 		const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(4));
 				
-		const selectedSlot = player.selectedSlot;
+		const selectedSlot = player.selectedSlotIndex;
 
 		if(player.isGlobalBanned && config.modules.globalBan.enabled) {
 			player.addTag("by:Isolate Anticheat");
@@ -501,7 +501,7 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 	// Autotool/A = checks for player slot mismatch
 	if(config.modules.autotoolA.enabled && player.flagAutotoolA && !player.hasTag("gmc")) {
 		revertBlock = true;
-		flag(player, "AutoTool", "A", "Misc", "selectedSlot", `${player.selectedSlot},lastSelectedSlot=${player.lastSelectedSlot},switchDelay=${player.autotoolSwitchDelay}`);
+		flag(player, "AutoTool", "A", "Misc", "selectedSlot", `${player.selectedSlotIndex},lastSelectedSlot=${player.lastSelectedSlot},switchDelay=${player.autotoolSwitchDelay}`);
 		currentVL++;
 	}
 
@@ -721,7 +721,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 world.afterEvents.entityHitBlock.subscribe((entityHit) => {
 	const { damagingEntity: player} = entityHit;
 	player.flagAutotoolA = false;
-	player.lastSelectedSlot = player.selectedSlot;
+	player.lastSelectedSlot = player.selectedSlotIndex;
 	player.startBreakTime = Date.now();
 	player.autotoolSwitchDelay = 0;
 	

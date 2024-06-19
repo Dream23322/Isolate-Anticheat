@@ -1,6 +1,6 @@
 {
   "name": "isolate-anticheat",
-  "version": "7.0.2",
+  "version": "8.7.1",
   "description": "Isolate AntiCheat - The best anticheat designed for Minecraft Bedrock realms/worlds/servers",
   "main": "main.js",
   "repository": {
@@ -30,8 +30,8 @@
   },
   "homepage": "https://github.com/Dream23322/Isolate-AntiCheat#readme",
   "devDependencies": {
-    "@minecraft/server": "^1.11.0-beta.1.20.80-preview.23",
-    "@minecraft/server-ui": "^1.1.0-beta.1.20.0-stable",
+    "@minecraft/server": "1.12.0-beta.1.21.0-stable",
+    "@minecraft/server-ui": "1.2.0-beta.1.21.0-stable",
     "eslint": "^8.57.0"
   }
 }

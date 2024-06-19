@@ -1,10 +1,10 @@
 {
 	"format_version": 2,	
 	"header": {
-		"name": "Isolate AntiCheat v8.7",
+		"name": "Isolate AntiCheat b8.7.1",
 		"description": "Isolate - The anticheat that seperates your server from hackers (BETA-API REQUIRED)",
-		"uuid": "4b8b7c8e-4b8b-4b8b-8c8e-8c8e8c8e8c8e",
-		"version": [8, 7, 0],
+		"uuid": "e76e6539-a5c1-4e40-b079-c267090135c7",
+		"version": [8, 7, 1],
 		"min_engine_version": [1, 19, 0]
 	},
 	"metadata": {
@@ -31,7 +31,7 @@
 	],
 	"dependencies": [{
 		"module_name": "@minecraft/server",
-		"version": "1.11.0-beta"
+		"version": "1.12.0-beta"
 	},
 	{
 		"module_name": "@minecraft/server-ui",
