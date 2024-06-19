@@ -18,7 +18,7 @@ import config from "../../data/config.js";
         return player.sendMessage("§r§j[§uIsolate§j]§r Your inventory is full! Try removing some items and try again.");
 
     // make sure they dont have the UI item in their current slot
-    const currentItem = container.getItem(player.selectedSlot);
+    const currentItem = container.getItem(player.selectedSlotIndex);
 
     if(currentItem?.typeId === config.customcommands.ui.ui_item && currentItem?.nameTag === config.customcommands.ui.ui_item_name)
         return player.sendMessage("§r§j[§uIsolate§j]§r You already have the UI item in your inventory.");

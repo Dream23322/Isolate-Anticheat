@@ -129,7 +129,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
     // If debug is enabled, then we log everything we know about the player.
     if(config.debug && player.hasTag("debugFlags")) {
-        const currentItem = player.getComponent("inventory").container.getItem(player.selectedSlot);
+        const currentItem = player.getComponent("inventory").container.getItem(player.selectedSlotIndex);
         const velocity = player.getVelocity();
         const headRotation = player.getHeadLocation();
 
@@ -153,7 +153,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 },
                 tags: String(player.getTags()).replace(/[\r\n"]/gm, ""),
                 currentItem: `${currentItem?.typeId ?? "minecraft:air"}`,
-                selectedSlot: player.selectedSlot,
+                selectedSlot: player.selectedSlotIndex,
                 dimension: player.dimension.id,
                 fallDistance: player.fallDistance,
                 extra: {
