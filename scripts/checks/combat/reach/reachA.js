@@ -51,7 +51,7 @@ function getMaxReach(player, entity, y_distance) {
 		if(player.isSprinting) max_reach -= 0.2;
 
 		// Players who have been kicked before will have a higher chance of cheating.
-		if(player.hadTag("strict")) max_reach -= 0.2;
+		if(player.hasTag("strict")) max_reach -= 0.2;
 		
 	}
 	// Dynamic reach checks for world conditions that can cause the players max reach to be lower than normal
