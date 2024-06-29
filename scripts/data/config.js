@@ -245,7 +245,7 @@ export default
             "ViolationsBeforeBan": 30,
             "autoReset": true,
             "hiveRegen": false,
-            "smartNotify": true,
+            "smartNotify": false,
             "smartOnly": false,
             "theme": "1",
             "flagstyle": "2",

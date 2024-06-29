@@ -39,7 +39,7 @@ export function aim_c(player) {
                     deltaYaw < 1.5 &&
                     lastDeltaYaw > 50 &&
                     lastLastDeltaYaw < 1.5 && 
-                    daltaPitch < 40 ||
+                    deltaPitch < 40 ||
                     deltaPitch < 1.5 &&
                     lastDeltaPitch > 50 &&
                     lastLastDeltaPitch < 1.5 && 

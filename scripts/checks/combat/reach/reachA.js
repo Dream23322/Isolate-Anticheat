@@ -1,6 +1,6 @@
 import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
-import { getDistanceY, getSpeed } from "../../../utils/mathUtil.js";
+import { getBlocksBetween, getDistanceY, getSpeed } from "../../../utils/mathUtil.js";
 import { getBlock_two } from "../../../utils/gameUtil.js";
 export function reach_a(player, entity) {
 	if(config.modules.reachA.enabled) {
@@ -56,9 +56,9 @@ function getMaxReach(player, entity, y_distance) {
 	}
 	// Dynamic reach checks for world conditions that can cause the players max reach to be lower than normal
 	if(config.modules.reachA.dynamicReach) {
-
+ 
 		// Being in water can be funny for reach
-		if(getBlock_two(player.location, player.location) === "minecraft:water" || getBlock_two(player.location, player.location) === "minecraft:lava") {
+		if(getBlocksBetween(player.location, player.location) === "minecraft:water" || getBlocksBetween(player.location, player.location) === "minecraft:lava") {
 			max_reach -= 0.7;
 		}
 		// If the player is hitting an iron golem, the golem will have less reach and therefore your average reach will be less
