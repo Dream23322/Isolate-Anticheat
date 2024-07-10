@@ -12,7 +12,7 @@ export function teleportCheck(player) {
 
         if(rotation.x == 0 && rotation.y == 0) return true;
 
-        if(posDiff > 10 && velDiff > 0.01 && speedDiff > 0.01) {
+        if(posDiff > 5 && velDiff > 0.01 && speedDiff > 0.01) {
             return true;
         }
     }

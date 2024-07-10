@@ -2,7 +2,7 @@ import { flag } from "../../../util";
 import config from "../../../data/config";
 const data = new Map();
 export function motion_d(player) {
-    if(config.modules.motionD.enabled) {
+    if(config.modules.motionD.enabled && !player.hasTag("teleport")) {
         if(data.get(player.name)) {
             const currentY = player.getVelocity().y;
             const dY1 = data.get(player.name)?.one;

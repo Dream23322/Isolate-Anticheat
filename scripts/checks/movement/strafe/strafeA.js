@@ -16,7 +16,7 @@ export function strafe_a(player) {
                 (lastVelocity.z < 0 && velocity.z > 0.3 || lastVelocity.z > 0.3 && velocity.z < 0)
             )
             const diff = {x: Math.abs(velocity.x) - Math.abs(lastVelocity.x), z: Math.abs(velocity.z) - Math.abs(lastVelocity.z)}
-            const allow = !player.hasTag("jumping") && !player.hasTag("swimming") && !player.hasTag("trident") && velocity.y > 0 && !player.hasTag("elytra") && !player.hasTag("slime") && !player.getEffect("speed") && !player.hasTag("damaged") && !player.hasTag("placing") && !player.hasTag("gmc");
+            const allow = !player.hasTag("jumping") && !player.hasTag("swimming") && !player.hasTag("trident") && velocity.y > 0 && !player.hasTag("elytra") && !player.hasTag("slime") && !player.getEffect("speed") && !player.hasTag("damaged") && !player.hasTag("placing") && !player.hasTag("gmc") && !player.hasTag("teleporting");
             if(invalid && allow) flag(player, "Strafe", "A", "Movement (BETA)", "x", `${diff.x},z=${diff.z}`, false);
         }
     }

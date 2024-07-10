@@ -41,7 +41,7 @@ export function timer_a(player, lastPosition, Value){
                         timerData.set(player, 20);
                         player.addTag("timer_bypass");
                     }
-                    if(!player.hasTag("timer_bypass") && !player.hasTag("ender_pearl") && timerValue < 1000 && Math.abs(timerData.get(player) - timerValue) < 15) {
+                    if(!player.hasTag("timer_bypass") && !player.hasTag("ender_pearl") && timerValue < 1000 && Math.abs(timerData.get(player) - timerValue) < 15 && !player.hasTag("teleporting")) {
                         flag(player, "Timer", "A", "Packet", "timer", timerData.get(player), false);
                     }
                 }
