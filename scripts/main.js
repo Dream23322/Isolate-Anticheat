@@ -71,6 +71,7 @@ import { aim_c } from "./checks/combat/aim/aimC.js";
 import { autoclicker_c } from "./checks/combat/autoclicker/autoclickerC.js";
 import { autoclicker_d } from "./checks/combat/autoclicker/autoclickerD.js";
 import { speed_e } from "./checks/movement/speed/speedE.js";
+import { teleportCheck } from "./utils/tag/teleport.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -84,6 +85,7 @@ const lastMessage = new Map();
 const lastXZv = new Map();
 const speedCLog = new Map();
 const dmg_data = new Map();
+const tp_data = new Map();
 
 
 if(config.debug) console.warn(`${new Date().toISOString()} | Isolate - Load success`);
@@ -380,8 +382,15 @@ Minecraft.system.runInterval(() => {
 			removalTags.forEach(tag => player.removeTag(tag));
 			setScore(player, "tag_reset", 0);
 		}
+		if(teleportCheck(player)) {
+			player.addTag("teleport")
+			tp_data.set(player.date, Date.now())
+		}
 		if(player.hasTag("damaged") && Date.now() - dmg_data.get(player.name) >= 4000) {
 			player.removeTag("damaged");
+		}
+		if(player.hasTag("teleport") && Date.now() - dmg_data.get(player.name) >= 4000) {
+			player.removeTag("teleport");
 		}
 
 
