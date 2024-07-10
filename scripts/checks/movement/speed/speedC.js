@@ -5,7 +5,7 @@ import { getSpeed } from "../../../utils/mathUtil.js";
 export function speed_c(player, tick_counter, speedCLog) {
     const playerSpeed = getSpeed(player);
     // Check if Speed/C is enabled in the config and that it has run at least once
-    if(config.modules.speedC.enabled && speedCLog.get(player) && !player.hasTag("elytra") && !player.hasTag("ender_pearl")) {
+    if(config.modules.speedC.enabled && speedCLog.get(player) && !player.hasTag("elytra") && !player.hasTag("ender_pearl") && !player.hasTag("teleport")) {
         // Get players Velocity
         const playerVelocity = player.getVelocity();
         // Get the max BPS of a player
