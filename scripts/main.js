@@ -72,6 +72,7 @@ import { autoclicker_c } from "./checks/combat/autoclicker/autoclickerC.js";
 import { autoclicker_d } from "./checks/combat/autoclicker/autoclickerD.js";
 import { speed_e } from "./checks/movement/speed/speedE.js";
 import { teleportCheck } from "./utils/tag/teleport.js";
+import { reach_c } from "./checks/combat/reach/reachC.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -717,6 +718,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 
 	hitbox_a(player, entity);
 	reach_a(player, entity);
+	reach_c(player, entity);
 	
 	badpackets_c(player, entity);
 
