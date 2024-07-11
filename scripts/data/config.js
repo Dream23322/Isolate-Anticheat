@@ -436,6 +436,27 @@ export default
             "punishmentLength": "3m",
             "minVlbeforePunishment": 30
         },
+        "reachC": {
+            "enabled": true,
+            "description": "Reach check based on reach over time",
+            "reach": 6.1,
+            "dynamicReach": true,
+            "smartReach": true,
+            "dynamicData": {
+                "water": 3.5,
+                "still": 3.5,
+                "speed": 5.4
+            },
+            "entities_blacklist": [
+                "minecraft:enderman",
+                "minecraft:fireball",
+                "minecraft:ender_dragon",
+                "minecraft:ghast"
+            ],
+            "punishment": "kick",
+            "punishmentLength": "3m",
+            "minVlbeforePunishment": 10
+        },
         "aimA": {
             "enabled": true,
             "description":"Simple delta check",
