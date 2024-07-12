@@ -18,7 +18,7 @@ export function speed_e(player) {
                 const d = data.get(player.name);
                 const average = Math.abs((d.one + d.two + d.three + d.four + d.five + d.six + d.seven + d.eight + d.nine + d.ten + d.eleven + d.twelve + d.thirteen + d.fourteen + d.fifteen + d.sixteen + d.seventeen + d.eighteen + d.nineteen + d.twenty + d.twentyOne + d.twentyTwo + d.twentyThree + d.twentyFour + d.twentyFive + d.twentySix + d.twentySeven + d.twentyEight + d.twentyNine + d.thirty) / 30);
             
-                if(average > config.modules.speedE.bpt && !player.hasTag("damaged") && !player.hasTag("op") && !player.isFlying && !player.hasTag("trident") && !player.hasTag("ice") && !player.hasTag("slime") && !player.hasTag("speedE_pass") && !player.hasTag("placing") && !player.hasTag("teleport")) {
+                if(average > config.modules.speedE.bpt && !player.hasTag("damaged") && !player.hasTag("op") && !player.isFlying && !player.hasTag("trident") && !player.hasTag("ice") && !player.hasTag("slime") && !player.hasTag("speedE_pass") && !player.hasTag("placing") && !player.hasTag("teleport") && (average * 20).toFixed(2) < config.modules.speedE.maxPredict) {
                     flag(player, "Speed", "E", "Movement", "avg_bpt", `${average.toFixed(2)},predict_bps=${(average * 20).toFixed(2)}`, true);
                 }
             }
