@@ -4,12 +4,12 @@ import { getBlocksBetween, getDistanceXZ, getDistanceY, getSpeed } from "../../.
 const data = new Map();
 
 export function reach_c(player, entity) {
-    if(failedTags(player)) return;
+    if(failedTags(player) || config.modules.reachC.entities_blacklist.includes(entity.typeId)) return;
     let xz_distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
     if(data.get(player.name)) {
         const d = data.get(player.name);
         const avg = Math.abs((xz_distance + d.one + d.two + d.three + d.four + d.five + d.six + d.seven + d.eight + d.nine + d.ten + d.eleven + d.twelve + d.thirteen + d.fourteen) / 15);
-
+		if(player.hasTag('reachDebug')) console.log("Reach: ", avg)
         if(avg > getMaxReach(player, entity)) {
             flag(player, "Reach", "C", "Combat", "reach", avg, false);
         }
@@ -28,8 +28,7 @@ export function reach_c(player, entity) {
         eleven: data.get(player.name)?.ten || 0,
         twelve: data.get(player.name)?.eleven || 0,
         thirteen: data.get(player.name)?.twelve || 0,
-        fourteen: data.get(player.name)?.thirteen || 0,
-        fifteen: data.get(player.name)?.fourteen || 0
+        fourteen: data.get(player.name)?.thirteen || 0
     })
 }
 

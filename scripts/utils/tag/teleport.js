@@ -1,7 +1,9 @@
+import { getSpeed } from "../mathUtil";
+
 const data = new Map();
 export function teleportCheck(player) {
     const velocity = player.getVelocity();
-    const speed = player.getSpeed();
+    const speed = getSpeed(player);
     const rotation = player.getRotation();
     if(data.get(player.name)) {
         const lastData = data.get(player.name);
@@ -12,7 +14,7 @@ export function teleportCheck(player) {
 
         if(rotation.x == 0 && rotation.y == 0) return true;
 
-        if(posDiff > 5 && velDiff > 0.01 && speedDiff > 0.01) {
+        if(posDiff > 5) {
             return true;
         }
     }

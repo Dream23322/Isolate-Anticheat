@@ -439,7 +439,7 @@ export default
         "reachC": {
             "enabled": true,
             "description": "Reach check based on reach over time",
-            "reach": 6.1,
+            "reach": 5.5,
             "dynamicReach": true,
             "smartReach": true,
             "dynamicData": {
@@ -455,7 +455,7 @@ export default
             ],
             "punishment": "kick",
             "punishmentLength": "3m",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 5
         },
         "aimA": {
             "enabled": true,
@@ -642,6 +642,7 @@ export default
             "enabled":true,
             "description": "Checks for high bpt (Blocks per tick) over a while",
             "bpt": 0.26,
+            "maxPredict": 9.50,
             "punishment": "kick",
             "minVlbeforePunishment": 40
         },
