@@ -206,5 +206,6 @@ export const banList = [
    "Blue Shadow8558",
    "freshthekinder",
    "Schwepe",
+   "thathsmymuddy"
 ]
 
