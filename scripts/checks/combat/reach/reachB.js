@@ -1,17 +1,17 @@
-import { flag, getScore, setScore } from "../../../util";
+import { flag, getScore, setScore } from "../../../util.js";
 import config from "../../../data/config.js";
 import { getBlocksBetween, getDistanceXZ, getDistanceY, getSpeed } from "../../../utils/mathUtil.js";
 const data = new Map();
 
-export function reach_c(player, entity) {
-    if(failedTags(player) || config.modules.reachC.entities_blacklist.includes(entity.typeId)) return;
+export function reach_b(player, entity) {
+    if(failedTags(player) || config.modules.reachB.entities_blacklist.includes(entity.typeId)) return;
     let xz_distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
     if(data.get(player.name)) {
         const d = data.get(player.name);
         const avg = Math.abs((xz_distance + d.one + d.two + d.three + d.four + d.five + d.six + d.seven + d.eight + d.nine + d.ten + d.eleven + d.twelve + d.thirteen + d.fourteen) / 15);
 		if(player.hasTag('reachDebug')) console.log("Reach: ", avg)
         if(avg > getMaxReach(player, entity)) {
-            flag(player, "Reach", "C", "Combat", "reach", avg, false);
+            flag(player, "Reach", "B", "Combat", "reach", avg, false);
         }
     }
     data.set(player.name, {
@@ -41,10 +41,10 @@ function failedTags(player) {
 }
 
 function getMaxReach(player, entity) {
-	let max_reach = config.modules.reachC.reach;
+	let max_reach = config.modules.reachB.reach;
 
 	// Check if smart reach is enabled in the config
-	if(config.modules.reachC.smartReach) {
+	if(config.modules.reachB.smartReach) {
 
 		// Having high speed in PvP can cause BDS Prediction to correct your movement and mess with your reach
 		if(getSpeed(player) > 0.4) max_reach += 0.2;
@@ -60,7 +60,7 @@ function getMaxReach(player, entity) {
 		
 	}
 	// Dynamic reach checks for world conditions that can cause the players max reach to be lower than normal
-	if(config.modules.reachC.dynamicReach) {
+	if(config.modules.reachB.dynamicReach) {
  
 		// Being in water can be funny for reach
 		if(getBlocksBetween(player.location, player.location) === "minecraft:water" || getBlocksBetween(player.location, player.location) === "minecraft:lava") {
@@ -77,7 +77,7 @@ function getMaxReach(player, entity) {
 		if(entity.location.y < player.location.y) max_reach -= 0.2;
 	}
 	// Make sure the reach value isnt below 3.1 blocks
-	if(max_reach < 3.1) return config.modules.reachC.reach;
+	if(max_reach < 3.1) return config.modules.reachB.reach;
 
 	// Return the final reach value.
 	return max_reach;

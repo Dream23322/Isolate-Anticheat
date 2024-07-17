@@ -436,7 +436,7 @@ export default
             "punishmentLength": "3m",
             "minVlbeforePunishment": 30
         },
-        "reachC": {
+        "reachB": {
             "enabled": true,
             "description": "Reach check based on reach over time",
             "reach": 5.5,
@@ -814,7 +814,7 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 5
         },
-        "reachB": {
+        "reachC": {
             "enabled": false,
             "description": "Checks for placing or breaking to far away",
             "reach": 7.55,

@@ -44,7 +44,7 @@ import { fly_d } from "./checks/movement/fly/flyD.js";
 import { scaffold_f } from "./checks/world/scaffold/scaffoldF.js";
 import { nuker_c } from "./checks/world/nuker/nukerC.js";
 import { nuker_b } from "./checks/world/nuker/nukerB.js";
-import { reach_b } from "./checks/world/reach/reachB.js";
+import { reach_c } from "./checks/world/reach/reachC.js";
 import { scaffold_b } from "./checks/world/scaffold/scaffoldB.js";
 import { scaffold_c } from "./checks/world/scaffold/scaffoldC.js";
 import { tower_a } from "./checks/world/scaffold/towerA.js";
@@ -72,7 +72,7 @@ import { autoclicker_c } from "./checks/combat/autoclicker/autoclickerC.js";
 import { autoclicker_d } from "./checks/combat/autoclicker/autoclickerD.js";
 import { speed_e } from "./checks/movement/speed/speedE.js";
 import { teleportCheck } from "./utils/tag/teleport.js";
-import { reach_c } from "./checks/combat/reach/reachC.js";
+import { reach_b } from "./checks/combat/reach/reachB.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -434,7 +434,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 		tower_b(player, block);
 	}
 
-	reach_b(player, block);
+	reach_c(player, block);
 	// This is used for other checks
 	if(!player.hasTag("placing")) {
 		player.addTag("placing");
@@ -718,7 +718,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 
 	hitbox_a(player, entity);
 	reach_a(player, entity);
-	reach_c(player, entity);
+	reach_b(player, entity);
 	
 	badpackets_c(player, entity);
 
