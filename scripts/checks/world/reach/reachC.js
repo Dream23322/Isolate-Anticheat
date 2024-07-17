@@ -3,12 +3,19 @@ import config from "../../../data/config.js";
 import { getDistanceXZ } from "../../../utils/mathUtil.js";
 
 export function reach_c(player, block) {
-    const playerVelocity = player.getVelocity();
-	// Reach/B = checks for placing blocks too far away
-	if(config.modules.reachC.enabled && !player.hasTag("noreach") && playerVelocity.y === 0 && player.fallDistance < 3) {
+	if(config.modules.reachC.enabled) {
 		const distance = getDistanceXZ(player, block);
-		if (distance > config.modules.reachC.reach && player.fallDistance !== 0) {
+		if(distance > getMax(player, block, distance)) {
 			flag(player, "Reach", "C", "Placement", "distance", distance, false);
 		}
 	}
 }	
+
+function getMax(player, block, distance) {
+	let maxReach = config.modules.reachC.reach;
+	if(player.hasTag("damaged")) maxReach += 0.5;
+	if(player.isSprinting) maxReach -= 0.1;
+	if(block.typeId === "minecraft:bed") maxReach += 1;
+
+	return maxReach;
+}
