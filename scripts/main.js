@@ -192,6 +192,7 @@ Minecraft.system.runInterval(() => {
 			player.addTag("isBanned");
 		}
 
+
 		// sexy looking ban message
 		if(player.hasTag("isBanned")) banMessage(player);
 
@@ -584,6 +585,26 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 			player.nameTag = `${borderColor}[§r${mainColor}${t.slice(4)}${borderColor}]§r ${playerNameColor}${player.name}`;
 		}
 	});
+
+	const lst = JSON.parse(world.getDynamicProperty("offlineList"));
+	const bnlst = JSON.parse(world.getDynamicProperty("banList"));
+	// If user is in offline ban list, add ban and remove from list
+	for (const dat of lst) {
+		if (lst[dat][0] === player.name) {
+			player.addTag(`reason:${lst[dat][1]}`);
+			player.addTag(`by:${lst[dat][2]}`);
+			if(typeof lst[dat][3] === "number") player.addTag(`time:${Date.now() + lst[dat][3]}`);
+			player.addTag("isBanned");
+
+			// Remove player from the list
+			delete lst[dat];
+			world.setDynamicProperty("offlineList", JSON.stringify(lst));
+
+			// Add the player to the banned players list
+			bnlst[player.name] = [player.nameTag, lst[dat][1], lst[dat][2], Date.now(), lst[dat][3]];
+			world.setDynamicProperty("banList", JSON.stringify(bnlst));
+		}
+	}
 
 	// Namespoof/A = username length check.
 	if (config.modules.namespoofA.enabled) {

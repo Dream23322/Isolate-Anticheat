@@ -221,6 +221,11 @@ export default
             "enabled": true,
             "requiredTags": ["op"],
             "aliases": ["bl"]
+        },
+        "oban": {
+            "enabled": true,
+            "requiredTags": ["op"],
+            "aliases": ["ob"]
         }
     },
     "modules": {

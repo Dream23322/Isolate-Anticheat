@@ -22,5 +22,13 @@ if(banlist) {
 	console.warn("[Isolate] >> Loaded Banlist Correctly");
 }
 
+const offlineList = world.getDynamicProperty("banList");
+if(!offlineList) {
+	world.setDynamicProperty("offlineList", "{}");
+}
+if(offlineList) {
+	console.warn("[Isolate] >> Loaded OfflineList Correctly");
+}
+
 import "./main.js";
 console.warn("[Isolate] >> Setup Correctly");
