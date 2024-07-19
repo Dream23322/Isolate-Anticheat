@@ -36,6 +36,7 @@ import { reset } from "./settings/reset.js";
 import { irc } from "./other/irc.js";
 import { seecps } from "./settings/seecps.js";
 import { banlist } from "./utility/banlist.js";
+import { oban } from "./moderation/oban.js";
 
 
 
@@ -177,6 +178,7 @@ function runCommand(msg, commandName, args) {
                 else if(commandName === "irc") irc(message, args);
                 else if(commandName === "seecps") seecps(message);
                 else if(commandName === "banlist") banlist(message);
+                else if(commandName === "oban") oban(message, args);
                 else throw Error(`Command ${commandName} was found in config.js but no handler for it was found.`);
         } catch (error) {
             console.error(`${new Date().toISOString()} | ${error} ${error.stack}`);
