@@ -18,6 +18,6 @@ export function scaffold_b(player, block) {
 
     if (isValidRotation || isValidPlacement) {
         flag(player, "Scaffold", "B", isValidRotation ? "World" : "Placement", 
-            isValidRotation ? "rotation" : "rotation-y%1", rotation.x, false);
+            isValidRotation ? "rotation" : "rotation-y%1", rotation.x, true);
     }
 }
