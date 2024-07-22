@@ -18,7 +18,6 @@ import { badpackets_h } from "./checks/packet/badpackets/badpacketsH.js";
 import { badpackets_i } from "./checks/packet/badpackets/badpacketsI.js";
 import { exploit_b } from "./checks/packet/exploit/exploitB.js";
 import { badpackets_c } from "./checks/packet/badpackets/badpacketsC.js";
-import { badpackets_d } from "./checks/packet/badpackets/badpacketsD.js";
 import { badpackets_e } from "./checks/packet/badpackets/badpacketsE.js";
 
 // Import movement checks
@@ -80,8 +79,6 @@ const system = Minecraft.system;
 let lagValue = 1;
 
 // Maps for logging data that we use in checks
-let lastPlayerYawRotations = new Map();
-const lastYawDiff = new Map();
 const lastMessage = new Map();
 const lastXZv = new Map();
 const speedCLog = new Map();
@@ -314,7 +311,6 @@ Minecraft.system.runInterval(() => {
 			motion_d(player);
 		}
 		if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
-			badpackets_d(player, lastPlayerYawRotations, lastYawDiff);
 			exploit_a(player);
 			exploit_b(player);
 			badpackets_f(player);
