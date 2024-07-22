@@ -1,5 +1,5 @@
 # please dont delete this file.
-tellraw @s {"rawtext":[{"text":"§l§u             Isolate Anticheat b8.7.2"}]}
+tellraw @s {"rawtext":[{"text":"§l§u             Isolate Anticheat v8.7.2"}]}
 tellraw @s {"rawtext":[{"text":"§l§6----------------------------------------------------------"}]}
 tellraw @s {"rawtext":[{"text":"§lIsolate AntiCheat is an anticheat for Minecraft Bedrock Edition."}]}
 tellraw @s {"rawtext":[{"text":"§lDeveloped and maintained by Dream23322/4urxra."}]}

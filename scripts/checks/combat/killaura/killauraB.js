@@ -11,7 +11,7 @@ export function killaura_b(player, system, entity) {
 			const swingDelay = Date.now() - player.lastLeftClick;
 
 			if(swingDelay > config.modules.killauraB.max_swing_delay) {
-				flag(player, "Killaura", "B", "Combat", `swingDelay=${swingDelay}`);
+				flag(player, "Killaura", "B", "Combat", `swingDelay=${swingDelay}`, true);
 			}
 		}, config.modules.killauraB.wait_ticks);
 	}
@@ -19,7 +19,7 @@ export function killaura_b(player, system, entity) {
     const rightTicks = getScore(player, "right");
 	if(config.modules.killauraB.enabled && player.hasTag("right")) {
         if(rightTicks > config.modules.killauraB.rightTicks) {
-            flag(player, "Killaura", "B", "Combat", `ticks=${rightTicks}`);
+            flag(player, "Killaura", "B", "Combat", `ticks=${rightTicks}`, true);
         }
     }
 
@@ -27,6 +27,6 @@ export function killaura_b(player, system, entity) {
 	if(config.modules.killauraB.enabled) {
 		const entityID = entity.typeId;
 		const invalid = entityID == "minecraft:xp_orb" || entity.ID == "minecraft:item";
-		if(invalid) flag(player, "Killaura", "B", "Combat", "entity", entityID, false);
+		if(invalid) flag(player, "Killaura", "B", "Combat", "entity", entityID, true);
 	}
 }

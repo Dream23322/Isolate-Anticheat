@@ -19,7 +19,7 @@ export function killaura_f(player, value) {
         if(reset >= 100 && getSpeed(player) > 0.1) {
             // If the player hits above config amount, flag
             if(getScore(player, "ka_F_hits", 0) > config.modules.killauraF.hits) {
-                flag(player, "Killaura", "F", "Combat (BETA)", "hits", getScore(player, "ka_F_hits", 0), false);
+                flag(player, "Killaura", "F", "Combat (BETA)", "hits", `${getScore(player, "ka_F_hits", 0)}`, true);
             }
             if(player.hasTag("debug")) console.warn(`Data || Hits: ${getScore(player, "ka_F_hits", 0)} | Misses: ${getScore(player, "ka_F_misses", 0)} | Reset: ${getScore(player, "killauraF_reset", 0)}`);
             // Reset the score
