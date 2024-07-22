@@ -372,7 +372,7 @@ export default
             "enabled": true,
             "description": "Checks if a players rotation is flat",
             "punishment": "kick",
-            "minVlbeforePunishment": 15
+            "minVlbeforePunishment": 50
         },
         "badpacketsH": {
             "enabled": true,
@@ -391,12 +391,6 @@ export default
             "enabled": true,
             "punishment": "kick",
             "minVlbeforePunishment": 10
-        },
-        "badpacketsD": {
-            "enabled": true,
-            "description": "Checks for derp hacks",
-            "punishment": "kick",
-            "minVlbeforePunishment": 30
         },
         "timerA": {
             "enabled": false,
@@ -706,7 +700,7 @@ export default
         "motionD": {
             "enabled": true,
             "description": "Checks for invalid speed changes",
-            "punishment": "kick",
+            "punishment": "none",
             "minVlbeforePunishment": 10
         },
         "strafeA": {
@@ -751,14 +745,14 @@ export default
             "nofalse": false,
             "description": "Checks for scaffold rotation (mainly while diag scaffolding)",
             "punishment": "kick",
-            "minVlbeforePunishment": 3
+            "minVlbeforePunishment": 15
         },
         "scaffoldB": {
             "enabled": true,
             "description": "Checks for common Pitch angles that scaffold cheats can use.",
             "punishment": "ban",
             "punishmentLength": "30m",
-            "minVlbeforePunishment": 3
+            "minVlbeforePunishment": 5
         },
         "scaffoldC": {
             "enabled": true,
@@ -810,7 +804,7 @@ export default
             "description": "Checks for towering up with a x rotation of 90",
             "undoPlace": false,
             "punishment": "kick",
-            "minVlbeforePunishment": 15
+            "minVlbeforePunishment": 5
         },
         "towerB": {
             "enabled": true,
