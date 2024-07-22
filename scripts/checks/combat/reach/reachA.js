@@ -12,7 +12,7 @@ export function reach_a(player, entity) {
 		checkDistance(player, xz_distance, y_distance, entity);
 		if(getScore(player, "reach_a_reset", 0) > 10) {
 			if(getScore(player, "reach_a_buffer", 0) > config.modules.reachA.buffer) {
-				flag(player, "Reach", "A", "Combat", "distance", `${xz_distance}, `, false);
+				flag(player, "Reach", "A", "Combat", "distance", `${xz_distance}, `, true);
 			}
 			setScore(player, "reach_a_buffer", 0);
 			setScore(player, "reach_a_reset", 0);

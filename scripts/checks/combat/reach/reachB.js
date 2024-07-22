@@ -4,32 +4,34 @@ import { getBlocksBetween, getDistanceXZ, getDistanceY, getSpeed } from "../../.
 const data = new Map();
 
 export function reach_b(player, entity) {
-    if(failedTags(player) || config.modules.reachB.entities_blacklist.includes(entity.typeId)) return;
-    let xz_distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
-    if(data.get(player.name)) {
-        const d = data.get(player.name);
-        const avg = Math.abs((xz_distance + d.one + d.two + d.three + d.four + d.five + d.six + d.seven + d.eight + d.nine + d.ten + d.eleven + d.twelve + d.thirteen + d.fourteen) / 15);
-		if(player.hasTag('reachDebug')) console.log("Reach: ", avg)
-        if(avg > getMaxReach(player, entity)) {
-            flag(player, "Reach", "B", "Combat", "reach", avg, false);
-        }
-    }
-    data.set(player.name, {
-        one: xz_distance,
-        two: data.get(player.name)?.one || 0,
-        three: data.get(player.name)?.two || 0,
-        four: data.get(player.name)?.three || 0,
-        five: data.get(player.name)?.four || 0,
-        six: data.get(player.name)?.five || 0,
-        seven: data.get(player.name)?.six || 0,
-        eight: data.get(player.name)?.seven || 0,
-        nine: data.get(player.name)?.eight || 0,
-        ten: data.get(player.name)?.nine || 0,
-        eleven: data.get(player.name)?.ten || 0,
-        twelve: data.get(player.name)?.eleven || 0,
-        thirteen: data.get(player.name)?.twelve || 0,
-        fourteen: data.get(player.name)?.thirteen || 0
-    })
+	if(config.modules.reachB.enabled) {
+		if(failedTags(player) || config.modules.reachB.entities_blacklist.includes(entity.typeId)) return;
+		let xz_distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
+		if(data.get(player.name)) {
+			const d = data.get(player.name);
+			const avg = Math.abs((xz_distance + d.one + d.two + d.three + d.four + d.five + d.six + d.seven + d.eight + d.nine + d.ten + d.eleven + d.twelve + d.thirteen + d.fourteen) / 15);
+			if(player.hasTag('reachDebug')) console.log("Reach: ", avg)
+			if(avg > getMaxReach(player, entity)) {
+				flag(player, "Reach", "B", "Combat", "reach", avg, true);
+			}
+		}
+		data.set(player.name, {
+			one: xz_distance,
+			two: data.get(player.name)?.one || 0,
+			three: data.get(player.name)?.two || 0,
+			four: data.get(player.name)?.three || 0,
+			five: data.get(player.name)?.four || 0,
+			six: data.get(player.name)?.five || 0,
+			seven: data.get(player.name)?.six || 0,
+			eight: data.get(player.name)?.seven || 0,
+			nine: data.get(player.name)?.eight || 0,
+			ten: data.get(player.name)?.nine || 0,
+			eleven: data.get(player.name)?.ten || 0,
+			twelve: data.get(player.name)?.eleven || 0,
+			thirteen: data.get(player.name)?.twelve || 0,
+			fourteen: data.get(player.name)?.thirteen || 0
+		})
+	}
 }
 
 function failedTags(player) {

@@ -444,7 +444,7 @@ export default
         "reachB": {
             "enabled": true,
             "description": "Reach check based on reach over time",
-            "reach": 5.5,
+            "reach": 5.9,
             "dynamicReach": true,
             "smartReach": true,
             "dynamicData": {
@@ -512,7 +512,7 @@ export default
             "minCPS": 12,
             "maxDeviation": 0.2500,
             "punishment": "kick",
-            "minVlbeforePunishment": 3,
+            "minVlbeforePunishment": 4,
             "checkCPSAfter": 1000
         },
         "autoclickerC": {
@@ -756,7 +756,7 @@ export default
         "scaffoldB": {
             "enabled": true,
             "description": "Checks for common Pitch angles that scaffold cheats can use.",
-            "punishment": "kick",
+            "punishment": "ban",
             "punishmentLength": "30m",
             "minVlbeforePunishment": 3
         },
