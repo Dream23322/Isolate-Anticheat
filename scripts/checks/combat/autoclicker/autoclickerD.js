@@ -7,7 +7,7 @@ export function autoclicker_d(player) {
         if(data.get(player.name)) {
             const dat = data.get(player.name);
             if(dat.one > 0 && dat.two > 0 && dat.three > 0 && player.cps > 0) {
-                isWave = (
+                const isWave = (
                     Math.abs(player.cps - dat.two) < 1 &&
                     Math.abs(player.cps - dat.three) > 1.5 &&
                     Math.abs(data.one - dat.three) < 1
