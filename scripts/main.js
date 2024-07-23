@@ -72,6 +72,7 @@ import { autoclicker_d } from "./checks/combat/autoclicker/autoclickerD.js";
 import { speed_e } from "./checks/movement/speed/speedE.js";
 import { teleportCheck } from "./utils/tag/teleport.js";
 import { reach_b } from "./checks/combat/reach/reachB.js";
+import { aim_e } from "./checks/combat/aim/aimE.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -332,6 +333,7 @@ Minecraft.system.runInterval(() => {
 			aim_b(player);
 			aim_c(player);
 			aim_b(player);
+			aim_e(player);
 		}
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
 		if (config.modules.scaffoldF.enabled && !player.hasTag("noscaffold")) {
