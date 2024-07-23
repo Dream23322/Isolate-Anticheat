@@ -351,6 +351,7 @@ Minecraft.system.runInterval(() => {
 		}
 		if(!player.hasTag("attacking") && player.hasTag("leftv2") && !player.hasTag("usingItem") && !player.hasTag("useItem") && !player.hasTag("interactBlock")) {
 			killaura_f(player, 0);
+			killaura_d(player, 0);
 		}
 		// Remove tags for checks :D
 		player.removeTag("attacking");
@@ -396,7 +397,6 @@ Minecraft.system.runInterval(() => {
 		autoclicker_b(player);
 		autoclicker_c(player);
 		autoclicker_d(player);
-		killaura_e(player);
 
 		if(player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
 			player.firstAttack = Date.now();
@@ -729,7 +729,8 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 		killaura_a(player, entity);
 		killaura_b(player, system, entity);
 		killaura_c(player, entity, player.entitiesHit);
-		killaura_d(player, entity);
+		killaura_d(player, 1);
+		killaura_e(player);
 		killaura_f(player, 1);
 	}
 

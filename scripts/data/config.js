@@ -522,7 +522,8 @@ export default
             "enabled": true,
             "minCPS": 7,
             "punishment": "none",
-            "minVlbeforePunishment": 0
+            "minVlbeforePunishment": 0,
+            "checkCPSAfter": 1000
         },
 		"killauraA": {
             "enabled": true,
@@ -552,6 +553,7 @@ export default
             "enabled": true,
             "description": "Checks is the attacked player is surrounded by blocks",
             "punishment": "kick",
+            "hits": 9,
             "punishmentLength": "3d",
             "minVlbeforePunishment": 3
         },
@@ -559,7 +561,7 @@ export default
 			"enabled": true,
             "description": "Checks for hitting entities while using an item",
 			"punishment": "kick",
-			"minVlbeforePunishment": 5
+			"minVlbeforePunishment": 10
         },
         "killauraF": {
             "enabled": true,
