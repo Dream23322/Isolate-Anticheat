@@ -48,7 +48,6 @@ import { scaffold_b } from "./checks/world/scaffold/scaffoldB.js";
 import { scaffold_c } from "./checks/world/scaffold/scaffoldC.js";
 import { tower_a } from "./checks/world/scaffold/towerA.js";
 import { tower_b } from "./checks/world/scaffold/towerB.js";
-import { scaffold_d } from "./checks/world/scaffold/scaffoldD.js";
 import { scaffold_a } from "./checks/world/scaffold/scaffoldA.js";
 import { scaffold_e } from "./checks/world/scaffold/scaffoldE.js";
 import { nuker_d } from "./checks/world/nuker/nukerD.js";
@@ -426,7 +425,6 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 		scaffold_a(player, block);
 		scaffold_b(player, block);
 		scaffold_c(player, block);
-		scaffold_d(player, block);
 		scaffold_e(player);
 		scaffold_f(player, block);
 		tower_a(player, block);

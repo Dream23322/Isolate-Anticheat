@@ -9,14 +9,14 @@ export function reach_b(player, entity) {
 		let xz_distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
 		if(data.get(player.name)) {
 			const d = data.get(player.name);
-			const avg = Math.abs((xz_distance + d.one + d.two + d.three + d.four + d.five + d.six + d.seven + d.eight + d.nine + d.ten + d.eleven + d.twelve + d.thirteen + d.fourteen) / 15);
+			const avg = Math.abs((xz_distance.toFixed(3) + d.one + d.two + d.three + d.four + d.five + d.six + d.seven + d.eight + d.nine + d.ten + d.eleven + d.twelve + d.thirteen + d.fourteen) / 15);
 			if(player.hasTag('reachDebug')) console.log("Reach: ", avg)
 			if(avg > getMaxReach(player, entity)) {
 				flag(player, "Reach", "B", "Combat", "reach", avg, true);
 			}
 		}
 		data.set(player.name, {
-			one: xz_distance,
+			one: xz_distance.toFixed(3),
 			two: data.get(player.name)?.one || 0,
 			three: data.get(player.name)?.two || 0,
 			four: data.get(player.name)?.three || 0,
