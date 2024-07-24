@@ -642,7 +642,7 @@ export default
         "speedE": {
             "enabled":true,
             "description": "Checks for high bpt (Blocks per tick) over a while",
-            "bpt": 0.26,
+            "bpt": 0.271,
             "maxPredict": 9.50,
             "punishment": "kick",
             "minVlbeforePunishment": 40
