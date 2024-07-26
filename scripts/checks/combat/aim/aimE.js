@@ -13,7 +13,7 @@ export function aim_e(player) {
             const diff1 = Math.abs(firstYaw - middleYaw);
             const diff2 = Math.abs(secondYaw - middleYaw);
             if(diff1 < 15 && diff2 < 15) {
-                flag(player, "Killaura", "E", "Combat", "yawDiff", `${diff1} - ${diff2}`, false);
+                flag(player, "Aim", "E", "Combat", "yawDiff", `${diff1} - ${diff2}`, false);
             }
         }
         data.set(player.name, {
