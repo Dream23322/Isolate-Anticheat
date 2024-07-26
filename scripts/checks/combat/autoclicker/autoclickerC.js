@@ -6,16 +6,30 @@ export function autoclicker_c(player) {
         player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
         const cps = player.cps;
         const isRounded = Number.isInteger(cps);
+        if(config.modules.autoclickerC.experimental) {
+            const difference = Math.abs(Math.round(cps) - cps);
+            if(difference < 0.001) {
+                if(data.get(player.name)) {
+                    const buffer = data.get(player.name);
+                    if(buffer > config.modules.autoclickerC.buffer && cps > 10) {
+                        flag(player, "Autoclicker", "C", "Combat (BETA)", "cps", cps);
+                        data.set(player.name, -1);
+                    }
+                }
+                data.set(player.name, (data.get(player.name) || 0) + 1);
+            }
+        }
         if(isRounded) {
             if(data.get(player.name)) {
                 const buffer = data.get(player.name)
                 if(buffer > config.modules.autoclickerC.buffer && cps > 10) {
-                    flag(player, "Autoclicker", "C", "Combat (BETA)", "cps", cps);
+                    flag(player, "Autoclicker", "C", "Combat", "cps", cps);
                     data.set(player.name, -1);
                 } 
             }
             data.set(player.name, (data.get(player.name) || 0) + 1);
         }
+        
     }
 
 }

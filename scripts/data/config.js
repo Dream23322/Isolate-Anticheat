@@ -513,7 +513,7 @@ export default
             "enabled": true,
             "minCPS": 6,
             "buffer": 5,
-            "min_diff": 0.001,
+            "experimental": false,
             "punishment": "none",
             "minVlbeforePunishment": 0,
             "checkCPSAfter": 1000
