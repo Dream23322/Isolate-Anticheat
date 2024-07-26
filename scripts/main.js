@@ -352,7 +352,7 @@ Minecraft.system.runInterval(() => {
 		}
 		if(!player.hasTag("attacking") && player.hasTag("leftv2") && !player.hasTag("usingItem") && !player.hasTag("useItem") && !player.hasTag("interactBlock")) {
 			killaura_f(player, 0);
-			killaura_d(player, 0);
+			killaura_d(player);
 		}
 		// Remove tags for checks :D
 		player.removeTag("attacking");
