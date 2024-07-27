@@ -520,7 +520,9 @@ export default
         },
         "autoclickerD": {
             "enabled": true,
-            "minCPS": 7,
+            "minCPS": 8,
+            "spikeAmount": 1.5,
+            "buffer": 5,
             "punishment": "none",
             "minVlbeforePunishment": 0,
             "checkCPSAfter": 1000
