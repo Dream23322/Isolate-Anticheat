@@ -136,14 +136,14 @@ export function mathOnGround(posY) {
     return posY % 0.015625 === 0;
 }
 
-export function getOutliers(collection) {
+export function getOutliers(collection, amt=1.5) {
     const values = Array.from(collection);
     const half = Math.floor(values.length / 2);
     const q1 = getMedian(values.slice(0, half));
     const q3 = getMedian(values.slice(half, values.length));
     const iqr = Math.abs(q1 - q3);
-    const lowThreshold = q1 - 1.5 * iqr;
-    const highThreshold = q3 + 1.5 * iqr;
+    const lowThreshold = q1 - amt * iqr;
+    const highThreshold = q3 + amt * iqr;
     const outliers = {
         lower: [],
         upper: []
@@ -158,6 +158,12 @@ export function getOutliers(collection) {
     });
 
     return outliers;
+}
+
+export function getOutliersInt(collection, amt=1.5) {
+    const data = getOutliers(collection, amt);
+    // Return amount of outliers
+    return data.lower.length + data.upper.length;
 }
 
 export function getSkewness(data) {
