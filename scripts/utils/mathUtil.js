@@ -217,7 +217,12 @@ export function getKurtosis(data) {
     return efficiencyFirst * (varianceSquared / Math.pow(variance / sum, 2.0)) - efficiencySecond;
 }
 
-// Helper function to calculate median
+/**
+ * Calculates the median value of an array of numbers.
+ *
+ * @param {number[]} values - The array of numbers to calculate the median for.
+ * @return {number} The median value of the input array.
+ */
 export function getMedian(values) {
     const sortedValues = values.slice().sort((a, b) => a - b);
     const middleIndex = Math.floor(sortedValues.length / 2);
