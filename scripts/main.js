@@ -372,7 +372,26 @@ Minecraft.system.runInterval(() => {
 			if(player.hasTag("packetlogger")) player.runCommandAsync(`title @s actionbar packets:${getScore(player, "packets", 0)}`);
 			setScore(player, "packets", 0);
 			player.removeTag("snow");
-			
+			let lst = Object.keys(JSON.parse(world.getDynamicProperty("offlineList")));
+			// Convert lst into a lst
+			const bnlst = JSON.parse(world.getDynamicProperty("banList"));
+			// If user is in offline ban list, add ban and remove from list			
+			for (let bandat in lst) {
+				if (lst[bandat] === player.nameTag) {
+					player.addTag(`reason:${lst[bandat][1]}`);
+					player.addTag(`by:${lst[bandat][2]}`);
+					if(typeof lst[bandat][3] === "number") player.addTag(`time:${Date.now() + lst[bandat][3]}`);
+					player.addTag("isBanned");
+					bnlst[player.name] = [player.nameTag, lst[bandat][1], lst[bandat][2], Date.now(), lst[bandat][3]];
+					// Remove player from the list
+					delete lst[bandat];
+					world.setDynamicProperty("offlineList", JSON.stringify(lst));
+		
+					// Add the player to the banned players list
+					
+					world.setDynamicProperty("banList", JSON.stringify(bnlst));
+				}
+			}
 		}
 		if(getScore(player, "tag_reset", 0) > 5) {
 			const removalTags = [

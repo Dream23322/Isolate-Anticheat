@@ -101,7 +101,7 @@ function adminLogsMenu(player) {
     }
     const menu = new MinecraftUI.ActionFormData()
         .title("Admin Logs")
-        .body(`"Admin Logs since last restart"\n\n${text}`)
+        .body(`Admin Logs since last restart\n\n${text}`)
         .button("Back", "textures/ui/arrow_left.png");
     menu.show(player).then((response) => {
         if(response.selection === 4) return;

@@ -38,6 +38,7 @@ import { irc } from "./other/irc.js";
 import { seecps } from "./settings/seecps.js";
 import { banlist } from "./utility/banlist.js";
 import { oban } from "./moderation/oban.js";
+import { adminlogs } from "./utility/adminlogs.js";
 
 
 
