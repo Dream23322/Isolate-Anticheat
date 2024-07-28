@@ -231,6 +231,11 @@ export default
             "enabled": true,
             "requiredTags": ["op"],
             "aliases": ["al", "adminlog"]
+        },
+        "clearlag": {
+            "enabled": true,
+            "requiredTags": ["op"],
+            "aliases": ["cl", "lag", "lagclear"]
         }
     },
     "modules": {
