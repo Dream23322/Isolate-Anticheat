@@ -545,6 +545,7 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 world.afterEvents.playerLeave.subscribe((playerLeave) => {
     const player = playerLeave.playerName;
     const message = `§u${player} §hhas §pleft§j the server`;
+    // @ts-ignore
     data.recentLogs.push(message);
 });
 world.afterEvents.playerSpawn.subscribe((playerJoin) => {
@@ -571,6 +572,7 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 
 	const message = `§u${player.name} §hhas §pjoined§h the server`;
     
+	// @ts-ignore
 	data.recentLogs.push(message)
 	// load custom nametag
 	const { mainColor, borderColor, playerNameColor } = config.customcommands.tag;
@@ -731,6 +733,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 		killaura_a(player, entity);
 		killaura_b(player, system, entity);
 		killaura_c(player, entity, player.entitiesHit);
+		// @ts-ignore
 		killaura_d(player, 1);
 		killaura_e(player);
 		killaura_f(player, 1);
