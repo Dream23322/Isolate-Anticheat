@@ -508,6 +508,7 @@ export default
         },
         "autoclickerB": {
             "enabled": true,
+            "description":"Checks for low deviation in CPS",
             "minCPS": 12,
             "maxDeviation": 0.2500,
             "punishment": "kick",
@@ -516,6 +517,7 @@ export default
         },
         "autoclickerC": {
             "enabled": true,
+            "description":"Checks for rounded CPS",
             "minCPS": 6,
             "buffer": 5,
             "experimental": false,
@@ -525,6 +527,7 @@ export default
         },
         "autoclickerD": {
             "enabled": true,
+            "description":"Checks for spikes in CPS",
             "minCPS": 8,
             "spikeAmount": 1.5,
             "buffer": 5,
@@ -534,6 +537,7 @@ export default
         },
         "autoclickerE": {
             "enabled": true,
+            "description":"Checks for kurtosis in CPS",
             "minCPS": 8,
             "buffer": 20,
             "punishment": "none",
@@ -566,7 +570,7 @@ export default
         },
         "killauraD": {
             "enabled": true,
-            "description": "Checks is the attacked player is surrounded by blocks",
+            "description": "Checks for killaura rotations",
             "punishment": "kick",
             "hits": 9,
             "punishmentLength": "3d",
