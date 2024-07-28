@@ -24,6 +24,7 @@ tellraw @s {"rawtext":[{"text":"§u!modules§r - View all enabled or disabled mo
 tellraw @s {"rawtext":[{"text":"§u!module <module> <setting> <newValue>§r - Change a modules settings."}]}
 tellraw @s {"rawtext":[{"text":"§u!reset§r - Resets config."}]}
 tellraw @s {"rawtext":[{"text":"§u!seecps§r - Shows players CPS."}]}
+tellraw @s {"rawtext":[{"text":"§u!seereach§r - Shows players REACH (Attacker >> Reach >> Target)."}]}
 tellraw @s {"rawtext":[{"text":"§u!notify§r - Enables/Disables cheat notifications."}]}
 tellraw @s {"rawtext":[{"text":"§u!clearlag§r - Clears server lag (Items, Arrows + Suggest other stuff to clear in discord)."}]}
 
