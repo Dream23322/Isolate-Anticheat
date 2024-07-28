@@ -226,6 +226,11 @@ export default
             "enabled": true,
             "requiredTags": ["op"],
             "aliases": ["ob"]
+        },
+        "adminlogs": {
+            "enabled": true,
+            "requiredTags": ["op"],
+            "aliases": ["al", "adminlog"]
         }
     },
     "modules": {

@@ -1,5 +1,6 @@
 import { world, system } from "@minecraft/server";
 import config from "../data/config.js";
+import data from "../data/data.js";
 
 // import all our commands
 import { kick } from "./moderation/kick.js";
@@ -43,12 +44,10 @@ import { oban } from "./moderation/oban.js";
 /**
  * @name commandHandler
  * @param {object} message - Message data
- * @param {object} message - Message data
  */
 export function commandHandler(message) {
     const prefix = config.modules.settings.prefix;
     // validate that required params are defined
-    if(typeof message !== "object") throw TypeError(`message is type of ${typeof message}. Expected "object"`);
     if(typeof message !== "object") throw TypeError(`message is type of ${typeof message}. Expected "object"`);
 
     
@@ -58,7 +57,6 @@ export function commandHandler(message) {
 
     // checks if the message starts with our prefix, if not exit
     if(!message.message.startsWith(prefix)) return;
-    if(!message.message.startsWith(prefix)) return;
 
    
     const args = message.message.slice(prefix.length).split(/ +/);
@@ -67,6 +65,10 @@ export function commandHandler(message) {
 
     if(config.debug) console.warn(`${new Date().toISOString()} | ${player.name} used the command: ${prefix}${command} ${args.join(" ")}`);
 
+    // Add to admin logs
+    const logData = `§u${player.name} §hCommand: §r${prefix}${command} ${args.join(" ")}`;
+
+    data.recentAdminLogs.push(logData);
 
     let commandData;
     let commandName;
@@ -81,7 +83,6 @@ export function commandHandler(message) {
             
             for (const cmd of Object.keys(config.customcommands)) {
                 const data = config.customcommands[cmd];
-                if(typeof data !== "object" || !data.aliases || !data.aliases.includes(command)) continue;
                 if(typeof data !== "object" || !data.aliases || !data.aliases.includes(command)) continue;
 
                 commandData = data;
@@ -179,6 +180,7 @@ function runCommand(msg, commandName, args) {
                 else if(commandName === "seecps") seecps(message);
                 else if(commandName === "banlist") banlist(message);
                 else if(commandName === "oban") oban(message, args);
+                else if(commandName === "adminlogs") adminlogs(message);
                 else throw Error(`Command ${commandName} was found in config.js but no handler for it was found.`);
         } catch (error) {
             console.error(`${new Date().toISOString()} | ${error} ${error.stack}`);

@@ -1,8 +1,10 @@
 // @ts-check
 
+// @ts-ignore
 import * as Minecraft from "@minecraft/server";
 import config from "./data/config.js";
 import data from "./data/data.js";
+// @ts-ignore
 import { setParticle, setSound, setTitle } from "./utils/gameUtil.js";
 
 
@@ -346,6 +348,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
             console.warn(`${new Date().toISOString()} |${player.name} was kicked by Isolate Anticheat for ${check}/${checkType}`);
             const message = `§u${player.name} §hwas §pkicked §hby §nIsolate Anticheat §j[§n${check}§j]`;
             player.runCommandAsync("function tools/resetwarns");
+            // @ts-ignore
             data.recentLogs.push(message)
             player.runCommandAsync(`kick "${player.name}" §r§uIsolate >> §6Unfair Advantage (Cheating)`);
         }
@@ -371,6 +374,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     player.addTag("by:§d Isolate Anticheat");
                     player.addTag(`reason:§c Isolate Anticheat caught you cheating!`);
                     banLength2 = parseTime("7d");
+                    // @ts-ignore
                     player.addTag(`time:${Date.now() + banLength2}`);
                     player.addTag("isBanned");
                     setScore(player, "kickvl", 0);
@@ -393,6 +397,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     const banList = JSON.parse(world.getDynamicProperty("banList"));
                     banList[player.name] = [player.nameTag, `Anticheat: ${check}/${checkType}`, "Isolate"];
                     world.setDynamicProperty("banList", JSON.stringify(banList))
+                    // @ts-ignore
                     data.recentLogs.push(message)
                     player.runCommandAsync(`kick "${player.name}"`);
                     return;
@@ -402,6 +407,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 console.warn(`${new Date().toISOString()} |${player.name} was kicked by Isolate Anticheat for ${check}/${checkType}`);
                 const message = `§u${player.name} §hwas §pkicked §hby §nIsolate Anticheat §j[§n${check}§j]`;
     
+                // @ts-ignore
                 data.recentLogs.push(message)
                 
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been §cpunished§r (§cKick§r) for ${check}/${checkType}"}]}`);
@@ -446,6 +452,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 world.setDynamicProperty("banList", JSON.stringify(banList))
                 const message = `§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat§b [§s${check}§b]`;
     
+                // @ts-ignore
                 data.recentLogs.push(message)
                 
                 
@@ -453,6 +460,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 player.addTag(`reason:§c Isolate Anticheat detected §6Unfair Advantage§c! §b [§s${check}§b]`);
                 try {
                     banLength = parseTime(punishmentLength);
+                    // @ts-ignore
                     player.addTag(`time:${Date.now() + banLength}`);
                 } catch (error) {}
                 player.runCommandAsync("function tools/resetwarns");
@@ -531,6 +539,7 @@ export function banMessage(player) {
         }
         // Remove the player for the ban list
         for (let i = -1; i < data.banList.length; i++) {
+            // @ts-ignore
             if(data.banList[i].ign !== player.name) continue;
             data.banList.splice(i, 1);
             break;
