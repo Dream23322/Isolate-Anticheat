@@ -527,6 +527,14 @@ export default
             "minVlbeforePunishment": 0,
             "checkCPSAfter": 1000
         },
+        "autoclickerE": {
+            "enabled": true,
+            "minCPS": 8,
+            "buffer": 20,
+            "punishment": "none",
+            "minVlbeforePunishment": 0,
+            "checkCPSAfter": 1000
+        },
 		"killauraA": {
             "enabled": true,
             "description": "Checks for funny killaura rotations (Detects Prax Killaura very fast)",

@@ -72,6 +72,7 @@ import { speed_e } from "./checks/movement/speed/speedE.js";
 import { teleportCheck } from "./utils/tag/teleport.js";
 import { reach_b } from "./checks/combat/reach/reachB.js";
 import { aim_e } from "./checks/combat/aim/aimE.js";
+import { autoclicker_e } from "./checks/combat/autoclicker/autoclickerE.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -398,6 +399,7 @@ Minecraft.system.runInterval(() => {
 		autoclicker_b(player);
 		autoclicker_c(player);
 		autoclicker_d(player);
+		autoclicker_e(player);
 
 		if(player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
 			player.firstAttack = Date.now();
@@ -740,7 +742,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 	
 	badpackets_c(player, entity);
 
-	if(config.modules.autoclickerA.enabled ||config.modules.autoclickerB.enabled) {
+	if(config.modules.autoclickerA.enabled ||config.modules.autoclickerB.enabled || config.modules.autoclickerC.enabled || config.modules.autoclickerD.enabled) {
 		player.cps++;
 	}
 	

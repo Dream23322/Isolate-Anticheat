@@ -1,17 +1,47 @@
-class EvictingList {
+export class EvictingList {
     constructor(maxSize) {
-        this.maxSize = maxSize;
-        this.list = [];
+      this.maxSize = maxSize;
+      this.map = new Map();
+    }
+  
+    getOrCreateList(key) {
+      if (!this.map.has(key)) {
+        this.map.set(key, []);
+      }
+      return this.map.get(key);
+    }
+  
+    add(key, item) {
+      const list = this.getOrCreateList(key);
+      if (list.length >= this.maxSize) {
+        list.shift(); // Remove the oldest item
+      }
+      list.push(item);
+    }
+  
+    getList(key) {
+      return this.map.get(key) || [];
+    }
+  
+    clear(key) {
+      if (this.map.has(key)) {
+        this.map.set(key, []);
+      }
+    }
+  
+    clearAll() {
+      this.map.clear();
+    }
+  
+    getSize(key) {
+      return this.getList(key).length;
+    }
+  
+    getMaxSize() {
+      return this.maxSize;
     }
 
-    add(item) {
-        if (this.list.length >= this.maxSize) {
-            this.list.shift();
-        }
-        this.list.push(item);
+    isFull(player) {
+      return this.getSize(player) >= this.getMaxSize();
     }
-
-    isFull() {
-        return this.list.length >= this.maxSize;
-    }
-}
+  }
