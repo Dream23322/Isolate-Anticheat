@@ -180,14 +180,16 @@ function kickPlayerMenu(player, playerSelected, lastMenu = 0) {
             return;
         }
 
-        const data = String(response.formValues).split(",");
+        const data_ = String(response.formValues).split(",");
 
-        const isSilent = data.pop();
-        const reason = data.join(",").replace(/"|\\/g, "") || "No Reason Provided";
+        const isSilent = data_.pop();
+        const reason = data_.join(",").replace(/"|\\/g, "") || "No Reason Provided";
 
         if(!isSilent) player.runCommandAsync(`kick "${playerSelected.name}" ${reason}`);
         playerSelected.triggerEvent("scythe:kick");
-
+        const adminData = `${player.nameTag} kicked ${playerSelected.name} (Silent:${isSilent}). Reason: ${reason}`;
+        // @ts-ignore
+        data.recentAdminLogs.push(adminData);
         player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has kicked ${playerSelected.name} (Silent:${isSilent}). Reason: ${reason}"}]}`);
     });
 }
@@ -209,15 +211,15 @@ function banPlayerMenu(player, playerSelected, lastMenu = 0) {
             return;
         }
 
-        const data = String(response.formValues).split(",");
+        const data_ = String(response.formValues).split(",");
 
-        const shouldPermBan = data.pop();
+        const shouldPermBan = data_.pop();
 
-        let banLength = data.pop();
+        let banLength = data_.pop();
         // @ts-expect-error
         if(banLength != 0) banLength = parseTime(`${banLength}d`);
 
-        const reason = data.join(",").replace(/"|\\/g, "") || "No Reason Provided";
+        const reason = data_.join(",").replace(/"|\\/g, "") || "No Reason Provided";
 
         // remove old ban tags
         playerSelected.getTags().forEach(t => {
@@ -231,7 +233,10 @@ function banPlayerMenu(player, playerSelected, lastMenu = 0) {
             playerSelected.addTag(`by:${player.nameTag}`);
             if(banLength && shouldPermBan === "false") playerSelected.addTag(`time:${Date.now() + banLength}`);
             playerSelected.addTag("isBanned");
-        
+            const adminData = `${player.nameTag} banned ${playerSelected.nameTag} (Perm:${shouldPermBan}). Reason: ${reason} Length: ${banLength}`;
+            // @ts-ignore
+            data.recentAdminLogs.push(adminData);
+
             player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has banned ${playerSelected.nameTag}. Reason: ${reason}"}]}`);
         }
     });
@@ -257,6 +262,10 @@ function unbanPlayerMenu(player) {
 
         // @ts-expect-error
         data.unbanQueue.push(playerToUnban.toLowerCase());
+
+        const adminData = `${player.nameTag} added ${playerToUnban} into the unban queue. Reason: ${reason}`;
+        // @ts-ignore
+        data.recentAdminLogs.push(adminData);
 
         player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has added ${playerToUnban} into the unban queue. Reason: ${reason}"}]}`);
     });
@@ -369,7 +378,6 @@ function editSettingMenu(player, check) {
 
         // Save config
         world.setDynamicProperty("config", JSON.stringify(config));
-
         player.sendMessage(`§r§j[§uIsolate§j]r Successfully updated the settings for ${check}.\n§r§j[§uIsolate§j]§r New Data:\n${JSON.stringify(checkData, null, 2)}`);
     });
 }
