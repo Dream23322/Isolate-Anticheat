@@ -1,5 +1,6 @@
 import * as Minecraft from "@minecraft/server";
 import { parseTime } from "../../util.js";
+import { playerTellraw } from "../../utils/gameUtil.js";
 
 const world = Minecraft.world;
 
@@ -24,16 +25,15 @@ export function oban(message, args) {
     const reason = args.slice(1).join(" ").replace(/"|\\/g, "") || "No reason specified";
     
     // try to find the player requested
-    const member = args[0].toLowerCase().replace(/"|\\|@/g, "")
-
+    const member = args[0]
     // make sure they dont ban themselves
-    if(member.id === player.id) return player.sendMessage("§r§j[§uIsolate§j]§r You cannot ban yourself.");
+    if(member === player.nameTag) return player.sendMessage("§r§j[§uIsolate§j]§r You cannot ban yourself.");
 
 
     // Add the player to the ban list
     const banList = JSON.parse(world.getDynamicProperty("offlineList"));
-    banList[member.name] = [member.nameTag, reason, player.nameTag, Date.now(), time || "Permanent"];
+    banList[member] = [member, reason, player.nameTag, Date.now(), time || "Permanent"];
     world.setDynamicProperty("offlineList", JSON.stringify(banList));
 
-    player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has banned ${member.nameTag} for ${reason} (OFFLINE BAN)"}]}`);
+    player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has banned ${member} for ${reason} (OFFLINE BAN)"}]}`);
 }
