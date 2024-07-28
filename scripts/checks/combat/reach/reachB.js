@@ -11,7 +11,7 @@ export function reach_b(player, entity) {
 			const d = data.get(player.name);
 			const avg = Math.abs((xz_distance + d.one + d.two + d.three + d.four + d.five + d.six + d.seven + d.eight + d.nine + d.ten + d.eleven + d.twelve + d.thirteen + d.fourteen) / 15);
 			if(player.hasTag('reachDebug')) console.log("Reach: ", avg)
-			if(avg > getMaxReach(player, entity)) {
+			if(avg > getMaxReach(player, entity) && !failedTags(player)) {
 				flag(player, "Reach", "B", "Combat", "reach", avg, true);
 			}
 		}
