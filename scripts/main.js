@@ -2,7 +2,7 @@
 // @ts-ignore
 import * as Minecraft from "@minecraft/server";
 import { tag_system, aroundAir, add_effect} from "./utils/gameUtil.js";
-import { getBlocksBetween, angleCalc } from "./utils/mathUtil.js";
+import { getBlocksBetween, angleCalc, getDistanceXZ } from "./utils/mathUtil.js";
 import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
 import { commandHandler } from "./commands/handler.js";
 import config from "./data/config.js";
@@ -767,8 +767,11 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 	if(config.modules.autoclickerA.enabled ||config.modules.autoclickerB.enabled || config.modules.autoclickerC.enabled || config.modules.autoclickerD.enabled) {
 		player.cps++;
 	}
-	
-
+	if(entity.typeId !== "minecraft:player") {
+		player.runCommandAsync(`tellraw @a[tag=seeREACH] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §d${player.nameTag} §r>> §i${getDistanceXZ(player, entity).toFixed(3)} §r>> §u${entity.typeId}"}]}`);
+	} else {
+		player.runCommandAsync(`tellraw @a[tag=seeREACH] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §d${player.nameTag} §r>> §i${getDistanceXZ(player, entity).toFixed(3)} §r>> §u${entity.nameTag}"}]}`);
+	}
 	if(config.debug && player.hasTag("logHits")) console.warn(player.getTags(), "rotation", rotation.x, "angleDiff", angleCalc(player, entity), "auraF" + getScore(player, "killauraF_buffer", 0), "killauraF_reset", getScore(player, "killauraF_reset", 0), "reach", Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2)));
 });
 world.afterEvents.entityHitBlock.subscribe((entityHit) => {

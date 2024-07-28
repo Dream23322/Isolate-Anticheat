@@ -40,6 +40,7 @@ import { banlist } from "./utility/banlist.js";
 import { oban } from "./moderation/oban.js";
 import { adminlogs } from "./utility/adminlogs.js";
 import { clearlag } from "./other/clearlag.js";
+import { seereach } from "./settings/seereach.js";
 
 
 
@@ -184,6 +185,7 @@ function runCommand(msg, commandName, args) {
                 else if(commandName === "oban") oban(message, args);
                 else if(commandName === "adminlogs") adminlogs(message);
                 else if(commandName === "clearlag") clearlag(message);
+                else if(commandName === "seereach") seereach(message);
                 else throw Error(`Command ${commandName} was found in config.js but no handler for it was found.`);
         } catch (error) {
             console.error(`${new Date().toISOString()} | ${error} ${error.stack}`);

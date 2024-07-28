@@ -236,6 +236,11 @@ export default
             "enabled": true,
             "requiredTags": ["op"],
             "aliases": ["cl", "lag", "lagclear"]
+        },
+        "seereach": {
+            "enabled": true,
+            "requiredTags": ["op"],
+            "aliases": ["sr", "sreach"]
         }
     },
     "modules": {
@@ -497,7 +502,7 @@ export default
             "minVlbeforePunishment": 10
         },
         "aimE": {
-            "enabled": true,
+            "enabled": false,
             "buffer": 10,
             "description": "Checks for a valid sensitivity in the rotation",
             "punishment": "none",
