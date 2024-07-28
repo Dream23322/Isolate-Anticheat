@@ -59,7 +59,8 @@ export function mainGui(player, error) {
         .button(`Manage Players\n§8§o${[...world.getPlayers()].length} player(s) online`, "textures/ui/FriendsDiversity.png")
         .button("Server Options", "textures/ui/servers.png")
         .button("Exit", "textures/ui/redX1.png")
-        .button("Logs", "textures/ui/WarningGlyph.png");
+        .button("Logs", "textures/ui/WarningGlyph.png")
+        .button("AdminLogs", icons.op);
     if(config.debug) menu.button("⭐ Debug", "textures/ui/debug_glyph_color.png");
     
     menu.show(player).then((response) => {
@@ -69,7 +70,8 @@ export function mainGui(player, error) {
         if(response.selection === 3) worldSettingsMenu(player);
         if(response.selection === 4) return;
         if(response.selection === 5) logsMenu(player);
-        if(config.debug && response.selection === 6) debugSettingsMenu(player);
+        if(response.selection === 6) adminLogsMenu(player);
+        if(config.debug && response.selection === 7) debugSettingsMenu(player);
         
     });
 }
@@ -84,6 +86,22 @@ function logsMenu(player) {
     const menu = new MinecraftUI.ActionFormData()
         .title("Isolate Anticheat Logs")
         .body(`"Logs since last restart"\n\n${text}`)
+        .button("Back", "textures/ui/arrow_left.png");
+    menu.show(player).then((response) => {
+        if(response.selection === 4) return;
+    });
+}
+
+function adminLogsMenu(player) {
+    player.playSound("mob.chicken.plop");
+    let logs = data.recentAdminLogs;          
+    let text = "";
+    for (let i = 0; i < logs.length; i++) {
+        text = text + logs[i] + "\n";
+    }
+    const menu = new MinecraftUI.ActionFormData()
+        .title("Admin Logs")
+        .body(`"Admin Logs since last restart"\n\n${text}`)
         .button("Back", "textures/ui/arrow_left.png");
     menu.show(player).then((response) => {
         if(response.selection === 4) return;
