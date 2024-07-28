@@ -25,6 +25,7 @@ tellraw @s {"rawtext":[{"text":"§u!module <module> <setting> <newValue>§r - Ch
 tellraw @s {"rawtext":[{"text":"§u!reset§r - Resets config."}]}
 tellraw @s {"rawtext":[{"text":"§u!seecps§r - Shows players CPS."}]}
 tellraw @s {"rawtext":[{"text":"§u!notify§r - Enables/Disables cheat notifications."}]}
+tellraw @s {"rawtext":[{"text":"§u!clearlag§r - Clears server lag (Items, Arrows + Suggest other stuff to clear in discord)."}]}
 
 
 tellraw @s {"rawtext":[{"text":"\n§l§dTools and Utilites"}]}
