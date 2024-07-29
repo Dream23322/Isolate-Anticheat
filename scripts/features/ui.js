@@ -380,6 +380,8 @@ function editSettingMenu(player, check) {
         world.setDynamicProperty("config", JSON.stringify(config));
 
         const adminData = `${player.nameTag} updated ${check} with \n${JSON.stringify(formValues, null, 2)}`;
+
+        data.recentAdminLogs.push(adminData);
         player.sendMessage(`§r§j[§uIsolate§j]r Successfully updated the settings for ${check}.\n§r§j[§uIsolate§j]§r New Data:\n${JSON.stringify(checkData, null, 2)}`);
     });
 }
