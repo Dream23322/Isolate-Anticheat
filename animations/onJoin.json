@@ -4,7 +4,6 @@
 		"animation.onJoin": {
 			"timeline": {
 				"9.0": [
-					// Anticheat Objectives
 					"/scoreboard objectives add banvl dummy",
 					"/scoreboard objectives add fastusevl dummy",
 					"/scoreboard objectives add autototemvl dummy",
