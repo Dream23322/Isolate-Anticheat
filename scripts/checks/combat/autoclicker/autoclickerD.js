@@ -8,8 +8,8 @@ export function autoclicker_d(player) {
         if(data.get(player.name)) {
             const dat = data.get(player.name);
             const minCPS = config.modules.autoclickerD.minCPS;
-            if(dat.one > minCPS && dat.two > minCPS && dat.three > minCPS && dat.four > minCPS && player.cps > minCPS) {
-                const outliersCheck = getOutliersInt([player.cps, dat.one, dat.two, dat.three, dat.four], 2);
+            if(dat.one > minCPS && dat.two > minCPS && dat.three > minCPS && dat.four > minCPS && player.cps > minCPS && dat.five > minCPS) {
+                const outliersCheck = getOutliersInt([player.cps, dat.one, dat.two, dat.three, dat.four, dat.five], 2);
                 if(outliersCheck >= 2) {
                     // Buffer system
                     const currentBuff = getScore(player, "autoclickerD_buffer", 0);
@@ -25,7 +25,8 @@ export function autoclicker_d(player) {
             one: player.cps,
             two: data.get(player.name)?.one || 0,
             three: data.get(player.name)?.two || 0,
-            four: data.get(player.name)?.three || 0
+            four: data.get(player.name)?.three || 0,
+            five: data.get(player.name)?.four || 0
         });
     }
 }

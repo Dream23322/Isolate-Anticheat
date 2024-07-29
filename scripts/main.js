@@ -333,7 +333,7 @@ Minecraft.system.runInterval(() => {
 			aim_b(player);
 			aim_c(player);
 			aim_b(player);
-			aim_e(player);
+			//aim_e(player);
 		}
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
 		if (config.modules.scaffoldF.enabled && !player.hasTag("noscaffold")) {

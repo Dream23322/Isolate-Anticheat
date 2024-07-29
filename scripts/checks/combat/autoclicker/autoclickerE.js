@@ -12,7 +12,6 @@ export function autoclicker_e(player) {
             const d = data.get(player.name);
             const CPSList = [player.cps, d.one, d.two, d.three, d.four, d.five, d.six, d.seven, d.eight, d.nine, d.ten]
             const avg = getAverage(CPSList);
-            console.log("avg: ", avg)
             if(avg > config.modules.autoclickerE.minCPS) {            
                 const skewness = Math.abs(getSkewness(CPSList));
             
