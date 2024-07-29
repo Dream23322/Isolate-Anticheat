@@ -13,7 +13,7 @@ export function adminlogs(message) {
     let logs = data.recentAdminLogs;          
     playerTellraw(player, "---------------\n§9Admin §nLogs\n§r---------------")
     for (let i = 0; i < logs.length; i++) {
-        playerTellraw(player, logs[i]);
+        playerTellraw(player, `${logs[i]}`);
     }
     playerTellraw(player, "---------------\n");
 }

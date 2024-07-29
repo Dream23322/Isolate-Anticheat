@@ -70,7 +70,6 @@ import { autoclicker_d } from "./checks/combat/autoclicker/autoclickerD.js";
 import { speed_e } from "./checks/movement/speed/speedE.js";
 import { teleportCheck } from "./utils/tag/teleport.js";
 import { reach_b } from "./checks/combat/reach/reachB.js";
-import { aim_e } from "./checks/combat/aim/aimE.js";
 import { autoclicker_e } from "./checks/combat/autoclicker/autoclickerE.js";
 
 const world = Minecraft.world;
@@ -98,11 +97,10 @@ world.beforeEvents.chatSend.subscribe((msg) => {
 		msg.cancel = true;
 		
 	}
-	if(lastMessage) {
-		if(lastMessage.get(player) === message) {
-			msg.cancel = true;
-			player.sendMessage("§cPlease do not repeat yourself");
-		}
+	
+	if(lastMessage && lastMessage.get(player) === message) {
+		msg.cancel = true;
+		player.sendMessage("§cPlease do not repeat yourself");
 	}
 
 	lastMessage.set(player, message);
@@ -237,14 +235,12 @@ Minecraft.system.runInterval(() => {
 			mainGui(player);
 		}
 		
-		if(config.modules.settings.autoReset) {
-			if(getScore(player, "tick_counter2", 0) > 300) {
-				if(!player.hasTag("reported") && player.hasTag("strict")) {
-					player.removeTag("strict");
-				}
-				player.runCommandAsync("function tools/resetwarns");
-				setScore(player, "tick_counter2", 0);
+		if(config.modules.settings.autoReset && getScore(player, "tick_counter2", 0) > 300) {
+			if(!player.hasTag("reported") && player.hasTag("strict")) {
+				player.removeTag("strict");
 			}
+			player.runCommandAsync("function tools/resetwarns");
+			setScore(player, "tick_counter2", 0);
 		}
 		if(player.hasTag("moving") && config.debug && player.hasTag("log")) {
 			console.warn(`${player.nameTag} speed is ${playerSpeed} Velocity.X ${playerVelocity.x}, Y ${playerVelocity.y}, Z ${playerVelocity.z}`);

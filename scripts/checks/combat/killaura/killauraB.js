@@ -17,10 +17,8 @@ export function killaura_b(player, system, entity) {
 	}
 	// Checks for hitting while using an item
     const rightTicks = getScore(player, "right");
-	if(config.modules.killauraB.enabled && player.hasTag("right")) {
-        if(rightTicks > config.modules.killauraB.rightTicks) {
-            flag(player, "Killaura", "B", "Combat", `ticks=${rightTicks}`, true);
-        }
+	if(config.modules.killauraB.enabled && player.hasTag("right") && rightTicks > config.modules.killauraB.rightTicks) {
+        flag(player, "Killaura", "B", "Combat", `ticks=${rightTicks}`, true);
     }
 
 	// Check for hitting an invalid entity
