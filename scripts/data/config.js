@@ -267,9 +267,9 @@ export default
             "hiveRegen": false,
             "smartNotify": false,
             "smartOnly": false,
-            "theme": "1",
+            "theme": "2",
             "flagstyle": "2",
-            "debugflag": false,
+            "debugflag": true,
             "prefix": "!",
             "chatRanks": false,
             "testingmode": false
