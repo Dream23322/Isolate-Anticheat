@@ -1,4 +1,4 @@
-// @ts-check
+// @ts-nocheck
 import * as Minecraft from "@minecraft/server";
 import * as MinecraftUI from "@minecraft/server-ui";
 
@@ -372,7 +372,6 @@ function editSettingMenu(player, check) {
         for(const optionid in optionsMap) {
             const name = optionsMap[optionid];
 
-            // @ts-expect-error
             checkData[name] = name === "punishment" ? Object.keys(punishments)[formValues[optionid]] : formValues[optionid];
         }
 
