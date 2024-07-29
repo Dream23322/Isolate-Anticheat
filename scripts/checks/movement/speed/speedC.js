@@ -16,10 +16,11 @@ export function speed_c(player, tick_counter, speedCLog) {
         const current_pos = {x: player.location.x, y: player.location.y, z: player.location.z};
         // Get the last position of the player
         const last_pos = speedCLog.get(player) || {x: player.location.x, y: player.location.y, z: player.location.z};
-        if(playerSpeed < 0.1) {
-            if(Math.abs((current_pos.x - last_pos.x) + (current_pos.z - last_pos.z) / 2) > max_bps_v) {
-                player.addTag("no_speed_c");
-            }
+        if(
+            playerSpeed < 0.1 && 
+            Math.abs((current_pos.x - last_pos.x) + (current_pos.z - last_pos.z) / 2) > max_bps_v
+        ) {
+            player.addTag("no_speed_c");
         }
 
         // To try stop false flags, we need to try check if a player is under conditions where they could have been teleported
@@ -51,15 +52,9 @@ export function speed_c(player, tick_counter, speedCLog) {
             const y_bps_2 = (last_pos.y - current_pos.y);
             if(current_pos.y < 0 || last_pos.y < 0) return;
             const xyz_bps = Math.abs((current_pos.x - last_pos.x) + (current_pos.y - last_pos.y) + (current_pos.z - last_pos.z) / 3);
-            if(player.hasTag("speedC")) {
-                console.log(`player xz: ${xz_bps} xyz: ${xyz_bps} y_bps: ${y_bps}`);
-            }
-            if(y_bps_2 < -10) {
-                player.addTag("speedC_bypass");
-            }
-            if(playerVelocity.y > 5) {
-                player.addTag("speedC_bypass");
-            }
+            if(player.hasTag("speedC")) console.log(`player xz: ${xz_bps} xyz: ${xyz_bps} y_bps: ${y_bps}`);
+            if(y_bps_2 < -10) player.addTag("speedC_bypass");
+            if(playerVelocity.y > 5) player.addTag("speedC_bypass");
             // Calculate the max XYZ bps
             const max_xyz_bps = Math.abs((max_bps_h + max_bps_v) / 2);
             // Check if the player is under conditions that could cause the player to flag the check even if they are not cheating or using client mods
@@ -84,7 +79,5 @@ export function speed_c(player, tick_counter, speedCLog) {
             player.removeTag("no_speed_c");   
         }
     }
-    if(tick_counter == 1) {
-        speedCLog.set(player, {x: player.location.x, y: player.location.y, z: player.location.z});
-    }
+    if(tick_counter == 1) speedCLog.set(player, {x: player.location.x, y: player.location.y, z: player.location.z});
 }

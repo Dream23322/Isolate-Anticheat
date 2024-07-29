@@ -1,16 +1,8 @@
 import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util.js";
 import config from "../../../data/config.js";
-import { angleCalc, getSpeed } from "../../../utils/mathUtil.js";
-import { getBlocksBetween } from "../../../utils/mathUtil.js";
+import { angleCalc, getSpeed, getBlocksBetween } from "../../../utils/mathUtil.js";
 import { add_effect } from "../../../utils/gameUtil.js";
-/**
- * Different style nuker checks
- * @param {Minecraft.Player} player - The player who broke the block
- * @param {Minecraft.Block} block - The block that was broken
- * @param {string} brokenBlockId - The ID of the broken block
- * @param {Minecraft.BlockPermutation} resetValue - The block permutation to reset the block to
- */
 export function nuker_d(player, block, brokenBlockId, resetValue) {
     // Check if the nukerD module is enabled and the broken block is a redstone ore
     if(config.modules.nukerD.enabled && (brokenBlockId === "minecraft:redstone_ore" || brokenBlockId === "minecraft:lit_redstone_ore")) {

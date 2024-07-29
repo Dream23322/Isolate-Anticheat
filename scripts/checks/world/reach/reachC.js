@@ -5,13 +5,13 @@ import { getDistanceXZ } from "../../../utils/mathUtil.js";
 export function reach_c(player, block) {
 	if(config.modules.reachC.enabled) {
 		const distance = getDistanceXZ(player, block);
-		if(distance > getMax(player, block, distance)) {
+		if(distance > getMax(player, block)) {
 			flag(player, "Reach", "C", "Placement", "distance", distance, false);
 		}
 	}
 }	
 
-function getMax(player, block, distance) {
+function getMax(player, block) {
 	let maxReach = config.modules.reachC.reach;
 	if(player.hasTag("damaged")) maxReach += 0.5;
 	if(player.isSprinting) maxReach -= 0.1;

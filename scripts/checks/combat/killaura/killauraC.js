@@ -26,7 +26,6 @@ export function killaura_c(player, entity, entitiesHit) {
 			const diff1 = Math.abs(rotation.x - lastRot);
 			const diff2 = Math.abs(rotation.x - lastRot2);
 			const diff3 = Math.abs(lastRot - lastRot2);
-			const diff4 = Math.abs(rotation.x - lastRot3);
 
 			const badRots = (
 				diff1 > 90 &&

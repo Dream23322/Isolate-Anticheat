@@ -17,7 +17,7 @@ export function aim_e(player) {
             }
         }
         data.set(player.name, {
-            one: currentYaw,
+            one: player.getRotation().x,
             two: data.get(player.name)?.one || 0,
             three: data.get(player.name)?.two || 0
         })

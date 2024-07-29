@@ -1,6 +1,6 @@
-import { flag, getScore, setScore } from "../../../util.js";
+import { flag } from "../../../util.js";
 import config from "../../../data/config.js";
-import { getBlocksBetween, getDistanceXZ, getDistanceY, getSpeed } from "../../../utils/mathUtil.js";
+import { getBlocksBetween, getSpeed } from "../../../utils/mathUtil.js";
 const data = new Map();
 
 export function reach_b(player, entity) {

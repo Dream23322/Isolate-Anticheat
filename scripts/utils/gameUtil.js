@@ -81,7 +81,8 @@ export function inAir(player) {
  * @param {string} message - The message the player will be told
  */
 export function playerTellraw(player, message) {
-    player.runCommandAsync(`tellraw "${player.name}" {"rawtext":[{"text":"${message}"}]}`);
+    // player.runCommandAsync(`tellraw "${player.name}" {"rawtext":[{"text":"${message}"}]}`);
+    player.sendMessage(message);
 }
 
 
