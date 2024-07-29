@@ -5,7 +5,7 @@ import { getDistanceXZ } from "../../../utils/mathUtil.js";
 export function reach_c(player, block) {
 	if(config.modules.reachC.enabled) {
 		const distance = getDistanceXZ(player, block);
-		if(distance > getMax(player, block)) {
+		if(distance > getMax(player, block) && !player.hasTag("op") && !player.hasTag("gmc")) {
 			flag(player, "Reach", "C", "Placement", "distance", distance, false);
 		}
 	}
