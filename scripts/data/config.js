@@ -501,13 +501,6 @@ export default
             "punishment": "none",
             "minVlbeforePunishment": 10
         },
-        "aimE": {
-            "enabled": false,
-            "buffer": 10,
-            "description": "Checks for a valid sensitivity in the rotation",
-            "punishment": "none",
-            "minVlbeforePunishment": 10
-        },
         "autoclickerA": {
             "enabled": true,
             "maxCPS": 19.5,
