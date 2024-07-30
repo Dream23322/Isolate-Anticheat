@@ -5,13 +5,13 @@ const data = new Map();
 
 export function reach_b(player, entity) {
 	if(config.modules.reachB.enabled) {
-		if(failedTags(player) || config.modules.reachB.entities_blacklist.includes(entity.typeId)) return;
+		if(player.hasTag("gmc") || config.modules.reachB.entities_blacklist.includes(entity.typeId)) return;
 		let xz_distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
 		const d = data.get(player.name) ?? (new Array(15)).fill(0);
 		if(d) {
 			const avg = Math.abs((xz_distance + d[0] + d[1] + d[2] + d[3] + d[4] + d[5] + d[6] + d[7] + d[8] + d[9] + d[10] + d[11] + d[12] + d[13] + d[14]) / 15);
 			if(player.hasTag('reachDebug')) console.log("Reach: ", avg)
-			if(avg > getMaxReach(player, entity) && !failedTags(player)) {
+			if(avg > getMaxReach(player, entity)) {
 				flag(player, "Reach", "B", "Combat", "reach", avg, true);
 			}
 			d.unshift(xz_distance);
@@ -19,14 +19,6 @@ export function reach_b(player, entity) {
 		}
 		data.set(player.name, d);
 	}
-}
-
-function failedTags(player) {
-	const tags = ["gmc", "op", "noreach"]
-	for(const tag in tags) {
-		if(player.hasTag(tag)) return true;
-	} 
-	return false;
 }
 
 function getMaxReach(player, entity) {
