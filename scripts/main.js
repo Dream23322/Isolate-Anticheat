@@ -474,7 +474,6 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 	if(config.modules.autotoolA.enabled && player.flagAutotoolA && !player.hasTag("gmc")) {
 		revertBlock = true;
 		flag(player, "AutoTool", "A", "Misc", "selectedSlot", `${player.selectedSlotIndex},lastSelectedSlot=${player.lastSelectedSlot},switchDelay=${player.autotoolSwitchDelay}`);
-		currentVL++;
 	}
 
 	/*
@@ -487,7 +486,6 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 		if(!player.hasTag("gmc")) {
 			revertBlock = true;
 			flag(player, "InstaBreak", "A", "Exploit", "block", blockBreak.brokenBlockPermutation.type.id, true);
-			currentVL++;
 		}
 	}
 
@@ -590,7 +588,6 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 		if (entitiesToCheck.includes(entityTypeId) || npcCheck) {
 			const closestPlayer = getClosestPlayer(entity);
 			flag(closestPlayer, "CommandBlockExploit", "G", "Exploit", "entity", entityTypeId);
-			currentVL++;
 			entity.kill();
 		}
 
@@ -600,7 +597,6 @@ world.afterEvents.entitySpawn.subscribe((entityCreate) => {
 				if (commandResult.successCount < 1) return;
 				const closestPlayer = getClosestPlayer(entity);
 				flag(closestPlayer, "CommandBlockExploit", "G", "Exploit", "entity", entityTypeId);
-				currentVL++;
 				entity.kill();
 			});
 		}
@@ -675,8 +671,6 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 		killaura_a(player, entity);
 		killaura_b(player, system, entity);
 		killaura_c(player, entity, player.entitiesHit);
-		// @ts-ignore
-		killaura_d(player, 1);
 		killaura_e(player);
 		killaura_f(player, 1);
 	}
