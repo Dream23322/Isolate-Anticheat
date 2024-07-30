@@ -287,7 +287,6 @@ Minecraft.system.runInterval(() => {
 			aim_a(player);
 			aim_b(player);
 			aim_c(player);
-			aim_b(player);
 		}
 
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
