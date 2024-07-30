@@ -18,7 +18,6 @@ export function reach_b(player, entity) {
 			d.pop();
 		}
 		data.set(player.name, d);
-	
 	}
 }
 
