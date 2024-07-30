@@ -1,5 +1,4 @@
 import * as Minecraft from "@minecraft/server";
-import config from '../../data/config.js';
 
 const world = Minecraft.world;
 

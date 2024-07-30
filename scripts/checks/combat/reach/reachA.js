@@ -1,7 +1,6 @@
 import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { getBlocksBetween, getDistanceY, getSpeed } from "../../../utils/mathUtil.js";
-import { getBlock_two } from "../../../utils/gameUtil.js";
 export function reach_a(player, entity) {
 	if(config.modules.reachA.enabled) {
 		if(failedTags(player)) return;

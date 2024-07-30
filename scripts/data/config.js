@@ -728,12 +728,6 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 15
         },
-        "motionD": {
-            "enabled": true,
-            "description": "Checks for invalid speed changes",
-            "punishment": "none",
-            "minVlbeforePunishment": 10
-        },
         "strafeA": {
             "enabled": true,
             "description": "Checks for strafing mid-air",

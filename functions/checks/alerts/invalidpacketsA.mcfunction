@@ -1,2 +1,0 @@
-tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r "},{"selector":"@s"},{"text":" §1has failed §7(Movement) §4Invalid-Packets §7 tags=ground,jump§4 VL= "},{"score":{"name":"@s","objective":"invalidsprintvl"}}]}
-tp @s @s

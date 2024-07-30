@@ -27,7 +27,6 @@ import { speed_b } from "./checks/movement/speed/speedB.js";
 import { motion_a } from "./checks/movement/motion/motionA.js";
 import { motion_b } from "./checks/movement/motion/motionB.js";
 import { motion_c } from "./checks/movement/motion/motionC.js";
-import { motion_d } from "./checks/movement/motion/motionD.js";
 import { fly_c } from "./checks/movement/fly/flyC.js";
 import { noslow_a } from "./checks/movement/noslow/noslowA.js";
 import { noslow_b } from "./checks/movement/noslow/noslowB.js";
@@ -84,19 +83,13 @@ const speedCLog = new Map();
 const dmg_data = new Map();
 const tp_data = new Map();
 
-
-if(config.debug) console.warn(`${new Date().toISOString()} | Isolate - Load success`);
-let currentVL;
 world.beforeEvents.chatSend.subscribe((msg) => {
 	const message = msg.message.toLowerCase();
 	const player = msg.sender;
 
 	if(config.debug && message === "ping") console.warn(`${new Date().toISOString()} | Pong!`);
 
-	if(message.includes("the best minecraft bedrock utility mod") || message.includes("disepi/ambrosial")) {
-		msg.cancel = true;
-		
-	}
+	if(message.includes("the best minecraft bedrock utility mod") || message.includes("disepi/ambrosial")) msg.cancel = true;
 	
 	if(lastMessage && lastMessage.get(player) === message) {
 		msg.cancel = true;
@@ -130,26 +123,19 @@ world.afterEvents.chatSend.subscribe((msg) => {
 
 	msg.sendToTargets = true;
 
-
-
 	// Spammer/A = checks if someone sends a message while moving and on ground
 	if(config.modules.spammerA.enabled && player.hasTag('moving') && player.hasTag('ground') && !player.hasTag('jump'))
 		return flag(player, "Spammer", "A", "Movement", undefined, undefined, true, msg);
-		currentVL++;
 
 	// Spammer/B = checks if someone sends a message while swinging their hand
 	if(config.modules.spammerB.enabled && player.hasTag('left') && !player.getEffect(Minecraft.MinecraftEffectTypes.miningFatigue))
 		return flag(player, "Spammer", "B", "Combat", undefined, undefined, true, msg);
-		currentVL++;
-
 	// Spammer/C = checks if someone sends a message while using an item
 	if(config.modules.spammerC.enabled && player.hasTag('right'))
 		return flag(player, "Spammer", "C", "Misc", undefined, undefined, true, msg);
-		currentVL++;
 	// Spammer/D = checks if someone sends a message while having a GUI open
 	if(config.modules.spammerD.enabled && player.hasTag('hasGUIopen'))
 		return flag(player, "Spammer", "D", "Misc", undefined, undefined, true, msg);
-		currentVL++;
 
 
 	// commandHandler(player, msg);
@@ -159,13 +145,14 @@ world.afterEvents.entityHurt.subscribe((data) => {
 	const player = data.hurtEntity;
 
 	if(player.typeId !== "minecraft:player") return;
+
 	player.addTag("damaged");
-	if(data.damageSource.cause === "fall") {
-		player.addTag("fall_damage");
-	}
+
+	if(data.damageSource.cause === "fall") player.addTag("fall_damage");
+
 	dmg_data.set(player.name, Date.now());
+
 	if(config.debug) console.warn(`${new Date().toISOString()} |${player.name} was damaged!`);
-	
 });
 
 Minecraft.system.runInterval(() => {
@@ -174,11 +161,9 @@ Minecraft.system.runInterval(() => {
 	// Run the code for each player
 	for (const player of world.getPlayers()) {
 
-		// Gud calculations :fire:
+		// Define Variables
 		const rotation = player.getRotation();
 		const playerVelocity = player.getVelocity();
-		const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(4));
-				
 		const selectedSlot = player.selectedSlotIndex;
 
 		if(player.isGlobalBanned && config.modules.globalBan.enabled) {
@@ -186,7 +171,6 @@ Minecraft.system.runInterval(() => {
 			player.addTag("reason:You are in a hacker database!");
 			player.addTag("isBanned");
 		}
-
 
 		// sexy looking ban message
 		if(player.hasTag("isBanned")) banMessage(player);
@@ -203,14 +187,11 @@ Minecraft.system.runInterval(() => {
 		if(player.flagNamespoofA) {
 			flag(player, "Namespoof", "A", "Exploit", "nameLength", player.name.length);
 			player.flagNamespoofA = false;
-			currentVL++;
 		}
 		if(player.flagNamespoofB) {
 			flag(player, "Namespoof", "B", "Exploit");
 			player.flagNamespoofB = false;
-			currentVL++;
 		}
-
 
 		// player position shit
 		if(player.hasTag("moving")) {
@@ -219,65 +200,45 @@ Minecraft.system.runInterval(() => {
 			player.runCommandAsync(`scoreboard players set @s zPos ${Math.floor(player.location.z)}`);
 		}
 
-		// Im currently adding more management for the strict system, it wont be a full system it will just be there to help prevent false flags
 		if(getScore(player, "kickvl", 0) > config.modules.settings.ViolationsBeforeBan / 2 && !player.hasTag("strict")) {
-			//Try add the tag
 			try {
 				player.addTag("strict");
 			} catch (error) {
-				// If .addTag() fails we use commands
 				player.runCommandAsync(`tag "${player.name}" add strict`);
 			}
 		}
-
-		if(player.hasTag("runUI")) {
-			player.removeTag("runUI")
-			mainGui(player);
-		}
 		
 		if(config.modules.settings.autoReset && getScore(player, "tick_counter2", 0) > 300) {
-			if(!player.hasTag("reported") && player.hasTag("strict")) {
-				player.removeTag("strict");
-			}
+			if(!player.hasTag("reported") && player.hasTag("strict")) player.removeTag("strict");
 			player.runCommandAsync("function tools/resetwarns");
 			setScore(player, "tick_counter2", 0);
 		}
-		if(player.hasTag("moving") && config.debug && player.hasTag("log")) {
-			console.warn(`${player.nameTag} speed is ${playerSpeed} Velocity.X ${playerVelocity.x}, Y ${playerVelocity.y}, Z ${playerVelocity.z}`);
-		}
 
 		const blockBelow = player.dimension.getBlock({x: player.location.x, y: player.location.y - 1, z: player.location.z}) ?? {typeId: "minecraft:air"};
+
 		const blockTags = ["ice", "slime", "end_portal", "stairs"];
 		blockTags.forEach(tag => {
 			if (blockBelow.typeId.includes(tag)) {
 				player.addTag(tag);
 			}
 		});
-		if (player.hasTag("trident")) {
-			setScore(player, "right", 0);
-		}
 
+		if (player.hasTag("trident")) setScore(player, "right", 0);
 
 		tag_system(player);
-
 
 		// AirTime 
 		const flyTime = getScore(player, "airTime", 0);
 		if(!player.isOnGround && !player.hasTag("ground") && aroundAir(player)) {
 			setScore(player, "airTime", flyTime + 1);
 		} else {
-			setScore(player, "airTime", 0)
+			setScore(player, "airTime", 0);
 		}
 
   
-		const tickValue = getScore(player, "tickValue", 0);                                      
-		// The flag system and the counter and summon system
-		if(player.hasTag("slime")) {
-			setScore(player, "tick_counter2", 0);
-		}
-		// Store the players last good position
-		// When a movement-related check flags the player, they will be teleported to this position
-		// xRot and yRot being 0 means the player position was modified from player.teleport, which we should ignore
+		const tickValue = getScore(player, "tickValue", 0);                            
+		if(player.hasTag("slime")) setScore(player, "tick_counter2", 0);
+
 		if(rotation.x !== 0 && rotation.y !== 0 && player.isOnGround) {
 			const pos1 = {x: player.location.x, y: player.location.y, z: player.location.z};
 			const pos2 = {x: player.location.x, y: player.location.y + 1, z: player.location.z};
@@ -304,7 +265,6 @@ Minecraft.system.runInterval(() => {
 			motion_a(player);
 			motion_b(player);
 			motion_c(player, lastXZv);
-			motion_d(player);
 		}
 		if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
 			exploit_a(player);
@@ -328,8 +288,8 @@ Minecraft.system.runInterval(() => {
 			aim_b(player);
 			aim_c(player);
 			aim_b(player);
-			//aim_e(player);
 		}
+
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
 		if (config.modules.scaffoldF.enabled && !player.hasTag("noscaffold")) {
 			const blocksPlaced = getScore(player, "scaffoldAmount", 0);
@@ -348,46 +308,37 @@ Minecraft.system.runInterval(() => {
 		}
 		if(!player.hasTag("attacking") && player.hasTag("leftv2") && !player.hasTag("usingItem") && !player.hasTag("useItem") && !player.hasTag("interactBlock")) {
 			killaura_f(player, 0);
-			killaura_d(player);
 		}
+
+		killaura_d(player);
+
 		// Remove tags for checks :D
-		player.removeTag("attacking");
-		player.removeTag("usingItem");
-		player.removeTag("breaking");
-		player.removeTag("leftv2");
-		
+		["attacking", "usingItem", "breaking", "leftv2"].forEach((tag) => player.removeTag(tag));
+
+		const tickCounter = getScore(player, "tick_counter", 0);
+		const packets = getScore(player, "packets", 0);
+		const tagReset = getScore(player, "tag_reset", 0);
+		const aimcReset = getScore(player, "aimc_reset", 0);
 		if(tickValue > 19) {
-			const currentCounter = getScore(player, "tick_counter", 0);
-			setScore(player, "tick_counter", currentCounter + 1);
-			setScore(player, "tick_counter2", getScore(player, "tick_counter2", 0) + 1);
-			setScore(player, "tag_reset", getScore(player, "tag_reset", 0) + 1);
-			setScore(player, "aimc_reset", getScore(player, "aimc_reset", 0) + 1);
+			setScore(player, "tick_counter", tickCounter + 1);
+			setScore(player, "tick_counter2", tickCounter + 1);
+			setScore(player, "tag_reset", tagReset + 1);
+			setScore(player, "aimc_reset", aimcReset + 1);
 			setScore(player, "motion_c_data", 0);
+
 			badpackets_e(player);
-			if(player.hasTag("packetlogger")) player.runCommandAsync(`title @s actionbar packets:${getScore(player, "packets", 0)}`);
-			setScore(player, "packets", 0);
+
+			if(player.hasTag("packetlogger")) player.runCommandAsync(`title @s actionbar packets:${packets}`);
 			player.removeTag("snow");
-			let lst = Object.keys(JSON.parse(world.getDynamicProperty("offlineList")));
-			// Convert lst into a lst
-			const bnlst = JSON.parse(world.getDynamicProperty("banList"));
-			// If user is in offline ban list, add ban and remove from list			
-			for (let bandat in lst) {
-				if (lst[bandat] === player.nameTag) {
-					player.addTag(`reason:${lst[bandat][1]}`);
-					player.addTag(`by:${lst[bandat][2]}`);
-					if(typeof lst[bandat][3] === "number") player.addTag(`time:${Date.now() + lst[bandat][3]}`);
-					player.addTag("isBanned");
-					bnlst[player.name] = [player.nameTag, lst[bandat][1], lst[bandat][2], Date.now(), lst[bandat][3]];
-					// Remove player from the list
-					delete lst[bandat];
-					world.setDynamicProperty("offlineList", JSON.stringify(lst));
-		
-					// Add the player to the banned players list
-					
-					world.setDynamicProperty("banList", JSON.stringify(bnlst));
-				}
+
+			setScore(player, "packets", 0);
+
+			if(player.hasTag("runUI")) {
+				player.removeTag("runUI")
+				mainGui(player);
 			}
 		}
+
 		if(getScore(player, "tag_reset", 0) > 5) {
 			const removalTags = [
 				"slime", "placing", "ice", "fall_damage", 
@@ -397,6 +348,7 @@ Minecraft.system.runInterval(() => {
 			removalTags.forEach(tag => player.removeTag(tag));
 			setScore(player, "tag_reset", 0);
 		}
+
 		if(teleportCheck(player)) {
 			player.addTag("teleport")
 			tp_data.set(player.date, Date.now())
@@ -404,7 +356,8 @@ Minecraft.system.runInterval(() => {
 		if(player.hasTag("damaged") && Date.now() - dmg_data.get(player.name) >= 4000) {
 			player.removeTag("damaged");
 		}
-		if(player.hasTag("teleport") && Date.now() - dmg_data.get(player.name) >= 4000) {
+
+		if(player.hasTag("teleport") && Date.now() - tp_data.get(player.name) >= 4000) {
 			player.removeTag("teleport");
 		}
 
@@ -432,10 +385,10 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	
 	
 	let undoPlace = false; 
+
 	// ==================================
 	//               Scaffold Checks
 	// ==================================
-	//   The best in the game
 
 	if(config.generalModules.scaffold && !player.hasTag("noscaffold")) {
 		scaffold_a(player, block);
@@ -447,10 +400,7 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	}
 
 	reach_c(player, block);
-	// This is used for other checks
-	if(!player.hasTag("placing")) {
-		player.addTag("placing");
-	}
+	player.addTag("placing");
 
 	if(undoPlace) {
 		try {
@@ -598,27 +548,6 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 			player.nameTag = `${borderColor}[§r${mainColor}${t.slice(4)}${borderColor}]§r ${playerNameColor}${player.name}`;
 		}
 	});
-
-	const lst = JSON.parse(world.getDynamicProperty("offlineList"));
-	const bnlst = JSON.parse(world.getDynamicProperty("banList"));
-	// If user is in offline ban list, add ban and remove from list
-	for (const dat of lst) {
-		if (lst[dat][0] === player.name) {
-			player.addTag(`reason:${lst[dat][1]}`);
-			player.addTag(`by:${lst[dat][2]}`);
-			if(typeof lst[dat][3] === "number") player.addTag(`time:${Date.now() + lst[dat][3]}`);
-			player.addTag("isBanned");
-
-			// Remove player from the list
-			delete lst[dat];
-			world.setDynamicProperty("offlineList", JSON.stringify(lst));
-
-			// Add the player to the banned players list
-			bnlst[player.name] = [player.nameTag, lst[dat][1], lst[dat][2], Date.now(), lst[dat][3]];
-			world.setDynamicProperty("banList", JSON.stringify(bnlst));
-		}
-	}
-
 	// Namespoof/A = username length check.
 	if (config.modules.namespoofA.enabled) {
 		const isPlayerNameWithSuffix = player.name.endsWith(')');

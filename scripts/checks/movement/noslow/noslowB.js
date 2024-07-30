@@ -2,8 +2,6 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getSpeed, getBlocksBetween } from "../../../utils/mathUtil.js";
 
-
-
 export function noslow_b(player) {
     const playerSpeed = getSpeed(player);
     const playerVelocity = player.getVelocity();

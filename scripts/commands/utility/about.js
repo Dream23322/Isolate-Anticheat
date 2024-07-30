@@ -1,8 +1,6 @@
 import * as Minecraft from "@minecraft/server";
 import config from "../../data/config.js";
 
-const world = Minecraft.world;
-
 /**
  * @name about
  * @param {object} message - Message object

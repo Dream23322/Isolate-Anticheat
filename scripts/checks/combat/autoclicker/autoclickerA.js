@@ -1,4 +1,4 @@
-import { debug, flag } from "../../../util";
+import { flag } from "../../../util";
 import config from "../../../data/config.js";
 const lastCPS = new Map();
 export function autoclicker_a(player) {
