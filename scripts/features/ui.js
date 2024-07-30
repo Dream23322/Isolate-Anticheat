@@ -1,7 +1,6 @@
 // @ts-nocheck
 import * as Minecraft from "@minecraft/server";
 import * as MinecraftUI from "@minecraft/server-ui";
-
 import config from "../data/config.js";
 import data from "../data/data.js";
 import { parseTime, capitalizeFirstLetter } from "../util.js";

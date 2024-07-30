@@ -5,7 +5,7 @@ import * as Minecraft from "@minecraft/server";
 import config from "./data/config.js";
 import data from "./data/data.js";
 // @ts-ignore
-import { setParticle, setSound, setTitle } from "./utils/gameUtil.js";
+import { setTitle } from "./utils/gameUtil.js";
 
 
 const world = Minecraft.world;

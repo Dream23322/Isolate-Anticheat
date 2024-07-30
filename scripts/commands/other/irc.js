@@ -1,7 +1,5 @@
 import * as Minecraft from "@minecraft/server";
 
-const world = Minecraft.world;
-
 export function irc(message, args) {
     // validate that required params are defined
     if(typeof message !== "object") throw TypeError(`message is type of ${typeof message}. Expected "object".`);

@@ -98,14 +98,11 @@ export function commandHandler(message) {
                 if(config.customcommands.sendInvalidCommandMsg) {
                     player.sendMessage(`§r§j[§uIsolate§j]§c The command: ${command} was not found. Please make sure it exists.`);
                     message.cancel = true;
-                    
-
                 }
                 return;
             }
         }
 
-        
         message.cancel = true;
 
         if(commandData.requiredTags.length >= 1 && commandData.requiredTags.some(tag => !player.hasTag(tag))) {
@@ -122,7 +119,7 @@ export function commandHandler(message) {
         runCommand(message, commandName, args);
     } catch (error) {
         console.error(`${new Date().toISOString()} | ${error} ${error.stack}`);
-        player.sendMessage(`§r§j[§uIsolate§j]§r There was an error while trying to run this command. Please forward this message to https://discord.gg/9m9TbgJ973.\n-------------------------\nCommand: ${String(message.message)}\n${String(error)}\n${error.stack || "\n"}-------------------------`);
+        player.sendMessage(`§r§j[§uIsolate§j]§r There was an error while trying to run this command. Please forward this message to https://discord.gg/YQXUXMHwbM.\n-------------------------\nCommand: ${String(message.message)}\n${String(error)}\n${error.stack || "\n"}-------------------------`);
         
     }
 }

@@ -4,7 +4,7 @@ import { hVelocity, getSpeed } from "../../../utils/mathUtil.js";
 
 export function speed_a(player) {
     const playerSpeed = getSpeed(player);
-// In speed/A we make sure we are still able to check players who have the speed effect! We do this by adding an estimate effect multiplier to the max speed.
+    // In speed/A we make sure we are still able to check players who have the speed effect! We do this by adding an estimate effect multiplier to the max speed.
     if(config.modules.speedA.enabled && hVelocity(player) > 0.05) {
     // Check if the player has an effect or not
     if(player.getEffect("speed")) {

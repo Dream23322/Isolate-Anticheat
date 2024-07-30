@@ -52,7 +52,6 @@
 					"/scoreboard objectives add aim_a_buffer dummy",
 					"/scoreboard objectives add aim_a_reset dummy",
 					"/ability @s[tag=flying,m=!c] mayfly true"
-
 				]
 			},
 			"animation_length": 9.9,

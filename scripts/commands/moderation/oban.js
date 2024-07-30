@@ -1,6 +1,5 @@
 import * as Minecraft from "@minecraft/server";
 import { parseTime } from "../../util.js";
-import { playerTellraw } from "../../utils/gameUtil.js";
 
 const world = Minecraft.world;
 
