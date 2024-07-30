@@ -7,30 +7,18 @@ export function reach_b(player, entity) {
 	if(config.modules.reachB.enabled) {
 		if(failedTags(player) || config.modules.reachB.entities_blacklist.includes(entity.typeId)) return;
 		let xz_distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
-		const d = data.get(player.name) ?? {};
+		const d = data.get(player.name) ?? (new Array(15)).fill(0);
 		if(d) {
-			const avg = Math.abs((xz_distance + d.one + d.two + d.three + d.four + d.five + d.six + d.seven + d.eight + d.nine + d.ten + d.eleven + d.twelve + d.thirteen + d.fourteen) / 15);
+			const avg = Math.abs((xz_distance + d[0] + d[1] + d[2] + d[3] + d[4] + d[5] + d[6] + d[7] + d[8] + d[9] + d[10] + d[11] + d[12] + d[13] + d[14]) / 15);
 			if(player.hasTag('reachDebug')) console.log("Reach: ", avg)
 			if(avg > getMaxReach(player, entity) && !failedTags(player)) {
 				flag(player, "Reach", "B", "Combat", "reach", avg, true);
 			}
+			d.unshift(xz_distance);
+			d.pop();
 		}
-		data.set(player.name, {
-			one: xz_distance,
-			two: d.one || 0,
-			three: d.two || 0,
-			four: d.three || 0,
-			five: d.four || 0,
-			six: d.five || 0,
-			seven: d.six || 0,
-			eight: d.seven || 0,
-			nine: d.eight || 0,
-			ten: d.nine || 0,
-			eleven: d.ten || 0,
-			twelve: d.eleven || 0,
-			thirteen: d.twelve || 0,
-			fourteen: d.thirteen || 0
-		})
+		data.set(player.name, d);
+	
 	}
 }
 
