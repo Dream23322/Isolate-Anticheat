@@ -3,7 +3,7 @@ import config from "../../../data/config.js";
 import { getBlocksBetween, getDistanceY, getSpeed } from "../../../utils/mathUtil.js";
 export function reach_a(player, entity) {
 	if(config.modules.reachA.enabled) {
-		if(failedTags(player)) return;
+		if(player.hasTag("gmc") || player.hasTag("noreach")) return;
 		setScore(player, "reach_a_reset", getScore(player, "reach_a_reset", 0) + 1);
 		let xz_distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
 		if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${xz_distance}\nPlayer Tags: ${player.getTags()}`);
@@ -17,14 +17,6 @@ export function reach_a(player, entity) {
 			setScore(player, "reach_a_reset", 0);
 		}
 	}
-}
-
-function failedTags(player) {
-	const tags = ["gmc", "op", "noreach"]
-	for(const tag in tags) {
-		if(player.hasTag(tag)) return true;
-	} 
-	return false;
 }
 
 function checkDistance(player, xy_distance, y_distance, entity) {
