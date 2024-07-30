@@ -21,6 +21,8 @@ export function speed_e(player) {
                 if(average > config.modules.speedE.bpt && !player.hasTag("damaged") && !player.hasTag("op") && !player.isFlying && !player.hasTag("trident") && !player.hasTag("ice") && !player.hasTag("slime") && !player.hasTag("speedE_pass") && !player.hasTag("placing") && !player.hasTag("teleport") && (average * 20).toFixed(2) < config.modules.speedE.maxPredict) {
                     flag(player, "Speed", "E", "Movement", "avg_bpt", `${average.toFixed(2)},predict_bps=${(average * 20).toFixed(2)}`, true);
                 }
+                data.unshift(bptDiff);
+                data.pop();
             }
             data.set(player.name, d);
         }

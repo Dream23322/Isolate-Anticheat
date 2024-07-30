@@ -7,10 +7,10 @@ export function autoclicker_e(player) {
     if(config.modules.autoclickerE.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerE.checkCPSAfter) {
 
         player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
-        const d = data.get(player.name) ?? {};
+        const d = data.get(player.name) ?? (new Array(10)).fill(0);
         if(d) {
             
-            const CPSList = [player.cps, d.one, d.two, d.three, d.four, d.five, d.six, d.seven, d.eight, d.nine, d.ten]
+            const CPSList = [player.cps, d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9]]
             const avg = getAverage(CPSList);
             if(avg > config.modules.autoclickerE.minCPS) {            
                 const skewness = Math.abs(getSkewness(CPSList));
@@ -22,21 +22,12 @@ export function autoclicker_e(player) {
                         buffer.set(player.name, 0);
                     }
                 }
+                data.unshift(player.cps);
+                data.pop();
             }
         }
 
         // Save last 10 CPS values 
-        data.set(player.name, {
-            one: player.cps,
-            two: d.one || 0,
-            three: d.two || 0,
-            four: d.three || 0,
-            five: d.four || 0,
-            six: d.five || 0,
-            seven: d.six || 0,
-            eight: d.seven || 0,
-            nine: d.eight || 0,
-            ten: d.nine || 0
-        });
+        data.set(player.name, d);
     }
 }
