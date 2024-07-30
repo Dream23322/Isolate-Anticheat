@@ -320,7 +320,7 @@ Minecraft.system.runInterval(() => {
 		const aimcReset = getScore(player, "aimc_reset", 0);
 		if(tickValue > 19) {
 			setScore(player, "tick_counter", tickCounter + 1);
-			setScore(player, "tick_counter2", tickCounter + 1);
+			setScore(player, "tick_counter2", getScore(player, "tick_counter2", 0) + 1);
 			setScore(player, "tag_reset", tagReset + 1);
 			setScore(player, "aimc_reset", aimcReset + 1);
 			setScore(player, "motion_c_data", 0);
