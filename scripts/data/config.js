@@ -241,6 +241,11 @@ export default
             "enabled": true,
             "requiredTags": ["op"],
             "aliases": ["sr", "sreach"]
+        },
+        "announce": {
+            "enabled": true,
+            "requiredTags": ["op"],
+            "aliases": ["a", "ann", "adminannounce"]
         }
     },
     "modules": {
