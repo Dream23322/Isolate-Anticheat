@@ -13,7 +13,6 @@ export function autoclicker_e(player) {
             const CPSList = [player.cps, d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9]]
             // Get average CPS of the list:     
             const skewness = Math.abs(getSkewness(CPSList));
-            playerTellraw(player, "Hello");
             if(skewness < 0.15 && getKurtosis(CPSList) < 0) {
                 buffer.set(player.name, (buffer.get(player.name) || 0) + 1);
                 if(buffer.get(player.name) > config.modules.autoclickerE.buffer) {

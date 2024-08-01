@@ -233,3 +233,8 @@ export function getMedian(values) {
         return sortedValues[middleIndex];
     }
 }
+
+
+export function toList(array) {
+    return array.join(", ");
+}
