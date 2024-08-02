@@ -14,7 +14,7 @@ export function teleportCheck(player) {
 
         if(rotation.x == 0 && rotation.y == 0) return true;
 
-        if(posDiff > 5) {
+        if(posDiff > 5 && velDiff < 1 && speedDiff < 0.4) {
             return true;
         }
     }

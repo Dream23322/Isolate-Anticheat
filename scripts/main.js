@@ -350,7 +350,7 @@ Minecraft.system.runInterval(() => {
 
 		if(teleportCheck(player)) {
 			player.addTag("teleport")
-			tp_data.set(player.date, Date.now())
+			tp_data.set(player.name, Date.now())
 		}
 		if(player.hasTag("damaged") && Date.now() - dmg_data.get(player.name) >= 4000) {
 			player.removeTag("damaged");
