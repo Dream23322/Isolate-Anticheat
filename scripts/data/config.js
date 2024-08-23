@@ -502,6 +502,7 @@ export default
         "aimD": {
             "enabled": true,
             "buffer": 8,
+            "needHit": true,
             "description": "Checks for extrememly smooth rotation",
             "punishment": "none",
             "minVlbeforePunishment": 10

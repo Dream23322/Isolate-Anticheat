@@ -3,7 +3,7 @@
 	"header": {
 		"name": "Isolate AntiCheat b8.7.4",
 		"description": "Isolate - The anticheat that seperates your server from hackers (BETA-API REQUIRED)",
-		"uuid": "d6a8346f-229c-42c8-9ee5-331723bf5d47",
+		"uuid": "6843004c-20f6-4016-bcb7-436f1d3c1974",
 		"version": [8, 7, 4],
 		"min_engine_version": [1, 19, 0]
 	},
