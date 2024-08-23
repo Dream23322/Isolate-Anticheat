@@ -2,8 +2,6 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 
 export function killaura_a(player, entity) {
-	// Idea from Matrix Anticheat
-
     if(config.modules.killauraA.enabled) {
         const playerVelocity = player.getVelocity();
         const rot = player.getRotation();

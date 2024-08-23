@@ -3,11 +3,11 @@ import config from "../../../data/config.js";
 const data = new Map();
 const buffer_data = new Map();
 export function killaura_e(player) {
-    if (!config.modules.killauraE.enabled || !player.hasTag("fighting")) return;
+    if (!config.modules.killauraE.enabled) return;
 
-    const rotationData = data.get(player.name) || { one: player.getRotation().x, two: 0, three: 0 };
+    const rotationData = data.get(player.name) || { one: player.getRotation().y, two: 0, three: 0 };
     const { one, two, three } = rotationData;
-    const rotationX = player.getRotation().x;
+    const rotationX = player.getRotation().y;
 
     const isKillaura = Math.abs(one - rotationX) > 0 && Math.abs(one - rotationX) !== rotationX &&
         Math.abs(one - two) > 0 && Math.abs(one - two) !== one &&

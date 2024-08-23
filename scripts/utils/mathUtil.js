@@ -235,6 +235,43 @@ export function getMedian(values) {
 }
 
 
-export function toList(array) {
-    return array.join(", ");
+function arrayToList(arr) {
+    const list = document.createElement('ul');
+    
+    arr.forEach(item => {
+      const listItem = document.createElement('li');
+      listItem.textContent = item;
+      list.appendChild(listItem);
+    });
+    
+    return list;
+  }
+
+export function isWavePattern(arr) {
+    if (arr.length < 3) return false;
+    
+    let increasing = arr[1] > arr[0];
+    
+    for (let i = 2; i < arr.length; i++) {
+      if (increasing) {
+        if (arr[i] <= arr[i-1]) {
+          increasing = false;
+        }
+      } else {
+        if (arr[i] >= arr[i-1]) {
+          if (i === arr.length - 1) return false;
+          increasing = true;
+        }
+      }
+    }
+    
+    return !increasing;
+}
+
+export function getAverageDifference(arr) {
+    let sum = 0;
+    for (let i = 1; i < arr.length; i++) {
+        sum += arr[i] - arr[i - 1];
+    }
+    return sum / (arr.length - 1);
 }

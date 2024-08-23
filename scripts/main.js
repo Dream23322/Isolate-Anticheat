@@ -70,6 +70,7 @@ import { speed_e } from "./checks/movement/speed/speedE.js";
 import { teleportCheck } from "./utils/tag/teleport.js";
 import { reach_b } from "./checks/combat/reach/reachB.js";
 import { autoclicker_e } from "./checks/combat/autoclicker/autoclickerE.js";
+import { aim_d } from "./checks/combat/aim/aimD.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -287,6 +288,7 @@ Minecraft.system.runInterval(() => {
 			aim_a(player);
 			aim_b(player);
 			aim_c(player);
+			
 		}
 
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
@@ -307,9 +309,9 @@ Minecraft.system.runInterval(() => {
 		}
 		if(!player.hasTag("attacking") && player.hasTag("leftv2") && !player.hasTag("usingItem") && !player.hasTag("useItem") && !player.hasTag("interactBlock")) {
 			killaura_f(player, 0);
+			killaura_e(player);
 		}
 
-		killaura_d(player);
 
 		// Remove tags for checks :D
 		["attacking", "usingItem", "breaking", "leftv2"].forEach((tag) => player.removeTag(tag));
@@ -665,12 +667,13 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 		player.addTag("fighting");
 	}
 
-	
+	aim_d(player);
+
 	if(config.generalModules.killaura && !player.hasTag("noaura")) {
 		killaura_a(player, entity);
 		killaura_b(player, system, entity);
 		killaura_c(player, entity, player.entitiesHit);
-		killaura_e(player);
+		killaura_d(player);
 		killaura_f(player, 1);
 	}
 
@@ -683,6 +686,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 	if(config.modules.autoclickerA.enabled ||config.modules.autoclickerB.enabled || config.modules.autoclickerC.enabled || config.modules.autoclickerD.enabled) {
 		player.cps++;
 	}
+	if(player.hasTag("tempcombatdebug")) player.sendMessage(`§r§j[§uIsolate§j]§r §d${player.nameTag} §r>> Rotation Data: §b${rotation.x} §b${rotation.y}`);
 	if(entity.typeId !== "minecraft:player") {
 		player.runCommandAsync(`tellraw @a[tag=seeREACH] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §d${player.nameTag} §r>> §i${getDistanceXZ(player, entity).toFixed(3)} §r>> §u${entity.typeId}"}]}`);
 	} else {

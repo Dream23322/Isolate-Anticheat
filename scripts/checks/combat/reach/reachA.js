@@ -8,7 +8,7 @@ export function reach_a(player, entity) {
 		let xz_distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
 		if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${xz_distance}\nPlayer Tags: ${player.getTags()}`);
 		let y_distance = getDistanceY(player, entity);
-		checkDistance(player, xz_distance, y_distance, entity);
+		checkDistance(player, xz_distance, entity);
 		if(getScore(player, "reach_a_reset", 0) > 10) {
 			if(getScore(player, "reach_a_buffer", 0) > config.modules.reachA.buffer) {
 				flag(player, "Reach", "A", "Combat", "distance", `${xz_distance}, `, true);
@@ -19,14 +19,14 @@ export function reach_a(player, entity) {
 	}
 }
 
-function checkDistance(player, xy_distance, y_distance, entity) {
-	const mx_reach = getMaxReach(player, entity, y_distance);
+function checkDistance(player, xy_distance, entity) {
+	const mx_reach = getMaxReach(player, entity);
 	if(xy_distance > mx_reach && !config.modules.reachA.entities_blacklist.includes(entity.typeId)) {
 		setScore(player, "reach_a_buffer", getScore(player, "reach_a_buffer", 0) + 1);
 	}
 }
 
-function getMaxReach(player, entity, y_distance) {
+function getMaxReach(player, entity) {
 	let max_reach = config.modules.reachA.reach;
 
 	// Check if smart reach is enabled in the config
