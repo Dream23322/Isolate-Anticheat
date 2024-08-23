@@ -502,8 +502,7 @@ export default
         "aimD": {
             "enabled": true,
             "buffer": 8,
-            "needHit": true,
-            "description": "Checks for extrememly smooth rotation",
+            "description": "Checks for perfect rotation",
             "punishment": "none",
             "minVlbeforePunishment": 10
         },
@@ -579,11 +578,11 @@ export default
         },
         "killauraD": {
             "enabled": true,
-            "description": "Checks for killaura rotations",
+            "description": "Checks for high pitch changes",
             "punishment": "kick",
             "hits": 9,
             "punishmentLength": "3d",
-            "minVlbeforePunishment": 3
+            "minVlbeforePunishment": 10
         },
         "killauraE": {
 			"enabled": true,
