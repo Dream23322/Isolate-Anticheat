@@ -787,7 +787,7 @@ export default
         },
         "scaffoldD": {
             "enabled": true,
-            "description":"Checks for a pattern in place distance that prax client can use",
+            "description":"Checks for a pattern in pitch and yaw angles",
             "punishment": "kick",
             "minVlbeforePunishment": 20
         },
