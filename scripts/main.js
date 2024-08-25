@@ -71,6 +71,7 @@ import { teleportCheck } from "./utils/tag/teleport.js";
 import { reach_b } from "./checks/combat/reach/reachB.js";
 import { autoclicker_e } from "./checks/combat/autoclicker/autoclickerE.js";
 import { aim_d } from "./checks/combat/aim/aimD.js";
+import { scaffold_d } from "./checks/world/scaffold/scaffoldD.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -395,11 +396,12 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 		scaffold_a(player, block);
 		scaffold_b(player, block);
 		scaffold_c(player, block);
+		scaffold_d(player, block);
 		scaffold_e(player);
 		scaffold_f(player, block);
 		tower_a(player, block);
 	}
-
+	if(player.hasTag("tempblockdebug")) player.sendMessage(`§r§j[§uIsolate§j]§r §d${player.nameTag} §r>> Rotation Data: §b${rotation.x} §b${rotation.y}`);
 	reach_c(player, block);
 	player.addTag("placing");
 
