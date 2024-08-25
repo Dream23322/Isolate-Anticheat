@@ -235,14 +235,12 @@ export function getMedian(values) {
 }
 
 
-function arrayToList(arr) {
-    const list = document.createElement('ul');
+export function arrayToList(arr) {
+    const list = []
     
-    arr.forEach(item => {
-      const listItem = document.createElement('li');
-      listItem.textContent = item;
-      list.appendChild(listItem);
-    });
+    for (const item of arr) {
+      list.push(item);
+    }
     
     return list;
   }

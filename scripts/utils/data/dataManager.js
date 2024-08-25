@@ -40,12 +40,19 @@ export function getPitch(player) {
 export function getPitchHistory(player) {
     return arrayToList(data.get(player.name).rotation.pitch);
 }
+export function getDeltaPitch(player) {
+    return data.get(player.name).rotation.pitch[1] - data.get(player.name).rotation.pitch[0];
+}
+
 
 export function getYaw(player) {
     return data.get(player.name).rotation.yaw[0];
 }
 export function getYawHistory(player) {
     return arrayToList(data.get(player.name).rotation.yaw);
+}
+export function getDeltaYaw(player) {
+    return data.get(player.name).rotation.yaw[1] - data.get(player.name).rotation.yaw[0];
 }
 
 export function getSpeedHistory(player) {
