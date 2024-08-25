@@ -1,6 +1,6 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
-import { getDistanceXZ, getSpeed } from "../../../utils/mathUtil.js";
+import { getAverageDifference, getDistanceXZ, getSpeed } from "../../../utils/mathUtil.js";
 
 // Thank you Visual1mpact for helping me with the Map's
 // Initialize scaffold_a_map if not present
@@ -96,7 +96,10 @@ export function scaffold_a(player, block) {
                     flag(player, "Scaffold", "A", "World", "Pitch(1)", pitch_values.new, false);
                 } 
                 if(getSpeed(player) > 1) {
-                    flag(player, "Scaffold", "A", "World", "Speed", getSpeed(player), false);
+                    flag(player, "Scaffold", "A", "World", "Speed", getSpeed(player), true);
+                }
+                if(getAverageDifference([pitch_values.new, pitch_values.mid, pitch_values.old]) < 0.5 && distance < 1.5 && getAverageDifference([yaw_values.new, yaw_values.mid, yaw_values.old]) > 5) {
+                    flag(player, "Scaffold", "A", "World", "Pitch(2)", getAverageDifference([pitch_values.new, pitch_values.mid, pitch_values.old]), false);
                 }
             }
             
