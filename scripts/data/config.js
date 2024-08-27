@@ -831,8 +831,8 @@ export default
         },
         "towerB": {
             "enabled": true,
-            "max_y_pos_diff": 0.35,
-            "description": "Checks for funny velocity while towering up",
+            "description": "Checks for high velocity when towering upwards",
+            "velocity": 3,
             "punishment": "kick",
             "minVlbeforePunishment": 5
         },
