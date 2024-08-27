@@ -14,7 +14,11 @@ export function killaura_d(player) {
         if(d && dtwo) {
             const asList = [d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9]];
             const asList2 = [dtwo[0], dtwo[1], dtwo[2], dtwo[3], dtwo[4], dtwo[5], dtwo[6], dtwo[7], dtwo[8], dtwo[9]];
-            if(Math.abs(getAverageDifference(asList2)) > 2 && isWavePattern(asList) && Math.abs(getAverageDifference(asList)) > 17) {
+            if(
+                Math.abs(getAverageDifference(asList2)) > 2 && 
+                isWavePattern(asList) && 
+                Math.abs(getAverageDifference(asList)) > 17
+            ) {
                 flag(player, "Killaura", "D", "Combat (Beta)", "data", `${getAverageDifference(asList)}, ${getAverageDifference(asList2)}`, true);
             }
             d.unshift(yaw);
