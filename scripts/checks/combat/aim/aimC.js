@@ -22,8 +22,6 @@ export function aim_c(player) {
             const yawData = data.get(player.name).yaw;
             // Get the buffer score for the player
             const bufferVal = getScore(player, "aim_c_buffer", 0);
-            const smallVal = config.modules.aimC.small;
-            const bigVal = config.modules.aimC.big;
             // Only run if the pitch and yaw data is available
             if(pitchData && yawData) {
                 // Calculate the absolute difference in pitch and yaw between the current and previous rotations
