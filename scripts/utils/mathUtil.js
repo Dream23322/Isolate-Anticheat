@@ -93,14 +93,30 @@ export function getAbsoluteGcd(current, last) {
 }
 
 export function gcd(a, b) {
-    if (!b) {
-        return a;
+    if (a < b) {
+        return gcd(b, a);
     }
-
-    return gcd(b, a % b);
+    if (Math.abs(b) < 0.001) {
+        return a;
+    } else {
+        return gcd(b, a - Math.floor(a / b) * b);
+    }
 }
 
+export function getGcdInt(current, previous) {
+    return (previous <= 16384) ? current : getGcd(previous, current % previous);
+}
+export function getGcdFloat(a, b) {
+    if (a < b) {
+        return getGcd(b, a);
+    }
 
+    if (Math.abs(b) < 0.001) {
+        return a;
+    } else {
+        return getGcd(b, a - Math.floor(a / b) * b);
+    }
+}
 export const EXPANDER = Math.pow(2, 24);
 
 export function getVariance(data) {
@@ -272,4 +288,127 @@ export function getAverageDifference(arr) {
         sum += arr[i] - arr[i - 1];
     }
     return sum / (arr.length - 1);
+}
+
+export function getListDifferences(values) {
+    return values.slice(0, -1).map((value, index) => value - values[index + 1]);
+}
+
+export function isNearPerfectWave(arr, tolerance = 0.1) {
+    if (arr.length < 3) return false;
+    
+    let increasing = arr[1] > arr[0];
+    let prevDiff = Math.abs(arr[1] - arr[0]);
+    
+    for (let i = 2; i < arr.length; i++) {
+      let diff = Math.abs(arr[i] - arr[i-1]);
+      let diffRatio = Math.abs(diff - prevDiff) / prevDiff;
+      
+      if (increasing) {
+        if (arr[i] <= arr[i-1] || diffRatio > tolerance) {
+          if (i === arr.length - 1) return false;
+          increasing = false;
+        }
+      } else {
+        if (arr[i] >= arr[i-1] || diffRatio > tolerance) {
+          if (i === arr.length - 1) return false;
+          increasing = true;
+        }
+      }
+      
+      prevDiff = diff;
+    }
+    
+    return !increasing;
+  }
+
+export function isPerfectWave(arr) {
+    if (arr.length < 4) return false;
+
+    let peak = Math.floor(arr.length / 2);
+
+    // Check if the array is increasing up to the peak
+    for (let i = 1; i <= peak; i++) {
+        if (arr[i] <= arr[i-1]) return false;
+    }
+
+    // Check if the array is decreasing after the peak
+    for (let i = peak + 1; i < arr.length; i++) {
+        if (arr[i] >= arr[i-1]) return false;
+    }
+
+    return true;
+}
+
+
+export function countDuplicates(list) {
+    const counts = {};
+    let duplicateCount = 0;
+  
+    for (const item of list) {
+      counts[item] = (counts[item] || 0) + 1;
+      if (counts[item] === 2) {
+        duplicateCount++;
+      }
+    }
+  
+    return duplicateCount;
+  }
+
+export function getgcd(a, b) {
+    a = BigInt(a);
+    b = BigInt(b);
+    while (b !== 0n) {
+        let t = b;
+        b = a % b;
+        a = t;
+    }
+    return a;
+}
+
+
+export function getStandardDeviationV2(numbers) {
+    const n = numbers.length;
+    if (n === 0) return 0;
+
+    const mean = numbers.reduce((sum, num) => sum + num, 0) / n;
+    
+    const squaredDifferences = numbers.map(num => Math.pow(num - mean, 2));
+    const variance = squaredDifferences.reduce((sum, num) => sum + num, 0) / n;
+    
+    return Math.sqrt(variance);
+}
+
+export function findNearDuplicates(arr) {
+    const floatMap = new Map();
+    let duplicateCount = 0;
+
+    arr.forEach(num => {
+        // To handle precision issues, round the float to a fixed number of decimal places
+        const roundedNum = num.toFixed(10);
+
+        if (floatMap.has(roundedNum)) {
+            if (floatMap.get(roundedNum) === 1) {
+                duplicateCount++;
+            }
+            floatMap.set(roundedNum, floatMap.get(roundedNum) + 1);
+        } else {
+            floatMap.set(roundedNum, 1);
+        }
+    });
+
+    return duplicateCount;
+}
+
+export function countRoundedValues(arr) {
+    let flatCount = 0;
+
+    arr.forEach(num => {
+        // Check if the number is an integer (flat/round value)
+        if (Number.isInteger(num)) {
+            flatCount++;
+        }
+    });
+
+    return flatCount;
 }

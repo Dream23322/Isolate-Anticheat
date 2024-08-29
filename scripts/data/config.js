@@ -479,7 +479,7 @@ export default
         "aimA": {
             "enabled": true,
             "description":"Simple delta check",
-            "buffer": 1,
+            "buffer": 8,
             "diff": 0.05,
             "punishment": "none",
             "minVlbeforePunishment": 20
@@ -504,6 +504,23 @@ export default
             "buffer": 8,
             "description": "Checks for perfect rotation",
             "punishment": "none",
+            "minVlbeforePunishment": 10
+        },
+        "aimE": {
+            "enabled": true,
+            "description": "Checks for irregular movements in the rotation",
+            "needHit": false,
+            "duplicates": 35,
+            "dataSize": 50,
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
+        },
+        "aimF": {
+            "enabled": true,
+            "description": "Checks for a valid sensitivty in the rotation",
+            "buffer": 10,
+            "total": 30,
+            "punishment": "kick",
             "minVlbeforePunishment": 10
         },
         "autoclickerA": {
@@ -832,7 +849,7 @@ export default
         "towerB": {
             "enabled": true,
             "description": "Checks for high velocity when towering upwards",
-            "velocity": 3,
+            "velocity": 1,
             "punishment": "kick",
             "minVlbeforePunishment": 5
         },

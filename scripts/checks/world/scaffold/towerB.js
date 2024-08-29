@@ -24,7 +24,6 @@ export function tower_b(player, block) {
             if(isTower && averageVelocity > maxVelocity) {
                 flag(player, "Tower", "B", "Placement", "data", `${averageVelocity.toFixed(5)}`, true);
             }
-            player.runCommandAsync(`tell @a ${averageVelocity.toFixed(5)} | ${isTower} | ${block.location.x} | ${block.location.y} | ${block.location.z} | ${dataList}`);
             d.unshift(player.getVelocity().y);
             d.pop();
         }
