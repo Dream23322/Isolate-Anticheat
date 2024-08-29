@@ -73,6 +73,8 @@ import { autoclicker_e } from "./checks/combat/autoclicker/autoclickerE.js";
 import { aim_d } from "./checks/combat/aim/aimD.js";
 import { scaffold_d } from "./checks/world/scaffold/scaffoldD.js";
 import { tower_b } from "./checks/world/scaffold/towerB.js";
+import { aim_e } from "./checks/combat/aim/aimE.js";
+import { aim_f } from "./checks/combat/aim/aimF.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -285,12 +287,17 @@ Minecraft.system.runInterval(() => {
 			noslow_a(player);
 			noslow_b(player);
 		}
+		if(player.hasTag("aimtempdebug")) {
+			// Send message with rotation data
+			player.sendMessage(`Rotation: ${rotation.x}, ${rotation.y}`);
+		}
 
 		if(config.generalModules.aim) {
 			aim_a(player);
 			aim_b(player);
 			aim_c(player);
-			
+			aim_e(player);
+			aim_f(player);
 		}
 
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
@@ -690,7 +697,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 	if(config.modules.autoclickerA.enabled ||config.modules.autoclickerB.enabled || config.modules.autoclickerC.enabled || config.modules.autoclickerD.enabled) {
 		player.cps++;
 	}
-	if(player.hasTag("tempcombatdebug")) player.sendMessage(`§r§j[§uIsolate§j]§r §d${player.nameTag} §r>> Rotation Data: §b${rotation.x} §b${rotation.y}`);
+	if(player.hasTag("tempcombatdebug")) player.sendMessage(`§r§j[§uIsolate§j]§r §d${player.nameTag} §r>> Rotation Data: §b${rotation.x} §b${rotation.y} | ${player.hasTag("sprint")} | ${player.isSprinting}`);
 	if(entity.typeId !== "minecraft:player") {
 		player.runCommandAsync(`tellraw @a[tag=seeREACH] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §d${player.nameTag} §r>> §i${getDistanceXZ(player, entity).toFixed(3)} §r>> §u${entity.typeId}"}]}`);
 	} else {
