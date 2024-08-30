@@ -14,7 +14,8 @@ export function scaffold_b(player, block) {
         (rotation.y % 1 === 0 && Math.abs(rotation.y) !== 90) ||
         (rotation.x % 5 === 0 ||
         (rotation.y % 5 === 0 && Math.abs(rotation.y) !== 90))) &&
-        rotation.x !== 0 && rotation.y !== 0);
+        rotation.x !== 0 && rotation.y !== 0) &&
+        config.modules.scaffoldB.enabled;
 
     if (isValidRotation || isValidPlacement) {
         flag(player, "Scaffold", "B", isValidRotation ? "World" : "Placement", 
