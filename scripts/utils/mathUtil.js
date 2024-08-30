@@ -259,7 +259,7 @@ export function arrayToList(arr) {
     }
     
     return list;
-  }
+}
 
 export function isWavePattern(arr) {
     if (arr.length < 3) return false;
