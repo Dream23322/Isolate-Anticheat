@@ -277,7 +277,8 @@ export default
             "debugflag": true,
             "prefix": "!",
             "chatRanks": false,
-            "testingmode": false
+            "testingmode": false,
+            "advancedCPS": false
         },
         "smartReport": {
             "enabled": false,
@@ -482,7 +483,7 @@ export default
             "buffer": 8,
             "diff": 0.05,
             "punishment": "none",
-            "minVlbeforePunishment": 20
+            "minVlbeforePunishment": 10
         },
         "aimB": {
             "enabled": true,
@@ -557,7 +558,7 @@ export default
             "spikeAmount": 1.5,
             "buffer": 5,
             "punishment": "none",
-            "minVlbeforePunishment": 0,
+            "minVlbeforePunishment": 10,
             "checkCPSAfter": 1000
         },
         "autoclickerE": {
@@ -566,7 +567,7 @@ export default
             "minCPS": 8,
             "buffer": 20,
             "punishment": "none",
-            "minVlbeforePunishment": 0,
+            "minVlbeforePunishment": 10,
             "checkCPSAfter": 1000
         },
 		"killauraA": {
