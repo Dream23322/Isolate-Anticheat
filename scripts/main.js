@@ -75,6 +75,7 @@ import { scaffold_d } from "./checks/world/scaffold/scaffoldD.js";
 import { tower_b } from "./checks/world/scaffold/towerB.js";
 import { aim_e } from "./checks/combat/aim/aimE.js";
 import { aim_f } from "./checks/combat/aim/aimF.js";
+import { autoConfigGUI } from "./features/autoconfig.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -231,7 +232,14 @@ Minecraft.system.runInterval(() => {
 		if (player.hasTag("trident")) setScore(player, "right", 0);
 
 		tag_system(player);
-
+		if(player.hasTag("runUI")) {
+			player.removeTag("runUI")
+			mainGui(player);
+		}
+		if(player.hasTag("autoconfigui")) {
+			player.removeTag("autoconfigui")
+			autoConfigGUI(player);
+		}
 		// AirTime 
 		const flyTime = getScore(player, "airTime", 0);
 		if(!player.isOnGround && !player.hasTag("ground") && aroundAir(player)) {
@@ -344,10 +352,7 @@ Minecraft.system.runInterval(() => {
 
 			setScore(player, "packets", 0);
 
-			if(player.hasTag("runUI")) {
-				player.removeTag("runUI")
-				mainGui(player);
-			}
+
 		}
 
 		if(getScore(player, "tag_reset", 0) > 5) {
