@@ -1,25 +1,39 @@
-import { flag } from "../../../util";
+import { flag, setScore, getScore } from "../../../util";
 import config from "../../../data/config.js";
-import { getKurtosis, getSkewness } from "../../../utils/mathUtil.js";
-import { playerTellraw } from "../../../utils/gameUtil.js";
-const buffer = new Map();
+import { arrayToList, countDuplicates, findNearDuplicates, getAverage, getAverageDifference, getOutliersInt, isNearPerfectWave, isWavePattern } from "../../../utils/mathUtil.js";
 const data = new Map();
 export function autoclicker_e(player) {
     if(config.modules.autoclickerE.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerE.checkCPSAfter) {
 
         player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
-        const d = data.get(player.name) ?? (new Array(10)).fill(0);
-        if(d) {
-            const CPSList = [player.cps, d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9]]
-            // Get average CPS of the list:     
-            const skewness = Math.abs(getSkewness(CPSList));
-            if(skewness < 0.15 && getKurtosis(CPSList) < 0) {
-                buffer.set(player.name, (buffer.get(player.name) || 0) + 1);
-                if(buffer.get(player.name) > config.modules.autoclickerE.buffer) {
-                    flag(player, "Autoclicker", "E", "Combat", "kurtosis", getKurtosis(CPSList));
-                    buffer.set(player.name, 0);
+        const d = data.get(player.name) ?? (new Array(19)).fill(0);
+        if(d && player.cps > 10) {
+            const CPSList = arrayToList(d);
+            CPSList.push(player.cps);
+
+            const cpsOutliers = getOutliersInt(CPSList, 3);
+            if(d.length > 18 && getAverage(CPSList) > 13) {
+                const isWave = isWavePattern(CPSList)
+                if(isWave) {
+                    setScore(player, "autoclickerE_buffer", getScore(player, "autoclickerE_buffer", 0) + 1);
+                    if(getScore(player, "autoclickerE_buffer", 0) >= 5) {
+                        flag(player, "AutoClicker", "E", "Kuristosis", "CPS", `${cpsOutliers},CPS=${player.cps},buffer=${getScore(player, "autoclickerE_buffer", 0)}`, true);
+                        setScore(player, "autoclickerE_buffer", 0);
+                    }
+                }
+
+                if(cpsOutliers < 2) flag(player, 'Autoclicker', "E", "Kuristosis", "CPS", player.cps);
+                const averageCpsDiff = Math.abs(getAverageDifference(CPSList));
+
+
+                const cpsDuplicates = findNearDuplicates(CPSList);
+                if(cpsDuplicates > 3) flag(player, "AutoClicker", "E", "Kuristosis", "CPS_DUPLICATES", cpsDuplicates);
+
+                if(cpsOutliers < 3 && averageCpsDiff < 0.7 && (isWave || cpsDuplicates > 2)) {
+                    flag(player, "AutoClicker", "E", "Kuristosis", "CPS", `${player.cps},total=${cpsOutliers + cpsDuplicates + (5 - averageCpsDiff)}`);
                 }
             }
+
             d.unshift(player.cps);
             d.pop();
             
