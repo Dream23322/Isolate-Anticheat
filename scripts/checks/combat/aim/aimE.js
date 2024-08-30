@@ -43,12 +43,12 @@ export function aim_e(player) {
             const deltaYawAverage = getAverage(dYaw);
             const deltaYawDuplicates = findNearDuplicates(dYaw, 0);
 
-            if(deltaYawAverage > 1 && deltaYawDuplicates > 5) flag(player, "Aim", "E", "Kuristosis (Beta)", "deltaYawDuplicates", deltaYawDuplicates, false);
+            if(deltaYawAverage > 1 && deltaYawDuplicates > 15) flag(player, "Aim", "E", "Kuristosis (Beta)", "deltaYawDuplicates", deltaYawDuplicates, false);
 
             const deltaPitchAverage = getAverage(dPitch);
             const deltaPitchDuplicates = findNearDuplicates(dPitch, 0);
 
-            if(deltaPitchAverage > 1 && deltaPitchDuplicates > 5) flag(player, "Aim", "E", "Kuristosis (Beta)", "deltaPitchDuplicates", deltaPitchDuplicates, false);
+            if(deltaPitchAverage > 1 && deltaPitchDuplicates > 15) flag(player, "Aim", "E", "Kuristosis (Beta)", "deltaPitchDuplicates", deltaPitchDuplicates, false);
 
             const total = Math.abs(deltaYawDuplicates + deltaPitchDuplicates);
 
