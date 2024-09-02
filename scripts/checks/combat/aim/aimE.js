@@ -1,6 +1,7 @@
 import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { arrayToList, countDuplicates, countRoundedValues, findNearDuplicates, getAverage, isNearPerfectWave } from "../../../utils/mathUtil.js";
+import { fastAbs } from "../../../utils/fastMath.js";
 
 const data = new Map();
 const dataYaw = new Map();
@@ -18,16 +19,16 @@ export function aim_e(player) {
         const dPitch = dataPitch.get(player.name) ?? (new Array(100)).fill(0);
         if (data3.get(player.name) && d && dYaw) {
 
-            const deltaYaw = Math.abs(currentRotation.y - data3.get(player.name).y);
-            const deltaPitch = Math.abs(currentRotation.x - data3.get(player.name).x);
+            const deltaYaw = fastAbs(currentRotation.y - data3.get(player.name).y);
+            const deltaPitch = fastAbs(currentRotation.x - data3.get(player.name).x);
             if(deltaYaw < 5 || deltaPitch < 5) return;
-            const lastDeltaYaw = Math.abs(data3.get(player.name).y - data3.get(player.name).y2);
-            const lastDeltaPitch = Math.abs(data3.get(player.name).x - data3.get(player.name).x2);
+            const lastDeltaYaw = fastAbs(data3.get(player.name).y - data3.get(player.name).y2);
+            const lastDeltaPitch = fastAbs(data3.get(player.name).x - data3.get(player.name).x2);
 
-            const yawAccel = Math.abs(deltaYaw - lastDeltaYaw);
-            const pitchAccel = Math.abs(deltaPitch - lastDeltaPitch);
+            const yawAccel = fastAbs(deltaYaw - lastDeltaYaw);
+            const pitchAccel = fastAbs(deltaPitch - lastDeltaPitch);
 
-            const accel = Math.abs(yawAccel + pitchAccel);
+            const accel = fastAbs(yawAccel + pitchAccel);
 
             if(isNearPerfectWave(arrayToList(d), 0.1)) {
                 setScore(player, "AimE_BUFFER", getScore(player, "AimE_BUFFER", 0) + 1);
@@ -37,7 +38,7 @@ export function aim_e(player) {
                 }
             }
             
-            const deltaDiff = Math.abs(deltaYaw - deltaPitch);
+            const deltaDiff = fastAbs(deltaYaw - deltaPitch);
             if(deltaDiff < 0.1 && deltaYaw > 1) flag(player, "Aim", "E", "Kuristosis (Beta)", "deltaDiff", deltaDiff, false);
 
             const deltaYawAverage = getAverage(dYaw);
@@ -50,7 +51,7 @@ export function aim_e(player) {
 
             if(deltaPitchAverage > 1 && deltaPitchDuplicates > 15) flag(player, "Aim", "E", "Kuristosis (Beta)", "deltaPitchDuplicates", deltaPitchDuplicates, false);
 
-            const total = Math.abs(deltaYawDuplicates + deltaPitchDuplicates);
+            const total = fastAbs(deltaYawDuplicates + deltaPitchDuplicates);
 
             if(total > config.modules.aimE.total) flag(player, "Aim", "E", "Kuristosis (Beta)", "total", total, false);
 

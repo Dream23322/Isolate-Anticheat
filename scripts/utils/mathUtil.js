@@ -1,7 +1,9 @@
+import { fastAbs, fastFloor, fastSqrt } from "./fastMath";
+
 // Gets player speed
 export function getSpeed(player) {
     const playerVelocity = player.getVelocity();
-    const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
+    const playerSpeed = Number(fastSqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
     return playerSpeed;
 }
 
@@ -36,7 +38,7 @@ export function angleCalc(player, entityHit) {
     const pos2 = { x: entityHit.location.x, y: entityHit.location.y, z: entityHit.location.z };
     let angle = Math.atan2((pos2.z - pos1.z), (pos2.x - pos1.x)) * 180 / Math.PI - player.getRotation().y - 90;
     if (angle <= -180) angle += 360;
-    angle = Math.abs(angle); 
+    angle = fastAbs(angle); 
     return angle;
 }
 
@@ -49,7 +51,7 @@ export function hVelocity(player) {
 }
 
 export function hVelocity_2(player) {
-    return Math.abs(player.getVelocity().x - player.getVelocity().z);
+    return fastAbs(player.getVelocity().x - player.getVelocity().z);
 }
 
 export function angleCalcRecode(player, entityHit) {
@@ -75,13 +77,13 @@ export function angleCalcRecode(player, entityHit) {
 
 
 export function getDistanceXZ(one, two) {
-    return Math.sqrt(Math.pow(two.location.x - one.location.x, 2) + Math.pow(two.location.z - one.location.z, 2));
+    return fastSqrt(Math.pow(two.location.x - one.location.x, 2) + Math.pow(two.location.z - one.location.z, 2));
 }
 export function getDistanceXYZ(one, two) {
-    return Math.sqrt(Math.pow(two.location.x - one.location.x, 2) + Math.pow(two.location.y - one.location.y, 2) + Math.pow(two.location.z - one.location.z, 2));
+    return fastSqrt(Math.pow(two.location.x - one.location.x, 2) + Math.pow(two.location.y - one.location.y, 2) + Math.pow(two.location.z - one.location.z, 2));
 }
 export function getDistanceY(one, two) {
-    return Math.sqrt(Math.pow(two.location.y - one.location.y, 2));
+    return fastSqrt(Math.pow(two.location.y - one.location.y, 2));
 }
 export function getAbsoluteGcd(current, last) {
     const EXPANDER = 1.6777216E7; // Adjusted to the provided value
@@ -141,7 +143,7 @@ export function getVariance(data) {
 
 export function getStandardDeviation(data) {
     const variance = getVariance(data);
-    return Math.sqrt(variance);
+    return fastSqrt(variance);
 }
 
 export function isScientificNotation(num) {
@@ -154,10 +156,10 @@ export function mathOnGround(posY) {
 
 export function getOutliers(collection, amt=1.5) {
     const values = Array.from(collection);
-    const half = Math.floor(values.length / 2);
+    const half = fastFloor(values.length / 2);
     const q1 = getMedian(values.slice(0, half));
     const q3 = getMedian(values.slice(half, values.length));
-    const iqr = Math.abs(q1 - q3);
+    const iqr = fastAbs(q1 - q3);
     const lowThreshold = q1 - amt * iqr;
     const highThreshold = q3 + amt * iqr;
     const outliers = {
@@ -198,7 +200,7 @@ export function getSkewness(data) {
     const median = (count % 2 !== 0) ? numbers[Math.floor(count / 2)] : (numbers[count / 2 - 1] + numbers[count / 2]) / 2;
     const variance = getVariance(data);
 
-    return 3 * (mean - median) / Math.sqrt(variance);
+    return 3 * (mean - median) / fastSqrt(variance);
 }
 
 export function getAverage(data) {
@@ -241,7 +243,7 @@ export function getKurtosis(data) {
  */
 export function getMedian(values) {
     const sortedValues = values.slice().sort((a, b) => a - b);
-    const middleIndex = Math.floor(sortedValues.length / 2);
+    const middleIndex = fastFloor(sortedValues.length / 2);
 
     if (sortedValues.length % 2 === 0) {
         return (sortedValues[middleIndex - 1] + sortedValues[middleIndex]) / 2;
@@ -298,11 +300,11 @@ export function isNearPerfectWave(arr, tolerance = 0.1) {
     if (arr.length < 3) return false;
     
     let increasing = arr[1] > arr[0];
-    let prevDiff = Math.abs(arr[1] - arr[0]);
+    let prevDiff = fastAbs(arr[1] - arr[0]);
     
     for (let i = 2; i < arr.length; i++) {
-      let diff = Math.abs(arr[i] - arr[i-1]);
-      let diffRatio = Math.abs(diff - prevDiff) / prevDiff;
+      let diff = fastAbs(arr[i] - arr[i-1]);
+      let diffRatio = fastAbs(diff - prevDiff) / prevDiff;
       
       if (increasing) {
         if (arr[i] <= arr[i-1] || diffRatio > tolerance) {
@@ -325,7 +327,7 @@ export function isNearPerfectWave(arr, tolerance = 0.1) {
 export function isPerfectWave(arr) {
     if (arr.length < 4) return false;
 
-    let peak = Math.floor(arr.length / 2);
+    let peak = fastFloor(arr.length / 2);
 
     // Check if the array is increasing up to the peak
     for (let i = 1; i <= peak; i++) {
@@ -376,7 +378,7 @@ export function getStandardDeviationV2(numbers) {
     const squaredDifferences = numbers.map(num => Math.pow(num - mean, 2));
     const variance = squaredDifferences.reduce((sum, num) => sum + num, 0) / n;
     
-    return Math.sqrt(variance);
+    return fastSqrt(variance);
 }
 
 export function findNearDuplicates(arr) {

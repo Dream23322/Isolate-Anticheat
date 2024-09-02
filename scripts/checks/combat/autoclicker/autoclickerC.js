@@ -1,5 +1,6 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
+import { fastAbs, fastRound } from "../../../utils/fastMath.js";
 const data = new Map();
 export function autoclicker_c(player) {
     if(config.modules.autoclickerC.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerC.checkCPSAfter) {
@@ -7,7 +8,7 @@ export function autoclicker_c(player) {
         const cps = player.cps;
         const isRounded = Number.isInteger(cps);
         if(config.modules.autoclickerC.experimental) {
-            const difference = Math.abs(Math.round(cps) - cps);
+            const difference = fastAbs(fastRound(cps) - cps);
             if(difference < 0.001) {
                 if(data.get(player.name)) {
                     const buffer = data.get(player.name);

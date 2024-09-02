@@ -61,3 +61,13 @@ export function fastClamp(x, min, max) {
 export function countTrue(arr) {
     return arr.filter(Boolean).length;
 }
+
+export function fastHypot(x, y) {
+    x = fastAbs(x);
+    y = fastAbs(y);
+    const max = Math.max(x, y);
+    const min = Math.min(x, y);
+    if (max === 0) return 0;
+    const ratio = min / max;
+    return max * fastSqrt(1 + ratio * ratio);
+}

@@ -1,6 +1,7 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getAbsoluteGcd } from "../../../utils/mathUtil.js";
+import { fastAbs, fastFloor } from "../../../utils/fastMath.js";
 const data = new Map();
 export function aim_b(player) {
     if(config.modules.aimB.enabled) {
@@ -10,10 +11,10 @@ export function aim_b(player) {
             const yawDat = data.get(player.name).yaw;
             if(pitchDat && yawDat) {
                 // Define constants
-                const deltaPitch = Math.abs(rotation.x - pitchDat.one);
-                const deltaYaw = Math.abs(rotation.y - yawDat.one);
-                const deltaPitch2 = Math.abs(pitchDat.one - pitchDat.two);
-                const deltaYaw2 = Math.abs(yawDat.one - yawDat.two);
+                const deltaPitch = fastAbs(rotation.x - pitchDat.one);
+                const deltaYaw = fastAbs(rotation.y - yawDat.one);
+                const deltaPitch2 = fastAbs(pitchDat.one - pitchDat.two);
+                const deltaYaw2 = fastAbs(yawDat.one - yawDat.two);
                 const constantYaw = getAbsoluteGcd(deltaYaw, deltaYaw2);
                 const constantPitch = getAbsoluteGcd(deltaPitch, deltaPitch2);
                 if(player.hasTag("aim_debug2")) player.sendMessage("constantYaw" + constantYaw + "constantPitch" + constantPitch);
@@ -30,11 +31,11 @@ export function aim_b(player) {
                 const currentYaw = deltaYaw / constantYaw;
                 const currentPitch = deltaPitch / constantPitch;
 
-                const floorYaw = Math.floor(currentYaw);
-                const floorPitch = Math.floor(currentPitch);
+                const floorYaw = fastFloor(currentYaw);
+                const floorPitch = fastFloor(currentPitch);
 
-                const moduloX = Math.abs(currentYaw - floorYaw);
-                const moduloY = Math.abs(currentPitch - floorPitch);
+                const moduloX = fastAbs(currentYaw - floorYaw);
+                const moduloY = fastAbs(currentPitch - floorPitch);
                 const invalidX2 = moduloX > 0.5 && !Number.isFinite(moduloX);
                 const invalidY2 = moduloY > 0.5 && !Number.isFinite(moduloY);
                 if(invalidX2 || invalidY2) flag(player, "Aim", "B", "Rotation (BETA)", "modX", `${moduloX},modY=${moduloY}`, false);
@@ -47,8 +48,8 @@ export function aim_b(player) {
                     const moduloY = currentY % previousY;
                     const moduloX = currentX % previousX;
 
-                    const floorModuloY = Math.abs(Math.floor(moduloY) - moduloY);
-                    const floorModuloX = Math.abs(Math.floor(moduloX) - moduloX);
+                    const floorModuloY = fastAbs(fastFloor(moduloY) - moduloY);
+                    const floorModuloX = fastAbs(fastFloor(moduloX) - moduloX);
 
                     const invalidY3 = moduloY > 90 && floorModuloY > 0.1;
                     const invalidX3 = moduloX > 90 && floorModuloX > 0.1;
