@@ -57,3 +57,7 @@ export function fastLerp(start, end, t) {
 export function fastClamp(x, min, max) {
     return x < min ? min : (x > max ? max : x);
 }
+
+export function countTrue(arr) {
+    return arr.filter(Boolean).length;
+}
