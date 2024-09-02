@@ -604,7 +604,8 @@ export default
         },
         "killauraE": {
 			"enabled": true,
-            "description": "Checks for hitting entities while using an item",
+            "description": "Checks for proper sprint mechanics",
+            "minSprint": 5,
 			"punishment": "kick",
 			"minVlbeforePunishment": 10
         },
