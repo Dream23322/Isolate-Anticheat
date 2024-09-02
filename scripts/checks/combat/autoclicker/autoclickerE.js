@@ -1,6 +1,7 @@
 import { flag, setScore, getScore } from "../../../util";
 import config from "../../../data/config.js";
 import { arrayToList, countDuplicates, findNearDuplicates, getAverage, getAverageDifference, getOutliersInt, isNearPerfectWave, isWavePattern } from "../../../utils/mathUtil.js";
+import { fastAbs } from "../../../utils/fastMath.js";
 const data = new Map();
 export function autoclicker_e(player) {
     if(config.modules.autoclickerE.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerE.checkCPSAfter) {
@@ -23,7 +24,7 @@ export function autoclicker_e(player) {
                 }
 
                 if(cpsOutliers < 2) flag(player, 'Autoclicker', "E", "Kuristosis", "CPS", player.cps);
-                const averageCpsDiff = Math.abs(getAverageDifference(CPSList));
+                const averageCpsDiff = fastAbs(getAverageDifference(CPSList));
 
 
                 const cpsDuplicates = findNearDuplicates(CPSList);

@@ -1,11 +1,12 @@
 import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { getBlocksBetween, getDistanceY, getSpeed } from "../../../utils/mathUtil.js";
+import { fastSqrt } from "../../../utils/fastMath.js";
 export function reach_a(player, entity) {
 	if(config.modules.reachA.enabled) {
 		if(player.hasTag("gmc") || player.hasTag("noreach")) return;
 		setScore(player, "reach_a_reset", getScore(player, "reach_a_reset", 0) + 1);
-		let xz_distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
+		let xz_distance = fastSqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
 		if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${xz_distance}\nPlayer Tags: ${player.getTags()}`);
 		let y_distance = getDistanceY(player, entity);
 		checkDistance(player, xz_distance, entity);

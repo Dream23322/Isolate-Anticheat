@@ -1,6 +1,7 @@
 import * as Minecraft from "@minecraft/server";
 import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
+import { fastAbs } from "../../../utils/fastMath.js";
 const data = new Map();
 /**
  * The aim_c function checks for suspicious aiming patterns in players' rotation data.
@@ -25,13 +26,13 @@ export function aim_c(player) {
             // Only run if the pitch and yaw data is available
             if(pitchData && yawData) {
                 // Calculate the absolute difference in pitch and yaw between the current and previous rotations
-                const deltaPitch = Math.abs(rot.x - pitchData.one);
-                const deltaYaw = Math.abs(rot.y - yawData.one);
+                const deltaPitch = fastAbs(rot.x - pitchData.one);
+                const deltaYaw = fastAbs(rot.y - yawData.one);
                 // Calculate the absolute difference in pitch and yaw between the previous and second previous rotations
-                const lastDeltaPitch = Math.abs(pitchData.one - pitchData.two);
-                const lastDeltaYaw = Math.abs(yawData.one - yawData.two);
-                const lastLastDeltaPitch = Math.abs(pitchData.two - pitchData.three);
-                const lastLastDeltaYaw = Math.abs(yawData.two - yawData.three);
+                const lastDeltaPitch = fastAbs(pitchData.one - pitchData.two);
+                const lastDeltaYaw = fastAbs(yawData.one - yawData.two);
+                const lastLastDeltaPitch = fastAbs(pitchData.two - pitchData.three);
+                const lastLastDeltaYaw = fastAbs(yawData.two - yawData.three);
                 // Check if the current rotation is within a certain threshold of the previous rotation
                 if(
                     deltaYaw < 1.5 &&
@@ -41,7 +42,7 @@ export function aim_c(player) {
                     deltaPitch < 1.5 &&
                     lastDeltaPitch > 50 &&
                     lastLastDeltaPitch < 1.5 && 
-                    Math.abs(deltaPitch) > 60
+                    fastAbs(deltaPitch) > 60
                 ) {
                     // Increment the buffer score for the player
                     setScore(player, "aim_c_buffer", bufferVal + 1);

@@ -3,6 +3,7 @@ import { flag } from "../../../util.js";
 import config from "../../../data/config.js";
 import { angleCalc, getSpeed, getBlocksBetween } from "../../../utils/mathUtil.js";
 import { add_effect } from "../../../utils/gameUtil.js";
+import { fastSqrt } from "../../../utils/fastMath.js";
 export function nuker_d(player, block, brokenBlockId, resetValue) {
     // Check if the nukerD module is enabled and the broken block is a redstone ore
     if(config.modules.nukerD.enabled && (brokenBlockId === "minecraft:redstone_ore" || brokenBlockId === "minecraft:lit_redstone_ore")) {
@@ -41,7 +42,7 @@ export function nuker_d(player, block, brokenBlockId, resetValue) {
         }
 
         // Calculate the distance between the player and the block
-        const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.z - player.location.z, 2));
+        const distance = fastSqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.z - player.location.z, 2));
 
         // Check if the player is moving too fast and flag the player if true
         if(getSpeed(player) > 0.26) {

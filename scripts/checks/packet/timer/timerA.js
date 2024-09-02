@@ -1,6 +1,7 @@
 import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
+import { fastAbs, fastHypot } from "../../../utils/fastMath.js";
 const timerData = new Map();
 
 
@@ -13,8 +14,8 @@ export function timer_a(player, lastPosition, Value){
         const velocity = player.getVelocity();
         const calcVelocity = {x: player.location.x - lastPosition.x, y:player.location.y - lastPosition.y, z: player.location.z - lastPosition.z};
         if(!isMovingWithVelocity(velocity)) return;
-        const ServerSpeed = Math.abs(Math.hypot(Math.hypot(calcVelocity.x, calcVelocity.z), calcVelocity.y));
-        const ClientSpeed = Math.abs(Math.hypot(Math.hypot(velocity.x, velocity.z), velocity.y));
+        const ServerSpeed = fastAbs(fastHypot(fastHypot(calcVelocity.x, calcVelocity.z), calcVelocity.y));
+        const ClientSpeed = fastAbs(fastHypot(fastHypot(velocity.x, velocity.z), velocity.y));
         const duped = ServerSpeed / ClientSpeed;
         if(player.timerHold == null) player.timerHold = [];
         player.timerHold.push(duped * 20 / Value);
@@ -37,11 +38,11 @@ export function timer_a(player, lastPosition, Value){
                     timer_lev_low++;
                 }
                 if(timerData.get(player) > timer_lev && (timerValue) > timer_lev || timerData.get(player) < timer_lev_low && (timerValue) < timer_lev_low) {
-                    if(Math.abs(player.lastPosition.y - player.location.y) > 5) {
+                    if(fastAbs(player.lastPosition.y - player.location.y) > 5) {
                         timerData.set(player, 20);
                         player.addTag("timer_bypass");
                     }
-                    if(!player.hasTag("timer_bypass") && !player.hasTag("ender_pearl") && timerValue < 1000 && Math.abs(timerData.get(player) - timerValue) < 15 && !player.hasTag("teleporting")) {
+                    if(!player.hasTag("timer_bypass") && !player.hasTag("ender_pearl") && timerValue < 1000 && fastAbs(timerData.get(player) - timerValue) < 15 && !player.hasTag("teleporting")) {
                         flag(player, "Timer", "A", "Packet", "timer", timerData.get(player), false);
                     }
                 }

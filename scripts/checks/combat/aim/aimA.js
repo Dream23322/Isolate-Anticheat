@@ -1,6 +1,7 @@
 import * as Minecraft from "@minecraft/server";
 import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
+import { fastAbs } from "../../../utils/fastMath.js";
 const data = new Map();
 /**
  * Aim A check.
@@ -21,22 +22,22 @@ export function aim_a(player) {
         // Only run if the player's pitch and yaw data is available
         if(data_yaw && data_pitch) {
             // Calculate the absolute difference in pitch and yaw between the current and previous rotations
-            const deltaPitch = Math.abs(rot.x - data_pitch.one);
-            const deltaYaw = Math.abs(rot.y - data_yaw.one);
+            const deltaPitch = fastAbs(rot.x - data_pitch.one);
+            const deltaYaw = fastAbs(rot.y - data_yaw.one);
 
             // Calculate the absolute difference in pitch and yaw between the previous and second previous rotations
-            const deltaPitch2 = Math.abs(data_pitch.one - data_pitch.two);
-            const deltaYaw2 = Math.abs(data_yaw.one - data_yaw.two);
+            const deltaPitch2 = fastAbs(data_pitch.one - data_pitch.two);
+            const deltaYaw2 = fastAbs(data_yaw.one - data_yaw.two);
             
             // Calculate the acceleration in pitch and yaw
-            const yawAccel = Math.abs(deltaYaw - deltaYaw2);
-            const pitchAccel = Math.abs(deltaPitch - deltaPitch2);
+            const yawAccel = fastAbs(deltaYaw - deltaYaw2);
+            const pitchAccel = fastAbs(deltaPitch - deltaPitch2);
 
             // If the player is not moving, skip this iteration
             if(deltaYaw == 0 && deltaPitch == 0) return;
 
-            const invalidYaw = yawAccel < 0.1 && Math.abs(deltaYaw) > 1.5;
-            const invalidPitch = pitchAccel < 0.1 && Math.abs(deltaPitch) > 1.5;
+            const invalidYaw = yawAccel < 0.1 && fastAbs(deltaYaw) > 1.5;
+            const invalidPitch = pitchAccel < 0.1 && fastAbs(deltaPitch) > 1.5;
 
             // Check for suspicious aiming patterns
             if(deltaPitch > 15 && config.modules.aimA.diff < 0.05 || deltaPitch < config.modules.aimA.diff && (deltaYaw > 15 && deltaYaw < 25 || deltaYaw > 250) && deltaYaw2 > 15 && deltaPitch2 < 0 || (invalidYaw || invalidPitch)) {
