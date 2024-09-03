@@ -20,7 +20,8 @@ export function fastRound(x) {
 
 // Fast square root (less accurate but faster)
 export function fastSqrt(x) {
-    return x * (1.5 - 0.5 * x * x * 0.25);
+    //return x * (1.5 - 0.5 * x * x * 0.25);
+    return Math.sqrt(x);
 }
 
 // Fast inverse square root (Quake III Arena method)

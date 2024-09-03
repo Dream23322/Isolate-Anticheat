@@ -76,26 +76,7 @@ export async function banAnimation(player, type) {
         player.runCommandAsync(`particle minecraft:${banMessage.particle} ~ ~ ~`);
     }
 }
-function createDisplayBar(currentVl, maxVl, filledChar, unfilledChar) {
-    let filled, unfilled;
-    if (maxVl <= 10) {
-        filled = currentVl;
-        unfilled = maxVl - currentVl;
-    } else {
-        const percent = currentVl / maxVl;
-        filled = Math.round(percent * 10);
-        unfilled = 10 - filled;
-    }
-    return filledChar.repeat(filled) + unfilledChar.repeat(unfilled);
-}
 
-function sendNotification(player, hackType, check, checkType, debugName, debug, currentVl, maxVl, themeMode, debugFlag, flagStyle) {
-    const baseMessage = `§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}`;
-    const debugInfo = debugFlag ? ` §9(${debugName}=${debug}§r§7)` : "";
-    const valueIndicator = flagStyle === "1" ? `§jx§9${currentVl}§h` : createDisplayBar(currentVl, maxVl, themeMode === "1" ? '§9|' : '§d|', themeMode === "1" ? '§j|' : '§u|');
-
-    player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"${baseMessage}${debugInfo}. [${valueIndicator}§h]"}]}`);
-}
 
 
 /**
@@ -208,8 +189,110 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     
     const thememode = config.modules.settings.theme;
     const maxVl = config.modules[check.toLowerCase() + checkType.toUpperCase()].minVlbeforePunishment;
-    sendNotification(player, hackType, check, checkType, debugName, debug, currentVl, maxVl, thememode, config.modules.settings.debugflag, config.modules.settings.flagstyle);
-    
+    if(thememode == "1") {
+        if(config.modules.settings.debugflag) {
+            if(config.modules.settings.flagstyle == "1") {
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§jx§9${currentVl}§h]"}]}`);
+            } else if(config.modules.settings.flagstyle == "2") {
+                let displ = "";
+                let filled, unfilled;
+                if(maxVl <= 10) {
+                    filled = currentVl;
+                    unfilled = maxVl - currentVl;
+                } else {
+                    let percent = currentVl / maxVl;
+                    filled = Math.round(percent * 10);
+                    unfilled = 10 - filled;
+                }
+
+                for (let i = 0; i < filled; i++) {
+                    displ += '§9|';
+                }
+
+                for (let i = 0; i < unfilled; i++) {
+                    displ += '§j|';
+                }
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [${displ}§h]"}]}`);
+            }
+        } else {
+            if(config.modules.settings.flagstyle == "1") {
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}§h. [§jx§9${currentVl}§h]"}]}`);
+            } else if(config.modules.settings.flagstyle == "2") {
+                let displ = "";
+                let filled, unfilled;
+                if(maxVl <= 10) {
+                    filled = currentVl;
+                    unfilled = maxVl - currentVl;
+                } else {
+                    let percent = currentVl / maxVl;
+                    filled = Math.round(percent * 10);
+                    unfilled = 10 - filled;
+                }
+
+                for (let i = 0; i < filled; i++) {
+                    displ += '§9|';
+                }
+
+                for (let i = 0; i < unfilled; i++) {
+                    displ += '§j|';
+                }
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}§h. [${displ}§h]"}]}`);
+            }
+            
+        }
+    } else if(thememode == "2") {
+        if(config.modules.settings.debugflag) {
+            if(config.modules.settings.flagstyle == "1") {
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§dx§u${currentVl}§h]"}]}`);
+            } else if(config.modules.settings.flagstyle == "2") {
+                let displ = "";
+                let filled, unfilled;
+                if(maxVl <= 10) {
+                    filled = currentVl;
+                    unfilled = maxVl - currentVl;
+                } else {
+                    let percent = currentVl / maxVl;
+                    filled = Math.round(percent * 10);
+                    unfilled = 10 - filled;
+                }
+
+                for (let i = 0; i < filled; i++) {
+                    displ += '§d|';
+                }
+
+                for (let i = 0; i < unfilled; i++) {
+                    displ += '§u|';
+                }
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [${displ}§h]"}]}`);
+            }
+            
+        } else {
+            if(config.modules.settings.flagstyle == "1") {
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()}§h. [§dx§u${currentVl}§h]"}]}`);     
+            } else if(config.modules.settings.flagstyle == "2") {
+                let displ = "";
+                let filled, unfilled;
+                if(maxVl <= 10) {
+                    filled = currentVl;
+                    unfilled = maxVl - currentVl;
+                } else {
+                    let percent = currentVl / maxVl;
+                    filled = Math.round(percent * 10);
+                    unfilled = 10 - filled;
+                }
+
+                for (let i = 0; i < filled; i++) {
+                    displ += '§d|';
+                }
+
+                for (let i = 0; i < unfilled; i++) {
+                    displ += '§u|';
+                }
+                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()}§h. [${displ}§h]"}]}`);
+
+            }
+        }
+    }
     if(typeof slot === "number") {
 		const container = player.getComponent("inventory").container;
 		container.setItem(slot, undefined);

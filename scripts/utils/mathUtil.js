@@ -102,10 +102,10 @@ export function gcd(a, b) {
     if (a < b) {
         return gcd(b, a);
     }
-    if (fastAbs(b) < 0.001) {
+    if (Math.abs(b) < 0.001) {
         return a;
     } else {
-        return gcd(b, a - fastFloor(a / b) * b);
+        return gcd(b, a - Math.floor(a / b) * b);
     }
 }
 
@@ -290,10 +290,10 @@ export function isWavePattern(arr) {
 
 export function getAverageDifference(arr) {
     let sum = 0;
-    for (let i = 1, len = arr.length; i < len; i++) {
+    for (let i = 1; i < arr.length; i++) {
         sum += arr[i] - arr[i - 1];
     }
-    return sum / (len - 1);
+    return sum / (arr.length - 1);
 }
 
 
