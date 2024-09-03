@@ -1,6 +1,7 @@
 import { flag} from "../../../util";
 import config from "../../../data/config.js";
 import { arrayToList, getAverageDifference } from "../../../utils/mathUtil.js";
+import { fastAbs } from "../../../utils/fastMath.js";
 
 const data = new Map();
 const data2 = new Map();
@@ -16,8 +17,8 @@ export function scaffold_d(player, block) {
             const pitchList = arrayToList(d);
             const yawList = arrayToList(d2);
 
-            const pitchDifferenceAverage = Math.abs(getAverageDifference(pitchList));
-            const yawDifferenceAverage = Math.abs(getAverageDifference(yawList));
+            const pitchDifferenceAverage = fastAbs(getAverageDifference(pitchList));
+            const yawDifferenceAverage = fastAbs(getAverageDifference(yawList));
 
             if(
                 isBlockBelow &&

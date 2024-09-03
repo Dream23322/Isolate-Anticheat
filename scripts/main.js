@@ -76,6 +76,7 @@ import { tower_b } from "./checks/world/scaffold/towerB.js";
 import { aim_e } from "./checks/combat/aim/aimE.js";
 import { aim_f } from "./checks/combat/aim/aimF.js";
 import { autoConfigGUI } from "./features/autoconfig.js";
+import { fastAbs, fastFloor, fastPow, fastSqrt } from "./utils/fastMath.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -201,9 +202,9 @@ Minecraft.system.runInterval(() => {
 
 		// player position shit
 		if(player.hasTag("moving")) {
-			player.runCommandAsync(`scoreboard players set @s xPos ${Math.floor(player.location.x)}`);
-			player.runCommandAsync(`scoreboard players set @s yPos ${Math.floor(player.location.y)}`);
-			player.runCommandAsync(`scoreboard players set @s zPos ${Math.floor(player.location.z)}`);
+			player.runCommandAsync(`scoreboard players set @s xPos ${fastFloor(player.location.x)}`);
+			player.runCommandAsync(`scoreboard players set @s yPos ${fastFloor(player.location.y)}`);
+			player.runCommandAsync(`scoreboard players set @s zPos ${fastFloor(player.location.z)}`);
 		}
 
 		if(getScore(player, "kickvl", 0) > config.modules.settings.ViolationsBeforeBan / 2 && !player.hasTag("strict")) {
@@ -396,8 +397,8 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	const { block, player} = blockPlace;
 	const rotation = player.getRotation()
 	const playerVelocity = player.getVelocity();
-	const playerSpeed = Number(Math.sqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
-	if(config.debug) console.warn(`${player.nameTag} has placed ${block.typeId}. Speed: ${playerSpeed} Distance: ${Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.z - player.location.z, 2))} Player X Rotation: ${rotation.x} Player Y Rotation: ${rotation.y}`);
+	const playerSpeed = Number(fastSqrt(fastAbs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
+	if(config.debug) console.warn(`${player.nameTag} has placed ${block.typeId}. Speed: ${playerSpeed} Distance: ${fastSqrt(fastPow(block.location.x - player.location.x, 2) + fastPow(block.location.z - player.location.z, 2))} Player X Rotation: ${rotation.x} Player Y Rotation: ${rotation.y}`);
 	
 	
 	let undoPlace = false; 
@@ -461,7 +462,7 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 
 	// Reach/B = checks for breaking blocks too far away
 	if(config.modules.reachB.enabled && !player.hasTag("noreach")) {
-		const distance = Math.sqrt(Math.pow(block.location.x - player.location.x, 2) + Math.pow(block.location.y - player.location.y, 2) + Math.pow(block.location.z - player.location.z, 2));
+		const distance = fastSqrt(fastPow(block.location.x - player.location.x, 2) + fastPow(block.location.y - player.location.y, 2) + fastPow(block.location.z - player.location.z, 2));
 		if(distance > config.modules.reachB.reach) {
 			flag(player, "Reach", "B", "Breaking", "distance", distance, false);
 			revertBlock = true;
@@ -705,12 +706,10 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 		player.cps++;
 	}
 	if(player.hasTag("tempcombatdebug")) player.sendMessage(`§r§j[§uIsolate§j]§r §d${player.nameTag} §r>> Rotation Data: §b${rotation.x} §b${rotation.y} | ${player.hasTag("sprint")} | ${player.isSprinting}`);
-	if(entity.typeId !== "minecraft:player") {
+	if(entity.typeId == "minecraft:player") {
 		player.runCommandAsync(`tellraw @a[tag=seeREACH] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §d${player.nameTag} §r>> §i${getDistanceXZ(player, entity).toFixed(3)} §r>> §u${entity.typeId}"}]}`);
-	} else {
-		player.runCommandAsync(`tellraw @a[tag=seeREACH] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §d${player.nameTag} §r>> §i${getDistanceXZ(player, entity).toFixed(3)} §r>> §u${entity.nameTag}"}]}`);
 	}
-	if(config.debug && player.hasTag("logHits")) console.warn(player.getTags(), "rotation", rotation.x, "angleDiff", angleCalc(player, entity), "auraF" + getScore(player, "killauraF_buffer", 0), "killauraF_reset", getScore(player, "killauraF_reset", 0), "reach", Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2)));
+	if(config.debug && player.hasTag("logHits")) console.warn(player.getTags(), "rotation", rotation.x, "angleDiff", angleCalc(player, entity), "auraF" + getScore(player, "killauraF_buffer", 0), "killauraF_reset", getScore(player, "killauraF_reset", 0), "reach", fastSqrt(fastPow(entity.location.x - player.location.x, 2) + fastPow(entity.location.z - player.location.z, 2)));
 });
 world.afterEvents.entityHitBlock.subscribe((entityHit) => {
 	const { damagingEntity: player} = entityHit;

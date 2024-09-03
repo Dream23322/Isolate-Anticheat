@@ -2,6 +2,7 @@ import * as Minecraft from "@minecraft/server";
 import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { arrayToList, getAverageDifference } from "../../../utils/mathUtil.js";
+import { fastAbs } from "../../../utils/fastMath.js";
 
 const data = new Map();
 const datatwo = new Map();
@@ -17,8 +18,8 @@ export function aim_d(player) {
             const asList = arrayToList(d);
             const asList2 = arrayToList(dtwo);
             const isInvalid = (
-                Math.abs(getAverageDifference(asList)) < 0.3 &&
-                Math.abs(getAverageDifference(asList2)) > 5 
+                fastAbs(getAverageDifference(asList)) < 0.3 &&
+                fastAbs(getAverageDifference(asList2)) > 5 
             )
             setScore(player, "aimDReset", getScore(player, "aimDReset", 0) + 1);
             if(isInvalid) {

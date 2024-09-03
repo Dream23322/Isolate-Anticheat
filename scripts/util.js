@@ -6,6 +6,7 @@ import config from "./data/config.js";
 import data from "./data/data.js";
 // @ts-ignore
 import { setTitle } from "./utils/gameUtil.js";
+import { fastFloor } from "./utils/fastMath.js";
 
 
 const world = Minecraft.world;
@@ -55,17 +56,8 @@ export async function banAnimation(player, type) {
   
     const banMessage = banMessages[type];
   
-    // Send title, subtitle, and EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEs to the player
-    player.runCommand(`title "${player.name}" title ${banMessage.title}`);
-    player.runCommand(`tp "${player.name}" "${player.name}"`);
-    player.runCommand(`title "${player.name}" subtitle ${banMessage.subtitle}`);
-    player.runCommand(`tp "${player.name}" "${player.name}"`);
     player.runCommand(`title "${player.name}" actionbar ${banMessage.actionbar}`);
     player.runCommand(`tp "${player.name}" "${player.name}"`);
-
-
-    player.sendMessage(banMessage.actionbar);
-
     player.sendMessage(banMessage.actionbar);
 
     // Type 2 is an animation explosion with angry villager
@@ -84,7 +76,26 @@ export async function banAnimation(player, type) {
         player.runCommandAsync(`particle minecraft:${banMessage.particle} ~ ~ ~`);
     }
 }
+function createDisplayBar(currentVl, maxVl, filledChar, unfilledChar) {
+    let filled, unfilled;
+    if (maxVl <= 10) {
+        filled = currentVl;
+        unfilled = maxVl - currentVl;
+    } else {
+        const percent = currentVl / maxVl;
+        filled = Math.round(percent * 10);
+        unfilled = 10 - filled;
+    }
+    return filledChar.repeat(filled) + unfilledChar.repeat(unfilled);
+}
 
+function sendNotification(player, hackType, check, checkType, debugName, debug, currentVl, maxVl, themeMode, debugFlag, flagStyle) {
+    const baseMessage = `§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}`;
+    const debugInfo = debugFlag ? ` §9(${debugName}=${debug}§r§7)` : "";
+    const valueIndicator = flagStyle === "1" ? `§jx§9${currentVl}§h` : createDisplayBar(currentVl, maxVl, themeMode === "1" ? '§9|' : '§d|', themeMode === "1" ? '§j|' : '§u|');
+
+    player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"${baseMessage}${debugInfo}. [${valueIndicator}§h]"}]}`);
+}
 
 
 /**
@@ -190,118 +201,14 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     }
 
     let currentVl = getScore(player, scoreboardObjective, 0);
+
     setScore(player, scoreboardObjective, currentVl + 1);
 
-    currentVl++;
     console.warn("[Isolate]", player.name, check,"[",checkType,"]", hackType, "-", debugName, debug, "VL=", currentVl);
+    
     const thememode = config.modules.settings.theme;
     const maxVl = config.modules[check.toLowerCase() + checkType.toUpperCase()].minVlbeforePunishment;
-    if(thememode == "1") {
-        if(config.modules.settings.debugflag) {
-            if(config.modules.settings.flagstyle == "1") {
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§jx§9${currentVl}§h]"}]}`);
-            } else if(config.modules.settings.flagstyle == "2") {
-                let displ = "";
-                let filled, unfilled;
-                if(maxVl <= 10) {
-                    filled = currentVl;
-                    unfilled = maxVl - currentVl;
-                } else {
-                    let percent = currentVl / maxVl;
-                    filled = Math.round(percent * 10);
-                    unfilled = 10 - filled;
-                }
-
-                for (let i = 0; i < filled; i++) {
-                    displ += '§9|';
-                }
-
-                for (let i = 0; i < unfilled; i++) {
-                    displ += '§j|';
-                }
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [${displ}§h]"}]}`);
-            }
-        } else {
-            if(config.modules.settings.flagstyle == "1") {
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}§h. [§jx§9${currentVl}§h]"}]}`);
-            } else if(config.modules.settings.flagstyle == "2") {
-                let displ = "";
-                let filled, unfilled;
-                if(maxVl <= 10) {
-                    filled = currentVl;
-                    unfilled = maxVl - currentVl;
-                } else {
-                    let percent = currentVl / maxVl;
-                    filled = Math.round(percent * 10);
-                    unfilled = 10 - filled;
-                }
-
-                for (let i = 0; i < filled; i++) {
-                    displ += '§9|';
-                }
-
-                for (let i = 0; i < unfilled; i++) {
-                    displ += '§j|';
-                }
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}§h. [${displ}§h]"}]}`);
-            }
-            
-        }
-    } else if(thememode == "2") {
-        if(config.modules.settings.debugflag) {
-            if(config.modules.settings.flagstyle == "1") {
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§dx§u${currentVl}§h]"}]}`);
-            } else if(config.modules.settings.flagstyle == "2") {
-                let displ = "";
-                let filled, unfilled;
-                if(maxVl <= 10) {
-                    filled = currentVl;
-                    unfilled = maxVl - currentVl;
-                } else {
-                    let percent = currentVl / maxVl;
-                    filled = Math.round(percent * 10);
-                    unfilled = 10 - filled;
-                }
-
-                for (let i = 0; i < filled; i++) {
-                    displ += '§d|';
-                }
-
-                for (let i = 0; i < unfilled; i++) {
-                    displ += '§u|';
-                }
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [${displ}§h]"}]}`);
-            }
-            
-        } else {
-            if(config.modules.settings.flagstyle == "1") {
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()}§h. [§dx§u${currentVl}§h]"}]}`);     
-            } else if(config.modules.settings.flagstyle == "2") {
-                let displ = "";
-                let filled, unfilled;
-                if(maxVl <= 10) {
-                    filled = currentVl;
-                    unfilled = maxVl - currentVl;
-                } else {
-                    let percent = currentVl / maxVl;
-                    filled = Math.round(percent * 10);
-                    unfilled = 10 - filled;
-                }
-
-                for (let i = 0; i < filled; i++) {
-                    displ += '§d|';
-                }
-
-                for (let i = 0; i < unfilled; i++) {
-                    displ += '§u|';
-                }
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()}§h. [${displ}§h]"}]}`);
-
-            }
-        }
-    }
-
-   
+    sendNotification(player, hackType, check, checkType, debugName, debug, currentVl, maxVl, thememode, config.modules.settings.debugflag, config.modules.settings.flagstyle);
     
     if(typeof slot === "number") {
 		const container = player.getComponent("inventory").container;
@@ -339,8 +246,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     const combat_vl = getScore(player, "reachvl", 0) + getScore(player, "killauravl", 0) + getScore(player, "aimvl", 0) + getScore(player, "autoclickervl", 0) + getScore(player, "hitboxvl", 0);
     const block_vl = getScore(player, "scaffoldvl", 0) + getScore(player, "nukervl", 0) + getScore(player, "towervl", 0);
     const other_vl = getScore(player, "badpacketsvl", 0) + getScore(player, "crashervl", 0) + getScore(player, "spammervl", 0) + getScore(player, "autototemvl", 0) + getScore(player, "autosheildvl", 0) + getScore(player, "illegalitemvl", 0);
-    // This was requested by Duckie Jam (1078815334871617556) from Appy's Practice Network (Code: KC2AfnqpLPo )
-    // That realm is ded btw
+    // This was requested by Duckie Jam (1078815334871617556)
     if(config.fancy_kick_calculation.on === true && config.modules.settings.autoKick == true) {
         if(movement_vl > config.fancy_kick_calculation.movement && combat_vl > config.fancy_kick_calculation.combat && block_vl > config.fancy_kick_calculation.block && other_vl > config.fancy_kick_calculation.other) {
             player.addTag("strict");
@@ -368,7 +274,6 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
         if (punishment === "kick" && (config.modules.settings.autoKick)) {
             let banLength2;
             try {
-                //banAnimation(player, "type2");
                 setScore(player, "kickvl", kickvl + 1);
                 if(kickvl > config.modules.settings.kicksBeforeBan || config.modules.smartReport.enabled && config.modules.smartReport.kickBan && kickvl > config.modules.smartReport.minKicks && player.hasTag("reported")) {
                     player.addTag("by:§d Isolate Anticheat");
@@ -575,22 +480,11 @@ export function banMessage(player) {
     }
 
     player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} was kicked for being banned. Ban Reason: ${reason || "You are banned!"}."}]}`);
-    try {
-        for (let i = 0; i < 3; i++) {
-            player.sendMessage("§4§klakjfdal;skdjfa;lskdjf;alskjdfa;lskjdfa;lksjdf;laskjdf;laskjdf;laskjdf;alskjdfa;lksjdf;alsjkfdla;skjdfa;lskdjfa;lsdjf;lasjdfl;aksjdfl;aksjdf;laksjdfl;kajsd;flkjaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-        }
-        player.runCommandAsync("title @s title §4§kafdjfa;lskdjfal;skjdf;alksjdfk;aljsd;flkajsakldjfa;lsf");
-        player.runCommandAsync("title @s subtitle §4§kakl;fjasdlkjf;aslkdjfalk;sjdf;laksjdf;lakjsdfj;laksdf;lkasjfdlk;asjdf;lkajsdf");
-        player.runCommandAsync("title @s actionbar §4§k89041709387123987412983741092837401923048127340912734098127340987123497123948712834");     
-        for (let i = 0; i < 30; i++) {
-            player.runCommandAsync(`tp "${player.name}" "${player.name}"`);
-        }
-        
+    try {       
         player.runCommandAsync(`kick "${player.name}" §r\n§l§cYOU ARE BANNED!\n§mBanned By:§r ${by || "N/A"}\n§bReason:§r ${reason || "N/A"}\n§aBan Length:§r ${time || "Permanant"}`);
     } catch (error) {
         player.triggerEvent("scythe:kick");
     }    
-    
 }
 
 /**
@@ -655,11 +549,11 @@ export function msToTime(ms) {
     if(ms > Date.now()) ms = ms - Date.now();
 
     // turn milliseconds into days, minutes, seconds, etc
-    const w = Math.floor(ms / (1000 * 60 * 60 * 24 * 7));
-    const d = Math.floor((ms % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24));
-    const h = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const m = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-    const s = Math.floor((ms % (1000 * 60)) / 1000);
+    const w = fastFloor(ms / (1000 * 60 * 60 * 24 * 7));
+    const d = fastFloor((ms % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24));
+    const h = fastFloor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = fastFloor((ms % (1000 * 60 * 60)) / (1000 * 60));
+    const s = fastFloor((ms % (1000 * 60)) / 1000);
     return {
         w: w,
         d: d,

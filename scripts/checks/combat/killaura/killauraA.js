@@ -1,6 +1,6 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
-import { fastAbs, fastHypot, fastSqrt } from "../../../utils/fastMath.js";
+import { fastAbs, fastHypot, fastPow, fastSqrt } from "../../../utils/fastMath.js";
 
 export function killaura_a(player, entity) {
     if(config.modules.killauraA.enabled) {
@@ -19,7 +19,7 @@ export function killaura_a(player, entity) {
         }
         
         const rotation = player.getRotation()
-        const distance = fastSqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
+        const distance = fastSqrt(fastPow(entity.location.x - player.location.x, 2) + fastPow(entity.location.z - player.location.z, 2));
         if(fastAbs(rotation.x) > 79 && distance > 3.5 && !player.hasTag("trident") && !player.hasTag("bow")) {
             flag(player, "Killaura", "A", "Combat", "angle", `${rotation.x},distance=${distance}`, false);
         }
