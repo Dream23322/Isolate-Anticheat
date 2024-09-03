@@ -95,7 +95,6 @@ export function scaffold_a(player, block) {
 
                 const diff_1 = fastAbs(yaw_values.mid - yaw_values.new);   
                 const diff_2 = fastAbs(yaw_values.new - player.getRotation().y);
-                console.warn("Diff1" + diff_1 + "Diff2 " + diff_2);
                 if(diff_2 < 10 && diff_1 < 10 && !is_decrease(player, place_location, last_place_location, old_place_location) && diff_1 > 0.5 && diff_2 > 0.5 && diff_1 != 0 && diff_2 != 0 && !config.modules.scaffoldA.nofalse && getSpeed(player) > 0.1 && (!player.isOnGround || diff_1 > 5 || diff_2 > 5)) {
                     flag(player, "Scaffold", "A", "World", "Yaw Diff (2)", (diff_1 + diff_2) / 2, false);
                 }

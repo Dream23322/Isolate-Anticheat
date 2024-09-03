@@ -1,14 +1,15 @@
 import { flag } from "../../../util";
 import config from "../../../data/config";
 import { hVelocity } from "../../../utils/mathUtil";
+import { fastAbs } from "../../../utils/fastMath";
 const data = new Map();
 export function speed_d(player) {
     if(config.modules.speedD.enabled) {
         if(data.get(player.name)) {
-            const currentY = Math.abs(player.getVelocity().y);
-            const dY1 = Math.abs(data.get(player.name)?.one);
-            const dY2 = Math.abs(data.get(player.name)?.two);
-            const dY3 = Math.abs(data.get(player.name)?.three);
+            const currentY = fastAbs(player.getVelocity().y);
+            const dY1 = fastAbs(data.get(player.name)?.one);
+            const dY2 = fastAbs(data.get(player.name)?.two);
+            const dY3 = fastAbs(data.get(player.name)?.three);
             if(currentY !== 0 && dY1 !== 0 && dY2 !== 0 && dY3 !== 0) {
                 const invalid = (
                     currentY < 0.1 &&

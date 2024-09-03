@@ -71,3 +71,82 @@ export function fastHypot(x, y) {
     const ratio = min / max;
     return max * fastSqrt(1 + ratio * ratio);
 }
+
+export function fastExp(x) {
+    const n = 20; // Number of terms in the Taylor series expansion
+    let result = 1;
+    let term = 1;
+    
+    for (let i = 1; i < n; i++) {
+        term *= x / i;
+        result += term;
+    }
+    
+    return result;
+}
+
+export function fastPow(base, exponent) {
+    if (exponent === 0) return 1;
+    if (base === 0) return 0;
+    
+    let result = 1;
+    let currentBase = base;
+    
+    const integerPart = fastFloor(exponent);
+    const fractionalPart = exponent - integerPart;
+    
+    // Handle integer part using exponentiation by squaring
+    let n = fastAbs(integerPart);
+    while (n > 0) {
+        if (n & 1) {
+            result *= currentBase;
+        }
+        currentBase *= currentBase;
+        n >>= 1;
+    }
+    
+    // Adjust result for negative integer exponents
+    if (integerPart < 0) {
+        result = 1 / result;
+    }
+    
+    // Handle fractional part using Math.exp and Math.log
+    if (fractionalPart !== 0) {
+        result *= fastExp(fractionalPart * fastLog(base));
+    }
+    
+    return result;
+}
+export function fastLog(x) {
+    if (x <= 0) {
+        throw new Error("Input must be positive");
+    }
+    
+    const n = 20; // Number of terms in the series expansion
+    let result = 0;
+    let term = (x - 1) / (x + 1);
+    let termSquared = term * term;
+    
+    for (let i = 1; i <= n; i += 2) {
+        result += term / i;
+        term *= termSquared;
+    }
+    
+    return 2 * result;
+}
+
+export function fastAtan2(y, x) {
+    const absY = fastAbs(y) + 1e-10; // Prevent division by zero
+    const angle = Math.atan(y / x);
+    let result;
+
+    if (x >= 0) {
+        result = angle;
+    } else {
+        result = y >= 0 ? angle + Math.PI : angle - Math.PI;
+    }
+    
+    return result;
+}
+
+export const PI = 105414357.0 / 33554432.0 + 1.984187159361080883e-9;

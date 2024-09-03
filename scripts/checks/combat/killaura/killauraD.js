@@ -1,6 +1,6 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
-import { getAverageDifference, isWavePattern } from "../../../utils/mathUtil.js";
+import { arrayToList, getAverageDifference, isWavePattern } from "../../../utils/mathUtil.js";
 import { fastAbs } from "../../../utils/fastMath.js";
 const data = new Map();
 const datatwo = new Map();
@@ -13,8 +13,8 @@ export function killaura_d(player) {
         const d = data.get(player.name) ?? (new Array(10)).fill(0);
         const dtwo = datatwo.get(player.name) ?? (new Array(10)).fill(0);
         if(d && dtwo) {
-            const asList = [d[0], d[1], d[2], d[3], d[4], d[5], d[6], d[7], d[8], d[9]];
-            const asList2 = [dtwo[0], dtwo[1], dtwo[2], dtwo[3], dtwo[4], dtwo[5], dtwo[6], dtwo[7], dtwo[8], dtwo[9]];
+            const asList = arrayToList(d);
+            const asList2 = arrayToList(dtwo);
             if(
                 fastAbs(getAverageDifference(asList2)) > 2 && 
                 isWavePattern(asList) && 

@@ -1,13 +1,13 @@
 import { flag } from "../../../util.js";
 import config from "../../../data/config.js";
 import { getBlocksBetween, getSpeed } from "../../../utils/mathUtil.js";
-import { fastAbs, fastSqrt } from "../../../utils/fastMath.js";
+import { fastAbs, fastPow, fastSqrt } from "../../../utils/fastMath.js";
 const data = new Map();
 
 export function reach_b(player, entity) {
 	if(config.modules.reachB.enabled) {
 		if(player.hasTag("gmc") || config.modules.reachB.entities_blacklist.includes(entity.typeId)) return;
-		let xz_distance = fastSqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.z - player.location.z, 2));
+		let xz_distance = fastSqrt(fastPow(entity.location.x - player.location.x, 2) + fastPow(entity.location.z - player.location.z, 2));
 		const d = data.get(player.name) ?? (new Array(15)).fill(0);
 		if(d) {
 			const avg = fastAbs((xz_distance + d[0] + d[1] + d[2] + d[3] + d[4] + d[5] + d[6] + d[7] + d[8] + d[9] + d[10] + d[11] + d[12] + d[13] + d[14]) / 15);

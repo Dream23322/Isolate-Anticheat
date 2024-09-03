@@ -1,9 +1,9 @@
-import { fastAbs, fastFloor, fastSqrt } from "./fastMath";
+import { fastAbs, fastAtan2, fastFloor, fastPow, fastSqrt, PI } from "./fastMath";
 
 // Gets player speed
 export function getSpeed(player) {
     const playerVelocity = player.getVelocity();
-    const playerSpeed = Number(fastSqrt(Math.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
+    const playerSpeed = Number(fastSqrt(fastAbs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
     return playerSpeed;
 }
 
@@ -34,12 +34,16 @@ export function getBlocksBetween(pos1, pos2) {
  * @name angleMaths
  */
 export function angleCalc(player, entityHit) {
-    const pos1 = { x: player.location.x, y: player.location.y, z: player.location.z };
-    const pos2 = { x: entityHit.location.x, y: entityHit.location.y, z: entityHit.location.z };
-    let angle = Math.atan2((pos2.z - pos1.z), (pos2.x - pos1.x)) * 180 / Math.PI - player.getRotation().y - 90;
-    if (angle <= -180) angle += 360;
-    angle = fastAbs(angle); 
-    return angle;
+    const dx = entityHit.location.x - player.location.x;
+    const dz = entityHit.location.z - player.location.z;
+    const angleToEntity = fastAtan2(dz, dx) * 180 / PI;
+    let angle = angleToEntity - player.getRotation().y - 90;
+    
+    if (angle <= -180) {
+        angle += 360;
+    }
+    
+    return fastAbs(angle);
 }
 
 /**
@@ -59,10 +63,10 @@ export function angleCalcRecode(player, entityHit) {
     const deltaZ = entityHit.location.z - player.location.z;
 
     // Calculate the angle in radians
-    let angleRad = Math.atan2(deltaZ, deltaX);
+    let angleRad = fastAtan2(deltaZ, deltaX);
 
     // Convert radians to degrees
-    let angleDeg = (angleRad * 180) / Math.PI;
+    let angleDeg = (angleRad * 180) / PI;
 
     // Adjust for player rotation
     angleDeg -= player.getRotation().y + 90;
@@ -77,19 +81,19 @@ export function angleCalcRecode(player, entityHit) {
 
 
 export function getDistanceXZ(one, two) {
-    return fastSqrt(Math.pow(two.location.x - one.location.x, 2) + Math.pow(two.location.z - one.location.z, 2));
+    return fastSqrt(fastPow(two.location.x - one.location.x, 2) + fastPow(two.location.z - one.location.z, 2));
 }
 export function getDistanceXYZ(one, two) {
-    return fastSqrt(Math.pow(two.location.x - one.location.x, 2) + Math.pow(two.location.y - one.location.y, 2) + Math.pow(two.location.z - one.location.z, 2));
+    return fastSqrt(fastPow(two.location.x - one.location.x, 2) + fastPow(two.location.y - one.location.y, 2) + fastPow(two.location.z - one.location.z, 2));
 }
 export function getDistanceY(one, two) {
-    return fastSqrt(Math.pow(two.location.y - one.location.y, 2));
+    return fastSqrt(fastPow(two.location.y - one.location.y, 2));
 }
 export function getAbsoluteGcd(current, last) {
     const EXPANDER = 1.6777216E7; // Adjusted to the provided value
 
-    let currentExpanded = Math.floor(current * EXPANDER);
-    let lastExpanded = Math.floor(last * EXPANDER);
+    let currentExpanded = fastFloor(current * EXPANDER);
+    let lastExpanded = fastFloor(last * EXPANDER);
 
     return gcd(currentExpanded, lastExpanded);
 }
@@ -98,10 +102,10 @@ export function gcd(a, b) {
     if (a < b) {
         return gcd(b, a);
     }
-    if (Math.abs(b) < 0.001) {
+    if (fastAbs(b) < 0.001) {
         return a;
     } else {
-        return gcd(b, a - Math.floor(a / b) * b);
+        return gcd(b, a - fastFloor(a / b) * b);
     }
 }
 
@@ -113,10 +117,10 @@ export function getGcdFloat(a, b) {
         return getGcd(b, a);
     }
 
-    if (Math.abs(b) < 0.001) {
+    if (fastAbs(b) < 0.001) {
         return a;
     } else {
-        return getGcd(b, a - Math.floor(a / b) * b);
+        return getGcd(b, a - fastFloor(a / b) * b);
     }
 }
 export const EXPANDER = Math.pow(2, 24);
@@ -135,7 +139,7 @@ export function getVariance(data) {
     average = sum / count;
 
     data.forEach(number => {
-        variance += Math.pow(number - average, 2.0);
+        variance += fastPow(number - average, 2.0);
     });
 
     return variance;
@@ -197,7 +201,7 @@ export function getSkewness(data) {
     numbers.sort((a, b) => a - b);
 
     const mean = sum / count;
-    const median = (count % 2 !== 0) ? numbers[Math.floor(count / 2)] : (numbers[count / 2 - 1] + numbers[count / 2]) / 2;
+    const median = (count % 2 !== 0) ? numbers[fastFloor(count / 2)] : (numbers[count / 2 - 1] + numbers[count / 2]) / 2;
     const variance = getVariance(data);
 
     return 3 * (mean - median) / fastSqrt(variance);
@@ -221,18 +225,18 @@ export function getKurtosis(data) {
     }
 
     const efficiencyFirst = count * (count + 1) / ((count - 1) * (count - 2) * (count - 3));
-    const efficiencySecond = 3 * Math.pow(count - 1, 2) / ((count - 2) * (count - 3));
+    const efficiencySecond = 3 * fastPow(count - 1, 2) / ((count - 2) * (count - 3));
     const average = sum / count;
 
     let variance = 0.0;
     let varianceSquared = 0.0;
 
     data.forEach(number => {
-        variance += Math.pow(average - number, 2.0);
-        varianceSquared += Math.pow(average - number, 4.0);
+        variance += fastPow(average - number, 2.0);
+        varianceSquared += fastPow(average - number, 4.0);
     });
 
-    return efficiencyFirst * (varianceSquared / Math.pow(variance / sum, 2.0)) - efficiencySecond;
+    return efficiencyFirst * (varianceSquared / fastPow(variance / sum, 2.0)) - efficiencySecond;
 }
 
 /**
@@ -286,11 +290,12 @@ export function isWavePattern(arr) {
 
 export function getAverageDifference(arr) {
     let sum = 0;
-    for (let i = 1; i < arr.length; i++) {
+    for (let i = 1, len = arr.length; i < len; i++) {
         sum += arr[i] - arr[i - 1];
     }
-    return sum / (arr.length - 1);
+    return sum / (len - 1);
 }
+
 
 export function getListDifferences(values) {
     return values.slice(0, -1).map((value, index) => value - values[index + 1]);
@@ -373,13 +378,20 @@ export function getStandardDeviationV2(numbers) {
     const n = numbers.length;
     if (n === 0) return 0;
 
-    const mean = numbers.reduce((sum, num) => sum + num, 0) / n;
+    let sum = 0;
+    let sumSqr = 0;
     
-    const squaredDifferences = numbers.map(num => Math.pow(num - mean, 2));
-    const variance = squaredDifferences.reduce((sum, num) => sum + num, 0) / n;
+    for (const num of numbers) {
+        sum += num;
+        sumSqr += num * num;
+    }
+
+    const mean = sum / n;
+    const variance = (sumSqr - sum * mean) / (n - 1);
     
     return fastSqrt(variance);
 }
+
 
 export function findNearDuplicates(arr) {
     const floatMap = new Map();

@@ -56,5 +56,5 @@ export function timer_a(player, lastPosition, Value){
     player.lastPosition = player.location;
 }
 function isMovingWithVelocity(velocity){
-	return Math.abs(Math.hypot(velocity.x, velocity.z)) > 0.01;
+	return fastAbs(fastHypot(velocity.x, velocity.z)) > 0.01;
 }
