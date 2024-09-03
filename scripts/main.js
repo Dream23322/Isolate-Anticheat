@@ -77,6 +77,7 @@ import { aim_e } from "./checks/combat/aim/aimE.js";
 import { aim_f } from "./checks/combat/aim/aimF.js";
 import { autoConfigGUI } from "./features/autoconfig.js";
 import { fastAbs, fastFloor, fastPow, fastSqrt } from "./utils/fastMath.js";
+import { aim_g } from "./checks/combat/aim/aimG.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -307,6 +308,7 @@ Minecraft.system.runInterval(() => {
 			aim_c(player);
 			aim_e(player);
 			aim_f(player);
+			aim_g(player);
 		}
 
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 

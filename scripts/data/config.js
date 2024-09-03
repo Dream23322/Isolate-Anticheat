@@ -482,12 +482,14 @@ export default
             "description":"Simple delta check",
             "buffer": 8,
             "diff": 0.05,
+            "needHit": true,
             "punishment": "none",
             "minVlbeforePunishment": 10
         },
         "aimB": {
             "enabled": true,
             "description":"Checks for invalid rotations",
+            "needHit": false,
             "punishment": "kick",
             "minVlbeforePunishment": 5
         },
@@ -497,12 +499,14 @@ export default
             "buffer": 10,
             "small": 1.5,
             "big": 50,
+            "needHit": false,
             "punishment": "none",
             "minVlbeforePunishment": 10
         },
         "aimD": {
             "enabled": true,
             "buffer": 8,
+            "needHit": true,
             "description": "Checks for perfect rotation",
             "punishment": "none",
             "minVlbeforePunishment": 10
@@ -521,6 +525,14 @@ export default
             "description": "Checks for a valid sensitivty in the rotation",
             "buffer": 10,
             "total": 30,
+            "needHit": true,
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
+        },
+        "aimG": {
+            "enabled": true,
+            "description": "Checks for inconsistent aiming",
+            "needHit": true,
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },

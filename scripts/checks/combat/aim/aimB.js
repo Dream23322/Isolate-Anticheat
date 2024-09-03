@@ -25,7 +25,7 @@ export function aim_b(player) {
                 const divisorY = deltaPitch % constantPitch;
                 const invalidX = deltaYaw > 0 && !Number.isFinite(divisorX);
                 const invalidY = deltaPitch > 0 && !Number.isFinite(divisorY);
-                if(invalidX || invalidY) flag(player, "Aim", "B", "Rotation (BETA)", "divX", `${divisorX},divY=${divisorY}`, false);
+                if((invalidX || invalidY) && (player.hasTag("attacking") || !config.modules.aimB.needHit)) flag(player, "Aim", "B", "Rotation (BETA)", "divX", `${divisorX},divY=${divisorY}`, false);
 
                 // Invalid part 2
                 const currentYaw = deltaYaw / constantYaw;
@@ -38,7 +38,7 @@ export function aim_b(player) {
                 const moduloY = fastAbs(currentPitch - floorPitch);
                 const invalidX2 = moduloX > 0.5 && !Number.isFinite(moduloX);
                 const invalidY2 = moduloY > 0.5 && !Number.isFinite(moduloY);
-                if(invalidX2 || invalidY2) flag(player, "Aim", "B", "Rotation (BETA)", "modX", `${moduloX},modY=${moduloY}`, false);
+                if((invalidX2 || invalidY2) && (player.hasTag("attacking") || !config.modules.aimB.needHit)) flag(player, "Aim", "B", "Rotation (BETA)", "modX", `${moduloX},modY=${moduloY}`, false);
 
                 const currentY = deltaYaw / constantYaw;
                 const currentX = deltaPitch / constantPitch;
@@ -54,7 +54,7 @@ export function aim_b(player) {
                     const invalidY3 = moduloY > 90 && floorModuloY > 0.1;
                     const invalidX3 = moduloX > 90 && floorModuloX > 0.1;
 
-                    if(invalidX3 && invalidY3) flag(player, "Aim", "B", "Combat", "modulo", `y=${moduloY},x=${moduloX}`)
+                    if((invalidX3 && invalidY3) && (player.hasTag("attacking") || !config.modules.aimB.needHit)) flag(player, "Aim", "B", "Combat", "modulo", `y=${moduloY},x=${moduloX}`)
                 }
             }
         }

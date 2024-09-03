@@ -47,7 +47,7 @@ export function aim_a(player) {
             // Send debug messages if the player has the "aim_debug" tag
             if(player.hasTag("aim_debug")) player.sendMessage("Yaw: " + deltaYaw.toFixed(4) + " Pitch: " + deltaPitch.toFixed(5));
             // Flag the player if the aim buffer score exceeds the threshold and the player has the "strict" tag
-            if(getScore(player, "aim_a_buffer", 0) > config.modules.aimA.buffer && player.hasTag("strict")) {
+            if(getScore(player, "aim_a_buffer", 0) > config.modules.aimA.buffer && player.hasTag("strict") &&  (player.hadTag("attacking") || !config.modules.aimA.needHit)) {
                 flag(player, "Aim", "A", "Combat (BETA)", "Delta", `${deltaYaw},${deltaPitch},Accel=${yawAccel},${pitchAccel}`, false);
                 setScore(player, "aim_a_buffer", 0);
             }

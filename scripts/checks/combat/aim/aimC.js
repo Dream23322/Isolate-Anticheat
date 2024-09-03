@@ -42,7 +42,8 @@ export function aim_c(player) {
                     deltaPitch < 1.5 &&
                     lastDeltaPitch > 50 &&
                     lastLastDeltaPitch < 1.5 && 
-                    fastAbs(deltaPitch) > 60
+                    fastAbs(deltaPitch) > 60 &&
+                    (player.hasTag("attacking") || !config.modules.aimC.needHit)
                 ) {
                     // Increment the buffer score for the player
                     setScore(player, "aim_c_buffer", bufferVal + 1);

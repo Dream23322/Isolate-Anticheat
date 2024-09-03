@@ -44,7 +44,7 @@ export function aim_f(player) {
                     player.runCommandAsync(`tell @a Yaw: ${yawAccelAverage} | Pitch: ${pitchAccelAverage} | YawDeviation: ${yawAccelDeviation} | PitchDeviation: ${pitchAccelDeviation}`);
                 }
 
-                if(averageInvalid && deviationInvalid) {
+                if(averageInvalid && deviationInvalid && (player.hasTag("attacking") || !config.modules.aimF.needHit)) {
                     setScore(player, "aimF_buffer", getScore(player, "aimF_buffer", 0) + 1);
                     if(getScore(player, "aimF_buffer", 0) > config.modules.aimF.buffer) {
                         flag(player, "Aim", "F", "Combat (Beta)", "aimF", "yaw: " + yawAccelAverage + " | pitch: " + pitchAccelAverage + " | yawDeviation: " + yawAccelDeviation + " | pitchDeviation: " + pitchAccelDeviation, false);
