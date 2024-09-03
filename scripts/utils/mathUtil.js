@@ -92,8 +92,8 @@ export function getDistanceY(one, two) {
 export function getAbsoluteGcd(current, last) {
     const EXPANDER = 1.6777216E7; // Adjusted to the provided value
 
-    let currentExpanded = fastFloor(current * EXPANDER);
-    let lastExpanded = fastFloor(last * EXPANDER);
+    let currentExpanded = Math.floor(current * EXPANDER);
+    let lastExpanded = Math.floor(last * EXPANDER);
 
     return gcd(currentExpanded, lastExpanded);
 }

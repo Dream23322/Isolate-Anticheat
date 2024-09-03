@@ -30,7 +30,7 @@ export function aim_e(player) {
 
             const accel = fastAbs(yawAccel + pitchAccel);
 
-            if(isNearPerfectWave(arrayToList(d), 0.1)) {
+            if(isNearPerfectWave(arrayToList(d), 0.1) && (player.hasTag("attacking") || !config.modules.aimE.needHit)) {
                 setScore(player, "AimE_BUFFER", getScore(player, "AimE_BUFFER", 0) + 1);
                 if(getScore(player, "AimE_BUFFER", 0) > 20) {
                     flag(player, "Aim", "E", "Kuristosis (Beta)", "wavePattern", "true", false);
@@ -39,21 +39,21 @@ export function aim_e(player) {
             }
             
             const deltaDiff = fastAbs(deltaYaw - deltaPitch);
-            if(deltaDiff < 0.1 && deltaYaw > 1) flag(player, "Aim", "E", "Kuristosis (Beta)", "deltaDiff", deltaDiff, false);
+            if(deltaDiff < 0.1 && deltaYaw > 1 && (player.hasTag("attacking") || !config.modules.aimE.needHit)) flag(player, "Aim", "E", "Kuristosis (Beta)", "deltaDiff", deltaDiff, false);
 
             const deltaYawAverage = getAverage(dYaw);
             const deltaYawDuplicates = findNearDuplicates(dYaw, 0);
 
-            if(deltaYawAverage > 1 && deltaYawDuplicates > 15) flag(player, "Aim", "E", "Kuristosis (Beta)", "deltaYawDuplicates", deltaYawDuplicates, false);
+            if(deltaYawAverage > 1 && deltaYawDuplicates > 15 && (player.hasTag("attacking") || !config.modules.aimE.needHit)) flag(player, "Aim", "E", "Kuristosis (Beta)", "deltaYawDuplicates", deltaYawDuplicates, false);
 
             const deltaPitchAverage = getAverage(dPitch);
             const deltaPitchDuplicates = findNearDuplicates(dPitch, 0);
 
-            if(deltaPitchAverage > 1 && deltaPitchDuplicates > 15) flag(player, "Aim", "E", "Kuristosis (Beta)", "deltaPitchDuplicates", deltaPitchDuplicates, false);
+            if(deltaPitchAverage > 1 && deltaPitchDuplicates > 15 && (player.hasTag("attacking") || !config.modules.aimE.needHit)) flag(player, "Aim", "E", "Kuristosis (Beta)", "deltaPitchDuplicates", deltaPitchDuplicates, false);
 
             const total = fastAbs(deltaYawDuplicates + deltaPitchDuplicates);
 
-            if(total > config.modules.aimE.total) flag(player, "Aim", "E", "Kuristosis (Beta)", "total", total, false);
+            if(total > config.modules.aimE.total && (player.hasTag("attacking") || !config.modules.aimE.needHit)) flag(player, "Aim", "E", "Kuristosis (Beta)", "total", total, false);
 
             dYaw.unshift(deltaYaw);
             dYaw.pop();

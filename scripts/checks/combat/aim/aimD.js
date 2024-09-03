@@ -25,7 +25,7 @@ export function aim_d(player) {
             if(isInvalid) {
                 setScore(player, "aimDBuffer", getScore(player, "aimDBuffer", 0) + 1);
             }
-            if(getScore(player, "aimDReset", 0) > 20) {
+            if(getScore(player, "aimDReset", 0) > 20 && (player.hasTag("attacking") || !config.modules.aimD.needHit)) {
                 const getPercent = getScore(player, "aimDBuffer", 0) / 20 * 100;
                 if(getScore(player, "aimDBuffer", 0) >= 12) {
                     
