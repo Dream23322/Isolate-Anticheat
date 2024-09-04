@@ -76,7 +76,101 @@ export async function banAnimation(player, type) {
         player.runCommandAsync(`particle minecraft:${banMessage.particle} ~ ~ ~`);
     }
 }
+const themeStyles = {
+    "1": {
+        prefix: '§r§j[§uIsolate§j]§r',
+        playerName: '§r',
+        failMessage: '§nhas failed §3',
+        checkColour: '§u',
+        separator: '§b/§h',
+        holder: "",
+        debugColor: '§9',
+        filledColor: '§9|',
+        unfilledColor: '§j|',
+        currentVlFormat: '§jx§9',
+    },
+    "2": {
+        prefix: '§r§j[§uIsolate§j]§r',
+        playerName: '§r',
+        failMessage: '§hhas failed §t',
+        checkColour: '§u',
+        separator: '§8/§i',
+        holder: "",
+        debugColor: '§9',
+        filledColor: '§d|',
+        unfilledColor: '§u|',
+        currentVlFormat: '§dx§u',
+    },
+    "alice": {
+        prefix: `§r§8[§cAlice§8]§r`,
+        playerName: '§7',
+        failMessage: '§rhas failed §h',
+        checkColour: '§c',
+        separator: ' §c(',
+        holder: ")",
+        debugColor: '§c',
+        filledColor: '§7|',
+        unfilledColor: '§r|',
+        currentVlFormat: '§hx§c',
+    }
+};
 
+function buildDisplayBar(currentVl, maxVl, filledColor, unfilledColor) {
+    let displayBar = "";
+    let filled, unfilled;
+
+    if (maxVl <= 10) {
+        filled = currentVl;
+        unfilled = maxVl - currentVl;
+    } else {
+        let percent = currentVl / maxVl;
+        filled = Math.round(percent * 10);
+        unfilled = 10 - filled;
+    }
+
+    for (let i = 0; i < filled; i++) {
+        displayBar += filledColor;
+    }
+
+    for (let i = 0; i < unfilled; i++) {
+        displayBar += unfilledColor;
+    }
+
+    return displayBar;
+}
+
+function buildNotification(player, theme, check, checkType, hackType, debug, debugName, currentVl, maxVl) {
+    const { flagstyle, debugflag } = config.modules.settings;
+    const style = themeStyles[theme];
+    
+    if (!style) return;
+
+    let notification = `${style.prefix} ${style.playerName}${player.nameTag} ${style.failMessage}[${hackType}] ${style.checkColour}${check}${style.separator}${checkType.toUpperCase()}${style.holder}`;
+
+    // Include debug information if debug flag is enabled
+    if (debugflag) {
+        notification += ` ${style.debugColor}(${debugName}=${debug})§h `;
+    } else {
+        notification += '§h. ';
+    }
+
+    // Add flag style specific information
+    if (flagstyle == "1") {
+        notification += `[${style.currentVlFormat}${currentVl}§h]`;
+    } else if (flagstyle == "2") {
+        let displayBar = buildDisplayBar(currentVl, maxVl, style.filledColor, style.unfilledColor);
+        notification += `[${displayBar}§h]`;
+    }
+
+    return notification;
+}
+
+function sendNotification(player, theme, check, checkType, hackType, debug, debugName, currentVl, maxVl) {
+    const notification = buildNotification(player, theme, check, checkType, hackType, debug, debugName, currentVl, maxVl);
+
+    // Send the notification with a single tellraw command
+    player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"${notification}"}]}`);
+}
 
 
 /**
@@ -189,110 +283,8 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     
     const thememode = config.modules.settings.theme;
     const maxVl = config.modules[check.toLowerCase() + checkType.toUpperCase()].minVlbeforePunishment;
-    if(thememode == "1") {
-        if(config.modules.settings.debugflag) {
-            if(config.modules.settings.flagstyle == "1") {
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§jx§9${currentVl}§h]"}]}`);
-            } else if(config.modules.settings.flagstyle == "2") {
-                let displ = "";
-                let filled, unfilled;
-                if(maxVl <= 10) {
-                    filled = currentVl;
-                    unfilled = maxVl - currentVl;
-                } else {
-                    let percent = currentVl / maxVl;
-                    filled = Math.round(percent * 10);
-                    unfilled = 10 - filled;
-                }
+    sendNotification(player, thememode, check, checkType, hackType, debug, debugName, currentVl, maxVl);
 
-                for (let i = 0; i < filled; i++) {
-                    displ += '§9|';
-                }
-
-                for (let i = 0; i < unfilled; i++) {
-                    displ += '§j|';
-                }
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [${displ}§h]"}]}`);
-            }
-        } else {
-            if(config.modules.settings.flagstyle == "1") {
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}§h. [§jx§9${currentVl}§h]"}]}`);
-            } else if(config.modules.settings.flagstyle == "2") {
-                let displ = "";
-                let filled, unfilled;
-                if(maxVl <= 10) {
-                    filled = currentVl;
-                    unfilled = maxVl - currentVl;
-                } else {
-                    let percent = currentVl / maxVl;
-                    filled = Math.round(percent * 10);
-                    unfilled = 10 - filled;
-                }
-
-                for (let i = 0; i < filled; i++) {
-                    displ += '§9|';
-                }
-
-                for (let i = 0; i < unfilled; i++) {
-                    displ += '§j|';
-                }
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §nhas failed §3[${hackType}] §u${check}§b/§h${checkType.toUpperCase()}§h. [${displ}§h]"}]}`);
-            }
-            
-        }
-    } else if(thememode == "2") {
-        if(config.modules.settings.debugflag) {
-            if(config.modules.settings.flagstyle == "1") {
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [§dx§u${currentVl}§h]"}]}`);
-            } else if(config.modules.settings.flagstyle == "2") {
-                let displ = "";
-                let filled, unfilled;
-                if(maxVl <= 10) {
-                    filled = currentVl;
-                    unfilled = maxVl - currentVl;
-                } else {
-                    let percent = currentVl / maxVl;
-                    filled = Math.round(percent * 10);
-                    unfilled = 10 - filled;
-                }
-
-                for (let i = 0; i < filled; i++) {
-                    displ += '§d|';
-                }
-
-                for (let i = 0; i < unfilled; i++) {
-                    displ += '§u|';
-                }
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()} §9(${debugName}=${debug}§r§7)§h. [${displ}§h]"}]}`);
-            }
-            
-        } else {
-            if(config.modules.settings.flagstyle == "1") {
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()}§h. [§dx§u${currentVl}§h]"}]}`);     
-            } else if(config.modules.settings.flagstyle == "2") {
-                let displ = "";
-                let filled, unfilled;
-                if(maxVl <= 10) {
-                    filled = currentVl;
-                    unfilled = maxVl - currentVl;
-                } else {
-                    let percent = currentVl / maxVl;
-                    filled = Math.round(percent * 10);
-                    unfilled = 10 - filled;
-                }
-
-                for (let i = 0; i < filled; i++) {
-                    displ += '§d|';
-                }
-
-                for (let i = 0; i < unfilled; i++) {
-                    displ += '§u|';
-                }
-                player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag}§r §hhas failed §t[${hackType}] §u${check}§8/§i${checkType.toUpperCase()}§h. [${displ}§h]"}]}`);
-
-            }
-        }
-    }
     if(typeof slot === "number") {
 		const container = player.getComponent("inventory").container;
 		container.setItem(slot, undefined);
@@ -372,7 +364,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     
                     if(config.modules.settings.theme == "1") {
                         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage! (7-Day)"}]}`);
-                    } else if(config.modules.settings.theme == "2") {
+                    } else {
                         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c "}]}`); 
                         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===========================================||"}]}`);
                         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u§l Isolate Anticheat"}]}`);
