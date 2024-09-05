@@ -41,6 +41,8 @@ export function aim_e(player) {
             const deltaDiff = fastAbs(deltaYaw - deltaPitch);
             if(deltaDiff < 0.1 && deltaYaw > 1 && (player.hasTag("attacking") || !config.modules.aimE.needHit)) flag(player, "Aim", "E", "Kuristosis (Beta)", "deltaDiff", deltaDiff, false);
 
+            const oldDeltaDiff = fastAbs(lastDeltaYaw - lastDeltaPitch);
+            if(fastAbs(oldDeltaDiff - deltaDiff) < 0.1 && (player.hasTag("attacking") || !config.modules.aimE.needHit)) flag(player, "Aim", "E", "Kuristosis (Beta)", "rotationDiff", fastAbs(oldDeltaDiff - deltaDiff), false);
             const deltaYawAverage = getAverage(dYaw);
             const deltaYawDuplicates = findNearDuplicates(dYaw, 0);
 

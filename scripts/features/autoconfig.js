@@ -228,7 +228,7 @@ function displaySeventh(player) {
 }
 
 function seventhQuestion(player) {
-    const options = ["old", "new"]
+    const options = ["old", "new", "alice"]
     const menu = new MinecraftUI.ModalFormData()
         .title("Isolate Anticheat Autoconfig")
         .dropdown("Theme", options);
@@ -404,6 +404,9 @@ function analyseData(player) {
     } else if(theme == 1) {
         logs.push("Theme Changed | New (theme 2)");
         config["modules"]["settings"]["theme"] = "2";
+    } else if(theme == 2) {
+        logs.push("Theme Changed | Alice (theme 3)");
+        config["modules"]["settings"]["theme"] = "alice";
     }
 
     // Update Dynamic Config
