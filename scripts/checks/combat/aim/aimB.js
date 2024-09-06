@@ -2,6 +2,7 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getAbsoluteGcd } from "../../../utils/mathUtil.js";
 import { fastAbs, fastFloor } from "../../../utils/fastMath.js";
+import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw } from "./aimData.js";
 const data = new Map();
 export function aim_b(player) {
     if(config.modules.aimB.enabled) {
@@ -11,10 +12,10 @@ export function aim_b(player) {
             const yawDat = data.get(player.name).yaw;
             if(pitchDat && yawDat) {
                 // Define constants
-                const deltaPitch = fastAbs(rotation.x - pitchDat.one);
-                const deltaYaw = fastAbs(rotation.y - yawDat.one);
-                const deltaPitch2 = fastAbs(pitchDat.one - pitchDat.two);
-                const deltaYaw2 = fastAbs(yawDat.one - yawDat.two);
+                const deltaPitch = getDeltaPitch(player);
+                const deltaYaw = getDeltaYaw(player);
+                const deltaPitch2 = getLastDeltaPitch(player);
+                const deltaYaw2 = getLastDeltaYaw(player);
                 const constantYaw = getAbsoluteGcd(deltaYaw, deltaYaw2);
                 const constantPitch = getAbsoluteGcd(deltaPitch, deltaPitch2);
                 if(player.hasTag("aim_debug2")) player.sendMessage("constantYaw" + constantYaw + "constantPitch" + constantPitch);

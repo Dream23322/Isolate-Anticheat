@@ -2,6 +2,7 @@ import * as Minecraft from "@minecraft/server";
 import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { fastAbs } from "../../../utils/fastMath.js";
+import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw } from "./aimData.js";
 const data = new Map();
 /**
  * Aim A check.
@@ -12,22 +13,16 @@ const data = new Map();
 export function aim_a(player) {
     const rot = player.getRotation();
     // Only run if the Aim A module is enabled and the player's data is available
-    if(config.modules.aimA.enabled && data.has(player.name)) {
-        // Get the player's current rotation
-        
-        // Get the player's previous pitch and yaw data
-        const data_yaw = data.get(player.name).yaw;
-        const data_pitch = data.get(player.name).pitch;
-
+    if(config.modules.aimA.enabled) {
         // Only run if the player's pitch and yaw data is available
-        if(data_yaw && data_pitch) {
+        if(true) {
             // Calculate the absolute difference in pitch and yaw between the current and previous rotations
-            const deltaPitch = fastAbs(rot.x - data_pitch.one);
-            const deltaYaw = fastAbs(rot.y - data_yaw.one);
+            const deltaPitch = getDeltaPitch(player);
+            const deltaYaw = getDeltaYaw(player);
 
             // Calculate the absolute difference in pitch and yaw between the previous and second previous rotations
-            const deltaPitch2 = fastAbs(data_pitch.one - data_pitch.two);
-            const deltaYaw2 = fastAbs(data_yaw.one - data_yaw.two);
+            const deltaPitch2 = getLastDeltaPitch(player);
+            const deltaYaw2 = getLastDeltaYaw(player);
             
             // Calculate the acceleration in pitch and yaw
             const yawAccel = fastAbs(deltaYaw - deltaYaw2);
@@ -57,17 +52,5 @@ export function aim_a(player) {
             }
         }
     }
-    // Update the player's pitch and yaw data with the current rotation
-    data.set(player.name, {
-        pitch: {
-            one: rot.x,
-            two: data.get(player.name)?.pitch?.one || 0,
-            three: data.get(player.name)?.pitch?.two || 0
-        },
-        yaw: {
-            one: rot.y,
-            two: data.get(player.name)?.yaw?.one || 0,
-            three: data.get(player.name)?.yaw?.two || 0
-        }
-    })
+
 }
