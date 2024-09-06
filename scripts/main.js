@@ -351,6 +351,7 @@ Minecraft.system.runInterval(() => {
 			setScore(player, "motion_c_data", 0);
 
 			badpackets_e(player);
+			player.removeTag("speedE_pass");
 
 			if(player.hasTag("packetlogger")) player.runCommandAsync(`title @s actionbar packets:${packets}`);
 			player.removeTag("snow");

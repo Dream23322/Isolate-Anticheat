@@ -514,7 +514,7 @@ export default
         "aimE": {
             "enabled": true,
             "description": "Checks for irregular movements in the rotation",
-            "needHit": false,
+            "needHit": true,
             "duplicates": 35,
             "dataSize": 50,
             "punishment": "kick",
@@ -527,21 +527,21 @@ export default
             "total": 30,
             "needHit": true,
             "punishment": "kick",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 5
         },
         "aimG": {
             "enabled": true,
             "description": "Checks for inconsistent aiming",
             "needHit": true,
             "punishment": "kick",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 5
         },
         "aimH": {
             "enabled": true,
             "description": "Checks for Identical Aim",
             "needHit": true,
             "punishment": "kick",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 5
         },
         "autoclickerA": {
             "enabled": true,

@@ -29,7 +29,7 @@ export function aim_h(player) {
                     && deltaPitch <= 20
                     && (player.hasTag("attacking") || !config.modules.aimH.needHit)
                 ) {
-                    flag(player, "Aim", "H", "Kuristosis (Beta)", "yawDeltaChange", yawDeltaChange, false);
+                    flag(player, "Aim", "H", "Kuristosis (Beta)", "yawDeltaChange", yawDeltaChange, true);
                 }
             }
         }
