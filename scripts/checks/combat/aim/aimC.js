@@ -2,6 +2,7 @@ import * as Minecraft from "@minecraft/server";
 import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { fastAbs } from "../../../utils/fastMath.js";
+import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw, getLastLastDeltaPitch, getLastLastDeltaYaw } from "./aimData.js";
 const data = new Map();
 /**
  * The aim_c function checks for suspicious aiming patterns in players' rotation data.
@@ -17,22 +18,24 @@ export function aim_c(player) {
         // Get the player's current rotation
         const rot = player.getRotation();
         // Check if the player's data is stored in the circular buffer
-        if(data.has(player.name)) {
+        if(true) {
             // Get the player's last 3 pitch and yaw rotations from the circular buffer
-            const pitchData = data.get(player.name).pitch;
-            const yawData = data.get(player.name).yaw;
+            const pitchData = true;
+            const yawData = true;
             // Get the buffer score for the player
             const bufferVal = getScore(player, "aim_c_buffer", 0);
             // Only run if the pitch and yaw data is available
             if(pitchData && yawData) {
                 // Calculate the absolute difference in pitch and yaw between the current and previous rotations
-                const deltaPitch = fastAbs(rot.x - pitchData.one);
-                const deltaYaw = fastAbs(rot.y - yawData.one);
+                const deltaPitch = getDeltaPitch(player);
+                const deltaYaw = getDeltaYaw(player);
                 // Calculate the absolute difference in pitch and yaw between the previous and second previous rotations
-                const lastDeltaPitch = fastAbs(pitchData.one - pitchData.two);
-                const lastDeltaYaw = fastAbs(yawData.one - yawData.two);
-                const lastLastDeltaPitch = fastAbs(pitchData.two - pitchData.three);
-                const lastLastDeltaYaw = fastAbs(yawData.two - yawData.three);
+                const lastDeltaPitch = getLastDeltaPitch(player);
+                const lastDeltaYaw = getLastDeltaYaw(player);
+                const lastLastDeltaPitch = getLastLastDeltaPitch(player);
+                const lastLastDeltaYaw = getLastLastDeltaYaw(player);
+
+                if(player.hasTag("AIMCD")) player.sendMessage(`${deltaYaw},${deltaPitch},${lastDeltaYaw},${lastDeltaPitch},${lastLastDeltaYaw},${lastLastDeltaPitch}`);
                 // Check if the current rotation is within a certain threshold of the previous rotation
                 if(
                     deltaYaw < 1.5 &&
@@ -59,21 +62,6 @@ export function aim_c(player) {
                 }
             }
         }
-        // Store the player's current rotation in the circular buffer
-        data.set(player.name, {
-            pitch: {
-                one: rot.x,
-                two: data.get(player.name)?.pitch?.one,
-                three: data.get(player.name)?.pitch?.two,
-                four: data.get(player.name)?.pitch?.three
-            },
-            yaw: {
-                one: rot.y,
-                two: data.get(player.name)?.yaw?.one,
-                three: data.get(player.name)?.yaw?.two,
-                four: data.get(player.name)?.yaw?.three
-            }
-        });
     }
 }
 

@@ -79,6 +79,7 @@ import { autoConfigGUI } from "./features/autoconfig.js";
 import { fastAbs, fastFloor, fastPow, fastSqrt } from "./utils/fastMath.js";
 import { aim_g } from "./checks/combat/aim/aimG.js";
 import { aim_h } from "./checks/combat/aim/aimH.js";
+import { run_aim_data } from "./checks/combat/aim/aimData.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -304,6 +305,7 @@ Minecraft.system.runInterval(() => {
 		}
 
 		if(config.generalModules.aim) {
+			run_aim_data(player);
 			aim_a(player);
 			aim_b(player);
 			aim_c(player);

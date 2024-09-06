@@ -7,12 +7,13 @@ const yawPositions = new Map();
 const deltaPitchData = new Map();
 const deltaYawData = new Map();
 
+export let started = false;
 /*
 This handler is used to get rotation data across all aim checks.
 We do this because without it, storing data in each aim check can cause large performance issues
 */
 
-export function run_aim_data() {
+export function run_aim_data(player) {
     const currentRot = player.getRotation();
     const pPos = pitchPositions.get(player.name) ?? new Array(100).fill(0);
     const yPos = yawPositions.get(player.name) ?? new Array(100).fill(0);
@@ -27,15 +28,24 @@ export function run_aim_data() {
         dYaw.unshift(deltaYaw);
         if(dPitch.length > 100) dPitch.pop();
         if(dYaw.length > 100) dYaw.pop();
+
+        pPos.unshift(currentRot.x);
+        yPos.unshift(currentRot.y);
+
+        if(pPos.length > 100) pPos.pop();
+        if(yPos.length > 100) yPos.pop();
+
         deltaPitchData.set(player.name, dPitch);
         deltaYawData.set(player.name, dYaw);
     }   
 
-    pitchPositions.set(player.name, currentRot.x);
-    yawPositions.set(player.name, currentRot.y);
+    pitchPositions.set(player.name, pPos);
+    yawPositions.set(player.name, yPos);
 
     deltaPitchData.set(player.name, dPitch);
     deltaYawData.set(player.name, dYaw);
+
+    started = true;
 }
 
 export function getDeltaPitch(player) {
@@ -43,15 +53,23 @@ export function getDeltaPitch(player) {
 }
 
 export function getLastDeltaPitch(player) {
-    return deltaPitchDataget(player.name)[1];
+    return deltaPitchData.get(player.name)[1];
+}
+
+export function getLastLastDeltaPitch(player) {
+    return deltaPitchData.get(player.name)[2];
 }
 
 export function getDeltaYaw(player) {
     return deltaYawData.get(player.name)[0];
 }
 
-export function detLastDeltaYaw(player) {
+export function getLastDeltaYaw(player) {
     return deltaYawData.get(player.name)[1];
+}
+
+export function getLastLastDeltaYaw(player) {
+    return deltaYawData.get(player.name)[2];
 }
 
 export function getDeltaPitchList(player) {
