@@ -73,6 +73,10 @@ export function getLastLastDeltaYaw(player) {
 }
 
 export function getDeltaPitchList(player) {
+    return arrayToList(deltaPitchData.get(player.name));
+}
+
+export function getDeltaPitchArray(player) {
     return deltaPitchData.get(player.name);
 }
 
@@ -94,7 +98,7 @@ export function amountDeltaPitch(player, amt) {
 
 
 export function getDeltaYawList(player) {
-    return deltaYawData.get(player.name);
+    return arrayToList(deltaYawData.get(player.name));
 }
 
 export function amountDeltaYaw(player, amt) {

@@ -3,6 +3,7 @@ import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { arrayToList, getAverageDifference } from "../../../utils/mathUtil.js";
 import { fastAbs } from "../../../utils/fastMath.js";
+import { amountDeltaPitch, amountDeltaYaw } from "./aimData.js";
 
 const data = new Map();
 const datatwo = new Map();
@@ -11,12 +12,12 @@ export function aim_d(player) {
    
         
         const currentRot = player.getRotation();
-        const d = data.get(player.name) ?? (new Array(5)).fill(0);
-        const dtwo = datatwo.get(player.name) ?? (new Array(5)).fill(0);
+        const d = amountDeltaPitch(player, 5);
+        const dtwo = amountDeltaYaw(player, 5);
         
         if(d && dtwo) {
-            const asList = arrayToList(d);
-            const asList2 = arrayToList(dtwo);
+            const asList = d
+            const asList2 = dtwo
             const isInvalid = (
                 fastAbs(getAverageDifference(asList)) < 0.3 &&
                 fastAbs(getAverageDifference(asList2)) > 5 
@@ -35,14 +36,8 @@ export function aim_d(player) {
                 setScore(player, "aimDBuffer", 0);
                 setScore(player, "aimDReset", 0);
             }
-            d.unshift(currentRot.x);
-            dtwo.unshift(currentRot.y);
 
-            d.pop();
-            dtwo.pop();
         }
 
-        data.set(player.name, d);
-        datatwo.set(player.name, dtwo);
     }
 }

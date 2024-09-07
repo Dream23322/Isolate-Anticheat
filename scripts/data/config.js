@@ -614,12 +614,12 @@ export default
             "minVlbeforePunishment": 5
         },
         "killauraD": {
-            "enabled": true,
-            "description": "Checks for high pitch changes",
+            "enabled": false,
+            "description": "Checks for high pitch changes (high false rate)",
             "punishment": "kick",
             "hits": 9,
             "punishmentLength": "3d",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 100
         },
         "killauraE": {
 			"enabled": true,
