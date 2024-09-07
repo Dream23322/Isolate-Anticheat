@@ -2,6 +2,7 @@ import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { arrayToList, countDuplicates, countRoundedValues, findNearDuplicates, getAverage, isNearPerfectWave } from "../../../utils/mathUtil.js";
 import { fastAbs } from "../../../utils/fastMath.js";
+import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw } from "./aimData.js";
 
 const data = new Map();
 const dataYaw = new Map();
@@ -19,11 +20,11 @@ export function aim_e(player) {
         const dPitch = dataPitch.get(player.name) ?? (new Array(100)).fill(0);
         if (data3.get(player.name) && d && dYaw) {
 
-            const deltaYaw = fastAbs(currentRotation.y - data3.get(player.name).y);
-            const deltaPitch = fastAbs(currentRotation.x - data3.get(player.name).x);
+            const deltaYaw = getDeltaYaw(player);
+            const deltaPitch = getDeltaPitch(player);
             if(deltaYaw < 5 || deltaPitch < 5) return;
-            const lastDeltaYaw = fastAbs(data3.get(player.name).y - data3.get(player.name).y2);
-            const lastDeltaPitch = fastAbs(data3.get(player.name).x - data3.get(player.name).x2);
+            const lastDeltaYaw = getLastDeltaYaw(player);
+            const lastDeltaPitch = getLastDeltaPitch(player);
 
             const yawAccel = fastAbs(deltaYaw - lastDeltaYaw);
             const pitchAccel = fastAbs(deltaPitch - lastDeltaPitch);

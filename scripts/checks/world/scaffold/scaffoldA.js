@@ -104,7 +104,7 @@ export function scaffold_a(player, block) {
                 if(getSpeed(player) > 1) {
                     flag(player, "Scaffold", "A", "World", "Speed", getSpeed(player), true);
                 }
-                if(getAverageDifference([pitch_values.new, pitch_values.mid, pitch_values.old]) < 0.5 && distance < 1.5 && getAverageDifference([yaw_values.new, yaw_values.mid, yaw_values.old]) > 5) {
+                if(getAverageDifference([pitch_values.new, pitch_values.mid, pitch_values.old]) < 0.5 && distance < 1.5 && getAverageDifference([yaw_values.new, yaw_values.mid, yaw_values.old]) > 5 && getAverageDifference([pitch_values.new, pitch_values.mid, pitch_values.old]) >= 0) {
                     flag(player, "Scaffold", "A", "World", "Pitch(2)", getAverageDifference([pitch_values.new, pitch_values.mid, pitch_values.old]), false);
                 }
             }
