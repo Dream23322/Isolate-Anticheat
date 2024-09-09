@@ -1,4 +1,5 @@
 // @ts-check
+
 // @ts-ignore
 import * as Minecraft from "@minecraft/server";
 import { tag_system, aroundAir, add_effect} from "./utils/gameUtil.js";

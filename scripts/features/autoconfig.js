@@ -292,7 +292,7 @@ function analyseData(player) {
             // Update Dynamic Config
             world.setDynamicProperty("config", JSON.stringify(config));
 
-            logs.push(`Disabled ${dat["name"]}`);
+            logs.push(`Disabled ${dat[1]}`);
         }
     } else if (servertype == 3) {
         
@@ -373,6 +373,8 @@ function analyseData(player) {
         logs.push("Timer(A) Enabled");
         config["modules"]["settings"]["autoReset"] = false;
         logs.push("AutoReset Disabled");
+        config["modules"]["speedA"]["minVlbeforePunishment"] = 3
+        logs.push("PunishVL Set: Speed(A) | 3");
     }
 
     // Update Dynamic Config

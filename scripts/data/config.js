@@ -288,7 +288,7 @@ export default
             "banLength": "7d"
         },
 
-        "filterUnicodeChat": true,
+        "filterUnicodeChat": false,
         /*
         Misc Checks - Checks that don't really have a catagory.
         */
