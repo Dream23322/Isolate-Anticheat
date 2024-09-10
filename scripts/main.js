@@ -695,7 +695,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 
 	aim_d(player);
 
-	if(config.generalModules.killaura && !player.hasTag("noaura")) {
+	if(config.generalModules.killaura && !player.hasTag("noaura") && !entity.typeId.includes("boat")) {
 		killaura_a(player, entity);
 		killaura_b(player, system, entity);
 		killaura_c(player, entity, player.entitiesHit);

@@ -82,6 +82,14 @@ export function commandHandler(message) {
         if(typeof config.customcommands[command] === "object") {
             commandData = config.customcommands[command];
             commandName = command;
+
+            if(!commandData) {
+                if(config.customcommands.sendInvalidCommandMsg) {
+                    player.sendMessage(`§r§j[§uIsolate§j]§c The command: ${command} was not found. Please make sure it exists.`);
+                    message.cancel = true;
+                }
+                return;
+            }
         } else {
             // check if the command is an alias
             
