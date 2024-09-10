@@ -189,20 +189,25 @@ export function getOutliersInt(collection, amt=1.5) {
 }
 
 export function getSkewness(data) {
-    let sum = 0;
-    let count = 0;
-    const numbers = Array.from(data);
+    const n = data.length;
+    if (n === 0) return 0;
 
-    numbers.forEach(number => {
-        sum += number;
-        ++count;
-    });
+    let sum = 0, sumSquared = 0;
 
-    numbers.sort((a, b) => a - b);
+    for (let i = 0; i < n; i++) {
+        const value = data[i];
+        sum += value;
+        sumSquared += value * value;
+    }
 
-    const mean = sum / count;
-    const median = (count % 2 !== 0) ? numbers[fastFloor(count / 2)] : (numbers[count / 2 - 1] + numbers[count / 2]) / 2;
-    const variance = getVariance(data);
+    const mean = sum / n;
+    const variance = (sumSquared / n) - (mean * mean);
+    
+    // Calculate median
+    const sortedData = [...data].sort((a, b) => a - b);
+    const median = n % 2 === 0 
+        ? (sortedData[n / 2 - 1] + sortedData[n / 2]) / 2 
+        : sortedData[fastFloor(n / 2)];
 
     return 3 * (mean - median) / fastSqrt(variance);
 }

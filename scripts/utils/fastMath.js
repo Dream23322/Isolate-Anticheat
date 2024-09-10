@@ -151,7 +151,7 @@ export function fastLog(x) {
 
 export function fastAtan2(y, x) {
     const absY = fastAbs(y) + 1e-10; // Prevent division by zero
-    const angle = Math.atan(y / x);
+    const angle = fastAtan(y / x);
     let result;
 
     if (x >= 0) {
@@ -162,5 +162,20 @@ export function fastAtan2(y, x) {
     
     return result;
 }
+export function fastAtan(x) {
+    const a1 = 0.99997726;
+    const a3 = -0.33262347;
+    const a5 = 0.19354346;
+    const a7 = -0.11643287;
+    const a9 = 0.05265332;
+    const a11 = -0.01172120;
 
+    const x2 = x * x;
+    const x4 = x2 * x2;
+    const x6 = x4 * x2;
+    const x8 = x6 * x2;
+    const x10 = x8 * x2;
+
+    return x * (a1 + a3 * x2 + a5 * x4 + a7 * x6 + a9 * x8 + a11 * x10);
+}
 export const PI = 105414357.0 / 33554432.0 + 1.984187159361080883e-9;
