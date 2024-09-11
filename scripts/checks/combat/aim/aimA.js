@@ -47,7 +47,7 @@ export function aim_a(player) {
                 setScore(player, "aim_a_buffer", 0);
             }
             // Check for extreme yaw acceleration (possibly indicative of a killaura)
-            if(deltaYaw > 35 && yawAccel < 0.01) {
+            if(deltaYaw > 35 && yawAccel < 0.01 && (player.hasTag("attacking") || !config.modules.aimA.needHit)) {
                 flag(player, "Aim", "A", "Combat (BETA)", "Yaw", `${deltaYaw},Accel=${yawAccel}`, false);
             }
         }

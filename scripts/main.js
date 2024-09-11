@@ -81,6 +81,10 @@ import { fastAbs, fastFloor, fastPow, fastSqrt } from "./utils/fastMath.js";
 import { aim_g } from "./checks/combat/aim/aimG.js";
 import { aim_h } from "./checks/combat/aim/aimH.js";
 import { run_aim_data } from "./checks/combat/aim/aimData.js";
+import { total_a } from "./checks/combat/total/totalA.js";
+import { total_b } from "./checks/movement/total/totalB.js";
+import { total_c } from "./checks/packet/total/totalC.js";
+import { total_d } from "./checks/world/total/totalD.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -115,6 +119,11 @@ world.beforeEvents.chatSend.subscribe((msg) => {
 	}
 
 	commandHandler(msg);
+
+	if(message.charAt(0) == "!" && msg.cancel == false) {
+        msg.cancel = true;
+		player.sendMessage("§r§j[§uIsolate§j]§r Unknown Command! Use !help for a list of commands.");
+    }
 
 	// add's user custom tags to their messages if it exists or we fall back
 	// also filter for non ASCII characters and remove them in messages
@@ -347,6 +356,10 @@ Minecraft.system.runInterval(() => {
 		const tagReset = getScore(player, "tag_reset", 0);
 		const aimcReset = getScore(player, "aimc_reset", 0);
 		if(tickValue > 19) {
+			total_a(player);
+			total_b(player);
+			total_c(player);
+			total_d(player);
 			setScore(player, "tick_counter", tickCounter + 1);
 			setScore(player, "tick_counter2", getScore(player, "tick_counter2", 0) + 1);
 			setScore(player, "tag_reset", tagReset + 1);

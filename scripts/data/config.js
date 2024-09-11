@@ -566,8 +566,8 @@ export default
             "minCPS": 6,
             "buffer": 5,
             "experimental": false,
-            "punishment": "none",
-            "minVlbeforePunishment": 0,
+            "punishment": "kick",
+            "minVlbeforePunishment": 3,
             "checkCPSAfter": 1000
         },
         "autoclickerD": {
@@ -586,7 +586,7 @@ export default
             "minCPS": 8,
             "buffer": 20,
             "punishment": "none",
-            "minVlbeforePunishment": 10,
+            "minVlbeforePunishment": 5,
             "checkCPSAfter": 1000
         },
 		"killauraA": {
@@ -641,6 +641,7 @@ export default
             "enabled": true,
             "description": "Checks for hitting a player off screen",
             "buffer": 6,
+            "minDistance": 2.5,
             "punishment": "kick",
             "minVlbeforePunishment": 5
         },
@@ -654,7 +655,7 @@ export default
             "speed": 0.22,
             "maxSpeed": 0.36,
             "punishment": "kick",
-            "minVlbeforePunishment": 30
+            "minVlbeforePunishment": 10
         },
         "noslowB": {
             "enabled": true,
@@ -881,6 +882,34 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 2
         },
+        "totalA": {
+            "enabled": true,
+            "description": "Checks for too many combat violations in 1 second",
+            "max": 6,
+            "punishment": "kick",
+            "minVlbeforePunishment": 0
+        },
+        "totalB": {
+            "enabled": true,
+            "description": "Checks for too many movement violations in 1 second",
+            "max": 6,
+            "punishment": "kick",
+            "minVlbeforePunishment": 0
+        },      
+        "totalC": {
+            "enabled": true,
+            "description": "Checks for too many packet violations in 1 second",
+            "max": 6,
+            "punishment": "kick",
+            "minVlbeforePunishment": 0
+        }, 
+        "totalD": {
+            "enabled": true,
+            "description": "Checks for too many place/break violations in 1 second",
+            "max": 6,
+            "punishment": "kick",
+            "minVlbeforePunishment": 0
+        }, 
         "commandblockexploitG": {
             "enabled": true,
             "npc": true,
