@@ -6,7 +6,7 @@ import config from "./data/config.js";
 import data from "./data/data.js";
 // @ts-ignore
 import { setTitle } from "./utils/gameUtil.js";
-import { fastFloor } from "./utils/fastMath.js";
+import { fastFloor, fastRound } from "./utils/fastMath.js";
 
 
 const world = Minecraft.world;
@@ -124,7 +124,7 @@ function buildDisplayBar(currentVl, maxVl, filledColor, unfilledColor) {
         unfilled = maxVl - currentVl;
     } else {
         let percent = currentVl / maxVl;
-        filled = Math.round(percent * 10);
+        filled = fastRound(percent * 10);
         unfilled = 10 - filled;
     }
 
@@ -346,7 +346,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     if(currentVl >= checkData.minVlbeforePunishment) {
 
 
-        if (punishment === "kick" && (config.modules.settings.autoKick)) {
+        if (punishment === "kick" && (config.modules.settings.autoKick) && (player.hasTag("reported") || !config.modules.settings.onlyReported)) {
             let banLength2;
             try {
                 setScore(player, "kickvl", kickvl + 1);
@@ -411,7 +411,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
             }    
 
         };
-        if(punishment === "ban") {
+        if(punishment === "ban" && (player.hasTag("reported") || !config.modules.settings.onlyReported)) {
             // Check if auto-banning is disabled
             if(config.modules.settings.autoBan) {
 

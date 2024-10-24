@@ -278,7 +278,8 @@ export default
             "prefix": "!",
             "chatRanks": false,
             "testingmode": false,
-            "advancedCPS": false
+            "advancedCPS": false,
+            "onlyReported": false
         },
         "smartReport": {
             "enabled": false,

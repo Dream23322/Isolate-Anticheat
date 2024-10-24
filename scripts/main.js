@@ -481,14 +481,7 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 	
 
 
-	// Reach/B = checks for breaking blocks too far away
-	if(config.modules.reachB.enabled && !player.hasTag("noreach")) {
-		const distance = fastSqrt(fastPow(block.location.x - player.location.x, 2) + fastPow(block.location.y - player.location.y, 2) + fastPow(block.location.z - player.location.z, 2));
-		if(distance > config.modules.reachB.reach) {
-			flag(player, "Reach", "B", "Breaking", "distance", distance, false);
-			revertBlock = true;
-		}
-	}
+
 
 	if(config.modules.nukerA.enabled) {
 		player.blocksBroken++;
