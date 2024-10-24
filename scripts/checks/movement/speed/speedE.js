@@ -16,6 +16,11 @@ export function speed_e(player) {
                 if(bptDiff > 2 || player.getEffect("speed")) {
                     data.set(player.name, (new Array(29)).fill(0));
                     //console.warn("bypassed");
+                    data2.set(player.name, {
+                        x: player.location.x,
+                        y: player.location.y,
+                        z: player.location.z
+                    });
                     return player.addTag("speedE_pass");
                 }
                 const valueList = arrayToList(d);

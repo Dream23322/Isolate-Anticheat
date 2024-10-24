@@ -51,6 +51,7 @@ export function aim_a(player) {
                 flag(player, "Aim", "A", "Combat (BETA)", "Yaw", `${deltaYaw},Accel=${yawAccel}`, false);
             }
         }
+        
     }
 
 }

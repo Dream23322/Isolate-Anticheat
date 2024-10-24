@@ -1,5 +1,5 @@
 
-tellraw @s {"rawtext":[{"text":"\n§l§uIsolate AntiCheat v8.7.4 Command Help"}]}
+tellraw @s {"rawtext":[{"text":"\n§l§uIsolate AntiCheat v8.7.5 Command Help"}]}
 tellraw @s {"rawtext":[{"text":"\n§l§u--------------------------------------"}]}
 
 
