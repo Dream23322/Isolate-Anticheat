@@ -1,5 +1,5 @@
 /**
- * @name seereach
+ * @name seecps
  * @param {object} message - Message object
  */
 export function seecps(message) {

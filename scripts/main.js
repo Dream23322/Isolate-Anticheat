@@ -85,6 +85,8 @@ import { total_a } from "./checks/combat/total/totalA.js";
 import { total_b } from "./checks/movement/total/totalB.js";
 import { total_c } from "./checks/packet/total/totalC.js";
 import { total_d } from "./checks/world/total/totalD.js";
+import { badpackets_k } from "./checks/packet/badpackets/badpacketsK.js";
+import { badpackets_j } from "./checks/packet/badpackets/badpacketsJ.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -578,6 +580,9 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 			t = t.replace(/"|\\/g, "");
 			player.nameTag = `${borderColor}[§r${mainColor}${t.slice(4)}${borderColor}]§r ${playerNameColor}${player.name}`;
 		}
+
+
+		
 	});
 	// Namespoof/A = username length check.
 	if (config.modules.namespoofA.enabled) {
@@ -596,7 +601,9 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	// Namespoof/B = regex check
 	if(config.modules.namespoofB.enabled && config.modules.namespoofB.regex.test(player.name))
 		player.flagNamespoofB = true;
-
+	badpackets_j(player);
+	player.addTag(player.clientSystemInfo.platformType);
+	badpackets_k(player);
 	// check if the player is in the global ban list
 	if(banList.includes(player.name.toLowerCase())) player.isGlobalBanned = true;
 });
