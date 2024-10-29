@@ -1,4 +1,4 @@
-# Gets all anticheat logs from a player
+  # Gets all anticheat logs from a player
 
 tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r Getting all Isolate logs from "},{"selector":"@s"},{"text":":\n§r"}]}
 execute @s[m=spectator] ~~~ tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r "},{"selector":"@s"},{"text":" is in Spectator mode."}]}
