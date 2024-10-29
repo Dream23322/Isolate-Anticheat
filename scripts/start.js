@@ -11,8 +11,29 @@ if(dpConfig) {
 	for(const item of Object.keys(parsedConfig)) {
 		config[item] = parsedConfig[item];
 	}
-	console.warn("[Isolate] >> Loaded Config Correctly");
+	
 }
+console.warn("[Isolate] >> ConfigID: " + config.configID);
+if(config.configID !== "a1") {
+	console.warn("[Isolate] >> Config ID doesnt match latest! Attempting to update config...")
+	config.modules.badpacketsK = {
+		enabled: true,
+		punishment: "ban",
+		punishmentLength: "",
+		minVlbeforePunishment: 0
+	}
+
+	config.customcommands.configid = {
+		enabled: true,
+		requiredTags: ["op"],
+		aliases: ["getid", "id"]
+	}
+	console.warn("[Isolate] >> Updated Config Correctly");
+}
+
+config.configID = "a1";	
+
+console.warn("[Isolate] >> Loaded Config Correctly");
 // Load the ban list
 const banlist = world.getDynamicProperty("banList");
 if(!banlist) {
