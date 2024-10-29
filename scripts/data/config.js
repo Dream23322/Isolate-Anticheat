@@ -1,6 +1,7 @@
 export default
 {
     // This config is made for pvp servers so most of the illegal checks are turned off
+    "configID": "a1",
     "debug": true,
     // if you have a laggy realm/server or don't want to risk anything turn this off
     "experimental_checks": true,
@@ -246,6 +247,11 @@ export default
             "enabled": true,
             "requiredTags": ["op"],
             "aliases": ["a", "ann", "adminannounce"]
+        },
+        "configid": {
+            "enabled": true,
+            "requiredTags": ["op"],
+            "aliases": ["getid", "id"]
         }
     },
     "modules": {
@@ -413,6 +419,12 @@ export default
             "enabled": true,
             "punishment": "kick",
             "minVlbeforePunishment": 10
+        },
+        "badpacketsK": {
+            "enabled": true,
+            "punishment": "ban",
+            "punishmentLength": "",
+            "minVlbeforePunishment": 0
         },
         "timerA": {
             "enabled": false,
