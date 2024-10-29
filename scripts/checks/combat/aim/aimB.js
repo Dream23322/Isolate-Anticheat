@@ -3,7 +3,6 @@ import config from "../../../data/config.js";
 import { getAbsoluteGcd } from "../../../utils/mathUtil.js";
 import { fastAbs, fastFloor } from "../../../utils/fastMath.js";
 import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw } from "./aimData.js";
-const data = new Map();
 export function aim_b(player) {
     if(config.modules.aimB.enabled) {
         // Define constants
