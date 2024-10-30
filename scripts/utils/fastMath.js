@@ -157,7 +157,7 @@ export function fastAtan2(y, x) {
     if (x >= 0) {
         result = angle;
     } else {
-        result = y >= 0 ? angle + Math.PI : angle - Math.PI;
+        result = y >= 0 ? angle + PI : angle - PI;
     }
     
     return result;
