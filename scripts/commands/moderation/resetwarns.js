@@ -29,5 +29,16 @@ export function resetwarns(message, args) {
 
     player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has reset ${member.nameTag}'s warns."}]}`);
 
-    member.runCommandAsync("function tools/resetwarns");
+    //member.runCommandAsync("function tools/resetwarns");
+
+    const check_names = [
+        "spammer", "namespoof", "autotool", "exploit", "crasher", "badpackets", "timer",
+        "reach", "aim", "autoclicker", "killaura", "hitbox",
+        "noslow", "invalidsprint", "speed", "fly", "motion", "strafe",
+        "nuker", "scaffold", "tower", "kick"
+    ];
+
+    for(const name of check_names) {
+        setScore(member, `${name}vl`, 0);
+    }
 }

@@ -4,5 +4,5 @@ export function announce(message, args) {
 
     const player = message.sender;
 
-    player.runCommandAsync(`tellraw @a {"rawtext":[{"text":"§c§lAdmin Announcement\n\n§r${player.nameTag} >> ${message.args.slice(0).join(" ")}"}]}`);
+    player.runCommandAsync(`tellraw @a {"rawtext":[{"text":"§c§lAdmin Announcement\n\n§r${player.nameTag} >> ${args.slice(0).join(" ")}"}]}`);
 }
