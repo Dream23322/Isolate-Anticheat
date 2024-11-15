@@ -530,6 +530,7 @@ export default
             "needHit": true,
             "duplicates": 35,
             "dataSize": 50,
+            "experimental": true,
             "punishment": "kick",
             "minVlbeforePunishment": 10
         },

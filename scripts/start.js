@@ -36,6 +36,17 @@ if(config.configID !== "a1c") {
 		punishment: "none",
 		minVlbeforePunishment: 5
 	}
+
+	config.modules.aimE = {
+		enabled: true,
+		description: "Checks for irregular movements in the rotation",
+		needHit: true,
+		duplicates: 35,
+		dataSize: 50,
+		experimental: true,
+		punishment: "kick",
+		minVlbeforePunishment: 10
+	}
 	
 	console.warn("[Isolate] >> Updated Config Correctly");
 }
