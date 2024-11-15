@@ -1,6 +1,6 @@
-
+import config from "../../../data/config.js";
 export function badpackets_j(player) {
-    if(config.modules.badpackets_j.enabled && !player.hasTag("op")) {
+    if(config.modules.badpacketsJ.enabled && !player.hasTag("op")) {
         const playerDeviceType = player.clientSystemInfo.platformType;
 
         if(playerDeviceType === "Desktop") {

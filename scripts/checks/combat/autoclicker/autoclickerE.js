@@ -23,15 +23,15 @@ export function autoclicker_e(player) {
                     }
                 }
 
-                if(cpsOutliers < 2) flag(player, 'Autoclicker', "E", "Kuristosis", "CPS", player.cps);
+                if(cpsOutliers < 2) flag(player, 'Autoclicker', "E", "Kuristosis", "CPS", player.cps, true);
                 const averageCpsDiff = fastAbs(getAverageDifference(CPSList));
 
 
                 const cpsDuplicates = findNearDuplicates(CPSList);
-                if(cpsDuplicates > 3) flag(player, "AutoClicker", "E", "Kuristosis", "CPS_DUPLICATES", cpsDuplicates);
+                if(cpsDuplicates > 3) flag(player, "AutoClicker", "E", "Kuristosis", "CPS_DUPLICATES", cpsDuplicates, true);
 
                 if(cpsOutliers < 3 && averageCpsDiff < 0.7 && (isWave || cpsDuplicates > 2)) {
-                    flag(player, "AutoClicker", "E", "Kuristosis", "CPS", `${player.cps},total=${cpsOutliers + cpsDuplicates + (5 - averageCpsDiff)}`);
+                    flag(player, "AutoClicker", "E", "Kuristosis", "CPS", `${player.cps},total=${cpsOutliers + cpsDuplicates + (5 - averageCpsDiff)}`, true);
                 }
             }
 

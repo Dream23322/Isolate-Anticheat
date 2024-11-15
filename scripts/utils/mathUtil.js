@@ -46,6 +46,38 @@ export function angleCalc(player, entityHit) {
     return fastAbs(angle);
 }
 
+export function isValidHitbox(player, entityHit, buffer = 0) {
+    const dx = entityHit.location.x - player.location.x;
+    const dz = entityHit.location.z - player.location.z;
+    const angleToEntity = Math.atan2(dz, dx) * 180 / PI;
+    let angle = angleToEntity - player.getRotation().y - 90;
+    
+    if (angle <= -180) {
+        angle += 360;
+    }
+    
+    const distance = Math.sqrt(dx * dx + dz * dz);
+    const hitboxWidth = 0.6 + buffer;
+    const hitboxHeight = 1.8 + buffer;
+    
+    // Check horizontal and vertical hitbox with buffer
+    const isInHorizontalHitbox = fastAbs(angle) <= (hitboxWidth / distance);
+    const dy = entityHit.location.y - player.location.y;
+    const isInVerticalHitbox = dy >= -buffer && dy <= hitboxHeight;
+
+    // Debug data to fix issues
+    console.warn(`dx: ${dx} | dz: ${dz} | distance: ${distance} | angle: ${angle} | angleToEntity: ${angleToEntity} | isInHorizontalHitbox: ${isInHorizontalHitbox} | isInVerticalHitbox: ${isInVerticalHitbox}`);
+    
+    return isInHorizontalHitbox && isInVerticalHitbox;
+}
+
+export function angleBasedHitbox(player, entityHit, buffer = 0) {
+    const angle = angleCalc(player, entityHit);
+
+    const check = angle + (10 - getDistanceXZ(player, entityHit)) > 10 + buffer - (getDistanceXZ(player, entityHit) / 10);
+    return check;
+}
+
 /**
  * @name hVelocity
  * @remarks Calculates a players horizontal velocity
@@ -110,7 +142,7 @@ export function gcd(a, b) {
 }
 
 export function getGcdInt(current, previous) {
-    return (previous <= 16384) ? current : getGcd(previous, current % previous);
+    return (previous <= 16384) ? current : getgcd(previous, current % previous);
 }
 export function getGcdFloat(a, b) {
     if (a < b) {
