@@ -251,7 +251,7 @@ export default
         "configid": {
             "enabled": true,
             "requiredTags": ["op"],
-            "aliases": ["getid", "id"]
+            "aliases": []
         }
     },
     "modules": {
@@ -656,6 +656,13 @@ export default
             "buffer": 6,
             "minDistance": 2.5,
             "punishment": "kick",
+            "minVlbeforePunishment": 5
+        },
+        "hitboxB": {
+            "enabled": true,
+            "description": "Traditional hitbox check (Only for desktop and console players, though console is less strict)",
+            "max_avg_angle": 50,
+            "punishment": "none",
             "minVlbeforePunishment": 5
         },
 

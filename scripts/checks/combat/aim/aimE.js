@@ -58,6 +58,8 @@ export function aim_e(player) {
 
             if(total > config.modules.aimE.total && (player.hasTag("attacking") || !config.modules.aimE.needHit)) flag(player, "Aim", "E", "Kuristosis (Beta)", "total", total, false);
 
+            
+
             dYaw.unshift(deltaYaw);
             dYaw.pop();
             dPitch.unshift(deltaPitch);

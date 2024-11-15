@@ -14,7 +14,7 @@ if(dpConfig) {
 	
 }
 console.warn("[Isolate] >> ConfigID: " + config.configID);
-if(config.configID !== "a1") {
+if(config.configID !== "a1c") {
 	console.warn("[Isolate] >> Config ID doesnt match latest! Attempting to update config...")
 	config.modules.badpacketsK = {
 		enabled: true,
@@ -28,6 +28,15 @@ if(config.configID !== "a1") {
 		requiredTags: ["op"],
 		aliases: ["getid", "id"]
 	}
+
+	config.modules.hitboxB = {
+		enabled: true,
+		description: "Traditional hitbox check (Only for desktop and console players, though console is less strict)",
+		max_avg_angle: 50,
+		punishment: "none",
+		minVlbeforePunishment: 5
+	}
+	
 	console.warn("[Isolate] >> Updated Config Correctly");
 }
 

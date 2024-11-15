@@ -87,6 +87,7 @@ import { total_c } from "./checks/packet/total/totalC.js";
 import { total_d } from "./checks/world/total/totalD.js";
 import { badpackets_k } from "./checks/packet/badpackets/badpacketsK.js";
 import { badpackets_j } from "./checks/packet/badpackets/badpacketsJ.js";
+import { hitbox_b } from "./checks/combat/hitbox/hitboxB.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -718,6 +719,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 	}
 
 	hitbox_a(player, entity);
+	hitbox_b(player, entity);
 	reach_a(player, entity);
 	reach_b(player, entity);
 	
