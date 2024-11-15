@@ -1,7 +1,7 @@
 import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { arrayToList, countDuplicates, countRoundedValues, findNearDuplicates, getAverage, isNearPerfectWave } from "../../../utils/mathUtil.js";
-import { fastAbs } from "../../../utils/fastMath.js";
+import { fastAbs, fastRound } from "../../../utils/fastMath.js";
 import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw } from "./aimData.js";
 
 const data = new Map();
@@ -58,7 +58,20 @@ export function aim_e(player) {
 
             if(total > config.modules.aimE.total && (player.hasTag("attacking") || !config.modules.aimE.needHit)) flag(player, "Aim", "E", "Kuristosis (Beta)", "total", total, false);
 
-            
+            if(config.modules.aimE.experimental) {
+                const isRoundYaw = fastAbs(deltaYaw - fastRound(deltaYaw))
+                const isRoundPitch = fastAbs(deltaPitch - fastAbs(deltaPitch))
+                if(isRoundPitch < 0.01 || isRoundYaw < 0.01) flag(player, "Aim", "E", "Kuristosis (Beta)", "roundDiff", `Pitch: ${isRoundPitch}, Yaw: ${isRoundYaw}`, false);
+                const pitchDeltaDelta = fastAbs(deltaPitch - lastDeltaPitch);
+                const isRoundDiffPitch = fastAbs(pitchDeltaDelta - fastRound(pitchDeltaDelta));
+
+                const yawDeltaDelta = fastAbs(deltaYaw - lastDeltaYaw);
+                const isRoundDiffYaw = fastAbs(yawDeltaDelta - fastRound(yawDeltaDelta));
+
+                if(isRoundDiffPitch < 0.01 || isRoundDiffYaw < 0.01) flag(player, "Aim", "E", "Kuristosis (Beta)", "roundDiff", `Pitch: ${isRoundDiffPitch}, Yaw: ${isRoundDiffYaw}`, false);
+
+                if(deltaPitchAverage < 4) flag(player, "Aim", "E", "Kuristosis (Beta)", "pitchAverage", deltaPitchAverage, false);
+            }
 
             dYaw.unshift(deltaYaw);
             dYaw.pop();
