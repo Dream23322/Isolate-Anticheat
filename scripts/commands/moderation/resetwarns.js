@@ -1,5 +1,5 @@
 import * as Minecraft from "@minecraft/server";
-
+import { setScore } from "../../util";
 const world = Minecraft.world;
 
 /**
