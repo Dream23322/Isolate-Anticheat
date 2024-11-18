@@ -88,6 +88,7 @@ import { total_d } from "./checks/world/total/totalD.js";
 import { badpackets_k } from "./checks/packet/badpackets/badpacketsK.js";
 import { badpackets_j } from "./checks/packet/badpackets/badpacketsJ.js";
 import { hitbox_b } from "./checks/combat/hitbox/hitboxB.js";
+import { aim_i } from "./checks/combat/aim/aimI.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -326,6 +327,7 @@ Minecraft.system.runInterval(() => {
 			aim_f(player);
 			aim_g(player);
 			aim_h(player);
+			aim_i(player);
 		}
 
 		// Scaffold/F = Checks for placing too many blocks in 20 ticks... 
@@ -384,7 +386,8 @@ Minecraft.system.runInterval(() => {
 			const removalTags = [
 				"slime", "placing", "ice", "fall_damage", 
 				"end_portal", "stairs", "timer_bypass", "ender_pearl", 
-				"useItem", "interactBlock", "speedE_pass", "fighting"
+				"useItem", "interactBlock", "speedE_pass", "fighting",
+				"attacking", "teleport"
 			];
 			removalTags.forEach(tag => player.removeTag(tag));
 			setScore(player, "tag_reset", 0);
@@ -564,7 +567,7 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 
 
 	// remove tags
-	const tagsToRemove = ["attack", "hasGUIopen", "right", "left", "ground", "gliding", "sprinting", "moving", "sleeping"];
+	const tagsToRemove = ["attack", "hasGUIopen", "right", "left", "ground", "gliding", "sprinting", "moving", "sleeping", "attacking", "fighting", "teleport", "useItem", "leftv2", "fall_damage"];
 	tagsToRemove.forEach(tag => player.removeTag(tag));
 
 	const message = `§u${player.name} §hhas §pjoined§h the server`;
@@ -732,7 +735,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 	if(entity.typeId == "minecraft:player") {
 		player.runCommandAsync(`tellraw @a[tag=seeREACH] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §d${player.nameTag} §r>> §i${getDistanceXZ(player, entity).toFixed(3)} §r>> §u${entity.typeId}"}]}`);
 	}
-	if(config.debug && player.hasTag("logHits")) console.warn(player.getTags(), "rotation", rotation.x, "angleDiff", angleCalc(player, entity), "auraF" + getScore(player, "killauraF_buffer", 0), "killauraF_reset", getScore(player, "killauraF_reset", 0), "reach", fastSqrt(fastPow(entity.location.x - player.location.x, 2) + fastPow(entity.location.z - player.location.z, 2)));
+	if(config.debug && player.hasTag("logHits")) console.warn(player.getTags(), "rotation", rotation.x, rotation.y, "angleDiff", angleCalc(player, entity), "auraF" + getScore(player, "killauraF_buffer", 0), "killauraF_reset", getScore(player, "killauraF_reset", 0), "reach", fastSqrt(fastPow(entity.location.x - player.location.x, 2) + fastPow(entity.location.z - player.location.z, 2)));
 });
 world.afterEvents.entityHitBlock.subscribe((entityHit) => {
 	const { damagingEntity: player} = entityHit;

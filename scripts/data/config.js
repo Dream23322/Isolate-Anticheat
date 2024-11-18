@@ -557,6 +557,13 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 5
         },
+        "aimI": {
+            "enabled": true,
+            "description": "Checks for Identical Aim",
+            "needHit": true,
+            "punishment": "kick",
+            "minVlbeforePunishment": 5
+        },
         "autoclickerA": {
             "enabled": true,
             "maxCPS": 19.5,

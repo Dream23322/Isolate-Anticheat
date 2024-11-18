@@ -1,6 +1,5 @@
 import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
-import { arrayToList, getAverage, getgcd, getGcdFloat, getOutliersInt, getStandardDeviationV2 } from "../../../utils/mathUtil.js";
 import { fastAbs, fastRound } from "../../../utils/fastMath.js";
 
 const data = new Map();

@@ -47,6 +47,14 @@ if(config.configID !== "a1c") {
 		punishment: "kick",
 		minVlbeforePunishment: 10
 	}
+
+	config.modules.aimI = {
+		enabled: true,
+		description: "Checks for Identical Aim",
+		needHit: true,
+		punishment: "kick",
+		minVlbeforePunishment: 5
+	}
 	
 	console.warn("[Isolate] >> Updated Config Correctly");
 }

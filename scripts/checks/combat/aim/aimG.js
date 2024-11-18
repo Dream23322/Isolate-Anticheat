@@ -21,7 +21,7 @@ export function aim_g(player) {
                 dP.unshift(deltaPitch);
                 const outliers = getOutliersInt(dP, 1.5);
 
-                if((outliers > 15 || outliers == 0) && (player.hasTag("attacking") || !config.modules.aimG.needHit)) {
+                if(outliers == 0 && (player.hasTag("attacking") || !config.modules.aimG.needHit)) {
                     setScore(player, "aimG_BUFFER", getScore(player, "aimG_BUFFER", 0) + 1);
 
                     if(getScore(player, "aimG_BUFFER", 0) > 20) {
