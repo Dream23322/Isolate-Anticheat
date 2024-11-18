@@ -264,7 +264,8 @@ export default
             // "kick" = kicks the player temporarily
             // "ban" = ban the player
             "punishmentLength": "7d", // How long a player wil be banned. This only matters when the punishment is set to ban
-            "minVlBeforePunishment": 10 // How many times the player has to flag the modules before action is taken on them.
+            "minVlBeforePunishment": 10, // How many times the player has to flag the modules before action is taken on them.
+            "AP": 1 // (Allowed Platforms) What platforms the check works on, 1 = Desktop + 2 = Console + 3 = Mobile (3 will check all, 2 will check desktop and console, 1 will check desktop)
             // If you have any other questions, please ask in the discord server.
         },
         "settings": {
@@ -300,37 +301,43 @@ export default
         Misc Checks - Checks that don't really have a catagory.
         */
         "spammerA": {
-            "enabled": true,
+            "enabled": false,
             "punishment": "mute",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 3
         },
         "spammerB": {
-            "enabled": true,
+            "enabled": false,
             "punishment": "mute",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 3
         },
         "spammerC": {
-            "enabled": true,
+            "enabled": false,
             "punishment": "mute",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 3
         },
         "spammerD": {
-            "enabled": true,
+            "enabled": false,
             "punishment": "mute",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 3
         },
         "namespoofA": {
             "enabled": false,
             "minNameLength": 3,
             "maxNameLength": 16,
             "punishment": "kick",
-            "minVlbeforePunishment": 1
+            "minVlbeforePunishment": 1,
+            "AP": 3
         },
         "namespoofB": {
             "enabled": false,
             "regex": /[^A-Za-z0-9_\-() ]/,
             "punishment": "kick",
-            "minVlbeforePunishment": 1
+            "minVlbeforePunishment": 1,
+            "AP": 3
         },
         "bedrockValidate": {
             "enabled": false,
@@ -342,7 +349,8 @@ export default
             "description": "Checks for instant slot change after breaking of a block",
             "startBreakDelay": 90,
             "punishment": "none",
-            "minVlbeforePunishment": 0
+            "minVlbeforePunishment": 0,
+            "AP": 3
         },
         /*
         Packet Checks - Checks for invalid/bad movement, rotations, etc. This also includes exploits.
@@ -351,13 +359,15 @@ export default
             "enabled": true,
             "description": "Checks for invalid skins",
             "punishment": "kick",
-            "minVlbeforePunishment": 0
+            "minVlbeforePunishment": 0,
+            "AP": 1
         },
         "exploitB": {
             "enabled": true,
             "description": "Checks for being below world",
             "punishment": "kick",
-            "minVlbeforePunishment": 0
+            "minVlbeforePunishment": 0,
+            "AP": 3
         },
         // This exploit has been entirely patched out.
         "crasherA": {
@@ -365,7 +375,8 @@ export default
             "description":"Checks for old horion crasher method, some clients may still use them",
             "punishment": "ban",
             "punishmentLength": "14d",
-            "minVlbeforePunishment": 1
+            "minVlbeforePunishment": 1,
+            "AP": 3
         },
         "badpacketsB": {
             "enabled": true,
@@ -373,20 +384,23 @@ export default
             "speed": 7.3,
             "punishment": "kick",
             "punishmentLength": "1m",
-            "minVlbeforePunishment": 1
+            "minVlbeforePunishment": 1,
+            "AP": 2
         },
         "badpacketsG": {
             "enabled": true,
             "description": "Checks for invalid actions",
             "punishment": "kick",
-            "minVlbeforePunishment": 15
+            "minVlbeforePunishment": 15,
+            "AP": 2
         },
         "badpacketsE": {
             "enabled": true,
             "description": "Checks for high amount of packets",
             "min_packets": 30,
             "punishment": "kick",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 10,
+            "AP": 1
         },
         // This exploit has been entirely patched out.
         "badpacketsC": {
@@ -394,37 +408,43 @@ export default
             "description":"Checks for self-hit",
             "punishment": "kick",
             "punishmentLength": "",
-            "minVlbeforePunishment": 1
+            "minVlbeforePunishment": 1,
+            "AP": 3
         },
         "badpacketsF": {
-            "enabled": true,
+            "enabled": false,
             "description": "Checks if a players rotation is flat",
             "punishment": "kick",
-            "minVlbeforePunishment": 50
+            "minVlbeforePunishment": 50,
+            "AP": 1
         },
         "badpacketsH": {
             "enabled": true,
             "description": "Checks for flying without permissions",
             "punishment": "kick",
-            "minVlbeforePunishment": 50
+            "minVlbeforePunishment": 50,
+            "AP": 3
         },
         "badpacketsI": {
             "enabled": true,
             "description": "Checks for head rotation over 90 ",
             "angle": 89.999999999999999999999999999,
             "punishment": "kick",
-            "minVlbeforePunishment": 200
+            "minVlbeforePunishment": 200,
+            "AP": 3
         },
         "badpacketsJ": {
             "enabled": true,
             "punishment": "kick",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 10,
+            "AP": 3
         },
         "badpacketsK": {
             "enabled": true,
             "punishment": "ban",
             "punishmentLength": "",
-            "minVlbeforePunishment": 0
+            "minVlbeforePunishment": 0,
+            "AP": 3
         },
         "timerA": {
             "enabled": false,
@@ -439,7 +459,8 @@ export default
             // mode: "average" or "all"
             "mode": "average",
             "punishment": "kick",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 10,
+            "AP": 2
         },
 
         /*
@@ -467,7 +488,8 @@ export default
             ],
             "punishment": "kick",
             "punishmentLength": "3m",
-            "minVlbeforePunishment": 30
+            "minVlbeforePunishment": 30,
+            "AP": 3
         },
         "reachB": {
             "enabled": true,
@@ -488,7 +510,8 @@ export default
             ],
             "punishment": "kick",
             "punishmentLength": "3m",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 3
         },
         "aimA": {
             "enabled": true,
@@ -497,14 +520,16 @@ export default
             "diff": 0.05,
             "needHit": true,
             "punishment": "none",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 10,
+            "AP": 1
         },
         "aimB": {
             "enabled": true,
             "description":"Checks for invalid rotations",
             "needHit": false,
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 1
         },
         "aimC": {
             "enabled": true,
@@ -514,7 +539,8 @@ export default
             "big": 50,
             "needHit": false,
             "punishment": "none",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 10,
+            "AP": 1
         },
         "aimD": {
             "enabled": true,
@@ -522,7 +548,8 @@ export default
             "needHit": true,
             "description": "Checks for perfect rotation",
             "punishment": "none",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 10,
+            "AP": 1
         },
         "aimE": {
             "enabled": true,
@@ -532,7 +559,8 @@ export default
             "dataSize": 50,
             "experimental": true,
             "punishment": "kick",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 10,
+            "AP": 1
         },
         "aimF": {
             "enabled": true,
@@ -541,28 +569,32 @@ export default
             "total": 30,
             "needHit": true,
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 1
         },
         "aimG": {
             "enabled": true,
             "description": "Checks for inconsistent aiming",
             "needHit": true,
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 1
         },
         "aimH": {
             "enabled": true,
             "description": "Checks for Identical Aim",
             "needHit": true,
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 1
         },
         "aimI": {
             "enabled": true,
             "description": "Checks for Identical Aim",
             "needHit": true,
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 1      
         },
         "autoclickerA": {
             "enabled": true,
@@ -570,7 +602,8 @@ export default
             "description":"Checks for CPS over config amount",
             "checkCPSAfter": 1000,
             "punishment": "none",
-            "minVlbeforePunishment": 0
+            "minVlbeforePunishment": 0,
+            "AP": 3
         },
         "autoclickerB": {
             "enabled": true,
@@ -579,7 +612,8 @@ export default
             "maxDeviation": 0.2500,
             "punishment": "kick",
             "minVlbeforePunishment": 4,
-            "checkCPSAfter": 1000
+            "checkCPSAfter": 1000,
+            "AP": 3
         },
         "autoclickerC": {
             "enabled": true,
@@ -589,7 +623,8 @@ export default
             "experimental": false,
             "punishment": "kick",
             "minVlbeforePunishment": 3,
-            "checkCPSAfter": 1000
+            "checkCPSAfter": 1000,
+            "AP": 3
         },
         "autoclickerD": {
             "enabled": true,
@@ -599,7 +634,8 @@ export default
             "buffer": 5,
             "punishment": "none",
             "minVlbeforePunishment": 10,
-            "checkCPSAfter": 1000
+            "checkCPSAfter": 1000,
+            "AP": 1
         },
         "autoclickerE": {
             "enabled": true,
@@ -608,14 +644,16 @@ export default
             "buffer": 20,
             "punishment": "none",
             "minVlbeforePunishment": 5,
-            "checkCPSAfter": 1000
+            "checkCPSAfter": 1000,
+            "AP": 1
         },
 		"killauraA": {
             "enabled": true,
             "description": "Checks for funny killaura rotations (Detects Prax Killaura very fast)",
             "punishment": "ban",
             "punishmentLength": "7d",
-            "minVlbeforePunishment": 3
+            "minVlbeforePunishment": 3,
+            "AP": 3
 		},
 		"killauraB": {
 			"enabled": true,
@@ -624,7 +662,8 @@ export default
 			"max_swing_delay": 2000,
             "rightTicks": 3,
 			"punishment": "kick",
-			"minVlbeforePunishment": 2
+			"minVlbeforePunishment": 2,
+            "AP": 3
 		},        
         "killauraC": {
             "enabled": true,
@@ -632,7 +671,8 @@ export default
             "entities": 3,
             "punishment": "kick",
             "punishmentLength": "3m",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 3
         },
         "killauraD": {
             "enabled": false,
@@ -640,14 +680,16 @@ export default
             "punishment": "kick",
             "hits": 9,
             "punishmentLength": "3d",
-            "minVlbeforePunishment": 100
+            "minVlbeforePunishment": 100,
+            "AP": 1
         },
         "killauraE": {
 			"enabled": true,
-            "description": "Checks for proper sprint mechanics",
+            "description": "Checks for proper sprint mechanics (Disabled)",
             "minSprint": 5,
 			"punishment": "kick",
-			"minVlbeforePunishment": 10
+			"minVlbeforePunishment": 10,
+            "AP": 3
         },
         "killauraF": {
             "enabled": true,
@@ -656,7 +698,8 @@ export default
             "timeMS": 45000,
             "punishment": "ban",
             "punishmentLength": "1d",
-            "minVlbeforePunishment": 2
+            "minVlbeforePunishment": 2,
+            "AP": 2
         },
         "hitboxA": {
             "enabled": true,
@@ -664,14 +707,16 @@ export default
             "buffer": 6,
             "minDistance": 2.5,
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 2
         },
         "hitboxB": {
             "enabled": true,
             "description": "Traditional hitbox check (Only for desktop and console players, though console is less strict)",
             "max_avg_angle": 50,
             "punishment": "none",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 2
         },
 
         /*
@@ -683,7 +728,8 @@ export default
             "speed": 0.22,
             "maxSpeed": 0.36,
             "punishment": "kick",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 10,
+            "AP": 3
         },
         "noslowB": {
             "enabled": true,
@@ -691,13 +737,15 @@ export default
             "speed": 0.22,
             "maxSpeed": 0.36,
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 3
         },
         "invalidsprintA": {
             "enabled": true,
             "description": "Checks for sprinting with blindness",
             "punishment": "none",
-            "minVlbeforePunishment": 0
+            "minVlbeforePunishment": 0,
+            "AP": 3
         },
         "speedA": {
             "enabled": true,
@@ -706,7 +754,8 @@ export default
             "checkForSprint": false,
             "checkForJump": true,
             "punishment": "kick",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 10,
+            "AP": 3
         },     
         "speedB": {
             "enabled": true,
@@ -716,7 +765,8 @@ export default
             "checkForSprint": false,
             "checkForJump": true,
             "punishment": "kick",
-            "minVlbeforePunishment": 3
+            "minVlbeforePunishment": 3,
+            "AP": 3
         },  
         "speedC": {
             "enabled": false,
@@ -725,21 +775,24 @@ export default
             "max_bps_h": 8,
             "max_bps_v": 36.2,
             "punishment": "kick",
-            "minVlbeforePunishment":3
+            "minVlbeforePunishment": 3,
+            "AP": 3
         },
         "speedD": {
             "enabled": true,
             "description": "Checks for B-Hop cheats",
             "punishment": "kick",
-            "minVlbeforePunishment": 20
+            "minVlbeforePunishment": 20,
+            "AP": 3
         },
         "speedE": {
             "enabled":true,
-            "description": "Checks for high bpt (Blocks per tick) over a while",
+            "description": "Checks for high bpt (Blocks per tick) over a while (Also flags timer cheats)",
             "bpt": 0.271,
             "maxPredict": 9.50,
             "punishment": "kick",
-            "minVlbeforePunishment": 40
+            "minVlbeforePunishment": 40,
+            "AP": 3
         },
         "flyA": {
             "enabled": true,
@@ -748,28 +801,32 @@ export default
             "diff": 0.1,
             "speed": 2.45,
             "punishmentLength": "3d",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 10,
+            "AP": 2
         },    
         "flyB": {
             "enabled": true,
             "description": "Checks for a player not going into the predicted location (y)",
             "punishment": "kick",
             "punishmentLength": "5m",
-            "minVlbeforePunishment": 30
+            "minVlbeforePunishment": 30,
+            "AP": 3
         },
         "flyC": {
             "enabled": true,
             "description": "Checks for groundspoof (BETA)",
             "punishment": "none",
             "punishmentLength": "1m",
-            "minVlbeforePunishment": 50
+            "minVlbeforePunishment": 50,
+            "AP": 3
         }, 
         "flyD": {
             "enabled": false,
             "dist": 1.45,
             "description": "Checks for non BDS based fly (Only use if ur server doesnt use BDS Prediction - Not a realm)",
             "punishment": "none",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 10,
+            "AP": 3
         },
         "motionA": {
             "enabled": true,
@@ -777,28 +834,32 @@ export default
             "description": "Checks for really high speed",
             "punishment": "ban",
             "punishmentLength": "1h",
-            "minVlbeforePunishment": 1
+            "minVlbeforePunishment": 1,
+            "AP": 3
         },
         "motionB": {
             "enabled": true,
             "description": "Checks for really high Y velocity",
             "height": -1.11,
             "punishment": "kick",
-            "minVlbeforePunishment": 100
+            "minVlbeforePunishment": 100,
+            "AP": 3
         },
         "motionC": {
             "enabled": true,
             "description": "Checks for failing BDS Prediction (strafe)",
             "min_velocity": 2.5,
             "punishment": "kick",
-            "minVlbeforePunishment": 15
+            "minVlbeforePunishment": 15,
+            "AP": 3
         },
         "strafeA": {
             "enabled": true,
             "description": "Checks for strafing mid-air",
             "diff": 0.3,
             "punishment": "none",
-            "minVlbeforePunishment": 10
+            "minVlbeforePunishment": 10,
+            "AP": 3
         },
         /*
         World Checks - Checks for breaking and placing blocks.
@@ -808,41 +869,47 @@ export default
             "description":"Checks for breaking too many blocks in a tick",
             "maxBlocks": 3,
             "punishment": "none",
-            "minVlbeforePunishment": 0
+            "minVlbeforePunishment": 0,
+            "AP": 3
         },
         "nukerB": {
             "enabled": true,
             "description":"Checks for breaking a bed that is behind you",
             "angle": 90,
             "punishment": "kick",
-            "minVlbeforePunishment": 0
+            "minVlbeforePunishment": 0,
+            "AP": 3
         },
         "nukerC": {
             "enabled": true,
             "description":"Checks for breaking a bed that is surrounded by blocks",
             "punishment": "kick",
             "score": -1,
-            "minVlbeforePunishment": 1
+            "minVlbeforePunishment": 1,
+            "AP": 3
         },
         "nukerD": {
             "enabled": true,
             "description":"Checks for regen cheats (Hive style)",
             "punishment": "kick",
-            "minVlbeforePunishment": 3
+            "minVlbeforePunishment": 3,
+            "AP": 3
         },
         "scaffoldA": {
             "enabled": true,
             "nofalse": false,
             "description": "Checks for scaffold rotation (mainly while diag scaffolding)",
             "punishment": "kick",
-            "minVlbeforePunishment": 15
+            "minVlbeforePunishment": 15,
+            "AP": 2
         },
         "scaffoldB": {
             "enabled": true,
             "description": "Checks for common Pitch angles that scaffold cheats can use.",
             "punishment": "ban",
             "punishmentLength": "30m",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 3
         },
         "scaffoldC": {
             "enabled": true,
@@ -850,27 +917,31 @@ export default
             "punishment": "kick", 
             "buffer": 18,
             "reset": 2,
-            "minVlbeforePunishment": 20
+            "minVlbeforePunishment": 20,
+            "AP": 2
         },
         "scaffoldD": {
             "enabled": true,
             "description":"Checks for a pattern in pitch and yaw angles",
             "punishment": "kick",
-            "minVlbeforePunishment": 20
+            "minVlbeforePunishment": 20,
+            "AP": 2
         },
         "scaffoldE": {
             "enabled": true,
             "description": "Checks for going too fast while placing",
             "speed": 2.82,
             "punishment": "kick",
-            "minVlbeforePunishment": 1
+            "minVlbeforePunishment": 1,
+            "AP": 2
         },
         "scaffoldF": {
             "enabled": true,
             "description":"Checks for placing too many blocks in 20 ticks",
             "blocksPerSecond": 7,
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 2
         },
         "instabreakA": {
             "enabled": true,
@@ -894,49 +965,56 @@ export default
             "description": "Checks for towering up with a x rotation of 90",
             "undoPlace": false,
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 2
         },
         "towerB": {
             "enabled": true,
             "description": "Checks for high velocity when towering upwards",
             "velocity": 1,
             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "minVlbeforePunishment": 5,
+            "AP": 2
         },
         "reachC": {
             "enabled": false,
             "description": "Checks for placing or breaking to far away",
             "reach": 7.55,
             "punishment": "kick",
-            "minVlbeforePunishment": 2
+            "minVlbeforePunishment": 2,
+            "AP": 1
         },
         "totalA": {
             "enabled": true,
             "description": "Checks for too many combat violations in 1 second",
             "max": 6,
             "punishment": "kick",
-            "minVlbeforePunishment": 0
+            "minVlbeforePunishment": 0,
+            "AP": 3
         },
         "totalB": {
             "enabled": true,
             "description": "Checks for too many movement violations in 1 second",
             "max": 6,
             "punishment": "kick",
-            "minVlbeforePunishment": 0
+            "minVlbeforePunishment": 0,
+            "AP": 3
         },      
         "totalC": {
             "enabled": true,
             "description": "Checks for too many packet violations in 1 second",
             "max": 6,
             "punishment": "kick",
-            "minVlbeforePunishment": 0
+            "minVlbeforePunishment": 0,
+            "AP": 3
         }, 
         "totalD": {
             "enabled": true,
             "description": "Checks for too many place/break violations in 1 second",
             "max": 6,
             "punishment": "kick",
-            "minVlbeforePunishment": 0
+            "minVlbeforePunishment": 0,
+            "AP": 3
         }, 
         "commandblockexploitG": {
             "enabled": true,
@@ -956,7 +1034,8 @@ export default
                 "minecraft:dispenser"
             ],
             "punishment": "kick",
-            "minVlbeforePunishment": 0
+            "minVlbeforePunishment": 0,
+            "AP": 3
         },
 
         "commandblockexploitH": {
