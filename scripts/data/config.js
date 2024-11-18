@@ -532,7 +532,7 @@ export default
             "AP": 1
         },
         "aimC": {
-            "enabled": true,
+            "enabled": false,
             "description": "Checks for head snaps",
             "buffer": 10,
             "small": 1.5,
@@ -581,7 +581,7 @@ export default
             "AP": 1
         },
         "aimH": {
-            "enabled": true,
+            "enabled": false,
             "description": "Checks for Identical Aim",
             "needHit": true,
             "punishment": "kick",
@@ -589,8 +589,8 @@ export default
             "AP": 1
         },
         "aimI": {
-            "enabled": true,
-            "description": "Checks for Identical Aim",
+            "enabled": false,
+            "description": "Checks for Identical Aim (DO NOT ENABLE)",
             "needHit": true,
             "punishment": "kick",
             "minVlbeforePunishment": 5,
