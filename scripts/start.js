@@ -2,6 +2,7 @@
 // Used to setup Isolate
 import config from "./data/config.js";
 import { world } from "@minecraft/server";
+import { configAdder } from "./temp.js";
 
 
 // Code from scythe
@@ -55,6 +56,8 @@ if(config.configID !== "a1c") {
 		punishment: "kick",
 		minVlbeforePunishment: 5
 	}
+
+	config = configAdder(config);
 	
 	console.warn("[Isolate] >> Updated Config Correctly");
 }
