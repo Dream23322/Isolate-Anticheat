@@ -2,6 +2,7 @@ import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { arrayToList, getAverage, getgcd, getGcdFloat, getOutliersInt, getStandardDeviationV2 } from "../../../utils/mathUtil.js";
 import { fastAbs } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 const dataYaw = new Map();
 const dataPitch = new Map();

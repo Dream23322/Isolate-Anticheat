@@ -1,6 +1,7 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { fastAbs, fastHypot, fastPow, fastRound, fastSqrt } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function killaura_a(player, entity) {
     if(!allowedPlatform(player, config.modules.killauraA.AP)) return;

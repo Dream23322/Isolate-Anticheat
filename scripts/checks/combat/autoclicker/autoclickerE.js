@@ -2,6 +2,7 @@ import { flag, setScore, getScore } from "../../../util";
 import config from "../../../data/config.js";
 import { arrayToList, countDuplicates, findNearDuplicates, getAverage, getAverageDifference, getOutliersInt, isNearPerfectWave, isWavePattern } from "../../../utils/mathUtil.js";
 import { fastAbs } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 const data = new Map();
 export function autoclicker_e(player) {
     if(!allowedPlatform(player, config.modules.autoclickerE.AP)) return;

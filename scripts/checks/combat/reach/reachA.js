@@ -2,6 +2,8 @@ import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { getBlocksBetween, getDistanceY, getSpeed } from "../../../utils/mathUtil.js";
 import { fastPow, fastSqrt } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
+
 export function reach_a(player, entity) {
 	if(!allowedPlatform(player, config.modules.reachA.AP)) return;
 	if(config.modules.reachA.enabled) {

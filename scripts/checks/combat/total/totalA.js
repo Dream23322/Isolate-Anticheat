@@ -1,5 +1,6 @@
 import { flag, getScore } from "../../../util";
 import config from "../../../data/config.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 const data = new Map();
 export function total_a(player) {

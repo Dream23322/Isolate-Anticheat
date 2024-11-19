@@ -2,6 +2,7 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getAverageDifference, getDistanceXZ, getSpeed } from "../../../utils/mathUtil.js";
 import { fastAbs, fastHypot } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 // Thank you Visual1mpact for helping me with the Map's
 // Initialize scaffold_a_map if not present

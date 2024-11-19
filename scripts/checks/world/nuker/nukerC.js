@@ -1,6 +1,8 @@
 import { flag } from "../../../util.js";
 import config from "../../../data/config.js";
 import { getBlocksBetween } from "../../../utils/mathUtil.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
+
 /*
 Original Code from 4urxra
 Recode (cleaner) from VIsual1mpact

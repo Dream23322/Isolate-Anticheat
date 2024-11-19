@@ -3,6 +3,7 @@ import { flag } from "../../../util.js";
 import config from "../../../data/config.js";
 import { angleCalc } from "../../../utils/mathUtil.js";
 import { fastPow, fastSqrt } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function nuker_b(player, block, brokenBlockId) {
     if(!allowedPlatform(player, config.modules.nukerB.AP)) return;

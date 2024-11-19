@@ -3,6 +3,7 @@ import config from "../../../data/config.js";
 import { arrayToList, countDuplicates, countRoundedValues, findNearDuplicates, getAverage, getOutliersInt, isNearPerfectWave } from "../../../utils/mathUtil.js";
 import { fastAbs, fastRound } from "../../../utils/fastMath.js";
 import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw } from "./aimData.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 const data = new Map();
 const dataYaw = new Map();

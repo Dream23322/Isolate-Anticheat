@@ -2,6 +2,8 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { arrayToList } from "../../../utils/mathUtil.js";
 import { countTrue } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
+
 const data = new Map();
 export function killaura_e(player) {
     if(!allowedPlatform(player, config.modules.killauraE.AP)) return;

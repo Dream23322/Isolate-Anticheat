@@ -1,5 +1,7 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
+
 const lastCPS = new Map();
 export function autoclicker_a(player) {
     if(!allowedPlatform(player, config.modules.autoclickerA.AP)) return;

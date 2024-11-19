@@ -1,6 +1,8 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getScore } from "../../../util";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
+
 export function killaura_b(player, system, entity) {
 	if(!allowedPlatform(player, config.modules.killauraB.AP)) return;
 	/**

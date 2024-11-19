@@ -2,7 +2,7 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { angleCalc, getDistanceXYZ} from "../../../utils/mathUtil.js";
 import { fastAbs } from "../../../utils/fastMath.js";
-
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 const data = new Map();
 export function hitbox_b(player, entity) {

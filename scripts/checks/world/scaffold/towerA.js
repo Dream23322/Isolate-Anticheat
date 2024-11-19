@@ -1,6 +1,7 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { fastFloor } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function tower_a(player, block) {
     if(!allowedPlatform(player, config.modules.towerA.AP)) return;

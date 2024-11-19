@@ -3,6 +3,7 @@ import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { fastAbs } from "../../../utils/fastMath.js";
 import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw, getLastLastDeltaPitch, getLastLastDeltaYaw } from "./aimData.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 const data = new Map();
 /**
  * The aim_c function checks for suspicious aiming patterns in players' rotation data.
