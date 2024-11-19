@@ -1,6 +1,8 @@
 import { flag } from "../../../util";
 import config from "../../../data/config";
 import { fastAbs } from "../../../utils/fastMath";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
+
 const data = new Map();
 
 export function strafe_a(player) {

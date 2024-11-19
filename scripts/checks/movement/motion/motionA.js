@@ -1,6 +1,7 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getSpeed } from "../../../utils/mathUtil.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function motion_a(player) {
     if(!allowedPlatform(player, config.modules.motionA.AP)) return;

@@ -1,5 +1,7 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
+
 const data = new Map();
 export function killaura_c(player, entity, entitiesHit) {
 	if(!allowedPlatform(player, config.modules.killauraC.AP)) return;

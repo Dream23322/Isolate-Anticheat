@@ -1,5 +1,6 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function badpackets_c(player, entity) {
 	if(!allowedPlatform(player, config.modules.badpacketsC.AP)) return;

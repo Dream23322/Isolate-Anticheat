@@ -1,6 +1,8 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { fastAbs, fastRound } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
+
 const data = new Map();
 export function autoclicker_c(player) {
     if(!allowedPlatform(player, config.modules.autoclickerC.AP)) return;

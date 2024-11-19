@@ -1,6 +1,7 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getSpeed } from "../../../utils/mathUtil.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 // Probs gonna recode this
 export function scaffold_e(player) {

@@ -2,6 +2,8 @@ import { flag } from "../../../util";
 import config from "../../../data/config";
 import { hVelocity } from "../../../utils/mathUtil";
 import { fastAbs } from "../../../utils/fastMath";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
+
 const data = new Map();
 export function speed_d(player) {
     if(!allowedPlatform(player, config.modules.speedD.AP)) return;

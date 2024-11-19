@@ -1,6 +1,7 @@
 import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { fastAbs, fastRound } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 const data = new Map();
 

@@ -1,6 +1,8 @@
 import { flag, setScore, getScore } from "../../../util";
 import config from "../../../data/config.js";
 import { getOutliersInt } from "../../../utils/mathUtil.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
+
 const data = new Map();
 export function autoclicker_d(player) {
     if(!allowedPlatform(player, config.modules.autoclickerD.AP)) return;

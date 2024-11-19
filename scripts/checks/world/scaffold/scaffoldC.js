@@ -1,6 +1,7 @@
 import { flag} from "../../../util";
 import config from "../../../data/config.js";
 import { angleCalc, getDistanceXZ } from "../../../utils/mathUtil.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function scaffold_c(player, block) {
     if(!allowedPlatform(player, config.modules.scaffoldC.AP)) return;

@@ -2,6 +2,7 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getSpeed, getBlocksBetween } from "../../../utils/mathUtil.js";
 import { fastAbs } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function noslow_b(player) {
     if(!allowedPlatform(player, config.modules.noslowB.AP)) return;

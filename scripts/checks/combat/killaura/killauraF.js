@@ -2,6 +2,7 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getScore, setScore } from "../../../util";
 import { getSpeed } from "../../../utils/mathUtil.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 const data = new Map();
 export function killaura_f(player, value) {

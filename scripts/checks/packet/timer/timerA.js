@@ -2,9 +2,9 @@ import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { fastAbs, fastHypot } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
+
 const timerData = new Map();
-
-
 /*
 Check made by _ieroo (@yellowworld777)
 Flag Logic made by 4urxra (@Dream23322)

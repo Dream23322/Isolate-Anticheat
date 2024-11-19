@@ -2,6 +2,7 @@ import { flag } from "../../../util.js";
 import config from "../../../data/config.js";
 import { hVelocity } from "../../../utils/mathUtil.js";
 import { fastAbs } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function motion_c(player, lastXZv) {
     if(!allowedPlatform(player, config.modules.motionC.AP)) return;

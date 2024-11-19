@@ -3,6 +3,8 @@ import config from "../../../data/config";
 import { playerTellraw } from "../../../utils/gameUtil";
 import { arrayToList, getAverage } from "../../../utils/mathUtil";
 import { fastAbs } from "../../../utils/fastMath";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
+
 const data = new Map();
 const data2 = new Map();
 export function speed_e(player) {

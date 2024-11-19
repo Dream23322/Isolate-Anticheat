@@ -1,6 +1,8 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { fastAbs } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
+
 const lastCPS = new Map();
 export function autoclicker_b(player) {
     if(!allowedPlatform(player, config.modules.autoclickerB.AP)) return;

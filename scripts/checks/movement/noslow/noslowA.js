@@ -2,6 +2,7 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getSpeed } from "../../../utils/mathUtil.js";
 import { getScore } from "../../../util";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function noslow_a(player) {
     if(!allowedPlatform(player, config.modules.noslowA.AP)) return;

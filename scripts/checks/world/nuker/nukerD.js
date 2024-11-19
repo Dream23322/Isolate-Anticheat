@@ -4,6 +4,8 @@ import config from "../../../data/config.js";
 import { angleCalc, getSpeed, getBlocksBetween } from "../../../utils/mathUtil.js";
 import { add_effect } from "../../../utils/gameUtil.js";
 import { fastPow, fastSqrt } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
+
 export function nuker_d(player, block, brokenBlockId, resetValue) {
     if(!allowedPlatform(player, config.modules.nukerD.AP)) return;
     // Check if the nukerD module is enabled and the broken block is a redstone ore

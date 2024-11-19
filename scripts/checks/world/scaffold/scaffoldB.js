@@ -1,6 +1,7 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { fastAbs, fastHypot } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function scaffold_b(player, block) {
     if(!allowedPlatform(player, config.modules.scaffoldB.AP)) return;

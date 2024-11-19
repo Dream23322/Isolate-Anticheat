@@ -1,6 +1,7 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { hVelocity, getSpeed } from "../../../utils/mathUtil.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function speed_a(player) {
     if(!allowedPlatform(player, config.modules.speedA.AP)) return;

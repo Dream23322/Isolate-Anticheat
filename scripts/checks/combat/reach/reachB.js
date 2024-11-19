@@ -2,6 +2,8 @@ import { flag } from "../../../util.js";
 import config from "../../../data/config.js";
 import { getBlocksBetween, getSpeed } from "../../../utils/mathUtil.js";
 import { fastAbs, fastPow, fastSqrt } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
+
 const data = new Map();
 
 export function reach_b(player, entity) {

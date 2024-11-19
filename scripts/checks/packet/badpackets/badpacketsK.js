@@ -1,5 +1,7 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
+
 /*
 
 BadPackets/K is from Scythe-Anticheat v3.2.0 (meaning the check was added after Isolate was "forked" from scythe)

@@ -2,6 +2,7 @@ import * as Minecraft from "@minecraft/server";
 import { flag, getScore } from "../../../util";
 import config from "../../../data/config.js";
 import { aroundAir } from "../../../utils/gameUtil";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 const data = new Map();
 export function fly_d(player) {

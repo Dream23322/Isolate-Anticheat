@@ -2,6 +2,7 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getSpeed } from "../../../utils/mathUtil.js";
 import { fastAbs } from "../../../utils/fastMath.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function speed_c(player, tick_counter, speedCLog) {
     if(!allowedPlatform(player, config.modules.speedC.AP)) return;

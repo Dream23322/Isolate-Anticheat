@@ -1,7 +1,8 @@
 import config from "../../../data/config.js";
-
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 import { getScore, setScore } from "../../../util";
 import { fastPow, fastSqrt } from "../../../utils/fastMath.js";
+
 export function scaffold_f(player, block) {
     if(!allowedPlatform(player, config.modules.scaffoldF.AP,)) return;
     // Scaffold/F = Place limit check (Amount of blocks placed in a scaffold ish way per 20 ticks)

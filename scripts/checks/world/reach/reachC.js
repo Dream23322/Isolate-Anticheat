@@ -1,6 +1,7 @@
 import { flag } from "../../../util.js";
 import config from "../../../data/config.js";
 import { getDistanceXZ } from "../../../utils/mathUtil.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function reach_c(player, block) {
 	if(!allowedPlatform(player, config.modules.reachC.AP)) return;
