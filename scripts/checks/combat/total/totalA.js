@@ -3,6 +3,7 @@ import config from "../../../data/config.js";
 
 const data = new Map();
 export function total_a(player) {
+    if(!allowedPlatform(player, config.modules.totalA.AP)) return;
     if(config.modules.totalA.enabled) {
         const lastTotal = data.get(player.name) ?? 0;
 

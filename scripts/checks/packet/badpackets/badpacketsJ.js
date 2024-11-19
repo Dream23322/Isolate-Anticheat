@@ -1,5 +1,6 @@
 import config from "../../../data/config.js";
 export function badpackets_j(player) {
+    if(!allowedPlatform(player, config.modules.badpacketsJ.AP)) return;
     if(config.modules.badpacketsJ.enabled && !player.hasTag("op")) {
         const playerDeviceType = player.clientSystemInfo.platformType;
 

@@ -2,6 +2,7 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 
 export function badpackets_f(player) {
+    if(!allowedPlatform(player, config.modules.badpacketsF.AP)) return; 
     const rotation = player.getRotation();
     if(config.modules.badpacketsF.enabled && config.experimental_checks) {
         if(

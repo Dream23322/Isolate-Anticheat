@@ -4,6 +4,7 @@ import { arrayToList } from "../../../utils/mathUtil.js";
 import { countTrue } from "../../../utils/fastMath.js";
 const data = new Map();
 export function killaura_e(player) {
+    if(!allowedPlatform(player, config.modules.killauraE.AP)) return;
     if (!config.modules.killauraE.enabled) return;
 
     const sprint = player.isSprinting;

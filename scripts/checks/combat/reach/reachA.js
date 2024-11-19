@@ -3,6 +3,7 @@ import config from "../../../data/config.js";
 import { getBlocksBetween, getDistanceY, getSpeed } from "../../../utils/mathUtil.js";
 import { fastPow, fastSqrt } from "../../../utils/fastMath.js";
 export function reach_a(player, entity) {
+	if(!allowedPlatform(player, config.modules.reachA.AP)) return;
 	if(config.modules.reachA.enabled) {
 		if(player.hasTag("gmc") || player.hasTag("noreach")) return;
 		setScore(player, "reach_a_reset", getScore(player, "reach_a_reset", 0) + 1);

@@ -3,6 +3,7 @@ import config from "../../../data/config.js";
 import { fastAbs, fastHypot } from "../../../utils/fastMath.js";
 
 export function scaffold_b(player, block) {
+    if(!allowedPlatform(player, config.modules.scaffoldB.AP)) return;
     const rotation = player.getRotation();
     const velocity = player.getVelocity();
 

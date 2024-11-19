@@ -3,6 +3,7 @@ import config from "../../../data/config.js";
 import { fastFloor } from "../../../utils/fastMath.js";
 
 export function tower_a(player, block) {
+    if(!allowedPlatform(player, config.modules.towerA.AP)) return;
     const rotation = player.getRotation()
     // Tower/A = Checks for 90 degree rotation
     if(config.modules.towerA.enabled) {

@@ -7,6 +7,7 @@ const data = new Map();
 const data2 = new Map();
 
 export function tower_b(player, block) {
+    if(!allowedPlatform(player, config.modules.towerB.AP)) return;
     if(config.modules.towerB.enabled) {
         const isPlaceBelow = block.location.y < player.location.y;
 

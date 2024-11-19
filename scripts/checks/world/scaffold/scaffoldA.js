@@ -50,6 +50,8 @@ function isAirBelowAllBlocks(player, one, two, three) {
 }
 
 export function scaffold_a(player, block) {
+    if(!allowedPlatform(player, config.modules.scaffoldA.AP)) return;
+    
     if (config.modules.scaffoldA.enabled && scaffold_a_map.has(player.name) && !player.hasTag("gmc") && !player.hasTag("op")) {
         const place_location = { x: block.location.x, y: block.location.y, z: block.location.z };
         const last_place_location = scaffold_a_map.get(player.name)?.a;

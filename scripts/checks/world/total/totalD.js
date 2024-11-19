@@ -3,6 +3,7 @@ import config from "../../../data/config.js";
 
 const data = new Map();
 export function total_d(player) {
+    if(!allowedPlatform(player, config.modules.totalD.AP)) return;
     if(config.modules.totalD.enabled) {
         const lastTotal = data.get(player.name) ?? 0;
 

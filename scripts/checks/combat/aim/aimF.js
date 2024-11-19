@@ -7,6 +7,7 @@ const data = new Map();
 const yawAccelD = new Map();
 const pitchAccelD = new Map();
 export function aim_f(player) {
+    if(!allowedPlatform(player, config.modules.aimF.AP)) return;
     if(config.modules.aimF.enabled) {
         const rotation = player.getRotation();
         const d = data.get(player.name) || null;

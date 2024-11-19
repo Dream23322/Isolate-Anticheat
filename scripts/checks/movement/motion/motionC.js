@@ -4,6 +4,7 @@ import { hVelocity } from "../../../utils/mathUtil.js";
 import { fastAbs } from "../../../utils/fastMath.js";
 
 export function motion_c(player, lastXZv) {
+    if(!allowedPlatform(player, config.modules.motionC.AP)) return;
     const playerVelocity = player.getVelocity();
     if(config.modules.motionC.enabled && !player.isJumping && !player.hasTag("nostrafe") && !player.hasTag("damaged") && !player.isFlying && !player.hasTag("op") && !player.hasTag("teleport")) {
         if(lastXZv.get(player)) {

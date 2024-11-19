@@ -5,6 +5,7 @@ import { angleCalc, getSpeed, getBlocksBetween } from "../../../utils/mathUtil.j
 import { add_effect } from "../../../utils/gameUtil.js";
 import { fastPow, fastSqrt } from "../../../utils/fastMath.js";
 export function nuker_d(player, block, brokenBlockId, resetValue) {
+    if(!allowedPlatform(player, config.modules.nukerD.AP)) return;
     // Check if the nukerD module is enabled and the broken block is a redstone ore
     if(config.modules.nukerD.enabled && (brokenBlockId === "minecraft:redstone_ore" || brokenBlockId === "minecraft:lit_redstone_ore")) {
         let score = 0; // Initialize the score

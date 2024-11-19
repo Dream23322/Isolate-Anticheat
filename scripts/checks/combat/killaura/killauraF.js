@@ -5,6 +5,7 @@ import { getSpeed } from "../../../utils/mathUtil.js";
 
 const data = new Map();
 export function killaura_f(player, value) {
+    if(!allowedPlatform(player, config.modules.killauraF.AP)) return;
     if(config.modules.killauraF.enabled) {
         // Setup Variables
         const miss = getScore(player, "ka_F_misses", 0);

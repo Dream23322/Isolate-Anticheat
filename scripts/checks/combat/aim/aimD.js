@@ -8,6 +8,7 @@ import { amountDeltaPitch, amountDeltaYaw } from "./aimData.js";
 const data = new Map();
 const datatwo = new Map();
 export function aim_d(player) {
+    if(!allowedPlatform(player, config.modules.aimD.AP)) return;
     if(config.modules.aimD.enabled) {
    
         

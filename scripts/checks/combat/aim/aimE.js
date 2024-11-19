@@ -10,6 +10,7 @@ const dataPitch = new Map();
 const data3 = new Map();
 
 export function aim_e(player) {
+    if(!allowedPlatform(player, config.modules.aimE.AP)) return;
     if(config.modules.aimE.enabled) {
         // If needHit is on, make sure the player has attacked
         if(config.modules.aimE.needHit && !player.hasTag("attacking")) return;

@@ -6,6 +6,7 @@ import { mathOnGround } from "../../../utils/mathUtil.js";
 const data = new Map();
 const data2 = new Map();
 export function fly_c(player) {
+    if(!allowedPlatform(player, config.modules.flyC.AP)) return;
     // Checks for Ground Spoof (BETA)
     if(config.modules.flyC.enabled && getScore(player, "tick_counter2", 0) > 8 && data2.get(player.name) && !player.hasTag("teleport")) {
         if(aroundAir(player) && !player.hasTag("elytra") && !player.isGliding && !player.hasTag("trident")) {
