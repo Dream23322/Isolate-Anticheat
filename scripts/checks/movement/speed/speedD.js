@@ -4,6 +4,7 @@ import { hVelocity } from "../../../utils/mathUtil";
 import { fastAbs } from "../../../utils/fastMath";
 const data = new Map();
 export function speed_d(player) {
+    if(!allowedPlatform(player, config.modules.speedD.AP)) return;
     if(config.modules.speedD.enabled) {
         if(data.get(player.name)) {
             const currentY = fastAbs(player.getVelocity().y);

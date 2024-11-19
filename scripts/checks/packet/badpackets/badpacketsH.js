@@ -2,6 +2,7 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 
 export function badpackets_h(player) {
+    if(!allowedPlatform(player, config.modules.badpacketsH.AP)) return;
     // Permission Spoof, so if someone is flying but doesnt have permission to fly
     if(config.modules.badpacketsH.enabled && player.isFlying && (!player.hasTag("op"))) {
         flag(player, "BadPackets","H", "Permision", "isFlying", "true", true);

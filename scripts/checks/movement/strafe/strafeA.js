@@ -4,6 +4,7 @@ import { fastAbs } from "../../../utils/fastMath";
 const data = new Map();
 
 export function strafe_a(player) {
+    if(!allowedPlatform(player, config.modules.strafeA.AP)) return;
     if(config.modules.strafeA.enabled) {
         const velocity = player.getVelocity();
         if(data.get(player.name)) {

@@ -6,6 +6,8 @@ import { fastAbs } from "../../../utils/fastMath";
 const data = new Map();
 const data2 = new Map();
 export function speed_e(player) {
+    if(!allowedPlatform(player, config.modules.speedE.AP)) return;
+    
     if(config.modules.speedE.enabled) {
         if(data2.get(player.name)) {
             const current_pos = {x: player.location.x, y: player.location.y, z: player.location.z};

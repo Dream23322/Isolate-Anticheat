@@ -3,6 +3,7 @@ import config from "../../../data/config.js";
 import { fastAbs } from "../../../utils/fastMath.js";
 
 export function badpackets_i(player) {
+    if(!allowedPlatform(player, config.modules.badpacketsI.AP)) return;
     const rotation = player.getRotation();
     // Impossible Rotations
     // Having your pitch over 90 isnt possible! Horion client might be able to do it

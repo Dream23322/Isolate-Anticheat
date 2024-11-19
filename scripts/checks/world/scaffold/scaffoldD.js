@@ -7,6 +7,7 @@ const data = new Map();
 const data2 = new Map();
 
 export function scaffold_d(player, block) {
+    if(!allowedPlatform(player, config.modules.scaffoldD.AP)) return;
     if(config.modules.scaffoldD.enabled) {
         const rotation = player.getRotation();
         const d = data.get(player.name) ?? (new Array(5)).fill(0);

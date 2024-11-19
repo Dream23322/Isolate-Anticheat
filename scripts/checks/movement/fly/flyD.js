@@ -5,6 +5,7 @@ import { aroundAir } from "../../../utils/gameUtil";
 
 const data = new Map();
 export function fly_d(player) {
+    if(!allowedPlatform(player, config.modules.flyD.AP)) return;
     if(config.modules.flyD.enabled && !player.hasTag("teleport")) {
         if(
             !player.hasTag("isFlying") && !player.isFlying && !player.isOnGround && !player.isJumping &&

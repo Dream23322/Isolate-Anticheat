@@ -8,6 +8,7 @@ https://github.com/Visual1mpact/
 Then I found false flags in it and made it messy again lmao
 */
 export function nuker_c(player, block, blockBreak, Minecraft) {
+    if(!allowedPlatform(player, config.modules.nukerC.AP)) return;
     if(config.modules.nukerC.enabled) {
         let score = 0;
         // List directions we will be checking

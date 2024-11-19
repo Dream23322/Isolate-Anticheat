@@ -2,6 +2,7 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 const data = new Map();
 export function killaura_c(player, entity, entitiesHit) {
+	if(!allowedPlatform(player, config.modules.killauraC.AP)) return;
 
 	// Multi Aura check
 	if(config.modules.killauraC.enabled && !entitiesHit.includes(entity.id)) {

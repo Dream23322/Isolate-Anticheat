@@ -5,6 +5,7 @@ import { fastAbs, fastRound } from "../../../utils/fastMath.js";
 const data = new Map();
 
 export function aim_h(player) {
+    if(!allowedPlatform(player, config.modules.aimH.AP)) return;
     if(config.modules.aimH.enabled) {
 
         const rot = player.getRotation();

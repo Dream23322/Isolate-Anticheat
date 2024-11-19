@@ -3,6 +3,7 @@ import config from "../../../data/config.js";
 import { getSpeed } from "../../../utils/mathUtil.js";
 
 export function motion_a(player) {
+    if(!allowedPlatform(player, config.modules.motionA.AP)) return;
     const playerSpeed = getSpeed(player);
     if(config.modules.motionA.enabled) {
         if(playerSpeed > config.modules.badpacketsB.speed && playerSpeed < 1000) {

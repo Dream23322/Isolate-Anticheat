@@ -4,6 +4,7 @@ import { getSpeed, getBlocksBetween } from "../../../utils/mathUtil.js";
 import { fastAbs } from "../../../utils/fastMath.js";
 
 export function noslow_b(player) {
+    if(!allowedPlatform(player, config.modules.noslowB.AP)) return;
     const playerSpeed = getSpeed(player);
     const playerVelocity = player.getVelocity();
     // NoSlow/B = Checks for speeding while in webs

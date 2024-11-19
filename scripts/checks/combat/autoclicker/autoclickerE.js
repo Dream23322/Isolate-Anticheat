@@ -4,6 +4,7 @@ import { arrayToList, countDuplicates, findNearDuplicates, getAverage, getAverag
 import { fastAbs } from "../../../utils/fastMath.js";
 const data = new Map();
 export function autoclicker_e(player) {
+    if(!allowedPlatform(player, config.modules.autoclickerE.AP)) return;
     if(config.modules.autoclickerE.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerE.checkCPSAfter) {
 
         player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);

@@ -7,6 +7,7 @@ const dataYaw = new Map();
 const dataPitch = new Map();
 
 export function aim_g(player) {
+    if(!allowedPlatform(player, config.modules.aimG.AP)) return;
     if(config.modules.aimG.enabled) {
         const rot = player.getRotation();
 

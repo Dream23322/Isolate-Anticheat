@@ -2,6 +2,7 @@ import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { angleCalc, getDistanceXYZ } from "../../../utils/mathUtil.js";
 export function hitbox_a(player, entity) {
+    if(!allowedPlatform(player, config.modules.hitboxA.AP)) return;
     // Hitbox/A = Checks for not having the attacked player on your screen
     if(config.modules.hitboxA.enabled && !player.hasTag("nohitbox")) {
         const distance = getDistanceXYZ(player, entity);

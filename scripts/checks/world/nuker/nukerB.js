@@ -5,6 +5,7 @@ import { angleCalc } from "../../../utils/mathUtil.js";
 import { fastPow, fastSqrt } from "../../../utils/fastMath.js";
 
 export function nuker_b(player, block, brokenBlockId) {
+    if(!allowedPlatform(player, config.modules.nukerB.AP)) return;
     if(config.modules.nukerB.enabled) {
         const angle = angleCalc(player, block);
         if(angle > 90) {

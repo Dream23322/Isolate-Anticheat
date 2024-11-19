@@ -5,6 +5,7 @@ import { fastAbs } from "../../../utils/fastMath.js";
 const data = new Map();
 const datatwo = new Map();
 export function killaura_d(player) {
+    if(!allowedPlatform(player, config.modules.killauraD.AP)) return;
     if(config.modules.killauraD.enabled) {
         const rot = player.getRotation();
         const pitch = rot.x;

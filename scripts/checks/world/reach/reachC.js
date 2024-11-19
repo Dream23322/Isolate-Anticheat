@@ -3,6 +3,7 @@ import config from "../../../data/config.js";
 import { getDistanceXZ } from "../../../utils/mathUtil.js";
 
 export function reach_c(player, block) {
+	if(!allowedPlatform(player, config.modules.reachC.AP)) return;
 	if(config.modules.reachC.enabled) {
 		const distance = getDistanceXZ(player, block);
 		if(distance > getMax(player, block) && !player.hasTag("op") && !player.hasTag("gmc")) {

@@ -4,6 +4,7 @@ import { getSpeed } from "../../../utils/mathUtil.js";
 import { fastAbs } from "../../../utils/fastMath.js";
 
 export function speed_c(player, tick_counter, speedCLog) {
+    if(!allowedPlatform(player, config.modules.speedC.AP)) return;
     const playerSpeed = getSpeed(player);
     // Check if Speed/C is enabled in the config and that it has run at least once
     if(config.modules.speedC.enabled && speedCLog.get(player) && !player.hasTag("elytra") && !player.hasTag("ender_pearl") && !player.hasTag("teleport")) {

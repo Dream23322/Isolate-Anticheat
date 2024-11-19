@@ -5,6 +5,7 @@ import { fastAbs, fastPow, fastSqrt } from "../../../utils/fastMath.js";
 const data = new Map();
 
 export function reach_b(player, entity) {
+	if(!allowedPlatform(player, config.modules.reachB.AP)) return;
 	if(config.modules.reachB.enabled) {
 		if(player.hasTag("gmc") || config.modules.reachB.entities_blacklist.includes(entity.typeId)) return;
 		let xz_distance = fastSqrt(fastPow(entity.location.x - player.location.x, 2) + fastPow(entity.location.z - player.location.z, 2));

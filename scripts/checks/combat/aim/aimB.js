@@ -4,6 +4,7 @@ import { getAbsoluteGcd } from "../../../utils/mathUtil.js";
 import { fastAbs, fastFloor } from "../../../utils/fastMath.js";
 import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw } from "./aimData.js";
 export function aim_b(player) {
+    if(!allowedPlatform(player, config.modules.aimB.AP)) return;
     if(config.modules.aimB.enabled) {
         // Define constants
         const deltaPitch = getDeltaPitch(player);

@@ -672,7 +672,7 @@ export default
             "punishment": "kick",
             "punishmentLength": "3m",
             "minVlbeforePunishment": 5,
-            "AP": 3
+            "AP": 2
         },
         "killauraD": {
             "enabled": false,

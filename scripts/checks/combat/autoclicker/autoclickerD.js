@@ -3,6 +3,7 @@ import config from "../../../data/config.js";
 import { getOutliersInt } from "../../../utils/mathUtil.js";
 const data = new Map();
 export function autoclicker_d(player) {
+    if(!allowedPlatform(player, config.modules.autoclickerD.AP)) return;
     if(config.modules.autoclickerD.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerD.checkCPSAfter) {
         player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
         if(data.get(player.name)) {

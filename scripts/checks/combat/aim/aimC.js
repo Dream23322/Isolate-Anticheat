@@ -13,6 +13,7 @@ const data = new Map();
  * @param {Minecraft.Player} player - The player object to check.
  */
 export function aim_c(player) {
+    if(!allowedPlatform(player, config.modules.aimC.AP)) return;
     // Only run if the Aim C module is enabled
     if(config.modules.aimC.enabled) {
         // Get the player's current rotation

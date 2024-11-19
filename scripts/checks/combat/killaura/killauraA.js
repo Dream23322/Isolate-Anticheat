@@ -3,6 +3,7 @@ import config from "../../../data/config.js";
 import { fastAbs, fastHypot, fastPow, fastRound, fastSqrt } from "../../../utils/fastMath.js";
 
 export function killaura_a(player, entity) {
+    if(!allowedPlatform(player, config.modules.killauraA.AP)) return;
     if(config.modules.killauraA.enabled) {
         const playerVelocity = player.getVelocity();
         const rot = player.getRotation();

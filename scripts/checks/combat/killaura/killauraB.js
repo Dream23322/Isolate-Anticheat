@@ -2,6 +2,7 @@ import { flag } from "../../../util";
 import config from "../../../data/config.js";
 import { getScore } from "../../../util";
 export function killaura_b(player, system, entity) {
+	if(!allowedPlatform(player, config.modules.killauraB.AP)) return;
 	/**
 	 * Killaura/B = Checks for invalid hits
 	 */

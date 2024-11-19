@@ -3,6 +3,7 @@ import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { fastAbs } from "../../../utils/fastMath.js";
 import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw } from "./aimData.js";
+import { allowedPlatform } from "../../../utils/platformUtils.js";
 const data = new Map();
 /**
  * Aim A check.
@@ -11,7 +12,7 @@ const data = new Map();
  * @param {Minecraft.Player} player - The player to check.
  */
 export function aim_a(player) {
-    const rot = player.getRotation();
+    if(!allowedPlatform(player, config.modules.aimA.AP)) return;
     // Only run if the Aim A module is enabled and the player's data is available
     if(config.modules.aimA.enabled) {
         // Only run if the player's pitch and yaw data is available

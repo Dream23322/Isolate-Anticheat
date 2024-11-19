@@ -4,6 +4,7 @@ import { getSpeed } from "../../../utils/mathUtil.js";
 import { fastAbs } from "../../../utils/fastMath.js";
 
 export function speed_b(player) {
+  if(!allowedPlatform(player, config.modules.speedB.AP)) return;
     const speed = getSpeed(player);
     const velocity = player.getVelocity();
 

@@ -10,6 +10,7 @@ Check made by _ieroo (@yellowworld777)
 Flag Logic made by 4urxra (@Dream23322)
 */
 export function timer_a(player, lastPosition, Value){
+    if(!allowedPlatform(player, config.modules.timerA.AP)) return;
     if(player.lastPosition && config.modules.timerA.enabled && (!config.modules.timerA.safe.placing || !player.hasTag("placing")) && !player.hasTag("op") && !player.hasTag("gmc")) {
         const velocity = player.getVelocity();
         const calcVelocity = {x: player.location.x - lastPosition.x, y:player.location.y - lastPosition.y, z: player.location.z - lastPosition.z};

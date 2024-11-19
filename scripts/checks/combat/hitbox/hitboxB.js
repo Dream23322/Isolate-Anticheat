@@ -6,6 +6,7 @@ import { fastAbs } from "../../../utils/fastMath.js";
 
 const data = new Map();
 export function hitbox_b(player, entity) {
+    
     const platformType = player.clientSystemInfo.platformType;
     if(
         config.modules.hitboxB.enabled &&

@@ -3,6 +3,7 @@ import config from "../../../data/config.js";
 import { fastAbs } from "../../../utils/fastMath.js";
 const lastCPS = new Map();
 export function autoclicker_b(player) {
+    if(!allowedPlatform(player, config.modules.autoclickerB.AP)) return;
     if(config.modules.autoclickerB.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerB.checkCPSAfter) {
         player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
         if(lastCPS.get(player.name)) {
