@@ -533,8 +533,8 @@ export default
         },
         "aimC": {
             "enabled": false,
-            "description": "Checks for head snaps",
-            "buffer": 20,
+            "description": "Checks for minimum mouse sensitivity GCD",
+            "buffer": 10,
             "small": 1.5,
             "big": 50,
             "needHit": false,
@@ -553,7 +553,7 @@ export default
         },
         "aimE": {
             "enabled": true,
-            "description": "Checks for irregular movements in the rotation",
+            "description": "Aim kurtosis check",
             "needHit": true,
             "duplicates": 35,
             "dataSize": 50,

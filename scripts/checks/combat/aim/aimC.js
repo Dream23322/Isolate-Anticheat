@@ -2,8 +2,9 @@ import * as Minecraft from "@minecraft/server";
 import { flag, getScore, setScore } from "../../../util";
 import config from "../../../data/config.js";
 import { fastAbs } from "../../../utils/fastMath.js";
-import { getDeltaPitch, getDeltaYaw } from "./aimData.js";
+import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw } from "./aimData.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
+import { EXPANDER, getgcd } from "../../../utils/mathUtil.js";
 
 export function aim_c(player) {
     if(config.modules.aimC.enabled) {
@@ -11,14 +12,20 @@ export function aim_c(player) {
         if(!allowedPlatform(player, config.modules.aimC.AP)) return;
 
         // Variables
-        const rot = player.getRotation();
         let bufferVal = getScore(player, "aim_c_buffer", 0);
+
+
         const deltaPitch = getDeltaPitch(player);
-        const deltaYaw = getDeltaYaw(player);
+
+        const lastDeltaPitch = getLastDeltaPitch(player);
+
+
+        if(deltaPitch < 1.0) return false;
+        const divisorPitch = getgcd((deltaPitch * EXPANDER), (lastDeltaPitch * EXPANDER));
 
         // Test rotation
         if(
-            !testRotation(rot, deltaPitch, deltaYaw)
+            gcd < 131072 &&
             (player.hasTag("attacking") || !config.modules.aimC.needHit)
         ) {
             // Increment the buffer score for the player
@@ -30,16 +37,9 @@ export function aim_c(player) {
         // Check if the buffer score exceeds the threshold for the Aim C module
         if(bufferVal > config.modules.aimC.buffer) {
             // Flag the player with the Aim C module and the rotation data
-            flag(player, "Aim", "C", "Combat (BETA)", "Accel", `${deltaYaw},${deltaPitch}`, false);
+            flag(player, "Aim", "C", "Combat (BETA)", "gcd", `${gcd}`, false);
             // Reset the buffer score for the player
             setScore(player, "aim_c_buffer", 0);
         }
     }
-}
-
-function testRotation(rot, deltaPitch, deltaYaw) {
-    const pitchTest = deltaPitch && (deltaYaw > 3.0 && deltaYaw < 35.0);
-    const yawTest = deltaYaw && (deltaPitch > 3.0 && deltaPitch < 35.0);
-    const exempt = player.hasTag("riding");
-    return !exempt && (pitchTest || yawTest) && fastAbs(rot.x) < 89;
 }

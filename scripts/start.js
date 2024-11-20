@@ -57,7 +57,15 @@ if(config.configID !== "a1c") {
 		minVlbeforePunishment: 5
 	}
 
-	config = configAdder(config);
+	// // Add .AL = 3 to all modules
+	// for(const item of Object.keys(config.modules)) {
+	// 	if(typeof config.modules[item] === "object") {
+	// 		config.modules[item] = config.modules[item].AL = 3;
+	// 	}
+	// }
+	
+	
+	world.setDynamicProperty("config", JSON.stringify(config));
 	
 	console.warn("[Isolate] >> Updated Config Correctly");
 }

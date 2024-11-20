@@ -404,6 +404,10 @@ Minecraft.system.runInterval(() => {
 		if(player.hasTag("teleport") && Date.now() - tp_data.get(player.name) >= 4000) {
 			player.removeTag("teleport");
 		}
+		if(player.hasTag("isolate_em_reset_config")) {
+			player.removeTag("isolate_em_reset_config");
+			world.setDynamicProperty("config", undefined);
+		}
 
 
 		autoclicker_a(player);
