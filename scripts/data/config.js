@@ -534,7 +534,7 @@ export default
         "aimC": {
             "enabled": false,
             "description": "Checks for head snaps",
-            "buffer": 10,
+            "buffer": 20,
             "small": 1.5,
             "big": 50,
             "needHit": false,

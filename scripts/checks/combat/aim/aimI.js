@@ -9,6 +9,7 @@ const dataPitch = new Map();
 const dataYaw = new Map();
 
 export function aim_i(player) {
+    return;
     if(!allowedPlatform(player, config.modules.aimI.AP)) return;
     if(!config.modules.aimI.enabled || !player.hasTag("attacking") && config.modules.aimI.needHit) return;
 
