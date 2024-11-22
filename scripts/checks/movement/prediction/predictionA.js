@@ -39,6 +39,7 @@ export function prediction_a(player) {
             positionData.last4.y !== 0 &&
             positionData.last4.z !== 0
         ) {
+            let max_deviation = config.modules.predictionA.deviation;
             let pass = false;
             const lastPositions = [
                 { x: player.location.x, y: player.location.y, z: player.location.z },
@@ -65,7 +66,7 @@ export function prediction_a(player) {
             const predictedY = lastPositions[0].y + avgVelY;
             const predictedZ = lastPositions[0].z + avgVelZ;
 
-            const deviation = fastSqrt(
+            const deviation = Math.sqrt(
                 fastPow(player.location.x - predictedX, 2) +
                 fastPow(player.location.y - predictedY, 2) +
                 fastPow(player.location.z - predictedZ, 2)
@@ -83,8 +84,11 @@ export function prediction_a(player) {
             const badEffects = ["speed", "jump_boost", "slowness", "slow_falling", "levitation", "wind_charged"];
             for (const effect of badEffects) if (player.getEffect(effect)) pass = true;
 
+            if(player.hasTag("attacking")) max_deviation += 0.2;
+            if(player.hasTag("jump")) max_deviation += 0.1;
+
             if (fastAbs(player.location.y - predictedY) < 0.2) {
-                if (deviation > config.modules.predictionA.deviation && !pass) {
+                if (deviation > max_deviation && !pass) {
                     flag(player, "Prediction", "A", "Movement", "deviation", deviation, true);
                 }
             } else {
