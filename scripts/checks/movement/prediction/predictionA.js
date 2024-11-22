@@ -1,6 +1,6 @@
 import { flag } from "../../../util";
 import config from "../../../data/config.js";
-import { fastPow } from "../../../utils/fastMath.js";
+import { fastAbs, fastPow, fastSqrt } from "../../../utils/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import { isAcceleratingUpwards, isLowYVelocity, isYVelocityNormal } from "./assist/gravityPrediction.js";
 const data = new Map();
@@ -45,13 +45,13 @@ export function prediction_a(player) {
             const predictedY = lastPositions[0].y + avgVelY;
             const predictedZ = lastPositions[0].z + avgVelZ;
 
-            const deviation = Math.sqrt(
+            const deviation = fastSqrt(
                 fastPow(player.location.x - predictedX, 2) +
                 fastPow(player.location.y - predictedY, 2) +
                 fastPow(player.location.z - predictedZ, 2)
             );  
 
-            if (Math.abs(player.location.y - predictedY) < 0.2) { 
+            if (fastAbs(player.location.y - predictedY) < 0.2) { 
                 if (deviation > config.modules.predictionA.deviation) {
                     flag(player, "Prediction", "A", "Movement", "deviation", deviation, true);
                 }
