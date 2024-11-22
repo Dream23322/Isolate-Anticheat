@@ -46,7 +46,7 @@ export function isYVelocityNormal(player, lastPositions) {
     const latestDeltaY = lastPositions[0].y - lastPositions[1].y;
     const expectedDeltaY = velocities[0].deltaY + GRAVITY_ACCEL;
     const deviation = fastAbs(latestDeltaY - expectedDeltaY);
-    console.warn(`Latest Y Delta: ${latestDeltaY.toFixed(3)}, Expected: ${expectedDeltaY.toFixed(3)}, Deviation: ${deviation.toFixed(3)}`);
+    //console.warn(`Latest Y Delta: ${latestDeltaY.toFixed(3)}, Expected: ${expectedDeltaY.toFixed(3)}, Deviation: ${deviation.toFixed(3)}`);
     const DEVIATION_THRESHOLD = 0.1;
     const validY = deviation < DEVIATION_THRESHOLD;
 
