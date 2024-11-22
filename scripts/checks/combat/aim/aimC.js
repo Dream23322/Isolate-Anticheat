@@ -21,7 +21,7 @@ export function aim_c(player) {
 
 
         if(deltaPitch < 1.0) return false;
-        const divisorPitch = getgcd((deltaPitch * EXPANDER), (lastDeltaPitch * EXPANDER));
+        const gcd = getgcd((deltaPitch * EXPANDER), (lastDeltaPitch * EXPANDER));
 
         // Test rotation
         if(
