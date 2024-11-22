@@ -54,7 +54,17 @@ if(config.configID !== "a1c") {
 		description: "Checks for Identical Aim",
 		needHit: true,
 		punishment: "kick",
-		minVlbeforePunishment: 5
+		minVlbeforePunishment: 5,
+		AP: 1
+	}
+
+	config.modules.predictionA = {
+		enabled: true,
+		description: "Prediction Check",
+		deviation: 0.5,
+		punishment: "kick",
+		minVlbeforePunishment: 10,
+		AP: 3
 	}
 
 	// // Add .AL = 3 to all modules
