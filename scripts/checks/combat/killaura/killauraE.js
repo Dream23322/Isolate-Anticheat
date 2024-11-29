@@ -1,7 +1,7 @@
-import { flag } from "../../../util";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { arrayToList } from "../../../utils/mathUtil.js";
-import { countTrue } from "../../../utils/fastMath.js";
+import { arrayToList } from "../../../utils/maths/mathUtil.js";
+import { countTrue } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 const data = new Map();

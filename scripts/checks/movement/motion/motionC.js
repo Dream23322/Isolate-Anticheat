@@ -1,7 +1,7 @@
-import { flag } from "../../../util.js";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { hVelocity } from "../../../utils/mathUtil.js";
-import { fastAbs } from "../../../utils/fastMath.js";
+import { hVelocity } from "../../../utils/maths/mathUtil.js";
+import { fastAbs } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function motion_c(player, lastXZv) {

@@ -1,6 +1,7 @@
-import { flag, setScore, getScore } from "../../../util";
+import { setScore, getScore } from "../../../util";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { getOutliersInt } from "../../../utils/mathUtil.js";
+import { getOutliersInt } from "../../../utils/maths/mathUtil.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 const data = new Map();

@@ -1,5 +1,5 @@
-import { fastAbs } from "../fastMath";
-import { getSpeed } from "../mathUtil";
+import { fastAbs } from "../maths/fastMath";
+import { getSpeed } from "../maths/mathUtil";
 
 const data = new Map();
 export function teleportCheck(player) {

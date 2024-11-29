@@ -5,7 +5,7 @@ import config from "../data/config.js";
 import data from "../data/data.js";
 import { parseTime, capitalizeFirstLetter } from "../util.js";
 import { addOp, removeOp } from "../commands/moderation/op.js";
-import { fastFloor } from "../utils/fastMath.js";
+import { fastFloor } from "../utils/maths/fastMath.js";
 
 const world = Minecraft.world;
 

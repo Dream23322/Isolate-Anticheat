@@ -1,6 +1,6 @@
-import { flag } from "../../../util";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { fastAbs } from "../../../utils/fastMath.js";
+import { fastAbs } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function badpackets_i(player) {

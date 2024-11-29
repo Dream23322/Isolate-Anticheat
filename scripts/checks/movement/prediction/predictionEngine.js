@@ -1,6 +1,6 @@
-import { flag } from "../../../util.js";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { fastAbs, fastPow, fastSqrt } from "../../../utils/fastMath.js";
+import { fastAbs, fastPow, fastSqrt } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import { gravityCheck } from "./assist/gravityPrediction.js";
 import { aroundAir } from "../../../utils/gameUtil.js";

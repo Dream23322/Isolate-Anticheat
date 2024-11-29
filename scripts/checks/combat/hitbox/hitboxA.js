@@ -1,6 +1,7 @@
-import { flag, getScore, setScore } from "../../../util";
+import { getScore, setScore } from "../../../util";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { angleCalc, getDistanceXYZ } from "../../../utils/mathUtil.js";
+import { angleCalc, getDistanceXYZ } from "../../../utils/maths/mathUtil.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 export function hitbox_a(player, entity) {
     if(!allowedPlatform(player, config.modules.hitboxA.AP)) return;

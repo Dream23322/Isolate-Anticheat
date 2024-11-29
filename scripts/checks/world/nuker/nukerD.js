@@ -1,9 +1,9 @@
 import * as Minecraft from "@minecraft/server";
-import { flag } from "../../../util.js";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { angleCalc, getSpeed, getBlocksBetween } from "../../../utils/mathUtil.js";
+import { angleCalc, getSpeed, getBlocksBetween } from "../../../utils/maths/mathUtil.js";
 import { add_effect } from "../../../utils/gameUtil.js";
-import { fastPow, fastSqrt } from "../../../utils/fastMath.js";
+import { fastPow, fastSqrt } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function nuker_d(player, block, brokenBlockId, resetValue) {

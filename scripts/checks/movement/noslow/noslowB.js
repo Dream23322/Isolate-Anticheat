@@ -1,7 +1,7 @@
-import { flag } from "../../../util";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { getSpeed, getBlocksBetween } from "../../../utils/mathUtil.js";
-import { fastAbs } from "../../../utils/fastMath.js";
+import { getSpeed, getBlocksBetween } from "../../../utils/maths/mathUtil.js";
+import { fastAbs } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function noslow_b(player) {

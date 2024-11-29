@@ -1,5 +1,5 @@
-import { fastAbs } from "../../../utils/fastMath";
-import { arrayToList } from "../../../utils/mathUtil";
+import { fastAbs } from "../../../utils/maths/fastMath";
+import { arrayToList } from "../../../utils/maths/mathUtil";
 
 const pitchPositions = new Map();
 const yawPositions = new Map();

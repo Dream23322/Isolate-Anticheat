@@ -1,6 +1,6 @@
-import { flag } from "../../../util.js";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { getBlocksBetween } from "../../../utils/mathUtil.js";
+import { getBlocksBetween } from "../../../utils/maths/mathUtil.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 /*

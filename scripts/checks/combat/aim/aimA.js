@@ -1,7 +1,8 @@
 import * as Minecraft from "@minecraft/server";
-import { flag, getScore, setScore } from "../../../util";
+import { getScore, setScore } from "../../../util";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { fastAbs } from "../../../utils/fastMath.js";
+import { fastAbs } from "../../../utils/maths/fastMath.js";
 import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw } from "./aimData.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 const data = new Map();

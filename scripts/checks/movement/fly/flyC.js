@@ -1,8 +1,9 @@
-import { flag, getScore } from "../../../util";
+import { getScore } from "../../../util";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { aroundAir } from "../../../utils/gameUtil.js";
-import { fastAbs } from "../../../utils/fastMath.js";
-import { mathOnGround } from "../../../utils/mathUtil.js";
+import { fastAbs } from "../../../utils/maths/fastMath.js";
+import { mathOnGround } from "../../../utils/maths/mathUtil.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 const data = new Map();

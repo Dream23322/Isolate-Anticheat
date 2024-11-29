@@ -1,7 +1,7 @@
-import { flag } from "../../../util";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { getAverageDifference, getDistanceXZ, getSpeed } from "../../../utils/mathUtil.js";
-import { fastAbs, fastHypot } from "../../../utils/fastMath.js";
+import { getAverageDifference, getDistanceXZ, getSpeed } from "../../../utils/maths/mathUtil.js";
+import { fastAbs, fastHypot } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 // Thank you Visual1mpact for helping me with the Map's

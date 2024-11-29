@@ -1,7 +1,8 @@
-import { flag, getScore } from "../../../util";
+import { getScore } from "../../../util";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { aroundAir } from "../../../utils/gameUtil.js";
-import { hVelocity } from "../../../utils/mathUtil.js";
+import { hVelocity } from "../../../utils/maths/mathUtil.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 /*
 Fly/B 

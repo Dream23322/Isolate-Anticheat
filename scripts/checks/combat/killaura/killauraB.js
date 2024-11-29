@@ -1,4 +1,4 @@
-import { flag } from "../../../util";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { getScore } from "../../../util";
 import { allowedPlatform } from "../../../utils/platformUtils.js";

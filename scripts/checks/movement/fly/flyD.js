@@ -1,5 +1,6 @@
 import * as Minecraft from "@minecraft/server";
-import { flag, getScore } from "../../../util";
+import { getScore } from "../../../util";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { aroundAir } from "../../../utils/gameUtil";
 import { allowedPlatform } from "../../../utils/platformUtils.js";

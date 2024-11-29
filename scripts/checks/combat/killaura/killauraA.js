@@ -1,6 +1,6 @@
-import { flag } from "../../../util";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { fastAbs, fastHypot, fastPow, fastRound, fastSqrt } from "../../../utils/fastMath.js";
+import { fastAbs, fastHypot, fastPow, fastRound, fastSqrt } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function killaura_a(player, entity) {

@@ -1,8 +1,8 @@
-import { flag } from "../../../util";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config";
 import { playerTellraw } from "../../../utils/gameUtil";
-import { arrayToList, getAverage } from "../../../utils/mathUtil";
-import { fastAbs, fastPow, fastSqrt } from "../../../utils/fastMath";
+import { arrayToList, getAverage } from "../../../utils/maths/mathUtil.js";
+import { fastAbs, fastPow, fastSqrt } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 const data = new Map();

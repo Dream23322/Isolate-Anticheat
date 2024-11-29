@@ -1,7 +1,8 @@
-import { flag, getScore, setScore } from "../../../util";
+import { getScore, setScore } from "../../../util";
+import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { getBlocksBetween, getDistanceY, getSpeed } from "../../../utils/mathUtil.js";
-import { fastPow, fastSqrt } from "../../../utils/fastMath.js";
+import { getBlocksBetween, getDistanceY, getSpeed } from "../../../utils/maths/mathUtil.js";
+import { fastPow, fastSqrt } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function reach_a(player, entity) {

@@ -1,4 +1,4 @@
-import { getBlocksBetween } from "./mathUtil";
+import { getBlocksBetween } from "./maths/mathUtil";
 
 // setTitle 
 export function setTitle(player, title, subtitle) {

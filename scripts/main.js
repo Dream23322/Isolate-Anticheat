@@ -3,14 +3,16 @@
 // @ts-ignore
 import * as Minecraft from "@minecraft/server";
 import { tag_system, aroundAir, add_effect} from "./utils/gameUtil.js";
-import { getBlocksBetween, angleCalc, getDistanceXZ } from "./utils/mathUtil.js";
-import { flag, banMessage, getClosestPlayer, getScore, setScore } from "./util.js";
+import { getBlocksBetween, angleCalc, getDistanceXZ } from "./utils/maths/mathUtil.js";
+import { getClosestPlayer, getScore, setScore } from "./util.js";
+import { banMessage } from "./utils/anticheat/punishment/ban.js";
+import { flag } from "./utils/anticheat/punishment/flag.js";
 import { commandHandler } from "./commands/handler.js";
 import config from "./data/config.js";
 import { banList } from "./data/globalban.js";
 import data from "./data/data.js";
 import { mainGui } from "./features/ui.js";
-import { joinData } from "./utils/acUtil.js";
+import { joinData } from "./utils/anticheat/acUtil.js";
 
 // Import Packet Checks
 import { badpackets_f } from "./checks/packet/badpackets/badpacketsF.js";
@@ -77,7 +79,7 @@ import { tower_b } from "./checks/world/scaffold/towerB.js";
 import { aim_e } from "./checks/combat/aim/aimE.js";
 import { aim_f } from "./checks/combat/aim/aimF.js";
 import { autoConfigGUI } from "./features/autoconfig.js";
-import { fastAbs, fastFloor, fastPow, fastSqrt } from "./utils/fastMath.js";
+import { fastAbs, fastFloor, fastPow, fastSqrt } from "./utils/maths/fastMath.js";
 import { aim_g } from "./checks/combat/aim/aimG.js";
 import { aim_h } from "./checks/combat/aim/aimH.js";
 import { run_aim_data } from "./checks/combat/aim/aimData.js";
