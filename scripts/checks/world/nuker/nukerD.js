@@ -48,13 +48,13 @@ export function nuker_d(player, block, brokenBlockId, resetValue) {
         const distance = fastSqrt(fastPow(block.location.x - player.location.x, 2) + fastPow(block.location.z - player.location.z, 2));
 
         // Check if the player is moving too fast and flag the player if true
-        if(getSpeed(player) > 0.26) {
+        if(getSpeed(player) > 0.325) {
             flag(player, "Nuker", "D", "World", "Speed", getSpeed(player), true);
             reset = true;
         }
 
         // Check if the angle between the player and the block is greater than 90 degrees and flag the player if true
-        if(angleCalc(player, block) > 90 && distance > 2) {
+        if(angleCalc(player, block) > 90 && distance > 2 && !player.getEffect("speed")) {
             flag(player, "Nuker", "D", "World", "angle", angleCalc(player, block), true);
             reset = true;
         }

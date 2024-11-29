@@ -63,13 +63,13 @@ export function speed_e(player) {
                     !player.hasTag("placing") && 
                     //!player.hasTag("teleport") && 
                     (average * 30).toFixed(2) < config.modules.speedE.maxPredict && 
-                    !player.hasTag("elytra")) {
-
+                    !player.hasTag("elytra")) 
+                {
                         flag(player, "Speed", "E", "Movement", "avg_bpt", `${average.toFixed(2)},predict_bps=${(average * 30).toFixed(2)}`, true);
                 }
                 d.unshift(bptDiff);
                 d.pop();
-                player.removeTag("speedE_pass");
+                player.removeTag("speedE_pass");    
             }
             data.set(player.name, d);
         }
