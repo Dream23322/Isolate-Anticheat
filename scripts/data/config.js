@@ -788,7 +788,7 @@ export default
         "speedE": {
             "enabled":true,
             "description": "Checks for high bpt (Blocks per tick) over a while (Also flags timer cheats)",
-            "bpt": 0.381,
+            "bpt": 0.4532,
             "maxPredict": 18.75,
             "punishment": "kick",
             "minVlbeforePunishment": 40,
@@ -854,7 +854,7 @@ export default
             "AP": 3
         },
         "strafeA": {
-            "enabled": true,
+            "enabled": false,
             "description": "Checks for strafing mid-air",
             "diff": 0.3,
             "punishment": "none",
@@ -864,9 +864,9 @@ export default
         "predictionA": {
             "enabled": true,
             "description": "Prediction Check",
-            "deviation": 0.5,
+            "deviation": 0.55,
             "punishment": "kick",
-            "minVlbeforePunishment": 10,
+            "minVlbeforePunishment": 30,
             "AP": 3
         },
         /*

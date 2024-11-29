@@ -2,7 +2,6 @@
 // Used to setup Isolate
 import config from "./data/config.js";
 import { world } from "@minecraft/server";
-import { configAdder } from "./temp.js";
 
 
 // Code from scythe
@@ -15,72 +14,18 @@ if(dpConfig) {
 	
 }
 console.warn("[Isolate] >> ConfigID: " + config.configID);
-if(config.configID !== "a1c") {
+if(config.configID !== "a2") {
 	console.warn("[Isolate] >> Config ID doesnt match latest! Attempting to update config...")
-	config.modules.badpacketsK = {
-		enabled: true,
-		punishment: "ban",
-		punishmentLength: "",
-		minVlbeforePunishment: 0
-	}
 
-	config.customcommands.configid = {
-		enabled: true,
-		requiredTags: ["op"],
-		aliases: ["getid", "id"]
-	}
-
-	config.modules.hitboxB = {
-		enabled: true,
-		description: "Traditional hitbox check (Only for desktop and console players, though console is less strict)",
-		max_avg_angle: 50,
-		punishment: "none",
-		minVlbeforePunishment: 5
-	}
-
-	config.modules.aimE = {
-		enabled: true,
-		description: "Checks for irregular movements in the rotation",
-		needHit: true,
-		duplicates: 35,
-		dataSize: 50,
-		experimental: true,
-		punishment: "kick",
-		minVlbeforePunishment: 10
-	}
-
-	config.modules.aimI = {
-		enabled: true,
-		description: "Checks for Identical Aim",
-		needHit: true,
-		punishment: "kick",
-		minVlbeforePunishment: 5,
-		AP: 1
-	}
-
-	config.modules.predictionA = {
-		enabled: true,
-		description: "Prediction Check",
-		deviation: 0.5,
-		punishment: "kick",
-		minVlbeforePunishment: 10,
-		AP: 3
-	}
-
-	// // Add .AL = 3 to all modules
-	// for(const item of Object.keys(config.modules)) {
-	// 	if(typeof config.modules[item] === "object") {
-	// 		config.modules[item] = config.modules[item].AL = 3;
-	// 	}
-	// }
-	
-	
-	world.setDynamicProperty("config", JSON.stringify(config));
+	console.warn("[Isolate] >> Large update! Attempting to reset to default config!");
+	world.setDynamicProperty("config", config);
+	console.warn("[Isolate] >> Attempted");
 	
 	console.warn("[Isolate] >> Updated Config Correctly");
+	
 }
 
-config.configID = "a1";	
+config.configID = "a2";	
 
 console.warn("[Isolate] >> Loaded Config Correctly");
 // Load the ban list
