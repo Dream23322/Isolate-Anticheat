@@ -43,6 +43,7 @@ import { clearlag } from "./other/clearlag.js";
 import { seereach } from "./settings/seereach.js";
 import { announce } from "./other/announce.js";
 import { configid } from "./settings/configid.js";
+import settings from "../data/settings.js";
 
 
 
@@ -51,7 +52,7 @@ import { configid } from "./settings/configid.js";
  * @param {object} message - Message data
  */
 export function commandHandler(message) {
-    const prefix = config.modules.settings.prefix;
+    const prefix = settings.general.prefix;
     // validate that required params are defined
     if(typeof message !== "object") throw TypeError(`message is type of ${typeof message}. Expected "object"`);
 

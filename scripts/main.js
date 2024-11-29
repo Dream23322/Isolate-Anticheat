@@ -90,6 +90,7 @@ import { badpackets_j } from "./checks/packet/badpackets/badpacketsJ.js";
 import { hitbox_b } from "./checks/combat/hitbox/hitboxB.js";
 import { aim_i } from "./checks/combat/aim/aimI.js";
 import { predictionEngine } from "./checks/movement/prediction/predictionEngine.js";
+import settings from "./data/settings.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -224,16 +225,8 @@ Minecraft.system.runInterval(() => {
 			player.runCommandAsync(`scoreboard players set @s yPos ${fastFloor(player.location.y)}`);
 			player.runCommandAsync(`scoreboard players set @s zPos ${fastFloor(player.location.z)}`);
 		}
-
-		if(getScore(player, "kickvl", 0) > config.modules.settings.ViolationsBeforeBan / 2 && !player.hasTag("strict")) {
-			try {
-				player.addTag("strict");
-			} catch (error) {
-				player.runCommandAsync(`tag "${player.name}" add strict`);
-			}
-		}
 		
-		if(config.modules.settings.autoReset && getScore(player, "tick_counter2", 0) > 300) {
+		if(settings.general.autoReset && getScore(player, "tick_counter2", 0) > 300) {
 			if(!player.hasTag("reported") && player.hasTag("strict")) player.removeTag("strict");
 			player.runCommandAsync("function tools/resetwarns");
 			setScore(player, "tick_counter2", 0);
@@ -352,7 +345,7 @@ Minecraft.system.runInterval(() => {
 		if(!player.hasTag("attacking") && player.hasTag("leftv2") && !player.hasTag("usingItem") && !player.hasTag("useItem") && !player.hasTag("interactBlock")) {
 			killaura_f(player, 0);
 			
-			if(config.modules.settings.advancedCPS) player.cps++;
+			if(settings.general.advancedCPS) player.cps++;
 		}
 
 
@@ -484,7 +477,7 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 	}
 
 	// Hive regen
-	if(config.modules.settings.hiveRegen) {
+	if(settings.general.hiveRegen) {
 		if(brokenBlockId === "minecraft:redstone_ore" || brokenBlockId === "minecraft:lit_redstone_ore") {
 			add_effect(player, "absorption", 10, 0);
 		}

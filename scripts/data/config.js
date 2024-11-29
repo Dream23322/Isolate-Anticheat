@@ -268,34 +268,6 @@ export default
             "AP": 1 // (Allowed Platforms) What platforms the check works on, 1 = Desktop + 2 = Console + 3 = Mobile (3 will check all, 2 will check desktop and console, 1 will check desktop)
             // If you have any other questions, please ask in the discord server.
         },
-        "settings": {
-            "autoKick": true,
-            "autoBan": true,
-            "silent": true,
-            "kicksBeforeBan": 7,
-            // Wait why is this here?
-            "ViolationsBeforeBan": 30,
-            "autoReset": true,
-            "hiveRegen": false,
-            "smartNotify": false,
-            "smartOnly": false,
-            "theme": "2",
-            "flagstyle": "2",
-            "debugflag": true,
-            "prefix": "!",
-            "chatRanks": false,
-            "testingmode": false,
-            "advancedCPS": false,
-            "onlyReported": false
-        },
-        "smartReport": {
-            "enabled": false,
-            "infoCheck": true,
-            "kickBan": true,
-            "minKicks": 2,
-            "banLength": "7d"
-        },
-
         "filterUnicodeChat": false,
         /*
         Misc Checks - Checks that don't really have a catagory.

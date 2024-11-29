@@ -4,6 +4,7 @@
 import * as Minecraft from "@minecraft/server";
 import config from "./data/config.js";
 import data from "./data/data.js";
+import settings from "./data/settings.js";
 // @ts-ignore
 import { setTitle } from "./utils/gameUtil.js";
 import { fastFloor, fastRound } from "./utils/fastMath.js";
@@ -140,7 +141,7 @@ function buildDisplayBar(currentVl, maxVl, filledColor, unfilledColor) {
 }
 
 function buildNotification(player, theme, check, checkType, hackType, debug, debugName, currentVl, maxVl) {
-    const { flagstyle, debugflag } = config.modules.settings;
+    const { flagstyle, debugflag } = settings.general;
     const style = themeStyles[theme];
     
     if (!style) return;
@@ -263,10 +264,6 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     // cancel the message
     if(cancelObject) cancelObject.cancel = true;
 
-
-
-    if(shouldTP && config.modules.settings.silent === false) player.teleport(check === "Crasher" ? {x: 30000000, y: 30000000, z: 30000000} : player.lastGoodPosition, {dimension: player.dimension, rotation: {x: rotation.x, y: rotation.y}, keepVelocity: false});
-
    
 
     const scoreboardObjective = check === "CommandBlockExploit" ? "cbevl" : `${check.toLowerCase()}vl`;
@@ -281,9 +278,12 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
     console.warn("[Isolate]", player.name, check,"[",checkType,"]", hackType, "-", debugName, debug, "VL=", currentVl);
     
-    const thememode = config.modules.settings.theme;
+    const thememode = settings.general.theme;
     const maxVl = config.modules[check.toLowerCase() + checkType.toUpperCase()].minVlbeforePunishment;
     sendNotification(player, thememode, check, checkType, hackType, debug, debugName, currentVl, maxVl);
+
+    const doTeleport = settings.lagbacks.silent ? false : ((currentVl / maxVl) * 100) > settings.lagbacks.percentBeforeLagback;
+    if(doTeleport) player.teleport(check === "Crasher" ? {x: 30000000, y: 30000000, z: 30000000} : player.lastGoodPosition, {dimension: player.dimension, rotation: {x: rotation.x, y: rotation.y}, keepVelocity: false});
 
     if(typeof slot === "number") {
 		const container = player.getComponent("inventory").container;
@@ -322,7 +322,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     const block_vl = getScore(player, "scaffoldvl", 0) + getScore(player, "nukervl", 0) + getScore(player, "towervl", 0);
     const other_vl = getScore(player, "badpacketsvl", 0) + getScore(player, "crashervl", 0) + getScore(player, "spammervl", 0) + getScore(player, "autototemvl", 0) + getScore(player, "autosheildvl", 0) + getScore(player, "illegalitemvl", 0);
     // This was requested by Duckie Jam (1078815334871617556)
-    if(config.fancy_kick_calculation.on === true && config.modules.settings.autoKick == true) {
+    if(config.fancy_kick_calculation.on === true && settings.punishment.autoKick == true) {
         if(movement_vl > config.fancy_kick_calculation.movement && combat_vl > config.fancy_kick_calculation.combat && block_vl > config.fancy_kick_calculation.block && other_vl > config.fancy_kick_calculation.other) {
             player.addTag("strict");
             //setSound(player, "mob.endermen.death");
@@ -335,7 +335,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
         }
     }
 
-    if(config.modules.settings.smartNotify) {
+    if(settings.general.smartNotify == true) {
         const total_vL = movement_vl + combat_vl + block_vl + other_vl;
         if(movement_vl > 20) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of movement cheat! (Specate with !v)"}]}`);
             else if(combat_vl == 10) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of combat cheat! (Specate with !v)"}]}`);
@@ -346,11 +346,11 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     if(currentVl >= checkData.minVlbeforePunishment) {
 
 
-        if (punishment === "kick" && (config.modules.settings.autoKick) && (player.hasTag("reported") || !config.modules.settings.onlyReported)) {
+        if (punishment === "kick" && (settings.punishment.autoKick) && (player.hasTag("reported") || !settings.punishment.onlyReported)) {
             let banLength2;
             try {
                 setScore(player, "kickvl", kickvl + 1);
-                if(kickvl > config.modules.settings.kicksBeforeBan || config.modules.smartReport.enabled && config.modules.smartReport.kickBan && kickvl > config.modules.smartReport.minKicks && player.hasTag("reported")) {
+                if(kickvl > settings.punishment.kicksBeforeBan || config.modules.smartReport.enabled && config.modules.smartReport.kickBan && kickvl > config.modules.smartReport.minKicks && player.hasTag("reported")) {
                     player.addTag("by:§d Isolate Anticheat");
                     player.addTag(`reason:§c Isolate Anticheat caught you cheating!`);
                     banLength2 = parseTime("7d");
@@ -362,7 +362,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     const message = `§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat §j[§n${check}§j]`;
                     player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been §cpunished§r (§cBan§r) for ${check}/${checkType}"}]}`);
                     
-                    if(config.modules.settings.theme == "1") {
+                    if(settings.general.theme == "1") {
                         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage! (7-Day)"}]}`);
                     } else {
                         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c "}]}`); 
@@ -391,9 +391,9 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 data.recentLogs.push(message)
                 
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been §cpunished§r (§cKick§r) for ${check}/${checkType}"}]}`);
-                if(config.modules.settings.theme == "1") {
+                if(settings.general.theme == "1") {
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been removed from your game for using an §6unfair advantage!"}]}`);
-                } else if(config.modules.settings.theme == "2") {
+                } else if(settings.general.theme == "2") {
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c "}]}`);                    
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c\n||===============================||"}]}`);
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u§l Isolate Anticheat"}]}`);
@@ -411,9 +411,9 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
             }    
 
         };
-        if(punishment === "ban" && (player.hasTag("reported") || !config.modules.settings.onlyReported)) {
+        if(punishment === "ban" && (player.hasTag("reported") || !settings.punishment.onlyReported)) {
             // Check if auto-banning is disabled
-            if(config.modules.settings.autoBan) {
+            if(settings.punishment.autoBan) {
 
                 const punishmentLength = checkData.punishmentLength?.toLowerCase();
                 //setSound(player, "mob.enderdragon.death");
@@ -445,10 +445,10 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                 } catch (error) {}
                 player.runCommandAsync("function tools/resetwarns");
                 player.addTag("isBanned");
-                if(config.modules.settings.theme == "1") {
+                if(settings.general.theme == "1") {
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage!"}]}`);
         
-                } else if(config.modules.settings.theme == "2") {
+                } else if(settings.general.theme == "2") {
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c "}]}`); 
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===========================================||"}]}`);
                     player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u§l Isolate Anticheat"}]}`);
@@ -473,11 +473,11 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
 
         // Testing mode
 
-        if(punishment == "kick" && config.modules.settings.testingmode) {
+        if(punishment == "kick" && settings.general.testingmode) {
             setTitle(player, "You would have been kicked", `Check: ${check}/${checkType}`);
             player.runCommandAsync("function tools/resetwarns");
         }
-        if(punishment == "ban" && config.modules.settings.testingmode) {
+        if(punishment == "ban" && settings.general.testingmode) {
             setTitle(player, "You would have been banned", `Check: ${check}/${checkType}`);
             player.runCommandAsync("function tools/resetwarns");
         }

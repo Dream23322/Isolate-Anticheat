@@ -1,6 +1,7 @@
 import * as Minecraft from "@minecraft/server";
 import config from "../../data/config";
 import { getScore, parseTime, setScore } from "../../util";
+import settings from "../../data/settings";
 const world = Minecraft.world;
 
 /**
@@ -29,7 +30,7 @@ export function report(message, args) {
     if(!member) return player.sendMessage("§r§j[§uIsolate§j]§r Couldn't find that player.");
 
     // make sure they dont report themselves
-    if(member.nameTag === player.nameTag && !config.modules.settings.testingmode) return player.sendMessage("§r§j[§uIsolate§j]§r You cannot report yourself.");
+    if(member.nameTag === player.nameTag && !settings.general.testingmode) return player.sendMessage("§r§j[§uIsolate§j]§r You cannot report yourself.");
 
     // prevent report spam
     if(player.reports.includes(member.nameTag)) return player.sendMessage("§r§j[§uIsolate§j]§r You have already reported this player.");
@@ -42,9 +43,9 @@ export function report(message, args) {
     if(config.modules.smartReport.enabled && config.modules.smartReport.infoCheck) {
         if(getScore(player, "kickvl", 0) > config.modules.smartReport.minKicks) {
             // Ban lel
-            if(config.modules.settings.theme == "1") {
+            if(settings.general.theme == "1") {
                 player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage! (7-Day)"}]}`);
-            } else if(config.modules.settings.theme == "2") {
+            } else if(settings.general.theme == "2") {
                 player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c "}]}`); 
                 player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===========================================||"}]}`);
                 player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u§l Isolate Anticheat"}]}`);

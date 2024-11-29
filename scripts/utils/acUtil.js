@@ -1,6 +1,6 @@
-import config from "../data/config";
+import settings from "../data/settings";
 export function joinData(player) {
-    if(config.modules.settings.chatRanks) { 
+    if(settings.general.chatRanks) { 
         if(player.name == player.nameTag) {
             player.nameTag =   `[Member] ${player.name}`
         }
