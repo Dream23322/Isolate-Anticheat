@@ -1,18 +1,9 @@
-const GRAVITY_THRESHOLD = 0.2; 
-const GRAVITY_TOLERANCE = 0.05; 
 const GRAVITY_ACCEL = -0.08; 
-import { fastAbs } from "../../../../utils/fastMath.js";
+import { getScore } from "../../../../util.js";
+import { fastAbs, fastSqrt } from "../../../../utils/fastMath.js";
 import { fastPow } from "../../../../utils/fastMath.js";
 import { inAir } from "../../../../utils/gameUtil.js";
-
-/**
- * Check if player's Y-velocity is under the threshold.
- * @param {object} player - The player object containing velocity info.
- * @returns {boolean} - True if velocity is under threshold, false otherwise.
- */
-export function isLowYVelocity(player, predY) {
-    return fastAbs(player.location.y - predY) < GRAVITY_THRESHOLD;
-}
+import { getAverage } from "../../../../utils/mathUtil.js";
 
 
 
@@ -25,7 +16,7 @@ export function isLowYVelocity(player, predY) {
  */
 export function isYVelocityNormal(player, lastPositions) {
     if (lastPositions.length < 5) {
-        console.warn("Not enough position data to predict velocity.");
+        //console.warn("Not enough position data to predict velocity.");
         return true;
     }
 
@@ -39,7 +30,7 @@ export function isYVelocityNormal(player, lastPositions) {
             deltaX,
             deltaY,
             deltaZ,
-            magnitude: Math.sqrt(fastPow(deltaX, 2) + fastPow(deltaY, 2) + fastPow(deltaZ, 2)),
+            magnitude: fastSqrt(fastPow(deltaX, 2) + fastPow(deltaY, 2) + fastPow(deltaZ, 2)),
         });
     }
 
@@ -51,7 +42,7 @@ export function isYVelocityNormal(player, lastPositions) {
     const validY = deviation < DEVIATION_THRESHOLD;
 
     if (!validY) {
-        console.warn(`Funky Y-velocity detected. Deviation: ${deviation}`);
+        //console.warn(`Funky Y-velocity detected. Deviation: ${deviation}`);
     }
 
     return validY;
@@ -65,7 +56,7 @@ export function isYVelocityNormal(player, lastPositions) {
  */
 export function isAcceleratingUpwards(player, lastPositions) {
     if (lastPositions.length < 5) {
-        console.warn("Not enough position data to predict velocity.");
+        //console.warn("Not enough position data to predict velocity.");
         return true;
     }
 
@@ -83,4 +74,64 @@ export function isAcceleratingUpwards(player, lastPositions) {
     ) return true;
 
     return false;
+}
+
+export function gravityCheck(lastPositions, player) {
+    // Confirm that all lastPositions are inAir
+    for (const posDat of lastPositions) {
+        if(posDat.inair !== true) {
+            if(player.hasTag("invalidA")) player.sendMessage("invalidA");
+            return {x: false, y: null};
+        }
+    }
+
+    let skip_check_one = false;
+
+    // Confirm that the player hasn't jumped/acceled upwards
+    // To do this, we compare two position points that are next to each other and if the player has moved up, skip
+    for (let i = 0; i < lastPositions.length - 1; i++) {
+        const deltaY = lastPositions[i].y - lastPositions[i + 1].y;
+        if (player.hasTag("gravityA")) player.sendMessage("deltaY: " + deltaY);
+        if (deltaY >= 0) skip_check_one = true;
+    }
+
+    if (!skip_check_one) {
+        // This checks if the players downwards acceleration seems legitimate
+        const min_down_accel = -0.00655 * getScore(player, "airTime", 0);
+
+        for (let i = 0; i < lastPositions.length - 1; i++) {
+            const deltaY = lastPositions[i].y - lastPositions[i + 1].y;
+            // If the players fall rate isnt fast enough, return true and flag
+            if(player.hasTag("gravityB")) player.sendMessage("2deltaY: " + deltaY);
+            if (deltaY > min_down_accel) return {
+                x: true, 
+                y: "BadAccel.Type:Down, Data: " + 
+                deltaY.toFixed(6) + 
+                ", " + 
+                min_down_accel.toFixed(5)
+            };
+        }
+    }
+
+    let lastDelta = 0;
+    // Checks if the player was going down then began to come back up
+    for (let i = 0; i < lastPositions.length - 1; i++) {
+        const deltaY = lastPositions[i].y - lastPositions[i + 1].y;
+        if(player.hasTag("gravityC")) player.sendMessage("3deltaY: " + deltaY + " lastDelta: " + lastDelta);
+        if(deltaY < 0 && lastDelta > 1e-4) return {x: true, y: "BadAccel.Type:Reverse, Data: " + deltaY.toFixed(4) +  ", " + lastDelta.toFixed(4)};
+        lastDelta = deltaY;
+    }
+
+    // Checks for accel upwards or constant upwards Y movement
+    lastDelta = 0;
+    if(skip_check_one) {
+        for (let i = 0; i < lastPositions.length - 1; i++) {
+            const deltaY = lastPositions[i].y - lastPositions[i + 1].y;
+            if(player.hasTag("gravityD")) player.sendMessage("4deltaY: " + deltaY + " lastDelta: " + lastDelta);
+            // If the player isnt decellerating, return true as this is impossible mid air (y movement only)
+            if(deltaY >= lastDelta && lastDelta > 0.003 && deltaY > 0 && getScore(player, "airTime", 0) > 8) return {x: true, y: "BadAccel.Type:Upwards, Data: " + deltaY.toFixed(4) +  ", " + lastDelta.toFixed(4)};
+            lastDelta = deltaY;
+        }
+    }
+    return {x: false};
 }

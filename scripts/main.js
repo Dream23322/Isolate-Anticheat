@@ -89,7 +89,7 @@ import { badpackets_k } from "./checks/packet/badpackets/badpacketsK.js";
 import { badpackets_j } from "./checks/packet/badpackets/badpacketsJ.js";
 import { hitbox_b } from "./checks/combat/hitbox/hitboxB.js";
 import { aim_i } from "./checks/combat/aim/aimI.js";
-import { prediction_a } from "./checks/movement/prediction/predictionA.js";
+import { predictionEngine } from "./checks/movement/prediction/predictionEngine.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -313,12 +313,13 @@ Minecraft.system.runInterval(() => {
 			strafe_a(player);
 			noslow_a(player);
 			noslow_b(player);
-			prediction_a(player);
+			predictionEngine(player);
 		}
 		if(player.hasTag("aimtempdebug")) {
 			// Send message with rotation data
 			player.sendMessage(`Rotation: ${rotation.x}, ${rotation.y}`);
 		}
+
 
 		if(config.generalModules.aim) {
 			run_aim_data(player);
@@ -485,7 +486,7 @@ world.afterEvents.playerBreakBlock.subscribe((blockBreak) => {
 	// Hive regen
 	if(config.modules.settings.hiveRegen) {
 		if(brokenBlockId === "minecraft:redstone_ore" || brokenBlockId === "minecraft:lit_redstone_ore") {
-			add_effect(player, "absorption", 10, 1);
+			add_effect(player, "absorption", 10, 0);
 		}
 	}
 
