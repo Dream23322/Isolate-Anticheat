@@ -505,7 +505,7 @@ export default
         },
         "aimC": {
             "enabled": false,
-            "description": "Checks for minimum mouse sensitivity GCD",
+            "description": "Checks for pitch being to active",
             "buffer": 10,
             "small": 1.5,
             "big": 50,

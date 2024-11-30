@@ -34,7 +34,7 @@ const themeStyles = {
         unfilledColor: '§u|',
         currentVlFormat: '§dx§u',
     },
-    "alice": {
+    "3": {
         prefix: `§r§8[§cAlice§8]§r`,
         playerName: '§7',
         failMessage: '§rhas failed §h',
@@ -219,7 +219,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
             let banLength2;
             try {
                 setScore(player, "kickvl", kickvl + 1);
-                if (kickvl > settings.punishment.kicksBeforeBan || config.modules.smartReport.enabled && config.modules.smartReport.kickBan && kickvl > config.modules.smartReport.minKicks && player.hasTag("reported")) {
+                if (kickvl > settings.punishment.kicksBeforeBan || settings.report.enabled && settings.report.kickBan && kickvl > settings.report.minKicks && player.hasTag("reported")) {
                     banPlayer(player, "§d Isolate Anticheat caught you cheating!", '7d', "§d Isolate Anticheat");
                     console.warn(`${new Date().toISOString()} |${player.name} was banned by Isolate Anticheat for ${check}/${checkType}`);
                     player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been §cpunished§r (§cBan§r) for ${check}/${checkType}"}]}`);

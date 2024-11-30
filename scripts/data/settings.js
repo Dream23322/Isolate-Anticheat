@@ -1,5 +1,6 @@
 export default
 {
+    "id": "a2",
     "general": {
         "autoReset": true,
         "hiveRegen": false,

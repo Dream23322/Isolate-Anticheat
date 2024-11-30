@@ -2,6 +2,7 @@
 import * as Minecraft from "@minecraft/server";
 import * as MinecraftUI from "@minecraft/server-ui";
 import config from "../data/config.js";
+import settings from "../data/settings.js";
 import data from "../data/data.js";
 import { parseTime, capitalizeFirstLetter } from "../util.js";
 import { addOp, removeOp } from "../commands/moderation/op.js";
@@ -42,7 +43,7 @@ const punishments = {
     ban: 3
 };
 
-const punishmentSettings = ["punishment","punishmentLength","minVlbeforePunishment"];
+const punishmentSettings = ["punishment","punishmentLength","minVlbeforePunishment", "AP"];
 // this is the function that will be called when the player wants to open the GUI
 // all other GUI functions will be called from here
 export function mainGui(player, error) {
@@ -65,7 +66,7 @@ export function mainGui(player, error) {
     
     menu.show(player).then((response) => {
         if(response.selection === 0) banMenu(player);
-        if(response.selection === 1) settingsMenu(player);
+        if(response.selection === 1) editorMenu(player);
         if(response.selection === 2) playerSettingsMenu(player);
         if(response.selection === 3) worldSettingsMenu(player);
         if(response.selection === 4) return;
@@ -274,7 +275,164 @@ function unbanPlayerMenu(player) {
 // ====================== //
 //     Settings Menu      //
 // ====================== //
-function settingsMenu(player) {
+function editorMenu(player) {
+    player.playSound("mob.chicken.plop");
+    if(player.hasTag("noUIAccess")) return player.sendMessage("§r§j[§uIsolate§j]§r §cYou do not have access to this menu!");
+
+    const menu = new MinecraftUI.ActionFormData()
+        .title("Module Editor")
+        .body("Module Settings - Edit settings for a specific module.\nAnticheat Settings - Change stuff like theme or lagbacks")
+        .button("Module Settings", "textures/ui/gear.png")
+        .button("Anticheat Settings", "textures/ui/gear.png");
+
+    menu.show(player).then((response) => {
+        if(response.selection === 0) return configMenu(player);
+        if(response.selection === 1) return acSettingsMenu(player);
+    });
+}
+
+function acSettingsMenu(player) {
+    player.playSound("mob.chicken.plop");
+
+    const menu = new MinecraftUI.ActionFormData()
+        .title("Anticheat Settings")
+        .body("Please select an option.")
+        .button("General", "textures/ui/gear.png")
+        .button("Punishment", "textures/ui/anvil_icon.png")
+        .button("Lagback", "textures/ui/WarningGlyph.png")
+        .button("Report", "textures/ui/WarningGlyph.png")
+        .button("Back", "textures/ui/arrow_left.png");
+    menu.show(player).then((response) => {
+        if(response.selection === 0) return generalSettingsMenu(player);
+        if(response.selection === 1) return punishmentSettingsMenu(player);
+        if(response.selection === 2) return lagbackSettingsMenu(player);
+        if(response.selection === 3) return reportSettingsMenu(player);
+        if(response.selection === 4) return mainGui(player);
+    })
+}
+
+function generalSettingsMenu(player) {
+    player.playSound("mob.chicken.plop");
+    const settingsData = settings["general"];
+    let optionsMap = [];
+    const menu = new MinecraftUI.ModalFormData()
+        .title("General Anticheat Settings");
+    console.warn("welp");
+    menu.toggle("Auto Reset Warns", settingsData["autoReset"]);
+    console.warn("welp1");
+    menu.toggle("Hive Regen System", settingsData["hiveRegen"]);
+    console.warn("welp2");
+    menu.toggle("Smart Cheat Notifications", settingsData["smartNotify"]);
+    console.warn("welp3");
+    menu.toggle("Smart Notifications Only", settingsData["smartOnly"]);
+    console.warn("welp4");
+    menu.slider("Theme", 1, 3, 1, Number(settingsData["theme"]));
+    console.warn("welp5");
+    menu.slider("Flag Theme", 1, 2, 1, Number(settingsData["flagstyle"]));
+    console.warn("welp6");
+    menu.toggle("Debug Info On Flag", settingsData["debugflag"]);
+    console.warn("welp7");
+    menu.textField("Command Prefix", "eg. !, >, -", settingsData["prefix"]);
+    console.warn("welp8");
+    menu.toggle("Chat Ranks (Experimental)", settingsData["chatRanks"]);
+    console.warn("welp9");
+    menu.toggle("Testing Mode", settingsData["testingmode"]);
+    console.warn("welp0");
+    menu.toggle("Advanced CPS (Experimental)", settingsData["advancedCPS"]);
+    
+    menu.show(player).then((response) => {
+        if(response.canceled) return acSettingsMenu(player);
+        // Yes its bad but I want it done today
+        settings["general"]["autoReset"] = response.formValues[0];
+        settings["general"]["hiveRegen"] = response.formValues[1];
+        settings["general"]["smartNotify"] = response.formValues[2];
+        settings["general"]["smartOnly"] = response.formValues[3];
+        settings["general"]["theme"] = (response.formValues[4]).toString();
+        settings["general"]["flagstyle"] = (response.formValues[5]).toString();
+        settings["general"]["debugflag"] = response.formValues[6];
+        settings["general"]["prefix"] = response.formValues[7];
+        settings["general"]["chatRanks"] = response.formValues[8];
+        settings["general"]["testingmode"] = response.formValues[9];
+        settings["general"]["advancedCPS"] = response.formValues[10];
+
+        world.setDynamicProperty("settings", JSON.stringify(settings));
+    });
+}
+function punishmentSettingsMenu(player) {
+    player.playSound("mob.chicken.plop");
+    const settingsData = settings["punishment"];
+    const menu = new MinecraftUI.ModalFormData()
+        .title("Punishment Anticheat Settings");
+
+    menu.toggle("Auto Kick", settingsData["autoKick"]);
+    menu.toggle("Auto Ban", settingsData["autoBan"]);
+    menu.slider("Kicks Before Ban", 1, 50, 1, settingsData["kicksBeforeBan"]);
+    menu.toggle("Only Auto-Punish Reported Players", settingsData["onlyReported"]);
+    menu.show(player).then((response) => {
+        if(response.canceled) return acSettingsMenu(player);
+
+        settings["punishment"]["autoKick"] = response.formValues[0];
+        settings["punishment"]["autoBan"] = response.formValues[1];
+        settings["punishment"]["kicksBeforeBan"] = response.formValues[2];
+        settings["punishment"]["onlyReported"] = response.formValues[3];
+
+        world.setDynamicProperty("settings", JSON.stringify(settings));
+
+    });
+}
+
+function lagbackSettingsMenu(player) {
+    player.playSound("mob.chicken.plop");
+    const settingsData = settings["lagbacks"];
+    const menu = new MinecraftUI.ModalFormData()
+        .title("Lagback Anticheat Settings");
+    console.warn("w1");
+    menu.toggle("Disabled", settingsData["silent"]);
+    console.warn("w2");
+    menu.slider("Percent Before Lagback", 0, 100, 1, settingsData["percentBeforeLagback"]);
+    console.warn("w3");
+
+    menu.show(player).then((response) => {
+        if(response.canceled) return acSettingsMenu(player);
+
+        settings["lagbacks"]["silent"] = response.formValues[0];
+        settings["lagbacks"]["percentBeforeLagback"] = response.formValues[1];
+
+        world.setDynamicProperty("settings", JSON.stringify(settings));
+    });
+}
+
+function reportSettingsMenu(player) {
+    player.playSound("mob.chicken.plop");
+    const settingsData = settings["report"];
+    const menu = new MinecraftUI.ModalFormData()
+        .title("Report Anticheat Settings");
+    
+    menu.toggle("Enabled", settingsData["enabled"]);
+    console.warn("herro");
+    menu.toggle("Info Check", settingsData["infoCheck"]);
+    console.warn("herro1");
+    menu.toggle("Kick/Ban", settingsData["kickBan"]);
+    console.warn("herro2");
+    menu.slider("Min Kicks", 1, 50, 1, settingsData["minKicks"]);
+    console.warn("herro3");
+    menu.textField("Ban Length", "Enter a ban length (ex: 12d, 1d, 1m, 30s", settingsData["banLength"]);
+    menu.show(player).then((response) => {
+        if(response.canceled) return acSettingsMenu(player);
+
+        settings["report"]["enabled"] = response.formValues[0];
+        settings["report"]["infoCheck"] = response.formValues[1];
+        settings["report"]["kickBan"] = response.formValues[2];
+        settings["report"]["minKicks"] = response.formValues[3];
+        settings["report"]["banLength"] = response.formValues[4];
+
+        world.setDynamicProperty("settings", JSON.stringify(settings));
+
+    });
+}
+
+
+function configMenu(player) {
     player.playSound("mob.chicken.plop");
     if(player.hasTag("noUIAccess")) return player.sendMessage("§r§j[§uIsolate§j]§r §cYou do not have access to this menu!");
     const settings_menu = new MinecraftUI.ActionFormData()
@@ -290,11 +448,11 @@ function settingsMenu(player) {
     settings_menu.show(player).then((response) => {
         if(!modules[response.selection ?? -1]) return mainGui(player);
 
-        settingsCheckSelectMenu(player, response.selection);
+        configCheckSelectMenu(player, response.selection);
     });
 }
 
-function settingsCheckSelectMenu(player, selection) {
+function configCheckSelectMenu(player, selection) {
     player.playSound("mob.chicken.plop");
     const subCheck = modules[selection];
 
@@ -311,20 +469,20 @@ function settingsCheckSelectMenu(player, selection) {
         menu.button(`${capitalizeFirstLetter(subCheck)}/${module[module.length - 1]}\n${checkData.enabled ? "§a(Enabled)" : "§4(Disabled)"}`);
     }
 
-    if(checks.length === 1) return editSettingMenu(player, checks[0]);
+    if(checks.length === 1) return editConfigMenu(player, checks[0]);
 
     menu.button("Back", icons.back);
 
     menu.show(player).then((response) => {
         const selection = response.selection ?? - 1;
 
-        if(!checks[selection]) return settingsMenu(player);
+        if(!checks[selection]) return configMenu(player);
 
-        editSettingMenu(player, checks[selection]);
+        editConfigMenu(player, checks[selection]);
     });
 }
 
-function editSettingMenu(player, check) {
+function editConfigMenu(player, check) {
     player.playSound("mob.chicken.plop");
     const checkData = config.modules[check] ?? config.misc_modules[check];
 
@@ -360,6 +518,7 @@ function editSettingMenu(player, check) {
         menu.dropdown("Punishment", Object.keys(punishments), punishments[checkData.punishment]);
         menu.textField("Punishment Length", "Enter a ban length (ex: 12d, 1d, 1m, 30s", checkData["punishmentLength"]);
         menu.slider("Minimum Violations (flags) Before Punishment", 0, 20, 1, checkData["minVlbeforePunishment"]);
+        menu.slider("Allowed Platforms", 1, 3, 1, checkData["AP"]);
 
         optionsMap = optionsMap.concat(punishmentSettings);
     }

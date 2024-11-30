@@ -14,18 +14,31 @@ if(dpConfig) {
 	
 }
 console.warn("[Isolate] >> ConfigID: " + config.configID);
-if(config.configID !== "a2") {
+if(config.configID !== "a21") {
 	console.warn("[Isolate] >> Config ID doesnt match latest! Attempting to update config...")
-
-	console.warn("[Isolate] >> Large update! Attempting to reset to default config!");
-	world.setDynamicProperty("config", config);
-	console.warn("[Isolate] >> Attempted");
 	
 	console.warn("[Isolate] >> Updated Config Correctly");
 	
 }
 
 config.configID = "a2";	
+
+const dpSettings = world.getDynamicProperty("settings"); // Object
+if(dpSettings) {
+	const parsedSettings = JSON.parse(dpSettings);
+	for(const item of Object.keys(parsedSettings)) {
+		settings[item] = parsedSettings[item];
+	}
+}
+console.warn("[Isolate] >> SettingsID: " + settings.id);
+
+if(settings.id !== "a2") {
+	console.warn("[Isolate] >> Settings ID doesnt match latest! Attempting to update settings...")
+	
+	console.warn("[Isolate] >> Updated Settings Correctly");
+}
+
+settings.id = "a2";
 
 console.warn("[Isolate] >> Loaded Config Correctly");
 // Load the ban list
@@ -46,4 +59,5 @@ if(offlineList) {
 }
 
 import "./main.js";
+import settings from "./data/settings.js";
 console.warn("[Isolate] >> Setup Correctly");
