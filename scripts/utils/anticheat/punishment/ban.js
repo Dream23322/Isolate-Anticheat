@@ -13,7 +13,7 @@ export function banPlayer(player, reason, time, by) {
 
     // Add ban tags
     player.addTag(`by:${by}`);
-    banLength2 = parseTime("7d");
+    const banLength2 = parseTime("7d");
     // @ts-ignore
     player.addTag(`time:${Date.now() + banLength2}`);
     player.addTag("isBanned");
