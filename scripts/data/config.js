@@ -472,7 +472,7 @@ export default
             "dynamicData": {
                 "water": 3.5,
                 "still": 3.5,
-                "speed": 5.4
+                "speed": 1.2
             },
             "entities_blacklist": [
                 "minecraft:enderman",
@@ -817,14 +817,6 @@ export default
             "minVlbeforePunishment": 100,
             "AP": 3
         },
-        "motionC": {
-            "enabled": true,
-            "description": "Checks for failing BDS Prediction (strafe)",
-            "min_velocity": 2.5,
-            "punishment": "kick",
-            "minVlbeforePunishment": 15,
-            "AP": 3
-        },
         "strafeA": {
             "enabled": false,
             "description": "Checks for strafing mid-air",
@@ -837,6 +829,7 @@ export default
             "enabled": true,
             "description": "Prediction Check",
             "deviation": 0.55,
+            "fastPow": false,
             "punishment": "kick",
             "minVlbeforePunishment": 30,
             "AP": 3

@@ -29,7 +29,6 @@ import { speed_a } from "./checks/movement/speed/speedA.js";
 import { speed_b } from "./checks/movement/speed/speedB.js";
 import { motion_a } from "./checks/movement/motion/motionA.js";
 import { motion_b } from "./checks/movement/motion/motionB.js";
-import { motion_c } from "./checks/movement/motion/motionC.js";
 import { fly_c } from "./checks/movement/fly/flyC.js";
 import { noslow_a } from "./checks/movement/noslow/noslowA.js";
 import { noslow_b } from "./checks/movement/noslow/noslowB.js";
@@ -291,7 +290,6 @@ Minecraft.system.runInterval(() => {
 		if(config.generalModules.motion && !player.hasTag("nomotion") && !player.hasTag("end_portal")) {
 			motion_a(player);
 			motion_b(player);
-			motion_c(player, lastXZv);
 		}
 		if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
 			exploit_a(player);
@@ -367,7 +365,6 @@ Minecraft.system.runInterval(() => {
 			setScore(player, "tick_counter2", getScore(player, "tick_counter2", 0) + 1);
 			setScore(player, "tag_reset", tagReset + 1);
 			setScore(player, "aimc_reset", aimcReset + 1);
-			setScore(player, "motion_c_data", 0);
 
 			badpackets_e(player);
 			player.removeTag("speedE_pass");

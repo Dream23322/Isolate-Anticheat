@@ -310,8 +310,6 @@ function analyseData(player) {
         logs.push("Disabled Aim(E)");
         config["modules"]["strafeA"]["punishment"] = "none";
         logs.push("Punishment Set: Strafe(A) | None");
-        config["modules"]["motionC"]["minVlbeforePunishment"] = 20;
-        logs.push("PunishVL Set: Motion(C) | 20");
 
         // Update Dynamic Config
         world.setDynamicProperty("config", JSON.stringify(config));
@@ -332,8 +330,6 @@ function analyseData(player) {
         logs.push("PunishVL Set: Killaura(D) | 20");
         config["modules"]["speedE"]["bpt"] = 0.35
         logs.push("BPT Set: Speed(E) | 0.35");
-        config["modules"]["motionC"]["punishment"] = "none";
-        logs.push("Punishment Set: Motion(C) | None");
         config["modules"]["strafeA"]["punishment"] = "none";
         logs.push("Punishment Set: Strafe(A) | None");
 
@@ -350,8 +346,6 @@ function analyseData(player) {
         logs.push("PunishVL Set: Killaura(D) | 20");
         config["modules"]["speedE"]["bpt"] = 0.28
         logs.push("BPT Set: Speed(E) | 0.28");
-        config["modules"]["motionC"]["minVlbeforePunishment"] = config.modules.motionC.minVlbeforePunishment * 1.5;
-        logs.push("PunishVL Set: Motion(C) | " + config.modules.motionC.minVlbeforePunishment * 1.5);
         config["modules"]["strafeA"]["punishment"] = "none";
         logs.push("Punishment Set: Strafe(A) | None");
     } else if(strictlevel == 3) {
