@@ -12,7 +12,6 @@ export function reach_a(player, entity) {
 		setScore(player, "reach_a_reset", getScore(player, "reach_a_reset", 0) + 1);
 		let xz_distance = fastSqrt(fastPow(entity.location.x - player.location.x, 2) + fastPow(entity.location.z - player.location.z, 2));
 		if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${xz_distance}\nPlayer Tags: ${player.getTags()}`);
-		let y_distance = getDistanceY(player, entity);
 		checkDistance(player, xz_distance, entity);
 		if(getScore(player, "reach_a_reset", 0) > 10) {
 			if(getScore(player, "reach_a_buffer", 0) > config.modules.reachA.buffer) {
