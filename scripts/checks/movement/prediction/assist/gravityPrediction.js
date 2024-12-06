@@ -5,9 +5,6 @@ import { fastPow } from "../../../../utils/maths/fastMath.js";
 import { inAir } from "../../../../utils/gameUtil.js";
 import { getAverage } from "../../../../utils/maths/mathUtil.js";
 
-
-
-
 /**
  * Check if player's Y-velocity follows expected patterns based on recent positions.
  * @param {object} player - The player object.
@@ -16,7 +13,6 @@ import { getAverage } from "../../../../utils/maths/mathUtil.js";
  */
 export function isYVelocityNormal(player, lastPositions) {
     if (lastPositions.length < 5) {
-        //console.warn("Not enough position data to predict velocity.");
         return true;
     }
 
@@ -37,13 +33,9 @@ export function isYVelocityNormal(player, lastPositions) {
     const latestDeltaY = lastPositions[0].y - lastPositions[1].y;
     const expectedDeltaY = velocities[0].deltaY + GRAVITY_ACCEL;
     const deviation = fastAbs(latestDeltaY - expectedDeltaY);
-    //console.warn(`Latest Y Delta: ${latestDeltaY.toFixed(3)}, Expected: ${expectedDeltaY.toFixed(3)}, Deviation: ${deviation.toFixed(3)}`);
     const DEVIATION_THRESHOLD = 0.1;
     const validY = deviation < DEVIATION_THRESHOLD;
 
-    if (!validY) {
-        //console.warn(`Funky Y-velocity detected. Deviation: ${deviation}`);
-    }
 
     return validY;
 }
@@ -56,7 +48,6 @@ export function isYVelocityNormal(player, lastPositions) {
  */
 export function isAcceleratingUpwards(player, lastPositions) {
     if (lastPositions.length < 5) {
-        //console.warn("Not enough position data to predict velocity.");
         return true;
     }
 
@@ -64,7 +55,6 @@ export function isAcceleratingUpwards(player, lastPositions) {
     const olderDeltaY = lastPositions[lastPositions.length - 2].y - lastPositions[lastPositions.length - 3].y;
     const latestDeltaY = lastPositions[0].y - lastPositions[1].y;
 
-    // Check if the player is accelerating upwards
     if(
         inAir(player) && 
         oldestDeltaY < olderDeltaY &&
