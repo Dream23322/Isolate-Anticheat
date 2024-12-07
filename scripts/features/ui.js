@@ -7,6 +7,7 @@ import data from "../data/data.js";
 import { parseTime, capitalizeFirstLetter } from "../util.js";
 import { addOp, removeOp } from "../commands/moderation/op.js";
 import { fastFloor } from "../utils/maths/fastMath.js";
+import * as isomath from "../../../utils/maths/isomath.js";
 
 const world = Minecraft.world;
 
@@ -143,7 +144,7 @@ function banMenuSelect(player, selection) {
         let playerName = `${plr.name}`;
         if(plr.id === player.id) playerName += " §1[YOU]";
         if(plr.hasTag("op")) playerName += " §1[OP]";
-        menu.button(playerName, playerIcons[fastFloor(Math.random() * playerIcons.length)]);
+        menu.button(playerName, playerIcons[isomath.floor(Math.random() * playerIcons.length)]);
     }
 
     menu.button("Back", "textures/ui/arrow_left.png");
@@ -577,7 +578,7 @@ function playerSettingsMenu(player) {
         let playerName = `${plr.name}`;
         if(plr.id === player.id) playerName += " §9[YOU]";
         if(plr.hasTag("op")) playerName += " §9[OP]";
-        menu.button(playerName, playerIcons[fastFloor(Math.random() * playerIcons.length)]);
+        menu.button(playerName, playerIcons[isomath.floor(Math.random() * playerIcons.length)]);
     }
 
     menu.button("Back", "textures/ui/arrow_left.png");
@@ -594,7 +595,7 @@ export function playerSettingsMenuSelected(player, playerSelected) {
 
     const menu = new MinecraftUI.ActionFormData()
         .title("Player Menu - " + player.name)
-        .body(`Managing ${playerSelected.name}.\n\nPlayer Info:\nCoordinates: ${fastFloor(playerSelected.location.x)}, ${fastFloor(playerSelected.location.y)}, ${fastFloor(playerSelected.location.z)}\nDimension: ${(playerSelected.dimension.id).replace("minecraft:", "")}\nIsolate Opped: ${playerSelected.hasTag("op")}\nMuted: ${playerSelected.hasTag("isMuted")}\nFrozen: ${playerSelected.hasTag("freeze")}\nVanished: ${playerSelected.hasTag("vanish")}\nFlying: ${playerSelected.hasTag("flying")}`)
+        .body(`Managing ${playerSelected.name}.\n\nPlayer Info:\nCoordinates: ${isomath.floor(playerSelected.location.x)}, ${isomath.floor(playerSelected.location.y)}, ${isomath.floor(playerSelected.location.z)}\nDimension: ${(playerSelected.dimension.id).replace("minecraft:", "")}\nIsolate Opped: ${playerSelected.hasTag("op")}\nMuted: ${playerSelected.hasTag("isMuted")}\nFrozen: ${playerSelected.hasTag("freeze")}\nVanished: ${playerSelected.hasTag("vanish")}\nFlying: ${playerSelected.hasTag("flying")}`)
         .button("Clear EnderChest", "textures/blocks/ender_chest_front.png")
         .button("Kick Player", "textures/ui/anvil_icon.png")
         .button("Ban Player", "textures/ui/anvil_icon.png");
@@ -818,7 +819,7 @@ function debugSettingsMenu(player) {
                 if(container.getItem(i)?.nameTag === config.customcommands.ui.ui_item_name) continue;
 
                 const allItems = [...Object.keys(Minecraft.MinecraftItemTypes)];
-                const randomItemName = allItems[fastFloor(Math.random() * allItems.length)];
+                const randomItemName = allItems[isomath.floor(Math.random() * allItems.length)];
                 const randomItem = Minecraft.MinecraftItemTypes[randomItemName];
 
                 if(totalItems.includes(randomItem.id) || config.itemLists.cbe_items.includes(randomItem.id) || config.itemLists.items_semi_illegal.includes(randomItem.id) || config.itemLists.items_very_illegal.includes(randomItem.id) || randomItemName.includes("element")) {
