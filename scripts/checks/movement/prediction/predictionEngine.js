@@ -93,36 +93,12 @@ export function predictionEngine(player) {
 
 function calculateDeviation(player, lastPositions, otherData) {
     const playerVelocity = player.getVelocity();
-
-    const predictedVelocity = calculateVelocity(player, lastPositions, otherData);
-    const YPreidction = getYVelo(player)
-
-    const predictedPosition = calculatePosition(player, lastPositions, predictedVelocity);
-
-
-
-    return { one: deviation, two: predictedVelocity.y };
+    
+    return { one: deviation, two: 
+        lastPositions[1] - playerVelocity.y;
+    };
 }
 
-
-function calculateVelocity(player, lastPositions) {
-    const velocity = player.getVelocity();
-
-    const velocityX = velocity.x + (lastPositions[1].x - player.location.x) / 2;
-    const velocityY = velocity.y + (lastPositions[1].y - player.location.y) / 2;
-    const velocityZ = velocity.z + (lastPositions[1].z - player.location.z) / 2;
-
-    return {x: velocityX, y: velocityY, z: velocityZ};
-}
-
-
-function calculatePosition(player, lastPositions, predictedVelocity) {
-    const posX = lastPositions[1].x - predictedVelocity.x;
-    const posY = lastPositions[1].y - predictedVelocity.y;
-    const posZ = lastPositions[1].z - predictedVelocity.z;
-
-    return { x: posX, y: posY, z: posZ };
-}
 
 
 /*
