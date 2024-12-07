@@ -829,7 +829,7 @@ export default
             "enabled": true,
             "description": "Prediction Check",
             "deviation": 0.55,
-            "fastPow": false,
+            "fastMaths": false,
             "punishment": "kick",
             "minVlbeforePunishment": 30,
             "AP": 3
