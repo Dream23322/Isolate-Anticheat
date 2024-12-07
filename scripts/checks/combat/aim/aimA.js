@@ -5,6 +5,7 @@ import config from "../../../data/config.js";
 import { fastAbs } from "../../../utils/maths/fastMath.js";
 import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw } from "./aimData.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
+import { abs } from "../../../utils/maths/isomath.js";
 const data = new Map();
 /**
  * Aim A check.
@@ -27,14 +28,14 @@ export function aim_a(player) {
             const deltaYaw2 = getLastDeltaYaw(player);
             
             // Calculate the acceleration in pitch and yaw
-            const yawAccel = fastAbs(deltaYaw - deltaYaw2);
-            const pitchAccel = fastAbs(deltaPitch - deltaPitch2);
+            const yawAccel = abs(deltaYaw - deltaYaw2);
+            const pitchAccel = abs(deltaPitch - deltaPitch2);
 
             // If the player is not moving, skip this iteration
             if(deltaYaw == 0 && deltaPitch == 0) return;
 
-            const invalidYaw = yawAccel < 0.1 && fastAbs(deltaYaw) > 1.5;
-            const invalidPitch = pitchAccel < 0.1 && fastAbs(deltaPitch) > 1.5;
+            const invalidYaw = yawAccel < 0.1 && abs(deltaYaw) > 1.5;
+            const invalidPitch = pitchAccel < 0.1 && abs(deltaPitch) > 1.5;
 
             // Check for suspicious aiming patterns
             if(deltaPitch > 15 && config.modules.aimA.diff < 0.05 || deltaPitch < config.modules.aimA.diff && (deltaYaw > 15 && deltaYaw < 25 || deltaYaw > 250) && deltaYaw2 > 15 && deltaPitch2 < 0 || (invalidYaw || invalidPitch)) {

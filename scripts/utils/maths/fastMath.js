@@ -96,7 +96,7 @@ export function fastHypot(x, y) {
         return max * fastSqrt(1 + ratio * ratio);
     } catch (e) {
         console.warn("[FastHypot] Error: " + e);
-        return 0;
+        return Math.hypot(x, y);
     }
 }
 
@@ -180,7 +180,7 @@ export function fastLog(x) {
 
 export function fastAtan2(y, x) {
     try {
-        const pi_over_4 = PI / 4;
+        const pi_over_4 = fastPI / 4;
         const absY = fastAbs(y) + 1e-10;
         const absX = fastAbs(x) + 1e-10; 
 
@@ -192,7 +192,7 @@ export function fastAtan2(y, x) {
         }
 
         if (x < 0) {
-            angle = PI - angle;
+            angle = fastPI - angle;
         }
         if (y < 0) {
             angle = -angle;
@@ -207,11 +207,11 @@ export function fastAtan2(y, x) {
 export function fastAtan(x) {
     try {
         const a = 0.28;
-        return (PI / 2) * (x / (1 + a * x * x));
+        return (fastPI / 2) * (x / (1 + a * x * x));
     } catch (e) {
         console.warn("[FastAtan] Error: " + e);
-        Math.atan(x);
+        return Math.atan(x);
     }
 }
 
-export const PI = 105414357.0 / 33554432.0 + 1.984187159361080883e-9;
+export const fastPI = 105414357.0 / 33554432.0 + 1.984187159361080883e-9;

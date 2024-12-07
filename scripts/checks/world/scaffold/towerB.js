@@ -3,7 +3,7 @@ import config from "../../../data/config.js";
 import { arrayToList, getAverageDifference } from "../../../utils/maths/mathUtil.js";
 import { fastAbs } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
-
+import * as isomath from "../../../utils/maths/isomath.js";
 const data = new Map();
 const data2 = new Map();
 
@@ -18,7 +18,7 @@ export function tower_b(player, block) {
             const isTower = isPlaceBelow && block.location.x === d2.x && block.location.z === d2.z && block.location.y > d2.y;
 
             const dataList = arrayToList(d);
-            const averageVelocity = fastAbs(getAverageDifference(dataList));
+            const averageVelocity = isomath.abs(getAverageDifference(dataList));
             // If the player has the tag "strict" minus 0.2 from the velocity amount in the config
             const maxVelocity = (
                 player.hasTag("strict") ? config.modules.towerB.velocity - 0.2 : config.modules.towerB.velocity

@@ -1,9 +1,9 @@
-import { fastAbs, fastAtan2, fastFloor, fastPow, fastSqrt, PI } from "./fastMath";
-
+import { fastAbs, fastAtan2, fastFloor, fastPow, fastSqrt, fastPI } from "./fastMath";
+import * as isomath from "../../../utils/maths/isomath.js";
 // Gets player speed
 export function getSpeed(player) {
     const playerVelocity = player.getVelocity();
-    const playerSpeed = Number(fastSqrt(fastAbs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(5));
+    const playerSpeed = Number(isomath.sqrt(isomath.abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(5));
     return playerSpeed;
 }
 
@@ -36,32 +36,32 @@ export function getBlocksBetween(pos1, pos2) {
 export function angleCalc(player, entityHit) {
     const dx = entityHit.location.x - player.location.x;
     const dz = entityHit.location.z - player.location.z;
-    const angleToEntity = fastAtan2(dz, dx) * 180 / PI;
+    const angleToEntity = isomath.atan2(dz, dx) * 180 / fastPI;
     let angle = angleToEntity - player.getRotation().y - 90;
     
     if (angle <= -180) {
         angle += 360;
     }
     
-    return fastAbs(angle);
+    return isomath.abs(angle);
 }
 
 export function isValidHitbox(player, entityHit, buffer = 0) {
     const dx = entityHit.location.x - player.location.x;
     const dz = entityHit.location.z - player.location.z;
-    const angleToEntity = fastAtan2(dz, dx) * 180 / PI;
+    const angleToEntity = isomath.atan2(dz, dx) * 180 / fastPI;
     let angle = angleToEntity - player.getRotation().y - 90;
     
     if (angle <= -180) {
         angle += 360;
     }
     
-    const distance = fastSqrt(dx * dx + dz * dz);
+    const distance = isomath.sqrt(dx * dx + dz * dz);
     const hitboxWidth = 0.6 + buffer;
     const hitboxHeight = 1.8 + buffer;
     
     // Check horizontal and vertical hitbox with buffer
-    const isInHorizontalHitbox = fastAbs(angle) <= (hitboxWidth / distance);
+    const isInHorizontalHitbox = isomath.abs(angle) <= (hitboxWidth / distance);
     const dy = entityHit.location.y - player.location.y;
     const isInVerticalHitbox = dy >= -buffer && dy <= hitboxHeight;
 
@@ -87,7 +87,7 @@ export function hVelocity(player) {
 }
 
 export function hVelocity_2(player) {
-    return fastAbs(player.getVelocity().x - player.getVelocity().z);
+    return isomath.abs(player.getVelocity().x - player.getVelocity().z);
 }
 
 export function angleCalcRecode(player, entityHit) {
@@ -95,10 +95,10 @@ export function angleCalcRecode(player, entityHit) {
     const deltaZ = entityHit.location.z - player.location.z;
 
     // Calculate the angle in radians
-    let angleRad = fastAtan2(deltaZ, deltaX);
+    let angleRad = isomath.atan2(deltaZ, deltaX);
 
     // Convert radians to degrees
-    let angleDeg = (angleRad * 180) / PI;
+    let angleDeg = (angleRad * 180) / fastPI;
 
     // Adjust for player rotation
     angleDeg -= player.getRotation().y + 90;
@@ -113,13 +113,13 @@ export function angleCalcRecode(player, entityHit) {
 
 
 export function getDistanceXZ(one, two) {
-    return fastSqrt(fastPow(two.location.x - one.location.x, 2) + fastPow(two.location.z - one.location.z, 2));
+    return isomath.sqrt(fastPow(two.location.x - one.location.x, 2) + fastPow(two.location.z - one.location.z, 2));
 }
 export function getDistanceXYZ(one, two) {
-    return fastSqrt(fastPow(two.location.x - one.location.x, 2) + fastPow(two.location.y - one.location.y, 2) + fastPow(two.location.z - one.location.z, 2));
+    return isomath.sqrt(fastPow(two.location.x - one.location.x, 2) + fastPow(two.location.y - one.location.y, 2) + fastPow(two.location.z - one.location.z, 2));
 }
 export function getDistanceY(one, two) {
-    return fastSqrt(fastPow(two.location.y - one.location.y, 2));
+    return isomath.sqrt(fastPow(two.location.y - one.location.y, 2));
 }
 export function getAbsoluteGcd(current, last) {
     const EXPANDER = 1.6777216E7; // Adjusted to the provided value
@@ -149,10 +149,10 @@ export function getGcdFloat(a, b) {
         return getGcd(b, a);
     }
 
-    if (fastAbs(b) < 0.001) {
+    if (isomath.abs(b) < 0.001) {
         return a;
     } else {
-        return getGcd(b, a - fastFloor(a / b) * b);
+        return getGcd(b, a - isomath.floor(a / b) * b);
     }
 }
 export const EXPANDER = Math.pow(2, 24);
@@ -179,7 +179,7 @@ export function getVariance(data) {
 
 export function getStandardDeviation(data) {
     const variance = getVariance(data);
-    return fastSqrt(variance);
+    return isomath.sqrt(variance);
 }
 
 export function isScientificNotation(num) {
@@ -192,10 +192,10 @@ export function mathOnGround(posY) {
 
 export function getOutliers(collection, amt=1.5) {
     const values = Array.from(collection);
-    const half = fastFloor(values.length / 2);
+    const half = isomath.floor(values.length / 2);
     const q1 = getMedian(values.slice(0, half));
     const q3 = getMedian(values.slice(half, values.length));
-    const iqr = fastAbs(q1 - q3);
+    const iqr = isomath.abs(q1 - q3);
     const lowThreshold = q1 - amt * iqr;
     const highThreshold = q3 + amt * iqr;
     const outliers = {
@@ -239,9 +239,9 @@ export function getSkewness(data) {
     const sortedData = [...data].sort((a, b) => a - b);
     const median = n % 2 === 0 
         ? (sortedData[n / 2 - 1] + sortedData[n / 2]) / 2 
-        : sortedData[fastFloor(n / 2)];
+        : sortedData[isomath.floor(n / 2)];
 
-    return 3 * (mean - median) / fastSqrt(variance);
+    return 3 * (mean - median) / isomath.sqrt(variance);
 }
 
 export function getAverage(data) {
@@ -284,7 +284,7 @@ export function getKurtosis(data) {
  */
 export function getMedian(values) {
     const sortedValues = values.slice().sort((a, b) => a - b);
-    const middleIndex = fastFloor(sortedValues.length / 2);
+    const middleIndex = isomath.floor(sortedValues.length / 2);
 
     if (sortedValues.length % 2 === 0) {
         return (sortedValues[middleIndex - 1] + sortedValues[middleIndex]) / 2;
@@ -342,11 +342,11 @@ export function isNearPerfectWave(arr, tolerance = 0.1) {
     if (arr.length < 3) return false;
     
     let increasing = arr[1] > arr[0];
-    let prevDiff = fastAbs(arr[1] - arr[0]);
+    let prevDiff = isomath.abs(arr[1] - arr[0]);
     
     for (let i = 2; i < arr.length; i++) {
-      let diff = fastAbs(arr[i] - arr[i-1]);
-      let diffRatio = fastAbs(diff - prevDiff) / prevDiff;
+      let diff = isomath.abs(arr[i] - arr[i-1]);
+      let diffRatio = isomath.abs(diff - prevDiff) / prevDiff;
       
       if (increasing) {
         if (arr[i] <= arr[i-1] || diffRatio > tolerance) {
@@ -369,7 +369,7 @@ export function isNearPerfectWave(arr, tolerance = 0.1) {
 export function isPerfectWave(arr) {
     if (arr.length < 4) return false;
 
-    let peak = fastFloor(arr.length / 2);
+    let peak = isomath.floor(arr.length / 2);
 
     // Check if the array is increasing up to the peak
     for (let i = 1; i <= peak; i++) {
@@ -426,7 +426,7 @@ export function getStandardDeviationV2(numbers) {
     const mean = sum / n;
     const variance = (sumSqr - sum * mean) / (n - 1);
     
-    return fastSqrt(variance);
+    return isomath.sqrt(variance);
 }
 
 

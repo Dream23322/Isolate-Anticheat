@@ -3,7 +3,7 @@ import config from "../../../data/config.js";
 import { getSpeed } from "../../../utils/maths/mathUtil.js";
 import { fastAbs } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
-
+import * as isomath from "../../../utils/maths/isomath.js";
 export function speed_c(player, tick_counter, speedCLog) {
     if(!allowedPlatform(player, config.modules.speedC.AP)) return;
     const playerSpeed = getSpeed(player);
@@ -21,7 +21,7 @@ export function speed_c(player, tick_counter, speedCLog) {
         const last_pos = speedCLog.get(player) || {x: player.location.x, y: player.location.y, z: player.location.z};
         if(
             playerSpeed < 0.1 && 
-            fastAbs((current_pos.x - last_pos.x) + (current_pos.z - last_pos.z) / 2) > max_bps_v
+            isomath.abs((current_pos.x - last_pos.x) + (current_pos.z - last_pos.z) / 2) > max_bps_v
         ) {
             player.addTag("no_speed_c");
         }
@@ -37,29 +37,29 @@ export function speed_c(player, tick_counter, speedCLog) {
             if(player.getEffect("speed")) {
                 const speed_value = player.getEffect("speed").amplifier;
                 const old_max_bps = max_bps_h;
-                max_bps_h = fastAbs(speed_value + old_max_bps);
+                max_bps_h = isomath.abs(speed_value + old_max_bps);
             }
             // If the player has jump_boost then take that into account for vertical BPS
             if(player.getEffect("jump_boost")) {
                 const jump_boost_value = player.getEffect("jump_boost").amplifier;
                 const old_max_bps_2 = max_bps_v;
-                max_bps_v = fastAbs(jump_boost_value + old_max_bps_2);
+                max_bps_v = isomath.abs(jump_boost_value + old_max_bps_2);
             }
             if(player.hasTag("placing")) {
                 max_bps_h+= 3;
             }
 
             // Calculate the BPS of the player  
-            const xz_bps = fastAbs((current_pos.x - last_pos.x) + (current_pos.z - last_pos.z) / 2);
-            const y_bps = fastAbs((current_pos.y - last_pos.y));
+            const xz_bps = isomath.abs((current_pos.x - last_pos.x) + (current_pos.z - last_pos.z) / 2);
+            const y_bps = isomath.abs((current_pos.y - last_pos.y));
             const y_bps_2 = (last_pos.y - current_pos.y);
             if(current_pos.y < 0 || last_pos.y < 0) return;
-            const xyz_bps = fastAbs((current_pos.x - last_pos.x) + (current_pos.y - last_pos.y) + (current_pos.z - last_pos.z) / 3);
+            const xyz_bps = isomath.abs((current_pos.x - last_pos.x) + (current_pos.y - last_pos.y) + (current_pos.z - last_pos.z) / 3);
             if(player.hasTag("speedC")) console.log(`player xz: ${xz_bps} xyz: ${xyz_bps} y_bps: ${y_bps}`);
             if(y_bps_2 < -10) player.addTag("speedC_bypass");
             if(playerVelocity.y > 5) player.addTag("speedC_bypass");
             // Calculate the max XYZ bps
-            const max_xyz_bps = fastAbs((max_bps_h + max_bps_v) / 2);
+            const max_xyz_bps = isomath.abs((max_bps_h + max_bps_v) / 2);
             // Check if the player is under conditions that could cause the player to flag the check even if they are not cheating or using client mods
             if(!player.hasTag("ice") && !player.isFlying && !player.isGliding && (!player.hasTag('damaged') || player.hasTag("fall_damage")) && !player.hasTag("no_speed_c") && !player.hasTag("stairs") && !player.hasTag("speedE_pass")) {
                 //player.removeTag("speedC_bypass");

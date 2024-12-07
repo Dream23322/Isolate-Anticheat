@@ -4,6 +4,7 @@ import { getAbsoluteGcd } from "../../../utils/maths/mathUtil.js";
 import { fastAbs, fastFloor } from "../../../utils/maths/fastMath.js";
 import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw } from "./aimData.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
+import { abs, floor } from "../../../utils/maths/isomath.js";
 export function aim_b(player) {
     if(!allowedPlatform(player, config.modules.aimB.AP)) return;
     if(config.modules.aimB.enabled) {
@@ -28,11 +29,11 @@ export function aim_b(player) {
         const currentYaw = deltaYaw / constantYaw;
         const currentPitch = deltaPitch / constantPitch;
 
-        const floorYaw = fastFloor(currentYaw);
-        const floorPitch = fastFloor(currentPitch);
+        const floorYaw = floor(currentYaw);
+        const floorPitch = floor(currentPitch);
 
-        const moduloX = fastAbs(currentYaw - floorYaw);
-        const moduloY = fastAbs(currentPitch - floorPitch);
+        const moduloX = abs(currentYaw - floorYaw);
+        const moduloY = abs(currentPitch - floorPitch);
         const invalidX2 = moduloX > 0.5 && !Number.isFinite(moduloX);
         const invalidY2 = moduloY > 0.5 && !Number.isFinite(moduloY);
         if((invalidX2 || invalidY2) && (player.hasTag("attacking") || !config.modules.aimB.needHit)) flag(player, "Aim", "B", "Rotation (BETA)", "modX", `${moduloX},modY=${moduloY}`, false);
@@ -45,8 +46,8 @@ export function aim_b(player) {
             const moduloY = currentY % previousY;
             const moduloX = currentX % previousX;
 
-            const floorModuloY = fastAbs(fastFloor(moduloY) - moduloY);
-            const floorModuloX = fastAbs(fastFloor(moduloX) - moduloX);
+            const floorModuloY = abs(floor(moduloY) - moduloY);
+            const floorModuloX = abs(floor(moduloX) - moduloX);
 
             const invalidY3 = moduloY > 90 && floorModuloY > 0.1;
             const invalidX3 = moduloX > 90 && floorModuloX > 0.1;

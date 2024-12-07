@@ -2,10 +2,10 @@ import { getScore, setScore } from "../../../util";
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { arrayToList, countDuplicates, countRoundedValues, findNearDuplicates, getAverage, getOutliersInt, isNearPerfectWave } from "../../../utils/maths/mathUtil.js";
-import { fastAbs, fastRound } from "../../../utils/maths/fastMath.js";
+import { abs, fastRound } from "../../../utils/maths/fastMath.js";
 import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw } from "./aimData.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
-
+import * as isomath from "../../../utils/maths/isomath.js";
 const data = new Map();
 const dataYaw = new Map();
 const dataPitch = new Map();
@@ -29,10 +29,10 @@ export function aim_e(player) {
             const lastDeltaYaw = getLastDeltaYaw(player);
             const lastDeltaPitch = getLastDeltaPitch(player);
 
-            const yawAccel = fastAbs(deltaYaw - lastDeltaYaw);
-            const pitchAccel = fastAbs(deltaPitch - lastDeltaPitch);
+            const yawAccel = abs(deltaYaw - lastDeltaYaw);
+            const pitchAccel = abs(deltaPitch - lastDeltaPitch);
 
-            const accel = fastAbs(yawAccel + pitchAccel);
+            const accel = abs(yawAccel + pitchAccel);
 
             if(isNearPerfectWave(arrayToList(d), 0.1) && (player.hasTag("attacking") || !config.modules.aimE.needHit)) {
                 setScore(player, "AimE_BUFFER", getScore(player, "AimE_BUFFER", 0) + 1);
@@ -42,11 +42,11 @@ export function aim_e(player) {
                 }
             }
             
-            const deltaDiff = fastAbs(deltaYaw - deltaPitch);
+            const deltaDiff = abs(deltaYaw - deltaPitch);
             if(deltaDiff < 0.1 && deltaYaw > 1 && (player.hasTag("attacking") || !config.modules.aimE.needHit)) flag(player, "Aim", "E", "Kuristosis (Beta)", "deltaDiff", deltaDiff, false);
 
-            const oldDeltaDiff = fastAbs(lastDeltaYaw - lastDeltaPitch);
-            if(fastAbs(oldDeltaDiff - deltaDiff) < 0.1 && (player.hasTag("attacking") || !config.modules.aimE.needHit)) flag(player, "Aim", "E", "Kuristosis (Beta)", "rotationDiff", fastAbs(oldDeltaDiff - deltaDiff), false);
+            const oldDeltaDiff = abs(lastDeltaYaw - lastDeltaPitch);
+            if(abs(oldDeltaDiff - deltaDiff) < 0.1 && (player.hasTag("attacking") || !config.modules.aimE.needHit)) flag(player, "Aim", "E", "Kuristosis (Beta)", "rotationDiff", abs(oldDeltaDiff - deltaDiff), false);
             const deltaYawAverage = getAverage(dYaw);
             const deltaYawDuplicates = findNearDuplicates(dYaw, 0);
 
@@ -57,19 +57,19 @@ export function aim_e(player) {
 
             if(deltaPitchAverage > 1 && deltaPitchDuplicates > 15 && (player.hasTag("attacking") || !config.modules.aimE.needHit)) flag(player, "Aim", "E", "Kuristosis (Beta)", "deltaPitchDuplicates", deltaPitchDuplicates, false);
 
-            const total = fastAbs(deltaYawDuplicates + deltaPitchDuplicates);
+            const total = abs(deltaYawDuplicates + deltaPitchDuplicates);
 
             if(total > config.modules.aimE.total && (player.hasTag("attacking") || !config.modules.aimE.needHit)) flag(player, "Aim", "E", "Kuristosis (Beta)", "total", total, false);
 
             if(config.modules.aimE.experimental) {
-                // const isRoundYaw = fastAbs(deltaYaw - fastRound(deltaYaw))
-                // const isRoundPitch = fastAbs(deltaPitch - fastAbs(deltaPitch))
+                // const isRoundYaw = abs(deltaYaw - isomath.round(deltaYaw))
+                // const isRoundPitch = abs(deltaPitch - abs(deltaPitch))
                 // if(isRoundPitch < 0.01 || isRoundYaw < 0.01) flag(player, "Aim", "E", "Kuristosis (Beta)", "roundDiffA", `Pitch: ${isRoundPitch}, Yaw: ${isRoundYaw}`, false);
-                const pitchDeltaDelta = fastAbs(deltaPitch - lastDeltaPitch);
-                const isRoundDiffPitch = fastAbs(pitchDeltaDelta - fastRound(pitchDeltaDelta));
+                const pitchDeltaDelta = abs(deltaPitch - lastDeltaPitch);
+                const isRoundDiffPitch = abs(pitchDeltaDelta - isomath.round(pitchDeltaDelta));
 
-                const yawDeltaDelta = fastAbs(deltaYaw - lastDeltaYaw);
-                const isRoundDiffYaw = fastAbs(yawDeltaDelta - fastRound(yawDeltaDelta));   
+                const yawDeltaDelta = abs(deltaYaw - lastDeltaYaw);
+                const isRoundDiffYaw = abs(yawDeltaDelta - isomath.round(yawDeltaDelta));   
 
                 if(isRoundDiffPitch < 0.01 && isRoundDiffYaw < 0.2 || isRoundDiffYaw < 0.01 && isRoundDiffPitch < 0.2) flag(player, "Aim", "E", "Kuristosis (Beta)", "roundDiffB", `Pitch: ${isRoundDiffPitch}, Yaw: ${isRoundDiffYaw}`, false);
 

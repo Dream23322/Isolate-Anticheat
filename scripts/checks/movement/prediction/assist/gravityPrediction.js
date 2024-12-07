@@ -4,7 +4,7 @@ import { fastAbs, fastSqrt } from "../../../../utils/maths/fastMath.js";
 import { fastPow } from "../../../../utils/maths/fastMath.js";
 import { inAir } from "../../../../utils/gameUtil.js";
 import { getAverage } from "../../../../utils/maths/mathUtil.js";
-
+import * as isomath from "../../../utils/maths/isomath.js";
 /**
  * Check if player's Y-velocity follows expected patterns based on recent positions.
  * @param {object} player - The player object.
@@ -26,13 +26,13 @@ export function isYVelocityNormal(player, lastPositions) {
             deltaX,
             deltaY,
             deltaZ,
-            magnitude: fastSqrt(fastPow(deltaX, 2) + fastPow(deltaY, 2) + fastPow(deltaZ, 2)),
+            magnitude: isomath.sqrt(isomath.pow(deltaX, 2) + isomath.pow(deltaY, 2) + isomath.pow(deltaZ, 2)),
         });
     }
 
     const latestDeltaY = lastPositions[0].y - lastPositions[1].y;
     const expectedDeltaY = velocities[0].deltaY + GRAVITY_ACCEL;
-    const deviation = fastAbs(latestDeltaY - expectedDeltaY);
+    const deviation = isomath.abs(latestDeltaY - expectedDeltaY);
     const DEVIATION_THRESHOLD = 0.1;
     const validY = deviation < DEVIATION_THRESHOLD;
 
@@ -58,9 +58,9 @@ export function isAcceleratingUpwards(player, lastPositions) {
     if(
         inAir(player) && 
         oldestDeltaY < olderDeltaY &&
-        fastAbs(oldestDeltaY - olderDeltaY) > 0.7 &&
+        isomath.abs(oldestDeltaY - olderDeltaY) > 0.7 &&
         olderDeltaY < latestDeltaY &&
-        fastAbs(olderDeltaY - latestDeltaY) > 0.8
+        isomath.abs(olderDeltaY - latestDeltaY) > 0.8
     ) return true;
 
     return false;

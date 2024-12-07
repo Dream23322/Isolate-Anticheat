@@ -5,7 +5,7 @@ import * as Minecraft from "@minecraft/server";
 import settings from "./data/settings.js";
 // @ts-ignore
 import { fastFloor, fastRound } from "./utils/maths/fastMath.js";
-
+import * as isomath from "../../../utils/maths/isomath.js";
 
 export const world = Minecraft.world;
 
@@ -71,11 +71,11 @@ export function msToTime(ms) {
     if(ms > Date.now()) ms = ms - Date.now();
 
     // turn milliseconds into days, minutes, seconds, etc
-    const w = fastFloor(ms / (1000 * 60 * 60 * 24 * 7));
-    const d = fastFloor((ms % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24));
-    const h = fastFloor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const m = fastFloor((ms % (1000 * 60 * 60)) / (1000 * 60));
-    const s = fastFloor((ms % (1000 * 60)) / 1000);
+    const w = isomath.floor(ms / (1000 * 60 * 60 * 24 * 7));
+    const d = isomath.floor((ms % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24));
+    const h = isomath.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = isomath.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+    const s = isomath.floor((ms % (1000 * 60)) / 1000);
     return {
         w: w,
         d: d,

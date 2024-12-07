@@ -4,6 +4,7 @@ import config from "../../../data/config.js";
 import { arrayToList, getAverage, getgcd, getGcdFloat, getStandardDeviationV2 } from "../../../utils/maths/mathUtil.js";
 import { fastAbs } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
+import { abs } from "../../../utils/maths/isomath.js";
 
 const data = new Map();
 const yawAccelD = new Map();
@@ -17,14 +18,14 @@ export function aim_f(player) {
         const yawSamples = yawAccelD.get(player.name) || (new Array(20)).fill(0);
         const pitchSamples = pitchAccelD.get(player.name) || (new Array(20)).fill(0);
         if(d != null) {
-            const deltaPitch = fastAbs(rotation.x - d.one);
-            const lastDeltaPitch = fastAbs(d.one - d.two);
+            const deltaPitch = abs(rotation.x - d.one);
+            const lastDeltaPitch = abs(d.one - d.two);
             
-            const deltaYaw = fastAbs(rotation.y - d.three);
-            const lastDeltaYaw = fastAbs(d.three - d.four);
+            const deltaYaw = abs(rotation.y - d.three);
+            const lastDeltaYaw = abs(d.three - d.four);
 
-            const yawAccel = fastAbs(deltaYaw - lastDeltaYaw);
-            const pitchAccel = fastAbs(deltaPitch - lastDeltaPitch);
+            const yawAccel = abs(deltaYaw - lastDeltaYaw);
+            const pitchAccel = abs(deltaPitch - lastDeltaPitch);
 
             // Make sure there is enough data in the arrays
             if(yawSamples.length >= 20) {

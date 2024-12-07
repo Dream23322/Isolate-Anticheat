@@ -3,7 +3,7 @@ import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { fastAbs, fastHypot } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
-
+import * as isomath from "../../../utils/maths/isomath.js";
 const timerData = new Map();
 /*
 Check made by _ieroo (@yellowworld777)
@@ -15,8 +15,8 @@ export function timer_a(player, lastPosition, Value){
         const velocity = player.getVelocity();
         const calcVelocity = {x: player.location.x - lastPosition.x, y:player.location.y - lastPosition.y, z: player.location.z - lastPosition.z};
         if(!isMovingWithVelocity(velocity)) return;
-        const ServerSpeed = fastAbs(fastHypot(fastHypot(calcVelocity.x, calcVelocity.z), calcVelocity.y));
-        const ClientSpeed = fastAbs(fastHypot(fastHypot(velocity.x, velocity.z), velocity.y));
+        const ServerSpeed = isomath.abs(fastHypot(fastHypot(calcVelocity.x, calcVelocity.z), calcVelocity.y));
+        const ClientSpeed = isomath.abs(fastHypot(fastHypot(velocity.x, velocity.z), velocity.y));
         const duped = ServerSpeed / ClientSpeed;
         if(player.timerHold == null) player.timerHold = [];
         player.timerHold.push(duped * 20 / Value);
@@ -39,11 +39,11 @@ export function timer_a(player, lastPosition, Value){
                     timer_lev_low++;
                 }
                 if(timerData.get(player) > timer_lev && (timerValue) > timer_lev || timerData.get(player) < timer_lev_low && (timerValue) < timer_lev_low) {
-                    if(fastAbs(player.lastPosition.y - player.location.y) > 5) {
+                    if(isomath.abs(player.lastPosition.y - player.location.y) > 5) {
                         timerData.set(player, 20);
                         player.addTag("timer_bypass");
                     }
-                    if(!player.hasTag("timer_bypass") && !player.hasTag("ender_pearl") && timerValue < 1000 && fastAbs(timerData.get(player) - timerValue) < 15 && !player.hasTag("teleporting")) {
+                    if(!player.hasTag("timer_bypass") && !player.hasTag("ender_pearl") && timerValue < 1000 && isomath.abs(timerData.get(player) - timerValue) < 15 && !player.hasTag("teleporting")) {
                         flag(player, "Timer", "A", "Packet", "timer", timerData.get(player), false);
                     }
                 }
@@ -57,5 +57,5 @@ export function timer_a(player, lastPosition, Value){
     player.lastPosition = player.location;
 }
 function isMovingWithVelocity(velocity){
-	return fastAbs(fastHypot(velocity.x, velocity.z)) > 0.01;
+	return isomath.abs(fastHypot(velocity.x, velocity.z)) > 0.01;
 }

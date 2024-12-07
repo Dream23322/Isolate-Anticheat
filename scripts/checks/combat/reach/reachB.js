@@ -3,17 +3,17 @@ import config from "../../../data/config.js";
 import { getBlocksBetween, getSpeed } from "../../../utils/maths/mathUtil.js";
 import { fastAbs, fastPow, fastSqrt } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
-
+import * as isomath from "../../../utils/maths/isomath.js";
 const data = new Map();
 
 export function reach_b(player, entity) {
 	if(!allowedPlatform(player, config.modules.reachB.AP)) return;
 	if(config.modules.reachB.enabled) {
 		if(player.hasTag("gmc") || config.modules.reachB.entities_blacklist.includes(entity.typeId)) return;
-		let xz_distance = fastSqrt(fastPow(entity.location.x - player.location.x, 2) + fastPow(entity.location.z - player.location.z, 2));
+		let xz_distance = isomath.sqrt(isomath.pow(entity.location.x - player.location.x, 2) + isomath.pow(entity.location.z - player.location.z, 2));
 		const d = data.get(player.name) ?? (new Array(15)).fill(0);
 		if(d) {
-			const avg = fastAbs((xz_distance + d[0] + d[1] + d[2] + d[3] + d[4] + d[5] + d[6] + d[7] + d[8] + d[9] + d[10] + d[11] + d[12] + d[13] + d[14]) / 15);
+			const avg = isomath.abs((xz_distance + d[0] + d[1] + d[2] + d[3] + d[4] + d[5] + d[6] + d[7] + d[8] + d[9] + d[10] + d[11] + d[12] + d[13] + d[14]) / 15);
 			if(player.hasTag('reachDebug')) console.log("Reach: ", avg)
 			if(avg > getMaxReach(player, entity)) {
 				flag(player, "Reach", "B", "Combat", "reach", `${avg.toFixed(5)},max=${getMaxReach(player, entity)}`, true);

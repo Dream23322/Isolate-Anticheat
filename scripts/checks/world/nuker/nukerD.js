@@ -5,6 +5,7 @@ import { angleCalc, getSpeed, getBlocksBetween } from "../../../utils/maths/math
 import { add_effect } from "../../../utils/gameUtil.js";
 import { fastPow, fastSqrt } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
+import * as isomath from "../../../utils/maths/isomath.js";
 
 export function nuker_d(player, block, brokenBlockId, resetValue) {
     if(!allowedPlatform(player, config.modules.nukerD.AP)) return;
@@ -45,7 +46,7 @@ export function nuker_d(player, block, brokenBlockId, resetValue) {
         }
 
         // Calculate the distance between the player and the block
-        const distance = fastSqrt(fastPow(block.location.x - player.location.x, 2) + fastPow(block.location.z - player.location.z, 2));
+        const distance = isomath.sqrt(isomath.pow(block.location.x - player.location.x, 2) + isomath.pow(block.location.z - player.location.z, 2));
 
         // Check if the player is moving too fast and flag the player if true
         if(getSpeed(player) > 0.325) {

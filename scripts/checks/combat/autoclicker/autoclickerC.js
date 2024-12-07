@@ -2,6 +2,7 @@ import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { fastAbs, fastRound } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
+import { abs, round } from "../../../utils/maths/isomath.js";
 
 const data = new Map();
 export function autoclicker_c(player) {
@@ -11,7 +12,7 @@ export function autoclicker_c(player) {
         const cps = player.cps;
         const isRounded = Number.isInteger(cps);
         if(config.modules.autoclickerC.experimental) {
-            const difference = fastAbs(fastRound(cps) - cps);
+            const difference = abs(round(cps) - cps);
             if(difference < 0.001) {
                 if(data.get(player.name)) {
                     const buffer = data.get(player.name);

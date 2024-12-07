@@ -4,7 +4,7 @@ import { playerTellraw } from "../../../utils/gameUtil";
 import { arrayToList, getAverage } from "../../../utils/maths/mathUtil.js";
 import { fastAbs, fastPow, fastSqrt } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
-
+import * as isomath from "../../../utils/maths/isomath.js";
 const data = new Map();
 const data2 = new Map();
 export function speed_e(player) {
@@ -12,15 +12,15 @@ export function speed_e(player) {
     
     if(config.modules.speedE.enabled) {
         if(data2.get(player.name)) {
-            const current_pos = {x: fastAbs(player.location.x), y: fastAbs(player.location.y), z: fastAbs(player.location.z)};
+            const current_pos = {x: isomath.abs(player.location.x), y: isomath.abs(player.location.y), z: isomath.abs(player.location.z)};
             const prev_pos = {x: data2.get(player.name).x, y: data2.get(player.name).y, z: data2.get(player.name).z} || { x: player.location.x, y: player.location.y, z: player.location.z };
-            const bptDiff = fastAbs(fastSqrt(fastPow(fastAbs(current_pos.x - prev_pos.x), 2) + fastPow(fastAbs(current_pos.z - prev_pos.z), 2)));
+            const bptDiff = isomath.abs(isomath.sqrt(isomath.pow(isomath.abs(current_pos.x - prev_pos.x), 2) + isomath.pow(isomath.abs(current_pos.z - prev_pos.z), 2)));
             const d = data.get(player.name) ?? (new Array(29)).fill(0);
             if(d) {
                 // Calculate max BPT
                 let maxBPT = config.modules.speedE.bpt // 0.271
                 if(player.getEffect("slowness")) {
-                    maxBPT -= (fastPow(player.getEffect("slowness").amplifier, 2) * 0.01);
+                    maxBPT -= (isomath.pow(player.getEffect("slowness").amplifier, 2) * 0.01);
                     if(maxBPT < 0.16 && player.isJumping) maxBPT = 0.22; 
                 }
                 if(player.getEffect("speed")) {
@@ -29,7 +29,7 @@ export function speed_e(player) {
                     const baseBPT = config.modules.speedE.bpt;
                     const scaleFactor = amplifier > 2 ? 0.25 - (amplifier - 0.25) * 0.015 : 0.25;
 
-                    maxBPT = baseBPT * fastPow(1 + scaleFactor, amplifier - 1);
+                    maxBPT = baseBPT * isomath.pow(1 + scaleFactor, amplifier - 1);
                     if(amplifier >= 4) maxBPT = maxBPT - (amplifier * 0.01 * 2) - (0.01 * (4 - amplifier));
                     if(4 - amplifier <= 0) maxBPT -= amplifier * 0.01;
                     if(amplifier == 1) maxBPT == 0.405
@@ -49,7 +49,7 @@ export function speed_e(player) {
                 }
                 const valueList = arrayToList(d);
                 valueList.push(bptDiff);
-                const average = fastAbs(getAverage(valueList));
+                const average = isomath.abs(getAverage(valueList));
                 if(player.hasTag("speedEDebug") && average > 0 && player.hasTag("moving")) player.sendMessage(`${player.name} ${average.toFixed(5)} | ${average * 30} | ${maxBPT} | ${player.getEffect("speed")?.amplifier ?? 0}`);
                 if(
                     average > maxBPT && 
@@ -74,9 +74,9 @@ export function speed_e(player) {
             data.set(player.name, d);
         }
         data2.set(player.name, {
-            x: fastAbs(player.location.x),
-            y: fastAbs(player.location.y),
-            z: fastAbs(player.location.z)
+            x: isomath.abs(player.location.x),
+            y: isomath.abs(player.location.y),
+            z: isomath.abs(player.location.z)
         });
     }
 

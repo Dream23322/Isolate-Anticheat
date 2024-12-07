@@ -2,6 +2,7 @@ import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { fastAbs, fastHypot } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
+import * as isomath from "../../../utils/maths/isomath.js";
 
 export function scaffold_b(player, block) {
     if(!allowedPlatform(player, config.modules.scaffoldB.AP)) return;
@@ -14,9 +15,9 @@ export function scaffold_b(player, block) {
         fastHypot(velocity.x, velocity.z) > 0.2 &&
         block.location.y < player.location.y &&
         ((rotation.x % 1 === 0 ||
-        (rotation.y % 1 === 0 && fastAbs(rotation.y) !== 90) ||
+        (rotation.y % 1 === 0 && isomath.abs(rotation.y) !== 90) ||
         (rotation.x % 5 === 0 ||
-        (rotation.y % 5 === 0 && fastAbs(rotation.y) !== 90))) &&
+        (rotation.y % 5 === 0 && isomath.abs(rotation.y) !== 90))) &&
         rotation.x !== 0 && rotation.y !== 0) &&
         config.modules.scaffoldB.enabled;
 

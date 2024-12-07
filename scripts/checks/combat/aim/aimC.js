@@ -6,6 +6,7 @@ import { fastAbs } from "../../../utils/maths/fastMath.js";
 import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw } from "./aimData.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import { arrayToList, EXPANDER, getAverage, getgcd } from "../../../utils/maths/mathUtil.js";
+import { abs } from "../../../utils/maths/isomath.js";
 
 const data = new Map();
 
@@ -36,7 +37,7 @@ export function aim_c(player) {
 
         // Get the average gcd
         const dataList = arrayToList(d);
-        const averageGCD = fastAbs(dataList[0] + dataList[1] + dataList[2] + dataList[3] + dataList[4], dataList[5] + dataList[6] + dataList[7] + dataList[8] + dataList[9]) / 10;
+        const averageGCD = abs(dataList[0] + dataList[1] + dataList[2] + dataList[3] + dataList[4], dataList[5] + dataList[6] + dataList[7] + dataList[8] + dataList[9]) / 10;
         if(
             averageGCD > 2000 &&
             (player.hasTag("attacking") || !config.modules.aimC.needHit)

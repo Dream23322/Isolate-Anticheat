@@ -5,6 +5,7 @@ import { fastAbs, fastRound } from "../../../utils/maths/fastMath.js";
 import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw } from "./aimData.js";
 import { arrayToList, countDuplicates, getOutliers, getOutliersInt } from "../../../utils/maths/mathUtil.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
+import { abs } from "../../../utils/maths/isomath.js";
 
 const dataPitch = new Map();
 const dataYaw = new Map();
@@ -17,11 +18,11 @@ export function aim_i(player) {
     const deltaPitch = getDeltaPitch(player);
     const deltaYaw = getDeltaYaw(player);
 z
-    const differencePitch = fastAbs(deltaPitch - getLastDeltaPitch(player));
-    const differenceYaw = fastAbs(deltaYaw - getLastDeltaYaw(player));
+    const differencePitch = abs(deltaPitch - getLastDeltaPitch(player));
+    const differenceYaw = abs(deltaYaw - getLastDeltaYaw(player));
 
-    const joltX = fastAbs(deltaPitch - differencePitch);
-    const joltY = fastAbs(deltaYaw - differenceYaw);
+    const joltX = abs(deltaPitch - differencePitch);
+    const joltY = abs(deltaYaw - differenceYaw);
     if(joltX != 0.0 && joltY != 0.0) {
         // Setup Arraylists
         const dPitch = dataPitch.get(player.name) ?? (new Array(30)).fill(0);

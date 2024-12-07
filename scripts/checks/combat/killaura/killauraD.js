@@ -3,7 +3,7 @@ import config from "../../../data/config.js";
 import { arrayToList, getAverageDifference, isWavePattern } from "../../../utils/maths/mathUtil.js";
 import { fastAbs } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
-
+import * as isomath from "../../../utils/maths/isomath.js";
 const data = new Map();
 const datatwo = new Map();
 export function killaura_d(player) {
@@ -19,9 +19,9 @@ export function killaura_d(player) {
             const asList = arrayToList(d);
             const asList2 = arrayToList(dtwo);
             if(
-                fastAbs(getAverageDifference(asList2)) > 2 && 
+                isomath.abs(getAverageDifference(asList2)) > 2 && 
                 isWavePattern(asList) && 
-                fastAbs(getAverageDifference(asList)) > 17
+                isomath.abs(getAverageDifference(asList)) > 17
             ) {
                 flag(player, "Killaura", "D", "Combat (Beta)", "data", `${getAverageDifference(asList)}, ${getAverageDifference(asList2)}`, true);
             }

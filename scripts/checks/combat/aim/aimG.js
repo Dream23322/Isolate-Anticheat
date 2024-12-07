@@ -4,6 +4,7 @@ import config from "../../../data/config.js";
 import { arrayToList, getAverage, getgcd, getGcdFloat, getOutliersInt, getStandardDeviationV2 } from "../../../utils/maths/mathUtil.js";
 import { fastAbs } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
+import { abs } from "../../../utils/maths/isomath.js";
 
 const dataYaw = new Map();
 const dataPitch = new Map();
@@ -17,8 +18,8 @@ export function aim_g(player) {
         const dP = dataPitch.get(player.name) ?? (new Array(20)).fill(0);
 
         if(lastDat !== 0 && dP) {
-            const deltaYaw = fastAbs(rot.y - lastDat.y);
-            const deltaPitch = fastAbs(rot.x - lastDat.x);
+            const deltaYaw = abs(rot.y - lastDat.y);
+            const deltaPitch = abs(rot.x - lastDat.x);
 
             if(deltaYaw > 0 && deltaPitch > 5) {
                 dP.unshift(deltaPitch);

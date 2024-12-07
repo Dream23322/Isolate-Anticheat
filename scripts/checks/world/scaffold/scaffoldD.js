@@ -3,6 +3,7 @@ import config from "../../../data/config.js";
 import { arrayToList, getAverageDifference } from "../../../utils/maths/mathUtil.js";
 import { fastAbs } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
+import * as isomath from "../../../utils/maths/isomath.js";
 
 const data = new Map();
 const data2 = new Map();
@@ -19,8 +20,8 @@ export function scaffold_d(player, block) {
             const pitchList = arrayToList(d);
             const yawList = arrayToList(d2);
 
-            const pitchDifferenceAverage = fastAbs(getAverageDifference(pitchList));
-            const yawDifferenceAverage = fastAbs(getAverageDifference(yawList));
+            const pitchDifferenceAverage = isomath.abs(getAverageDifference(pitchList));
+            const yawDifferenceAverage = isomath.abs(getAverageDifference(yawList));
 
             if(
                 isBlockBelow &&

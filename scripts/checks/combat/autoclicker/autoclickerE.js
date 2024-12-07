@@ -27,7 +27,7 @@ export function autoclicker_e(player) {
                 }
 
                 if(cpsOutliers < 2) flag(player, 'Autoclicker', "E", "Kuristosis", "CPS", player.cps, true);
-                const averageCpsDiff = fastAbs(getAverageDifference(CPSList));
+                const averageCpsDiff = fastAb(getAverageDifference(CPSList));
 
 
                 const cpsDuplicates = findNearDuplicates(CPSList);

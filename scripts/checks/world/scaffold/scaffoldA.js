@@ -3,6 +3,7 @@ import config from "../../../data/config.js";
 import { getAverageDifference, getDistanceXZ, getSpeed } from "../../../utils/maths/mathUtil.js";
 import { fastAbs, fastHypot } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
+import * as isomath from "../../../utils/maths/isomath.js";
 
 // Thank you Visual1mpact for helping me with the Map's
 // Initialize scaffold_a_map if not present
@@ -12,8 +13,8 @@ function is_diag_recode(neww, player, old) {
     const dx = neww.x - old.x;
     const dz = neww.z - old.z;
     return (
-        (fastAbs(neww.x) ^ fastAbs(old.x)) &&
-        (fastAbs(neww.z) ^ fastAbs(old.z)) &&
+        (isomath.abs(neww.x) ^ isomath.abs(old.x)) &&
+        (isomath.abs(neww.z) ^ isomath.abs(old.z)) &&
         ((dx * dx) < 4) &&
         ((dz * dz) < 4) &&
         (neww.y < player.location.y) &&
@@ -61,16 +62,16 @@ export function scaffold_a(player, block) {
         const yaw_values = scaffold_a_map.get(player.name)?.yaw;
         const distance = getDistanceXZ(player, block);
         if (last_place_location && old_place_location && pitch_values) {
-            const xDist = fastAbs(place_location.x) - fastAbs(last_place_location.x);
-            const zDist = fastAbs(place_location.z) - fastAbs(last_place_location.z);
-            const isSameX = xDist === 0 && xDist === fastAbs(old_place_location.x);
-            const isSameZ = zDist === 0 && zDist === fastAbs(old_place_location.z);
+            const xDist = isomath.abs(place_location.x) - isomath.abs(last_place_location.x);
+            const zDist = isomath.abs(place_location.z) - isomath.abs(last_place_location.z);
+            const isSameX = xDist === 0 && xDist === isomath.abs(old_place_location.x);
+            const isSameZ = zDist === 0 && zDist === isomath.abs(old_place_location.z);
 
             if (isSameX || isSameZ) {
-                const isPitchChange = fastAbs(pitch_values.new - pitch_values.mid) > 0.05 &&
-                                       fastAbs(pitch_values.mid - pitch_values.old) > 0.05;
-                const isYawSame = fastAbs(yaw_values.new - yaw_values.mid) === 0 &&
-                                  fastAbs(yaw_values.mid - yaw_values.old) === 0;
+                const isPitchChange = isomath.abs(pitch_values.new - pitch_values.mid) > 0.05 &&
+                                       isomath.abs(pitch_values.mid - pitch_values.old) > 0.05;
+                const isYawSame = isomath.abs(yaw_values.new - yaw_values.mid) === 0 &&
+                                  isomath.abs(yaw_values.mid - yaw_values.old) === 0;
 
                 if (isPitchChange && isYawSame) {
                     flag(player, "Scaffold", "A", "World", "yaw(1)", player.getRotation().y, false);
@@ -81,12 +82,12 @@ export function scaffold_a(player, block) {
                 isAirBelowAllBlocks(player, place_location, last_place_location, old_place_location)
             ) {
                 
-                const isPitchEqual = fastAbs(pitch_values.new - pitch_values.mid) === 0
-                                    && fastAbs(pitch_values.new - pitch_values.old) === 0;
-                const isYawEqual = fastAbs(yaw_values.new - yaw_values.mid) === 0
-                                 && fastAbs(yaw_values.new - yaw_values.old) === 0;
-                const arePitchAndYawDifferent = fastAbs(pitch_values.new - pitch_values.mid) !== 0 
-                                           && fastAbs(yaw_values.new - yaw_values.mid) !== 0;
+                const isPitchEqual = isomath.abs(pitch_values.new - pitch_values.mid) === 0
+                                    && isomath.abs(pitch_values.new - pitch_values.old) === 0;
+                const isYawEqual = isomath.abs(yaw_values.new - yaw_values.mid) === 0
+                                 && isomath.abs(yaw_values.new - yaw_values.old) === 0;
+                const arePitchAndYawDifferent = isomath.abs(pitch_values.new - pitch_values.mid) !== 0 
+                                           && isomath.abs(yaw_values.new - yaw_values.mid) !== 0;
                 const isDiagonalConditionMet = isPitchEqual && isYawEqual ||
                                               isYawEqual && isPitchEqual && arePitchAndYawDifferent;
                 if (isDiagonalConditionMet && getSpeed(player) > 0.3) {
@@ -96,8 +97,8 @@ export function scaffold_a(player, block) {
                 }
                 const rotx = player.getRotation().x;
 
-                const diff_1 = fastAbs(yaw_values.mid - yaw_values.new);   
-                const diff_2 = fastAbs(yaw_values.new - player.getRotation().y);
+                const diff_1 = isomath.abs(yaw_values.mid - yaw_values.new);   
+                const diff_2 = isomath.abs(yaw_values.new - player.getRotation().y);
                 if(diff_2 < 10 && diff_1 < 10 && !is_decrease(player, place_location, last_place_location, old_place_location) && diff_1 > 0.5 && diff_2 > 0.5 && diff_1 != 0 && diff_2 != 0 && !config.modules.scaffoldA.nofalse && getSpeed(player) > 0.1 && (!player.isOnGround || diff_1 > 5 || diff_2 > 5)) {
                     flag(player, "Scaffold", "A", "World", "Yaw Diff (2)", (diff_1 + diff_2) / 2, false);
                 }

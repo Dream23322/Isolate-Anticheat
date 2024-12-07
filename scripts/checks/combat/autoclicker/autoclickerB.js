@@ -2,6 +2,8 @@ import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { fastAbs } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
+import { abs } from "../../../utils/maths/isomath.js";
+import * as isomath from "../../../utils/maths/isomath.js";
 
 const lastCPS = new Map();
 export function autoclicker_b(player) {
@@ -12,7 +14,7 @@ export function autoclicker_b(player) {
             const oldCPS = lastCPS.get(player.name)?.old;
             const newCPS = lastCPS.get(player.name)?.new;
             if(oldCPS && player.cps > config.modules.autoclickerB.minCPS) {
-                const averageDif = fastAbs(fastAbs(player.cps - newCPS) + fastAbs(oldCPS - newCPS)) / 2;
+                const averageDif = abs(abs(player.cps - newCPS) + abs(oldCPS - newCPS)) / 2;
                 if(averageDif < config.modules.autoclickerB.maxDeviation) flag(player, "Autoclicker", "B", "Combat", "AVG_DIFF", averageDif);
             }
         }

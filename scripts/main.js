@@ -13,6 +13,7 @@ import { banList } from "./data/globalban.js";
 import data from "./data/data.js";
 import { mainGui } from "./features/ui.js";
 import { joinData } from "./utils/anticheat/acUtil.js";
+import * as isomath from "../../../utils/maths/isomath.js";
 
 // Import Packet Checks
 import { badpackets_f } from "./checks/packet/badpackets/badpacketsF.js";
@@ -92,6 +93,7 @@ import { hitbox_b } from "./checks/combat/hitbox/hitboxB.js";
 import { aim_i } from "./checks/combat/aim/aimI.js";
 import { predictionEngine } from "./checks/movement/prediction/predictionEngine.js";
 import settings from "./data/settings.js";
+import { abs, sqrt } from "./utils/maths/isomath.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -222,9 +224,9 @@ Minecraft.system.runInterval(() => {
 
 		// player position shit
 		if(player.hasTag("moving")) {
-			player.runCommandAsync(`scoreboard players set @s xPos ${fastFloor(player.location.x)}`);
-			player.runCommandAsync(`scoreboard players set @s yPos ${fastFloor(player.location.y)}`);
-			player.runCommandAsync(`scoreboard players set @s zPos ${fastFloor(player.location.z)}`);
+			player.runCommandAsync(`scoreboard players set @s xPos ${isomath.floor(player.location.x)}`);
+			player.runCommandAsync(`scoreboard players set @s yPos ${isomath.floor(player.location.y)}`);
+			player.runCommandAsync(`scoreboard players set @s zPos ${isomath.floor(player.location.z)}`);
 		}
 		
 		if(settings.general.autoReset && getScore(player, "tick_counter2", 0) > 300) {
@@ -423,8 +425,8 @@ world.afterEvents.playerPlaceBlock.subscribe((blockPlace) => {
 	const { block, player} = blockPlace;
 	const rotation = player.getRotation()
 	const playerVelocity = player.getVelocity();
-	const playerSpeed = Number(fastSqrt(fastAbs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
-	if(config.debug) console.warn(`${player.nameTag} has placed ${block.typeId}. Speed: ${playerSpeed} Distance: ${fastSqrt(fastPow(block.location.x - player.location.x, 2) + fastPow(block.location.z - player.location.z, 2))} Player X Rotation: ${rotation.x} Player Y Rotation: ${rotation.y}`);
+	const playerSpeed = Number(sqrt(abs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
+	if(config.debug) console.warn(`${player.nameTag} has placed ${block.typeId}. Speed: ${playerSpeed} Distance: ${isomath.sqrt(isomath.pow(block.location.x - player.location.x, 2) + isomath.pow(block.location.z - player.location.z, 2))} Player X Rotation: ${rotation.x} Player Y Rotation: ${rotation.y}`);
 	
 	
 	let undoPlace = false; 
@@ -734,7 +736,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 	if(entity.typeId == "minecraft:player") {
 		player.runCommandAsync(`tellraw @a[tag=seeREACH] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §d${player.nameTag} §r>> §i${getDistanceXZ(player, entity).toFixed(3)} §r>> §u${entity.typeId}"}]}`);
 	}
-	if(config.debug && player.hasTag("logHits")) console.warn(player.getTags(), "rotation", rotation.x, rotation.y, "angleDiff", angleCalc(player, entity), "auraF" + getScore(player, "killauraF_buffer", 0), "killauraF_reset", getScore(player, "killauraF_reset", 0), "reach", fastSqrt(fastPow(entity.location.x - player.location.x, 2) + fastPow(entity.location.z - player.location.z, 2)));
+	if(config.debug && player.hasTag("logHits")) console.warn(player.getTags(), "rotation", rotation.x, rotation.y, "angleDiff", angleCalc(player, entity), "auraF" + getScore(player, "killauraF_buffer", 0), "killauraF_reset", getScore(player, "killauraF_reset", 0), "reach", isomath.sqrt(isomath.pow(entity.location.x - player.location.x, 2) + isomath.pow(entity.location.z - player.location.z, 2)));
 });
 world.afterEvents.entityHitBlock.subscribe((entityHit) => {
 	const { damagingEntity: player} = entityHit;

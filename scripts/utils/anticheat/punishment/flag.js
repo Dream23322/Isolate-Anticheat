@@ -8,7 +8,7 @@ import { banPlayer } from "./ban";
 import { kickPlayer } from "./kick";
 import { fastRound } from "../../maths/fastMath";
 import { banAnimation  } from "../../../util";
-
+import * as isomath from "../../../utils/maths/isomath.js";
 const themeStyles = {
     "1": {
         prefix: '§r§j[§uIsolate§j]§r',
@@ -280,7 +280,7 @@ function buildDisplayBar(currentVl, maxVl, filledColor, unfilledColor) {
         unfilled = maxVl - currentVl;
     } else {
         let percent = currentVl / maxVl;
-        filled = fastRound(percent * 10);
+        filled = isomath.round(percent * 10);
         unfilled = 10 - filled;
     }
 

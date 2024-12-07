@@ -6,6 +6,7 @@ import { arrayToList, getAverageDifference } from "../../../utils/maths/mathUtil
 import { fastAbs } from "../../../utils/maths/fastMath.js";
 import { amountDeltaPitch, amountDeltaYaw } from "./aimData.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
+import { abs } from "../../../utils/maths/standardMath.js";
 
 const data = new Map();
 const datatwo = new Map();
@@ -22,8 +23,8 @@ export function aim_d(player) {
             const asList = d
             const asList2 = dtwo
             const isInvalid = (
-                fastAbs(getAverageDifference(asList)) < 0.3 &&
-                fastAbs(getAverageDifference(asList2)) > 5 
+                abs(getAverageDifference(asList)) < 0.3 &&
+                abs(getAverageDifference(asList2)) > 5 
             )
             setScore(player, "aimDReset", getScore(player, "aimDReset", 0) + 1);
             if(isInvalid) {
