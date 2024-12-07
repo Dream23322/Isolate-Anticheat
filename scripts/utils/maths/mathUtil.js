@@ -3,7 +3,7 @@ import { fastAbs, fastAtan2, fastFloor, fastPow, fastSqrt, PI } from "./fastMath
 // Gets player speed
 export function getSpeed(player) {
     const playerVelocity = player.getVelocity();
-    const playerSpeed = Number(fastSqrt(fastAbs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(2));
+    const playerSpeed = Number(fastSqrt(fastAbs(playerVelocity.x**2 +playerVelocity.z**2)).toFixed(5));
     return playerSpeed;
 }
 
@@ -36,7 +36,7 @@ export function getBlocksBetween(pos1, pos2) {
 export function angleCalc(player, entityHit) {
     const dx = entityHit.location.x - player.location.x;
     const dz = entityHit.location.z - player.location.z;
-    const angleToEntity = Math.atan2(dz, dx) * 180 / PI;
+    const angleToEntity = fastAtan2(dz, dx) * 180 / PI;
     let angle = angleToEntity - player.getRotation().y - 90;
     
     if (angle <= -180) {
@@ -49,14 +49,14 @@ export function angleCalc(player, entityHit) {
 export function isValidHitbox(player, entityHit, buffer = 0) {
     const dx = entityHit.location.x - player.location.x;
     const dz = entityHit.location.z - player.location.z;
-    const angleToEntity = Math.atan2(dz, dx) * 180 / PI;
+    const angleToEntity = fastAtan2(dz, dx) * 180 / PI;
     let angle = angleToEntity - player.getRotation().y - 90;
     
     if (angle <= -180) {
         angle += 360;
     }
     
-    const distance = Math.sqrt(dx * dx + dz * dz);
+    const distance = fastSqrt(dx * dx + dz * dz);
     const hitboxWidth = 0.6 + buffer;
     const hitboxHeight = 1.8 + buffer;
     
