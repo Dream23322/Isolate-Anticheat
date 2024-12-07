@@ -1,5 +1,5 @@
-export function envrionmentAssist(player, xPart, yPart, zPart, environmentData) {
-    let envrionmentAssist = { x: xPart, y: yPart, z: zPart };
+export function envrionmentAssist(player, xPart, zPart, environmentData) {
+    let envrionmentAssist = { x: xPart, z: zPart };
 
     // Handle player sneaking
     const sneakingHandled = handleSneaking(player, xPart, zPart, environmentData);
