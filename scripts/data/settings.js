@@ -30,5 +30,8 @@ export default
         "kickBan": true,
         "minKicks": 2,
         "banLength": "7d"
+    },
+    "performance": {
+        "fastMath": true
     }
 }

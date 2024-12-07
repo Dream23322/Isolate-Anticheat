@@ -301,13 +301,15 @@ function acSettingsMenu(player) {
         .button("Punishment", "textures/ui/anvil_icon.png")
         .button("Lagback", "textures/ui/WarningGlyph.png")
         .button("Report", "textures/ui/WarningGlyph.png")
+        .button("Performance", "textures/ui/gear.png")
         .button("Back", "textures/ui/arrow_left.png");
     menu.show(player).then((response) => {
         if(response.selection === 0) return generalSettingsMenu(player);
         if(response.selection === 1) return punishmentSettingsMenu(player);
         if(response.selection === 2) return lagbackSettingsMenu(player);
         if(response.selection === 3) return reportSettingsMenu(player);
-        if(response.selection === 4) return mainGui(player);
+        if(response.selection === 4) return perforamnceSettingsMenu(player);
+        if(response.selection === 5) return mainGui(player);
     })
 }
 
@@ -427,7 +429,23 @@ function reportSettingsMenu(player) {
         settings["report"]["banLength"] = response.formValues[4];
 
         world.setDynamicProperty("settings", JSON.stringify(settings));
+    });
+}
 
+function perforamnceSettingsMenu(player) {
+    player.playSound("mob.chicken.plop");
+    const settingsData = settings["performance"];
+    const menu = new MinecraftUI.ModalFormData()
+        .title("Performance Anticheat Settings");
+
+    menu.toggle("Fast Maths", settingsData["fastMath"]);
+
+    menu.show(player).then((response) => {
+        if(response.canceled) return acSettingsMenu(player);
+
+        settings["performance"]["fastMath"] = response.formValues[0];
+
+        world.setDynamicProperty("settings", JSON.stringify(settings));
     });
 }
 
