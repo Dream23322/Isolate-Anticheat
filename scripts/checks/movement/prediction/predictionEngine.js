@@ -3,10 +3,12 @@ import config from "../../../data/config.js";
 import { fastAbs, fastPow, fastSqrt } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import { gravityCheck } from "./assist/gravityPrediction.js";
-import { aroundAir } from "../../../utils/gameUtil.js";
+import { aroundAir, inAir } from "../../../utils/gameUtil.js";
+import { envrionmentAssist } from "./assist/environmentAssist.js";
+import { getSpeed } from "../../../utils/maths/mathUtil.js";
 const data = new Map();
 const maxVelo = 10;
-const pause = 500; 
+const data2 = new Map();
 export function predictionEngine(player) {
     if (!config.modules.predictionA.enabled) return;
     if (!allowedPlatform(player, config.modules.predictionA.AP)) return;
@@ -33,6 +35,7 @@ export function predictionEngine(player) {
         ) {
             let max_deviation = config.modules.predictionA.deviation;
             let pass = false;
+
             const lastPositions = [
                 { x: player.location.x, y: player.location.y, z: player.location.z, inair: !player.isOnGround && aroundAir(player) },
                 positionData.last,
@@ -40,23 +43,14 @@ export function predictionEngine(player) {
                 positionData.last3,
                 positionData.last4,
             ];
-            const { avgVelX, avgVelY, avgVelZ } = smoothVelocity(lastPositions);
-            const predictedX = lastPositions[0].x + avgVelX;
-            const predictedY = lastPositions[0].y + avgVelY;
-            const predictedZ = lastPositions[0].z + avgVelZ;
 
-            const deviation = Math.sqrt(
-                fastPow(player.location.x - predictedX, 2) +
-                fastPow(player.location.y - predictedY, 2) +
-                fastPow(player.location.z - predictedZ, 2)
-            );
-
+            const deviationData = calculateDeviation(player, lastPositions, data2.get(player.name));
+            const deviation = deviationData.one;
+            const predictedY = deviationData.two;
             if (deviation > 1.3) {
-                console.warn(`Large deviation detected: ${deviation.toFixed(3)} (Lag spike compensation)`);
+                //console.warn(`Large deviation detected: ${deviation.toFixed(3)} (Lag spike compensation)`);
                 pass = true;
             }
-
-            
             const badTags = ["damaged", "slime", "elytra", "ice", "op", "flying", "teleport", "speedE_pass"];
             for (const tag of badTags) if (player.hasTag(tag)) pass = true;
 
@@ -67,7 +61,7 @@ export function predictionEngine(player) {
             if(player.hasTag("jump")) max_deviation += 0.1;
             if(player.hasTag("damaged")) max_deviation += 1.05;
 
-            if (fastAbs(player.location.y - predictedY) < 0.2) {
+            if (fastAbs(player.location.y - predictedY) < 0.5) {
                 if (deviation > max_deviation && !pass) {
                     flag(player, "Prediction", "A", "Movement", "deviation", deviation, true);
                 }
@@ -86,19 +80,93 @@ export function predictionEngine(player) {
         last3: positionData?.last2 || { x: 0, y: 0, z: 0, inair: false  },
         last4: positionData?.last3 || { x: 0, y: 0, z: 0, inair: false   }
     });
+    data2.set(player.name, 
+        { 
+            velo: playerVelocity,
+            lastVelo: data2.get(player.name)?.velo || { x: 0, y: 0, z: 0 },
+            sneak: player.isSneaking,
+            ground: player.isOnGround,
+        }
+    );
 }
-function smoothVelocity(lastPositions) {
-    const totalVelX = (lastPositions[0].x - lastPositions[1].x) + (lastPositions[1].x - lastPositions[2].x) + (lastPositions[2].x - lastPositions[3].x);
-    const totalVelY = (lastPositions[0].y - lastPositions[1].y) + (lastPositions[1].y - lastPositions[2].y) + (lastPositions[2].y - lastPositions[3].y);
-    const totalVelZ = (lastPositions[0].z - lastPositions[1].z) + (lastPositions[1].z - lastPositions[2].z) + (lastPositions[2].z - lastPositions[3].z);
+// No Xcoco, its not chatGPT, I made 90% of it while on a fucking plane 45,000 feet in the sky. How am I meant to use chatgpt there huh?
+
+function calculateDeviation(player, lastPositions, otherData) {
+    const playerVelocity = player.getVelocity();
+
+    const predictedVelocity = calculateVelocity(player, lastPositions, otherData);
+    const YPreidction = getYVelo(player)
+
+    const predictedPosition = calculatePosition(player, lastPositions, predictedVelocity);
+
+
+
+    return { one: deviation, two: predictedVelocity.y };
+}
+
+
+function calculateVelocity(player, lastPositions) {
+    const velocity = player.getVelocity();
+
+    const velocityX = velocity.x + (lastPositions[1].x - player.location.x) / 2;
+    const velocityY = velocity.y + (lastPositions[1].y - player.location.y) / 2;
+    const velocityZ = velocity.z + (lastPositions[1].z - player.location.z) / 2;
+
+    return {x: velocityX, y: velocityY, z: velocityZ};
+}
+
+
+function calculatePosition(player, lastPositions, predictedVelocity) {
+    const posX = lastPositions[1].x - predictedVelocity.x;
+    const posY = lastPositions[1].y - predictedVelocity.y;
+    const posZ = lastPositions[1].z - predictedVelocity.z;
+
+    return { x: posX, y: posY, z: posZ };
+}
+
+
+/*
+Velocity Prediction
+
+This is done by getting the position difference between the players position in the last tick and current tick,
+then taking other factors such as Speed, Accel, Environmental Factors (Sneak, Sprint, Friction, Slime, etc) and Position History into account.
+This should allow for the final deviation to be somewhat precise.
+
+^^^
+This most likely won't be made in full for the first release as it will take some time
+
+*/
+function calculateVelocityDeviation(player, lastPositions, otherData) {
+    const VDTP_RAW = getVelocityDeviationTypePosition(player, lastPositions);
+    const VDTH_RAW = getVelocityDeviationTypeHistory(player, lastPositions);
+
     
-    let avgVelX = totalVelX / 3;
-    let avgVelY = totalVelY / 3;
-    let avgVelZ = totalVelZ / 3;
-    
-    avgVelX = Math.min(Math.max(avgVelX, -maxVelo),maxVelo);
-    avgVelY = Math.min(Math.max(avgVelY, -maxVelo),maxVelo);
-    avgVelZ = Math.min(Math.max(avgVelZ, -maxVelo),maxVelo);
-    
-    return { avgVelX, avgVelY, avgVelZ };
+}
+
+// Basic position based Velocity prediction.
+function getVelocityDeviationTypePosition(player, lastPositions) {
+    const playerVelocity = player.getVelocity();
+    // Formula: OldPos - CurrentPos
+
+    const predictedVelocityX = lastPositions[1].x - player.location.x;
+
+    // For now we will skip Y calculations as the current gravity prediction works well so there is no reason to do extra calculations which use Memory (RAM) and CPU.
+    //const predictedVelocityY = lastPositions[1].y - player.location.y - 1;
+
+    const predictedVelocityZ = lastPositions[1].z - player.location.z;
+
+    return (predictedVelocityX - playerVelocity.x) + (predictedVelocityZ - playerVelocity.z);
+}
+
+// TODO: Improve this
+// ps: I just have to get this update out.
+function getVelocityDeviationTypeHistory(player, lastPositions) {
+    /*
+    To use position history, we look at the last two position based velocities and using that we can predict the next velocity.
+    */
+    const oldPositionVelocityX = lastPositions[4].x - lastPositions[3].x;
+    const midPositionVelocityX = lastPositions[3].x - lastPositions[2].x;
+    const newPositionVelocityX = lastPositions[2].x - lastPositions[1].x;
+
+    return (oldPositionVelocityX + midPositionVelocityX + newPositionVelocityX) / 3;
 }
