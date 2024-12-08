@@ -102,4 +102,15 @@ export function atan(x) {
     return Math.atan(x);
 }
 
+export function sin(x) {
+    return Math.sin(x);
+}
+
+export function cos(x) {
+    return Math.cos(x);
+}
+
+export function tan(x) {
+    return Math.tan(x);
+}
 export const PI = Math.PI;

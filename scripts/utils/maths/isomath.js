@@ -42,4 +42,10 @@ export const atan2 = math.atan2 || math.fastAtan2;
 
 export const atan = math.atan || math.fastAtan;
 
+export const sin = math.sin || math.fastSin;
+
+export const cos = math.cos || math.fastCos;
+
+export const tan = math.tan || math.fastTan;
+
 export const pi = math.PI || math.fastPI

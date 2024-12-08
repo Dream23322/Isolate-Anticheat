@@ -214,4 +214,46 @@ export function fastAtan(x) {
     }
 }
 
+export function fastSin(x) {
+    try {
+        // Normalize angle to -π to π
+        x = x % (2 * fastPI);
+        if (x > fastPI) x -= 2 * fastPI;
+        else if (x < -fastPI) x += 2 * fastPI;
+
+        // Approximation: x - (x^3)/6 + (x^5)/120
+        const x2 = x * x;
+        return x * (1 - x2 / 6 + x2 * x2 / 120);
+    } catch (e) {
+        console.warn("[FastSin] Error: " + e);
+        return Math.sin(x);
+    }
+}
+
+export function fastCos(x) {
+    try {
+        // cos(x) = sin(x + π/2)
+        return fastSin(x + Math.PI / 2);
+    } catch (e) {
+        console.warn("[FastCos] Error: " + e);
+        return Math.cos(x);
+    }
+}
+
+export function fastTan(x) {
+    try {
+        const sinX = fastSin(x);
+        const cosX = fastCos(x);
+        
+        // Avoid division by zero
+        if (cosX === 0) return Infinity;
+        return sinX / cosX;
+    } catch (e) {
+        console.warn("[FastTan] Error: " + e);
+        return Math.tan(x);
+    }
+}
+
+
+
 export const fastPI = 105414357.0 / 33554432.0 + 1.984187159361080883e-9;
