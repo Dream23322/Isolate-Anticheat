@@ -192,7 +192,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     const block_vl = getScore(player, "scaffoldvl", 0) + getScore(player, "nukervl", 0) + getScore(player, "towervl", 0);
     const other_vl = getScore(player, "badpacketsvl", 0) + getScore(player, "crashervl", 0) + getScore(player, "spammervl", 0) + getScore(player, "autototemvl", 0) + getScore(player, "autosheildvl", 0) + getScore(player, "illegalitemvl", 0);
     // This was requested by Duckie Jam (1078815334871617556)
-    if (config.fancy_kick_calculation.on === true && settings.punishment.autoKick == true) {
+    if (config.fancy_kick_calculation.on === true && settings.punishment.autoKick === true) {
         if (movement_vl > config.fancy_kick_calculation.movement && combat_vl > config.fancy_kick_calculation.combat && block_vl > config.fancy_kick_calculation.block && other_vl > config.fancy_kick_calculation.other) {
             player.addTag("strict");
             //setSound(player, "mob.endermen.death");
@@ -204,13 +204,13 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
         }
     }
 
-    if (settings.general.smartNotify == true) {
+    if (settings.general.smartNotify === true) {
         const total_vL = movement_vl + combat_vl + block_vl + other_vl;
         if (movement_vl > 20) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of movement cheat! (Specate with !v)"}]}`);
-        else if (combat_vl == 10) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of combat cheat! (Specate with !v)"}]}`);
-        else if (block_vl == 5) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of place/break cheat! (Specate with !v)"}]}`);
-        else if (other_vl == 15) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of Misc cheat!"}]}`);
-        else if (total_vL == 20) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using an Unfair Advantage! (Specate with !v)"}]}`);
+        else if (combat_vl === 10) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of combat cheat! (Specate with !v)"}]}`);
+        else if (block_vl === 5) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of place/break cheat! (Specate with !v)"}]}`);
+        else if (other_vl === 15) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using a form of Misc cheat!"}]}`);
+        else if (total_vL === 20) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §n${player.name} §his most likely using an Unfair Advantage! (Specate with !v)"}]}`);
     }
     if (currentVl >= checkData.minVlbeforePunishment) {
 
@@ -260,11 +260,11 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
             player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically muted by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
         }
         // Testing mode
-        if (punishment == "kick" && settings.general.testingmode) {
+        if (punishment === "kick" && settings.general.testingmode) {
             setTitle(player, "You would have been kicked", `Check: ${check}/${checkType}`);
             player.runCommandAsync("function tools/resetwarns");
         }
-        if (punishment == "ban" && settings.general.testingmode) {
+        if (punishment === "ban" && settings.general.testingmode) {
             setTitle(player, "You would have been banned", `Check: ${check}/${checkType}`);
             player.runCommandAsync("function tools/resetwarns");
         }
@@ -311,9 +311,9 @@ function buildNotification(player, theme, check, checkType, hackType, debug, deb
     }
 
     // Add flag style specific information
-    if (flagstyle == "1") {
+    if (flagstyle === "1") {
         notification += `[${style.currentVlFormat}${currentVl}§h]`;
-    } else if (flagstyle == "2") {
+    } else if (flagstyle === "2") {
         let displayBar = buildDisplayBar(currentVl, maxVl, style.filledColor, style.unfilledColor);
         notification += `[${displayBar}§h]`;
     }

@@ -17,7 +17,7 @@ export function fly_b(player) {
     if(config.modules.flyB.enabled && aroundAir(player)) {
         const velocityY = player.getVelocity().y;
         if(fly_b_map.has(player)) {
-            if(fly_b_map.get(player) == 0 && velocityY == 0 && getScore(player, "tick_counter2", 0) > 3 && !player.isOnGround && hVelocity(player) !== 0 && getScore(player, "airTime") >= 10 && !player.hasTag("teleport") && !player.isFlying) {
+            if(fly_b_map.get(player) === 0 && velocityY === 0 && getScore(player, "tick_counter2", 0) > 3 && !player.isOnGround && hVelocity(player) !== 0 && getScore(player, "airTime") >= 10 && !player.hasTag("teleport") && !player.isFlying) {
                 flag(player, "Fly", "B", "Movement", "Velocity", velocityY, true);
             }
         }

@@ -32,7 +32,7 @@ export function aim_a(player) {
             const pitchAccel = abs(deltaPitch - deltaPitch2);
 
             // If the player is not moving, skip this iteration
-            if(deltaYaw == 0 && deltaPitch == 0) return;
+            if(deltaYaw === 0 && deltaPitch === 0) return;
 
             const invalidYaw = yawAccel < 0.1 && abs(deltaYaw) > 1.5;
             const invalidPitch = pitchAccel < 0.1 && abs(deltaPitch) > 1.5;

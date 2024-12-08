@@ -21,6 +21,10 @@ declare module "@minecraft/server" {
 		lastThrow: number
 		lastMessageSent: number
 
+		// Velocity Position Speed and a bunch of other stuff
+		velocity: Vector3
+		speed: number
+
 		// Arrays
 		entitiesHit: Array<String>
 		reports: Array<String>

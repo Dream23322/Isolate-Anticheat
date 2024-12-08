@@ -11,7 +11,7 @@ export function killaura_a(player, entity) {
         const rot = player.getRotation();
         // github.com/jasonlaubb/Matrix-Anticheat/
         // good anticheat tbh
-        if(!player.isGliding && fastHypot(playerVelocity.x, playerVelocity.z) > 0.2 && (rot.x % 5 == 0 || (rot.y % 5 == 0 && isomath.abs(rot.y) != 90)) && (rot.x != 0 || rot.y != 0)) {
+        if(!player.isGliding && fastHypot(playerVelocity.x, playerVelocity.z) > 0.2 && (rot.x % 5 === 0 || (rot.y % 5 === 0 && isomath.abs(rot.y) != 90)) && (rot.x != 0 || rot.y != 0)) {
             flag(player, "Killaura", "A", "Combat", "rotation-y%1", 0, false);
         }
 
@@ -30,7 +30,7 @@ export function killaura_a(player, entity) {
         // Fix bypass which i made lol
         const roundYaw = isomath.round(rot.y);
         if(
-            (roundYaw == 0 || roundYaw == 90 || roundYaw == 180 || roundYaw == 270) &&
+            (roundYaw === 0 || roundYaw === 90 || roundYaw === 180 || roundYaw === 270) &&
             isomath.abs(roundYaw - rot.y) < 0.4
         ) flag(player, "Killaura", "A", "Combat", "roundYaw", roundYaw + ", " + isomath.abs(roundYaw - rot.y), false);
     }

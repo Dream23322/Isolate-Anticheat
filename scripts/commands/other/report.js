@@ -43,9 +43,9 @@ export function report(message, args) {
     if(config.modules.smartReport.enabled && config.modules.smartReport.infoCheck) {
         if(getScore(player, "kickvl", 0) > config.modules.smartReport.minKicks) {
             // Ban lel
-            if(settings.general.theme == "1") {
+            if(settings.general.theme === "1") {
                 player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage! (7-Day)"}]}`);
-            } else if(settings.general.theme == "2") {
+            } else if(settings.general.theme === "2") {
                 player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c "}]}`); 
                 player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===========================================||"}]}`);
                 player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u§l Isolate Anticheat"}]}`);

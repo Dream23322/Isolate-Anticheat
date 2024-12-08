@@ -21,7 +21,7 @@ export function banPlayer(player, reason, time, by) {
     player.addTag(`reason:${reason}`);
     setScore(player, "kickvl", 0);
 
-    if (settings.general.theme == "1") {
+    if (settings.general.theme === "1") {
         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage! (7-Day)"}]}`);
     } else {
         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c "}]}`);

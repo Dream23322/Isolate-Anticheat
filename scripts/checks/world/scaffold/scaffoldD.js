@@ -27,7 +27,7 @@ export function scaffold_d(player, block) {
                 isBlockBelow &&
                 pitchDifferenceAverage > 0 &&
                 pitchDifferenceAverage < 1 &&
-                yawDifferenceAverage == 0
+                yawDifferenceAverage === 0
             ) flag(player, "Scaffold", "D", "Placement (BETA)", "data", `${pitchDifferenceAverage.toFixed(5)}, ${yawDifferenceAverage.toFixed(1)}`, false);
 
             d.unshift(rotation.x);

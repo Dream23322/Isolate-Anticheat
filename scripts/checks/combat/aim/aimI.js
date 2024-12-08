@@ -41,7 +41,7 @@ z
             const duplicatesX = countDuplicates(arrayToList(dPitch))
             const duplicatesY = countDuplicates(arrayToList(dYaw));
 
-            if(duplicatesX + duplicatesY == 0 && outliersX < 10 && outliersY < 10) {
+            if(duplicatesX + duplicatesY === 0 && outliersX < 10 && outliersY < 10) {
                 flag(player, "Aim", "I", "Kuristosis (Beta)", "outliers", `${outliersX}, ${outliersY}, duplicatesX=${duplicatesX}, duplicatesY=${duplicatesY}`, false);
             }
             if(player.hasTag("aimIDebug")) console.warn("AimI", outliersX, outliersY, duplicatesX, duplicatesY);

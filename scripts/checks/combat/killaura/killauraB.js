@@ -27,7 +27,7 @@ export function killaura_b(player, system, entity) {
 	// Check for hitting an invalid entity
 	if(config.modules.killauraB.enabled) {
 		const entityID = entity.typeId;
-		const invalid = entityID == "minecraft:xp_orb" || entity.ID == "minecraft:item";
+		const invalid = entityID === "minecraft:xp_orb" || entity.ID === "minecraft:item";
 		if(invalid) flag(player, "Killaura", "B", "Combat", "entity", entityID, true);
 	}
 }

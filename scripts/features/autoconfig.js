@@ -253,7 +253,7 @@ function analyseData(player) {
     let smartCommands = data.smartCommands;
     let theme = data.theme;
     console.warn(servertype)
-    if (servertype == 0 || servertype == 1) {
+    if (servertype === 0 || servertype === 1) {
         // Dont need Scaffold Checks or Nuker/B/C
         const moduleData = [
             config["modules"]["scaffoldA"],
@@ -276,7 +276,7 @@ function analyseData(player) {
             logs.push(`Disabled ${dat[1]}`);
         }
         world.setDynamicProperty("config", JSON.stringify(config));
-    } else if (servertype == 2) {
+    } else if (servertype === 2) {
         // Dont need Nuker/B/C or strict scaffold checks
         const moduleData = [
             config["modules"]["scaffoldC"],
@@ -294,7 +294,7 @@ function analyseData(player) {
 
             logs.push(`Disabled ${dat[1]}`);
         }
-    } else if (servertype == 3) {
+    } else if (servertype === 3) {
         
         config["modules"]["towerB"]["punishment"] = "ban";
         logs.push("Punishment Set: Tower(B) | Ban");
@@ -315,7 +315,7 @@ function analyseData(player) {
         world.setDynamicProperty("config", JSON.stringify(config));
     }
 
-    if(strictlevel == 1) {
+    if(strictlevel === 1) {
         config["modules"]["settings"]["autoBan"] = false;
         logs.push("AutoBan Disabled");
         config["modules"]["settings"]["autoKick"] = true;
@@ -333,7 +333,7 @@ function analyseData(player) {
         config["modules"]["strafeA"]["punishment"] = "none";
         logs.push("Punishment Set: Strafe(A) | None");
 
-    } else if(strictlevel == 2) {
+    } else if(strictlevel === 2) {
         config["modules"]["settings"]["autoBan"] = true;
         logs.push("AutoBan Enabled");
         config["modules"]["settings"]["autoKick"] = true;
@@ -348,7 +348,7 @@ function analyseData(player) {
         logs.push("BPT Set: Speed(E) | 0.28");
         config["modules"]["strafeA"]["punishment"] = "none";
         logs.push("Punishment Set: Strafe(A) | None");
-    } else if(strictlevel == 3) {
+    } else if(strictlevel === 3) {
         config["modules"]["settings"]["autoBan"] = true;
         logs.push("AutoBan Enabled");
         config["modules"]["settings"]["autoKick"] = true;
@@ -374,7 +374,7 @@ function analyseData(player) {
     // Update Dynamic Config
     world.setDynamicProperty("config", JSON.stringify(config));
 
-    if(autoban == true) {
+    if(autoban === true) {
         logs.push("AutoBan Enabled");
         config["modules"]["settings"]["autoBan"] = true;
     } else {
@@ -382,7 +382,7 @@ function analyseData(player) {
         config["modules"]["settings"]["autoBan"] = false;
     }
 
-    if(autokick == true) {
+    if(autokick === true) {
         logs.push("AutoKick Enabled");
         config["modules"]["settings"]["autoKick"] = true;
     } else {
@@ -393,14 +393,14 @@ function analyseData(player) {
     // Update Dynamic Config
     world.setDynamicProperty("config", JSON.stringify(config));
     console.warn(theme)
-    if(theme == 0) {
+    if(theme === 0) {
         logs.push("Theme Changed | Old (theme 1)");
         config["modules"]["settings"]["theme"] = "1";
     
-    } else if(theme == 1) {
+    } else if(theme === 1) {
         logs.push("Theme Changed | New (theme 2)");
         config["modules"]["settings"]["theme"] = "2";
-    } else if(theme == 2) {
+    } else if(theme === 2) {
         logs.push("Theme Changed | Alice (theme 3)");
         config["modules"]["settings"]["theme"] = "alice";
     }

@@ -12,9 +12,9 @@ export function killaura_f(player, value) {
         const miss = getScore(player, "ka_F_misses", 0);
         const hit = getScore(player, "ka_F_hits", 0);
         let reset = getScore(player, "killauraF_reset", 0);
-        if(value == 0) {
+        if(value === 0) {
             setScore(player, "ka_F_misses", miss + 1);
-        } else if(value == 1) {
+        } else if(value === 1) {
             setScore(player, "ka_F_hits", hit + 1);
         }
         setScore(player, "killauraF_reset", reset + 1);

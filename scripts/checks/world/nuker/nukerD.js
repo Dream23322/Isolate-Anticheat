@@ -40,7 +40,7 @@ export function nuker_d(player, block, brokenBlockId, resetValue) {
         let reset = false;
 
         // Check if the score is 6, if so, flag the player and reset the block
-        if(score == 6) {
+        if(score === 6) {
             flag(player, "Nuker", "D", "World", "score", score, true);
             reset = true;
         }
@@ -61,7 +61,7 @@ export function nuker_d(player, block, brokenBlockId, resetValue) {
         }
 
         // Reset the block and add an absorption effect to the player if reset is true
-        if(reset == true) {
+        if(reset === true) {
             block.setPermutation(resetValue);
             add_effect(player, "minecraft:absorption", 1, 0);
         }

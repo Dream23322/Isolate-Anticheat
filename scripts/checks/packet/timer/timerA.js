@@ -18,9 +18,9 @@ export function timer_a(player, lastPosition, Value){
         const ServerSpeed = isomath.abs(fastHypot(fastHypot(calcVelocity.x, calcVelocity.z), calcVelocity.y));
         const ClientSpeed = isomath.abs(fastHypot(fastHypot(velocity.x, velocity.z), velocity.y));
         const duped = ServerSpeed / ClientSpeed;
-        if(player.timerHold == null) player.timerHold = [];
+        if(player.timerHold === null) player.timerHold = [];
         player.timerHold.push(duped * 20 / Value);
-	if(duped == 0) return;
+	if(duped === 0) return;
         if(player.timerHold.length >= 20){
             let timer = 0;
             for(const currentTH of player.timerHold){

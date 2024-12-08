@@ -13,7 +13,7 @@ export function teleportCheck(player) {
         const velDiff = isomath.abs(lastData.vel.x - velocity.x) + isomath.abs(lastData.vel.y - velocity.y) + isomath.abs(lastData.vel.z - velocity.z);
         const speedDiff = isomath.abs(lastData.speed - speed);
 
-        if(rotation.x == 0 && rotation.y == 0) return true;
+        if(rotation.x === 0 && rotation.y === 0) return true;
 
         if(posDiff > 5 && velDiff < 1 && speedDiff < 0.4) {
             return true;

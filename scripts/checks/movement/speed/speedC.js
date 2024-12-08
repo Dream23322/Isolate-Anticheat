@@ -82,5 +82,5 @@ export function speed_c(player, tick_counter, speedCLog) {
             player.removeTag("no_speed_c");   
         }
     }
-    if(tick_counter == 1) speedCLog.set(player, {x: player.location.x, y: player.location.y, z: player.location.z});
+    if(tick_counter === 1) speedCLog.set(player, {x: player.location.x, y: player.location.y, z: player.location.z});
 }

@@ -32,7 +32,7 @@ export function speed_e(player) {
                     maxBPT = baseBPT * isomath.pow(1 + scaleFactor, amplifier - 1);
                     if(amplifier >= 4) maxBPT = maxBPT - (amplifier * 0.01 * 2) - (0.01 * (4 - amplifier));
                     if(4 - amplifier <= 0) maxBPT -= amplifier * 0.01;
-                    if(amplifier == 1) maxBPT == 0.405
+                    if(amplifier === 1) maxBPT === 0.405
                     if(player.hasTag("jump") && amplifier > 3) maxBPT -= 0.02;
                 }
 

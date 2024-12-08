@@ -3,7 +3,7 @@
 // @ts-ignore
 import * as Minecraft from "@minecraft/server";
 import { tag_system, aroundAir, add_effect} from "./utils/gameUtil.js";
-import { getBlocksBetween, angleCalc, getDistanceXZ } from "./utils/maths/mathUtil.js";
+import { getBlocksBetween, angleCalc, getDistanceXZ, getSpeed } from "./utils/maths/mathUtil.js";
 import { getClosestPlayer, getScore, setScore } from "./util.js";
 import { banMessage } from "./utils/anticheat/punishment/ban.js";
 import { flag } from "./utils/anticheat/punishment/flag.js";
@@ -13,7 +13,7 @@ import { banList } from "./data/globalban.js";
 import data from "./data/data.js";
 import { mainGui } from "./features/ui.js";
 import { joinData } from "./utils/anticheat/acUtil.js";
-import * as isomath from "../../../utils/maths/isomath.js";
+import * as isomath from "./utils/maths/isomath.js";
 
 // Import Packet Checks
 import { badpackets_f } from "./checks/packet/badpackets/badpacketsF.js";
@@ -129,7 +129,7 @@ world.beforeEvents.chatSend.subscribe((msg) => {
 
 	commandHandler(msg);
 
-	if(message.charAt(0) == "!" && msg.cancel == false) {
+	if(message.charAt(0) === "!" && msg.cancel === false) {
         msg.cancel = true;
 		player.sendMessage("§r§j[§uIsolate§j]§r Unknown Command! Use !help for a list of commands.");
     }
@@ -210,6 +210,9 @@ Minecraft.system.runInterval(() => {
 			player.flagAutotoolA = true;
 			player.autotoolSwitchDelay = Date.now() - player.startBreakTime;
 		}
+
+		player.velocity = playerVelocity;
+		player.speed = getSpeed(player);
 
 		// anti-namespoof
 		// these values are set in the playerJoin event
@@ -733,7 +736,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 		player.cps++;
 	}
 	if(player.hasTag("tempcombatdebug")) player.sendMessage(`§r§j[§uIsolate§j]§r §d${player.nameTag} §r>> Rotation Data: §b${rotation.x} §b${rotation.y} | ${player.hasTag("sprint")} | ${player.isSprinting}`);
-	if(entity.typeId == "minecraft:player") {
+	if(entity.typeId === "minecraft:player") {
 		player.runCommandAsync(`tellraw @a[tag=seeREACH] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r §d${player.nameTag} §r>> §i${getDistanceXZ(player, entity).toFixed(3)} §r>> §u${entity.typeId}"}]}`);
 	}
 	if(config.debug && player.hasTag("logHits")) console.warn(player.getTags(), "rotation", rotation.x, rotation.y, "angleDiff", angleCalc(player, entity), "auraF" + getScore(player, "killauraF_buffer", 0), "killauraF_reset", getScore(player, "killauraF_reset", 0), "reach", isomath.sqrt(isomath.pow(entity.location.x - player.location.x, 2) + isomath.pow(entity.location.z - player.location.z, 2)));
