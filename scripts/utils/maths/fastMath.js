@@ -180,25 +180,18 @@ export function fastLog(x) {
 
 export function fastAtan2(y, x) {
     try {
-        const pi_over_4 = fastPI / 4;
-        const absY = fastAbs(y) + 1e-10;
-        const absX = fastAbs(x) + 1e-10; 
+    // Handle edge cases for zeroes
+    if (x === 0) return y > 0 ? fastPI / 2 : y < 0 ? -fastPI / 2 : 0;
+    if (y === 0) return x > 0 ? 0 : fastPI;
 
-        let angle;
-        if (absX > absY) {
-            angle = pi_over_4 * (y / x);
-        } else {
-            angle = pi_over_4 * (x / y);
-        }
+    // Calculate raw atan
+    const absY = fastAbs(y);
+    const ratio = absY / fastAbs(x);
+    const atan = fastAtan(ratio);
 
-        if (x < 0) {
-            angle = fastPI - angle;
-        }
-        if (y < 0) {
-            angle = -angle;
-        }
-
-        return angle;
+    // Adjust based on quadrant
+    if (x > 0) return y >= 0 ? atan : -atan; // Quadrant 1 or 4
+    else return y >= 0 ? fastPI - atan : atan - Math.PI; // Quadrant 2 or 3
     } catch (e) {
         console.warn("[FastAtan2] Error: " + e);
         return Math.atan2(y, x);
@@ -206,8 +199,12 @@ export function fastAtan2(y, x) {
 }
 export function fastAtan(x) {
     try {
-        const a = 0.28;
-        return (fastPI / 2) * (x / (1 + a * x * x));
+        if (fastAbs(x) > 1) {
+            return Math.sign(x) * Math.PI / 2 - fastAtan(1 / x);
+        }
+        // Use an approximation formula: x - x^3/3 + x^5/5
+        const x2 = x * x;
+        return x * (1 - x2 / 3 + x2 * x2 / 5);
     } catch (e) {
         console.warn("[FastAtan] Error: " + e);
         return Math.atan(x);

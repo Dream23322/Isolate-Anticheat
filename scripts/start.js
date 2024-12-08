@@ -1,6 +1,7 @@
 // First file that runs
 // Used to setup Isolate
 import config from "./data/config.js";
+import settings from "./data/settings.js";
 import { world } from "@minecraft/server";
 
 
@@ -14,13 +15,16 @@ if(dpConfig) {
 	
 }
 console.warn("[Isolate] >> ConfigID: " + config.configID);
-if(config.configID !== "a21") {
+if(config.configID !== "a2") {
 	console.warn("[Isolate] >> Config ID doesnt match latest! Attempting to update config...")
 	config.modules.predictionA = {
 		enabled: true,
 		description: "Prediction Check",
 		deviation: 0.55,
 		fastPow: false,
+		correct: false,
+		flag: true,
+		keepvelocity: true,
 		punishment: "kick",
 		minVlbeforePunishment: 30,
 		AP: 3
@@ -69,5 +73,5 @@ if(offlineList) {
 }
 
 import "./main.js";
-import settings from "./data/settings.js";
+import "./utils/maths/isomath.js";
 console.warn("[Isolate] >> Setup Correctly");

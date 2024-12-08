@@ -36,7 +36,7 @@ export function getBlocksBetween(pos1, pos2) {
 export function angleCalc(player, entityHit) {
     const dx = entityHit.location.x - player.location.x;
     const dz = entityHit.location.z - player.location.z;
-    const angleToEntity = isomath.atan2(dz, dx) * 180 / fastPI;
+    const angleToEntity = Math.atan2(dz, dx) * 180 / fastPI;
     let angle = angleToEntity - player.getRotation().y - 90;
     
     if (angle <= -180) {
