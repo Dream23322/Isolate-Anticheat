@@ -4,7 +4,7 @@ import { fastAbs, fastSqrt } from "../../../../utils/maths/fastMath.js";
 import { fastPow } from "../../../../utils/maths/fastMath.js";
 import { inAir } from "../../../../utils/gameUtil.js";
 import { getAverage } from "../../../../utils/maths/mathUtil.js";
-import * as isomath from "../../../utils/maths/isomath.js";
+import * as isomath from "../../../../utils/maths/isomath.js";
 /**
  * Check if player's Y-velocity follows expected patterns based on recent positions.
  * @param {object} player - The player object.

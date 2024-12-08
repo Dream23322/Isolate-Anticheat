@@ -1,5 +1,5 @@
 import { fastAbs, fastAtan2, fastFloor, fastPow, fastSqrt, fastPI } from "./fastMath";
-import * as isomath from "../../../utils/maths/isomath.js";
+import * as isomath from "../../utils/maths/isomath.js";
 // Gets player speed
 export function getSpeed(player) {
     const playerVelocity = player.getVelocity();

@@ -311,7 +311,7 @@ Minecraft.system.runInterval(() => {
 			strafe_a(player);
 			noslow_a(player);
 			noslow_b(player);
-			predictionEngine(player);
+			//predictionEngine(player);
 		}
 		if(player.hasTag("aimtempdebug")) {
 			// Send message with rotation data
