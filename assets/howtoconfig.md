@@ -8,7 +8,7 @@ This will show a brief description of nearly every setting in the anticheat.
 
 Allows you to find what you are looking for faster.
 
-[Click Here](https://github.com/Dream23322/Isolate-Anticheat/)
+[Click Here](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#quick-finder)
 
 ## Anticheat Settings
 
@@ -785,82 +785,82 @@ The check currently isnt too accurate so please, be careful when changing these 
 
 ---
 
-## Anticheat Settings
+## [Anticheat Settings](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#anticheat-settings)
 
-- General
+- [General](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#general)
   
-- Punishment
+- [Punishment](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#punishment)
   
-- Lagback
+- [Lagback](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#lagbacks)
   
-- Report
+- [Report](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#report)
   
-- Performance
+- [Performance](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#performance)
   
 
-## Module Settings
+## [Module Settings](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#module-settings)
 
-- Global
+- [Global](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#global)
   
-- Misc Checks
+- [Misc Checks](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#misc-checks)
   
-  - Spammer
+  - [Spammer](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#misc-checks)
     
-  - Namespoof
+  - [Namespoof](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#misc-checks)
     
-  - Autotool
+  - [Autotool](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#misc-checks)
     
-- Packet Checks
+- [Packet Checks](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#packet-checks)
   
-  - Exploit
+  - [Exploit](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#exploit)
     
-  - Crasher
+  - [Crasher](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#crasher)
     
-  - BadPackets
+  - [BadPackets](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#badpackets)
     
-  - Timer
+  - [Timer](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#badpackets)
     
-- Combat Checks
+- [Combat Checks](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#combat-checks)
   
-  - Reach
+  - [Reach](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#reach)
     
-  - Aim
+  - [Aim](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#aim)
     
-  - Autoclicker
+  - [Autoclicker](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#autoclicker)
     
-  - Killaura
+  - [Killaura](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#killaura)
     
-  - Hitbox
+  - [Hitbox](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#hitbox)
     
-- Movement Checks
+- [Movement Checks](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#movement)
   
-  - NoSlow
+  - [NoSlow](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#noslow)
     
-  - Sprint
+  - [Sprint](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#sprint)
     
-  - Speed
+  - [Speed](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#speed)
     
-  - Fly
+  - [Fly](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#fly)
     
-  - Motion
+  - [Motion](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#motion)
     
-  - Strafe
+  - [Strafe](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#strafe)
     
-  - Prediction
+  - [Prediction](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#prediction)
     
-- World Checks
+- [World Checks](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#world-checks)
   
-  - Nuker
+  - [Nuker](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#nuker)
     
-  - Scaffold
+  - [Scaffold](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#scaffold)
     
-  - Instabreak
+  - [Instabreak](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#instabreak)
     
-  - Tower
+  - [Tower](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#tower)
     
-  - Reach
+  - [Reach](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#reach-1)
     
-- Total Checks
+- [Total Checks](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#reach-1)
   
 
 ---
