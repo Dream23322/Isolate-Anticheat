@@ -113,4 +113,8 @@ export function cos(x) {
 export function tan(x) {
     return Math.tan(x);
 }
+
+export function pythag(a, b) {
+    return sqrt(pow(a, 2) + pow(b, 2));
+}
 export const PI = Math.PI;

@@ -44,6 +44,7 @@ import { seereach } from "./settings/seereach.js";
 import { announce } from "./other/announce.js";
 import { configid } from "./settings/configid.js";
 import settings from "../data/settings.js";
+import { testmath } from "./other/testmath.js";
 
 
 
@@ -196,6 +197,7 @@ function runCommand(msg, commandName, args) {
                 else if(commandName === "seereach") seereach(message);
                 else if(commandName === "configid") configid(message, args);
                 else if(commandName === "announce") announce(message, args);
+                else if(commandName === "testmath") testmath(message, args);
                 else throw Error(`Command ${commandName} was found in config.js but no handler for it was found.`);
         } catch (error) {
             console.error(`${new Date().toISOString()} | ${error} ${error.stack}`);

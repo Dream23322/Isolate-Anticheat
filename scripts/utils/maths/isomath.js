@@ -9,8 +9,9 @@ let math = null;
 // There is probably a better fix to this but... yeah it works so later me can find out if there is one
 const initializeMath = () => {
   if (!math) {
+    console.warn("[Isolate] Loading Math")
     math = settings.performance.fastMath ? fastMath : standardMath;
-    console.warn("[Isolate] >> Using " + (settings.performance.fastMath ? "FastMath" : "StandardMath"));
+    console.warn("[Isolate] >> Loaded: " + (settings.performance.fastMath ? "Fast Math" : "Standard Math"));
   }
   return math;
 };
@@ -57,4 +58,11 @@ export const cos = (x) => initializeMath().cos(x);
 
 export const tan = (x) => initializeMath().tan(x);
 
+export const pythag = (a, b) => initializeMath().pythag(a, b);
+
 export const pi = () => initializeMath().PI;
+
+export function reloadMath() {
+    math = null;
+    initializeMath();
+}

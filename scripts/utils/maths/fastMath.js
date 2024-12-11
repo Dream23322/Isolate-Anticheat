@@ -1,3 +1,16 @@
+// Use pre computed lookup tables as it can be faster
+
+const SQRT_TABLE = new Float32Array(1024);
+for (let i = 0; i < 1024; i++) {
+    SQRT_TABLE[i] = Math.sqrt(i);
+}
+
+const POW_TABLE = new Float32Array(1024);
+for (let i = 0; i < 1024; i++) {
+    POW_TABLE[i] = Math.pow(2, i);
+}
+
+
 // Fast absolute value
 export function fastAbs(x) {
     return x < 0 ? -x : x;
@@ -21,21 +34,27 @@ export function fastRound(x) {
 // Fast square root (less accurate but faster)
 export function fastSqrt(x) {
     try {
-        if (isNaN(x) || x < 0) {
-            return NaN;
+        // Handle special cases
+        if (x < 0) return NaN;
+        if (x === 0 || x === 1) return x;
+        
+        // Use lookup table for small integers
+        if (x < 1024 && Number.isInteger(x)) {
+            return SQRT_TABLE[x];
         }
-
-        let t;
-        let squareRoot = x / 2;
-
-        if (x !== 0) {
-            do {
-                t = squareRoot;
-                squareRoot = (t + (x / t)) / 2;
-            } while (t !== squareRoot);
-        }
-
-        return squareRoot;
+        
+        // Fast inverse square root approximation
+        const halfX = x * 0.5;
+        let i = new Float32Array(1);
+        i[0] = x;
+        let j = new Int32Array(i.buffer);
+        j[0] = 0x5f375a86 - (j[0] >> 1);
+        let y = new Float32Array(j.buffer)[0];
+        
+        // One Newton iteration for better accuracy
+        y = y * (1.5 - (halfX * y * y));
+        
+        return x * y;
     } catch (e) {
         console.warn("[FastSqrt] Error: " + e);
         return Math.sqrt(x);
@@ -120,36 +139,34 @@ export function fastExp(x) {
 
 export function fastPow(base, exponent) {
     try {
+        // Handle special cases
         if (exponent === 0) return 1;
+        if (exponent === 1) return base;
         if (base === 0) return 0;
+        if (base === 1) return 1;
         
-        let result = 1;
-        let currentBase = base;
+        // Check if we can use the lookup table for powers of 2
+        if (base === 2 && exponent < 1024 && Number.isInteger(exponent)) {
+            return POW_TABLE[exponent];
+        }
         
-        const integerPart = fastFloor(exponent);
-        const fractionalPart = exponent - integerPart;
-        
-        // Handle integer part using exponentiation by squaring
-        let n = fastAbs(integerPart);
-        while (n > 0) {
-            if (n & 1) {
-                result *= currentBase;
+        // For integer exponents, use binary exponentiation
+        if (Number.isInteger(exponent)) {
+            let result = 1;
+            let currentPower = base;
+            let exp = (exponent);
+            
+            while (exp > 0) {
+                if (exp & 1) result *= currentPower;
+                currentPower *= currentPower;
+                exp >>= 1;
             }
-            currentBase *= currentBase;
-            n >>= 1;
+            
+            return exponent < 0 ? 1 / result : result;
         }
         
-        // Adjust result for negative integer exponents
-        if (integerPart < 0) {
-            result = 1 / result;
-        }
-        
-        // Handle fractional part using Math.exp and Math.log
-        if (fractionalPart !== 0) {
-            result *= fastExp(fractionalPart * fastLog(base));
-        }
-        
-        return result;
+        // For other cases, use exp(ln(x) * n)
+        return Math.exp(Math.log(Math.abs(base)) * exponent);
     } catch (e) {
         console.warn("[FastPow] Error: " + e);
         return Math.pow(base, exponent);
@@ -180,18 +197,27 @@ export function fastLog(x) {
 
 export function fastAtan2(y, x) {
     try {
-    // Handle edge cases for zeroes
-    if (x === 0) return y > 0 ? fastPI / 2 : y < 0 ? -fastPI / 2 : 0;
-    if (y === 0) return x > 0 ? 0 : fastPI;
+        // Handle special cases
+        if (x === 0) {
+            if (y > 0) return fastPI / 2;
+            if (y < 0) return -fastPI / 2;
+            return 0;
+        }
 
-    // Calculate raw atan
-    const absY = fastAbs(y);
-    const ratio = absY / fastAbs(x);
-    const atan = fastAtan(ratio);
-
-    // Adjust based on quadrant
-    if (x > 0) return y >= 0 ? atan : -atan; // Quadrant 1 or 4
-    else return y >= 0 ? fastPI - atan : atan - Math.PI; // Quadrant 2 or 3
+        const abs_y = fastAbs(y);
+        const abs_x = fastAbs(x);
+        const a = Math.min(abs_x, abs_y) / Math.max(abs_x, abs_y);
+        
+        // Approximation using polynomial
+        const s = a * a;
+        let r = ((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a;
+        
+        // Adjust for quadrant
+        if (abs_y > abs_x) r = 1.57079637 - r;
+        if (x < 0) r = fastPI - r;
+        if (y < 0) r = -r;
+        
+        return r;
     } catch (e) {
         console.warn("[FastAtan2] Error: " + e);
         return Math.atan2(y, x);
@@ -199,12 +225,18 @@ export function fastAtan2(y, x) {
 }
 export function fastAtan(x) {
     try {
-        if (fastAbs(x) > 1) {
-            return Math.sign(x) * Math.PI / 2 - fastAtan(1 / x);
-        }
-        // Use an approximation formula: x - x^3/3 + x^5/5
-        const x2 = x * x;
-        return x * (1 - x2 / 3 + x2 * x2 / 5);
+        const abs_x = fastAbs(x);
+        const a = Math.min(abs_x, 1) / Math.max(abs_x, 1);
+        
+        // Approximation using polynomial
+        const s = a * a;
+        let r = ((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a;
+        
+        // Adjust if |x| > 1
+        if (abs_x > 1) r = fastPI/2 - r;
+        if (x < 0) r = -r;
+        
+        return r;
     } catch (e) {
         console.warn("[FastAtan] Error: " + e);
         return Math.atan(x);
@@ -249,6 +281,10 @@ export function fastTan(x) {
         console.warn("[FastTan] Error: " + e);
         return Math.tan(x);
     }
+}
+
+export function fastPythag(a, b) {
+    return fastSqrt(a * a + b * b);
 }
 
 

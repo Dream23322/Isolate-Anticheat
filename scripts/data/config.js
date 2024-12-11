@@ -252,6 +252,10 @@ export default
             "enabled": true,
             "requiredTags": ["op"],
             "aliases": []
+        },
+        "testmath": {
+            "enabled": true,
+            "requiredTags": ["op"]
         }
     },
     "modules": {
@@ -527,6 +531,7 @@ export default
             "enabled": true,
             "description": "Aim kurtosis check",
             "needHit": true,
+            "total": 30,
             "duplicates": 35,
             "dataSize": 50,
             "experimental": true,
@@ -778,7 +783,7 @@ export default
         },    
         "flyB": {
             "enabled": true,
-            "description": "Checks for a player not going into the predicted location (y)",
+            "description": "Checks for a player keeping 0 y velocity while in air. This is impossible",
             "punishment": "kick",
             "punishmentLength": "5m",
             "minVlbeforePunishment": 30,
@@ -957,8 +962,11 @@ export default
             "minVlbeforePunishment": 2,
             "AP": 1
         },
+
+    
+        // Total Checks
         "totalA": {
-            "enabled": true,
+            "enabled": true, 
             "description": "Checks for too many combat violations in 1 second",
             "max": 6,
             "punishment": "kick",
