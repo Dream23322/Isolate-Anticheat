@@ -443,10 +443,17 @@ function perforamnceSettingsMenu(player) {
 
     menu.show(player).then((response) => {
         if(response.canceled) return acSettingsMenu(player);
-
+        
         settings["performance"]["fastMath"] = response.formValues[0];
 
         world.setDynamicProperty("settings", JSON.stringify(settings));
+
+        // Reload maths
+        player.sendMessage("§r§j[§uIsolate§j]§r §7Reloading Math...");
+        console.warn("[Isolate] Reloading Math...");
+        isomath.reloadMath();
+        player.sendMessage("§r§j[§uIsolate§j]§r §7Done.");
+        console.warn("[Isolate] Done.");
     });
 }
 
