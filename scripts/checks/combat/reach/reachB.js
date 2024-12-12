@@ -1,7 +1,7 @@
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { getBlocksBetween, getSpeed } from "../../../utils/maths/mathUtil.js";
-import { fastAbs, fastPow, fastSqrt } from "../../../utils/maths/fastMath.js";
+import { abs, log, sqrt } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import * as isomath from "../../../utils/maths/isomath.js";
 const data = new Map();

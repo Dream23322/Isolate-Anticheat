@@ -1,4 +1,4 @@
-import { fastAbs } from "../maths/fastMath";
+import { abs } from "../maths/fastMath";
 import { getSpeed } from "../maths/mathUtil";
 import * as isomath from "../../utils/maths/isomath";
 const data = new Map();

@@ -1,7 +1,7 @@
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { getAverageDifference, getDistanceXZ, getSpeed } from "../../../utils/maths/mathUtil.js";
-import { fastAbs, fastHypot } from "../../../utils/maths/fastMath.js";
+import { abs, hypot } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import * as isomath from "../../../utils/maths/isomath.js";
 
@@ -40,7 +40,7 @@ function calculateDistance(origin, point) {
     const dx = point.x - origin.x;
     const dz = point.z - origin.z;
     
-    return fastHypot(dx, dz);
+    return hypot(dx, dz);
 }
 function isAirBelowAllBlocks(player, one, two, three) {
     const dimension = player.dimension;

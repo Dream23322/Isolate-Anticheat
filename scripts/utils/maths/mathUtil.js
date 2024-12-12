@@ -1,4 +1,4 @@
-import { fastAbs, fastAtan2, fastFloor, fastPow, fastSqrt, fastPI } from "./fastMath";
+import { abs, atan2, floor, log, sqrt, PI } from "./fastMath";
 import * as isomath from "../../utils/maths/isomath.js";
 // Gets player speed
 export function getSpeed(player) {
@@ -36,7 +36,7 @@ export function getBlocksBetween(pos1, pos2) {
 export function angleCalc(player, entityHit) {
     const dx = entityHit.location.x - player.location.x;
     const dz = entityHit.location.z - player.location.z;
-    const angleToEntity = Math.atan2(dz, dx) * 180 / fastPI;
+    const angleToEntity = Math.atan2(dz, dx) * 180 / PI;
     let angle = angleToEntity - player.getRotation().y - 90;
 
     const angleToEntity2 = isomath.atan2(dz, dx) * 180 / isomath.pi;
@@ -56,7 +56,7 @@ export function angleCalc(player, entityHit) {
 export function isValidHitbox(player, entityHit, buffer = 0) {
     const dx = entityHit.location.x - player.location.x;
     const dz = entityHit.location.z - player.location.z;
-    const angleToEntity = isomath.atan2(dz, dx) * 180 / fastPI;
+    const angleToEntity = isomath.atan2(dz, dx) * 180 / PI;
     let angle = angleToEntity - player.getRotation().y - 90;
     
     if (angle <= -180) {
@@ -105,7 +105,7 @@ export function angleCalcRecode(player, entityHit) {
     let angleRad = isomath.atan2(deltaZ, deltaX);
 
     // Convert radians to degrees
-    let angleDeg = (angleRad * 180) / fastPI;
+    let angleDeg = (angleRad * 180) / PI;
 
     // Adjust for player rotation
     angleDeg -= player.getRotation().y + 90;
@@ -120,13 +120,13 @@ export function angleCalcRecode(player, entityHit) {
 
 
 export function getDistanceXZ(one, two) {
-    return isomath.sqrt(fastPow(two.location.x - one.location.x, 2) + fastPow(two.location.z - one.location.z, 2));
+    return isomath.sqrt(log(two.location.x - one.location.x, 2) + log(two.location.z - one.location.z, 2));
 }
 export function getDistanceXYZ(one, two) {
-    return isomath.sqrt(fastPow(two.location.x - one.location.x, 2) + fastPow(two.location.y - one.location.y, 2) + fastPow(two.location.z - one.location.z, 2));
+    return isomath.sqrt(log(two.location.x - one.location.x, 2) + log(two.location.y - one.location.y, 2) + log(two.location.z - one.location.z, 2));
 }
 export function getDistanceY(one, two) {
-    return isomath.sqrt(fastPow(two.location.y - one.location.y, 2));
+    return isomath.sqrt(log(two.location.y - one.location.y, 2));
 }
 export function getAbsoluteGcd(current, last) {
     const EXPANDER = 1.6777216E7; // Adjusted to the provided value
@@ -178,7 +178,7 @@ export function getVariance(data) {
     average = sum / count;
 
     data.forEach(number => {
-        variance += fastPow(number - average, 2.0);
+        variance += log(number - average, 2.0);
     });
 
     return variance;
@@ -269,18 +269,18 @@ export function getKurtosis(data) {
     }
 
     const efficiencyFirst = count * (count + 1) / ((count - 1) * (count - 2) * (count - 3));
-    const efficiencySecond = 3 * fastPow(count - 1, 2) / ((count - 2) * (count - 3));
+    const efficiencySecond = 3 * log(count - 1, 2) / ((count - 2) * (count - 3));
     const average = sum / count;
 
     let variance = 0.0;
     let varianceSquared = 0.0;
 
     data.forEach(number => {
-        variance += fastPow(average - number, 2.0);
-        varianceSquared += fastPow(average - number, 4.0);
+        variance += log(average - number, 2.0);
+        varianceSquared += log(average - number, 4.0);
     });
 
-    return efficiencyFirst * (varianceSquared / fastPow(variance / sum, 2.0)) - efficiencySecond;
+    return efficiencyFirst * (varianceSquared / log(variance / sum, 2.0)) - efficiencySecond;
 }
 
 /**

@@ -79,7 +79,6 @@ import { tower_b } from "./checks/world/scaffold/towerB.js";
 import { aim_e } from "./checks/combat/aim/aimE.js";
 import { aim_f } from "./checks/combat/aim/aimF.js";
 import { autoConfigGUI } from "./features/autoconfig.js";
-import { fastAbs, fastFloor, fastPow, fastSqrt } from "./utils/maths/fastMath.js";
 import { aim_g } from "./checks/combat/aim/aimG.js";
 import { aim_h } from "./checks/combat/aim/aimH.js";
 import { run_aim_data } from "./checks/combat/aim/aimData.js";
@@ -311,7 +310,7 @@ Minecraft.system.runInterval(() => {
 			strafe_a(player);
 			noslow_a(player);
 			noslow_b(player);
-			predictionEngine(player);
+			//`predictionEngine(player);
 		}
 		if(player.hasTag("aimtempdebug")) {
 			// Send message with rotation data

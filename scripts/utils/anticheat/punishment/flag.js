@@ -6,7 +6,7 @@ import { setTitle } from "../../gameUtil";
 import { addLogs } from "../data/logs";
 import { banPlayer } from "./ban";
 import { kickPlayer } from "./kick";
-import { fastRound } from "../../maths/fastMath";
+import { round } from "../../maths/fastMath";
 import { banAnimation  } from "../../../util";
 import * as isomath from "../../../utils/maths/isomath.js";
 const themeStyles = {

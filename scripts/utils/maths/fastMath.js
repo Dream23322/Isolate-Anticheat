@@ -12,27 +12,27 @@ for (let i = 0; i < 1024; i++) {
 
 
 // Fast absolute value
-export function fastAbs(x) {
+export function abs(x) {
     return x < 0 ? -x : x;
 }
 
 // Fast floor function
-export function fastFloor(x) {
+export function floor(x) {
     return x | 0;
 }
 
 // Fast ceiling function
-export function fastCeil(x) {
+export function ceil(x) {
     return (x + 0.99999) | 0;
 }
 
 // Fast round function
-export function fastRound(x) {
+export function round(x) {
     return (x + 0.5) | 0;
 }
 
 // Fast square root (less accurate but faster)
-export function fastSqrt(x) {
+export function sqrt(x) {
     try {
         // Handle special cases
         if (x < 0) return NaN;
@@ -78,10 +78,10 @@ export function fastDistance3D(x1, y1, z1, x2, y2, z2) {
     const dx = x2 - x1;
     const dy = y2 - y1;
     const dz = z2 - z1;
-    return fastSqrt(dx * dx + dy * dy + dz * dz);
+    return sqrt(dx * dx + dy * dy + dz * dz);
 }
 
-export function fastSquare(x) {
+export function square(x) {
     return x * x;
 }
 
@@ -91,12 +91,12 @@ export function fastInRange(x, min, max) {
 }
 
 // Fast linear interpolation
-export function fastLerp(start, end, t) {
+export function lerp(start, end, t) {
     return start + t * (end - start);
 }
 
 // Fast clamp function
-export function fastClamp(x, min, max) {
+export function clamp(x, min, max) {
     return x < min ? min : (x > max ? max : x);
 }
 
@@ -104,22 +104,22 @@ export function countTrue(arr) {
     return arr.filter(Boolean).length;
 }
 
-export function fastHypot(x, y) {
+export function hypot(x, y) {
     try {
-        x = fastAbs(x);
-        y = fastAbs(y);
+        x = abs(x);
+        y = abs(y);
         const max = Math.max(x, y);
         const min = Math.min(x, y);
         if (max === 0) return 0;
         const ratio = min / max;
-        return max * fastSqrt(1 + ratio * ratio);
+        return max * sqrt(1 + ratio * ratio);
     } catch (e) {
         console.warn("[FastHypot] Error: " + e);
         return Math.hypot(x, y);
     }
 }
 
-export function fastExp(x) {
+export function exp(x) {
     try {
         const n = 20; // Number of terms in the Taylor series expansion
         let result = 1;
@@ -137,7 +137,7 @@ export function fastExp(x) {
     }
 }
 
-export function fastPow(base, exponent) {
+export function log(base, exponent) {
     try {
         // Handle special cases
         if (exponent === 0) return 1;
@@ -172,7 +172,7 @@ export function fastPow(base, exponent) {
         return Math.pow(base, exponent);
     }
 }
-export function fastLog(x) {
+export function log(x) {
     try {
         if (x <= 0) {
             throw new Error("Input must be positive");
@@ -195,17 +195,17 @@ export function fastLog(x) {
     }
 }
 
-export function fastAtan2(y, x) {
+export function atan2(y, x) {
     try {
         // Handle special cases
         if (x === 0) {
-            if (y > 0) return fastPI / 2;
-            if (y < 0) return -fastPI / 2;
+            if (y > 0) return PI / 2;
+            if (y < 0) return -PI / 2;
             return 0;
         }
 
-        const abs_y = fastAbs(y);
-        const abs_x = fastAbs(x);
+        const abs_y = abs(y);
+        const abs_x = abs(x);
         const a = Math.min(abs_x, abs_y) / Math.max(abs_x, abs_y);
         
         // Approximation using polynomial
@@ -214,7 +214,7 @@ export function fastAtan2(y, x) {
         
         // Adjust for quadrant
         if (abs_y > abs_x) r = 1.57079637 - r;
-        if (x < 0) r = fastPI - r;
+        if (x < 0) r = PI - r;
         if (y < 0) r = -r;
         
         return r;
@@ -223,9 +223,9 @@ export function fastAtan2(y, x) {
         return Math.atan2(y, x);
     }
 }
-export function fastAtan(x) {
+export function atan(x) {
     try {
-        const abs_x = fastAbs(x);
+        const abs_x = abs(x);
         const a = Math.min(abs_x, 1) / Math.max(abs_x, 1);
         
         // Approximation using polynomial
@@ -233,7 +233,7 @@ export function fastAtan(x) {
         let r = ((-0.0464964749 * s + 0.15931422) * s - 0.327622764) * s * a + a;
         
         // Adjust if |x| > 1
-        if (abs_x > 1) r = fastPI/2 - r;
+        if (abs_x > 1) r = PI/2 - r;
         if (x < 0) r = -r;
         
         return r;
@@ -243,12 +243,12 @@ export function fastAtan(x) {
     }
 }
 
-export function fastSin(x) {
+export function sin(x) {
     try {
         // Normalize angle to -π to π
-        x = x % (2 * fastPI);
-        if (x > fastPI) x -= 2 * fastPI;
-        else if (x < -fastPI) x += 2 * fastPI;
+        x = x % (2 * PI);
+        if (x > PI) x -= 2 * PI;
+        else if (x < -PI) x += 2 * PI;
 
         // Approximation: x - (x^3)/6 + (x^5)/120
         const x2 = x * x;
@@ -259,20 +259,20 @@ export function fastSin(x) {
     }
 }
 
-export function fastCos(x) {
+export function cos(x) {
     try {
         // cos(x) = sin(x + π/2)
-        return fastSin(x + Math.PI / 2);
+        return sin(x + Math.PI / 2);
     } catch (e) {
         console.warn("[FastCos] Error: " + e);
         return Math.cos(x);
     }
 }
 
-export function fastTan(x) {
+export function tan(x) {
     try {
-        const sinX = fastSin(x);
-        const cosX = fastCos(x);
+        const sinX = sin(x);
+        const cosX = cos(x);
         
         // Avoid division by zero
         if (cosX === 0) return Infinity;
@@ -283,10 +283,10 @@ export function fastTan(x) {
     }
 }
 
-export function fastPythag(a, b) {
-    return fastSqrt(a * a + b * b);
+export function pythag(a, b) {
+    return sqrt(a * a + b * b);
 }
 
 
 
-export const fastPI = 105414357.0 / 33554432.0 + 1.984187159361080883e-9;
+export const PI = 105414357.0 / 33554432.0 + 1.984187159361080883e-9;

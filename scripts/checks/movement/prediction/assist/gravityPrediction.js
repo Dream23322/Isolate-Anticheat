@@ -1,7 +1,7 @@
 const GRAVITY_ACCEL = -0.08; 
 import { getScore } from "../../../../util.js";
-import { fastAbs, fastSqrt } from "../../../../utils/maths/fastMath.js";
-import { fastPow } from "../../../../utils/maths/fastMath.js";
+import { abs, sqrt } from "../../../../utils/maths/fastMath.js";
+import { log } from "../../../../utils/maths/fastMath.js";
 import { inAir } from "../../../../utils/gameUtil.js";
 import { getAverage } from "../../../../utils/maths/mathUtil.js";
 import * as isomath from "../../../../utils/maths/isomath.js";

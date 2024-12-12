@@ -1,7 +1,7 @@
 import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { fastAbs, fastHypot } from "../../../utils/maths/fastMath.js";
+import { abs, hypot } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import * as isomath from "../../../utils/maths/isomath.js";
 const timerData = new Map();
@@ -15,8 +15,8 @@ export function timer_a(player, lastPosition, Value){
         const velocity = player.getVelocity();
         const calcVelocity = {x: player.location.x - lastPosition.x, y:player.location.y - lastPosition.y, z: player.location.z - lastPosition.z};
         if(!isMovingWithVelocity(velocity)) return;
-        const ServerSpeed = isomath.abs(fastHypot(fastHypot(calcVelocity.x, calcVelocity.z), calcVelocity.y));
-        const ClientSpeed = isomath.abs(fastHypot(fastHypot(velocity.x, velocity.z), velocity.y));
+        const ServerSpeed = isomath.abs(hypot(hypot(calcVelocity.x, calcVelocity.z), calcVelocity.y));
+        const ClientSpeed = isomath.abs(hypot(hypot(velocity.x, velocity.z), velocity.y));
         const duped = ServerSpeed / ClientSpeed;
         if(player.timerHold === null) player.timerHold = [];
         player.timerHold.push(duped * 20 / Value);
@@ -57,5 +57,5 @@ export function timer_a(player, lastPosition, Value){
     player.lastPosition = player.location;
 }
 function isMovingWithVelocity(velocity){
-	return isomath.abs(fastHypot(velocity.x, velocity.z)) > 0.01;
+	return isomath.abs(hypot(velocity.x, velocity.z)) > 0.01;
 }

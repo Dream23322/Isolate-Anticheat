@@ -1,4 +1,4 @@
-import { fastAbs } from "../../../utils/maths/fastMath";
+import { abs } from "../../../utils/maths/fastMath";
 import { arrayToList } from "../../../utils/maths/mathUtil";
 import { abs } from "../../../utils/maths/standardMath";
 

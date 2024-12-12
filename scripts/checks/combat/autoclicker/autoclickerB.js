@@ -1,6 +1,6 @@
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { fastAbs } from "../../../utils/maths/fastMath.js";
+import { abs } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import { abs } from "../../../utils/maths/isomath.js";
 import * as isomath from "../../../utils/maths/isomath.js";

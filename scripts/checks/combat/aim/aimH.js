@@ -1,7 +1,7 @@
 import { getScore, setScore } from "../../../util";
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { fastAbs, fastRound } from "../../../utils/maths/fastMath.js";
+import { abs, round } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import { getDeltaPitch, getDeltaYaw } from "./aimData.js";
 

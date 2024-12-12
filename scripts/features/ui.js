@@ -6,7 +6,7 @@ import settings from "../data/settings.js";
 import data from "../data/data.js";
 import { parseTime, capitalizeFirstLetter } from "../util.js";
 import { addOp, removeOp } from "../commands/moderation/op.js";
-import { fastFloor } from "../utils/maths/fastMath.js";
+import { floor } from "../utils/maths/fastMath.js";
 import * as isomath from "../utils/maths/isomath.js";
 
 const world = Minecraft.world;

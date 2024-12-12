@@ -2,7 +2,7 @@ import { getScore } from "../../../util";
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { aroundAir } from "../../../utils/gameUtil.js";
-import { fastAbs } from "../../../utils/maths/fastMath.js";
+import { abs } from "../../../utils/maths/fastMath.js";
 import { mathOnGround } from "../../../utils/maths/mathUtil.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import * as isomath from "../../../utils/maths/isomath.js";
