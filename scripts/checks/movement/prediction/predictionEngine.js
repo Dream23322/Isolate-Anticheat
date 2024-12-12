@@ -100,6 +100,7 @@ export function predictionEngine(player) {
     );
 }
 
+
 // No Xcoco (or daze tbh), its not chatGPT, I made 90% of it while on a fucking plane 45,000 feet in the sky. How am I meant to use chatgpt there huh?
 
 function calculateDeviation(player, lastPositions, otherData) {
