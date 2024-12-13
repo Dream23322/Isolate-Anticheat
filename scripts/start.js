@@ -15,16 +15,14 @@ if(dpConfig) {
 	
 }
 console.warn("[Isolate] >> ConfigID: " + config.configID);
-if(config.configID !== "a2") {
+if(config.configID !== "a2231") {
 	console.warn("[Isolate] >> Config ID doesnt match latest! Attempting to update config...")
 	config.modules.predictionA = {
 		enabled: true,
 		description: "Prediction Check",
-		deviation: 0.55,
-		fastPow: false,
-		correct: false,
-		flag: true,
-		keepvelocity: true,
+		deviationOGF: 0.002,
+		minOffGroundTicksOGF: 4,
+		ogfBuffer: 5,
 		punishment: "kick",
 		minVlbeforePunishment: 30,
 		AP: 3

@@ -210,8 +210,22 @@ Minecraft.system.runInterval(() => {
 			player.autotoolSwitchDelay = Date.now() - player.startBreakTime;
 		}
 
+		// Handle Data
 		player.velocity = playerVelocity;
 		player.speed = getSpeed(player);
+
+		if(player.isOnGround) {
+			player.ticksOffGround = 0;
+		} else {
+			player.ticksOffGround++;
+		}
+
+		if(player.isJumping) {
+			player.ticksSinceJump = 0;
+		} else {
+			player.ticksSinceJump++;
+		}
+
 
 		// anti-namespoof
 		// these values are set in the playerJoin event
@@ -310,7 +324,7 @@ Minecraft.system.runInterval(() => {
 			strafe_a(player);
 			noslow_a(player);
 			noslow_b(player);
-			//`predictionEngine(player);
+			predictionEngine(player);
 		}
 		if(player.hasTag("aimtempdebug")) {
 			// Send message with rotation data
@@ -407,8 +421,6 @@ Minecraft.system.runInterval(() => {
 			player.removeTag("isolate_em_reset_config");
 			world.setDynamicProperty("config", undefined);
 		}
-
-
 		autoclicker_a(player);
 		autoclicker_b(player);
 		autoclicker_c(player);

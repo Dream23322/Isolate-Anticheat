@@ -1,8 +1,6 @@
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config";
-import { playerTellraw } from "../../../utils/gameUtil";
 import { arrayToList, getAverage } from "../../../utils/maths/mathUtil.js";
-import { abs, log, sqrt } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import * as isomath from "../../../utils/maths/isomath.js";
 const data = new Map();

@@ -2,7 +2,6 @@ import * as Minecraft from "@minecraft/server";
 import { getScore, setScore } from "../../../util";
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { abs } from "../../../utils/maths/fastMath.js";
 import { getDeltaPitch, getDeltaYaw, getLastDeltaPitch, getLastDeltaYaw } from "./aimData.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import { abs } from "../../../utils/maths/isomath.js";

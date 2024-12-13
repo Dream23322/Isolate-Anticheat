@@ -2,7 +2,7 @@ import { setScore, getScore } from "../../../util";
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { arrayToList, countDuplicates, findNearDuplicates, getAverage, getAverageDifference, getOutliersInt, isNearPerfectWave, isWavePattern } from "../../../utils/maths/mathUtil.js";
-import { abs } from "../../../utils/maths/fastMath.js";
+
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 const data = new Map();
 export function autoclicker_e(player) {

@@ -833,8 +833,9 @@ export default
         "predictionA": {
             "enabled": true,
             "description": "Prediction Check",
-            "deviation": 0.55,
-            "fastMaths": false,
+            "deviationOGF": 0.002,
+            "ogfBuffer": 5,
+            "minOffGroundTicksOGF": 4,
             "punishment": "kick",
             "minVlbeforePunishment": 30,
             "AP": 3

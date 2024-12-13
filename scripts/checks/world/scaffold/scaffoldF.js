@@ -1,7 +1,6 @@
 import config from "../../../data/config.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import { getScore, setScore } from "../../../util";
-import { log, sqrt } from "../../../utils/maths/fastMath.js";
 import * as isomath from "../../../utils/maths/isomath.js";
 
 export function scaffold_f(player, block) {

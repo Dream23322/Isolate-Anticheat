@@ -4,7 +4,6 @@
 import * as Minecraft from "@minecraft/server";
 import settings from "./data/settings.js";
 // @ts-ignore
-import { floor, round } from "./utils/maths/fastMath.js";
 import * as isomath from "./utils/maths/isomath.js";
 
 export const world = Minecraft.world;

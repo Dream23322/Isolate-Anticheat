@@ -1,8 +1,6 @@
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { angleCalc, getDistanceXYZ} from "../../../utils/maths/mathUtil.js";
-import { abs } from "../../../utils/maths/fastMath.js";
-import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 const data = new Map();
 export function hitbox_b(player, entity) {

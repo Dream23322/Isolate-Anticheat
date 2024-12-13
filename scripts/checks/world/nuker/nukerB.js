@@ -2,7 +2,6 @@ import * as Minecraft from "@minecraft/server";
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { angleCalc } from "../../../utils/maths/mathUtil.js";
-import { log, sqrt } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import * as isomath from "../../../utils/maths/isomath.js";
 

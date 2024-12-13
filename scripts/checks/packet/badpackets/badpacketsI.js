@@ -1,6 +1,5 @@
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { abs } from "../../../utils/maths/fastMath.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import * as isomath from "../../../utils/maths/isomath.js";
 export function badpackets_i(player) {

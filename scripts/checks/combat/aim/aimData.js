@@ -1,6 +1,5 @@
-import { abs } from "../../../utils/maths/fastMath";
 import { arrayToList } from "../../../utils/maths/mathUtil";
-import { abs } from "../../../utils/maths/standardMath";
+import * as isomath from "../../../utils/maths/isomath.js"
 
 const pitchPositions = new Map();
 const yawPositions = new Map();
@@ -22,8 +21,8 @@ export function run_aim_data(player) {
     const dPitch = deltaPitchData.get(player.name) ?? new Array(100).fill(0);
     const dYaw = deltaYawData.get(player.name) ?? new Array(100).fill(0);
     if(pPos && yPos && dPitch && dYaw) {
-        const deltaPitch = abs(currentRot.x - pPos[0]);
-        const deltaYaw = abs(currentRot.y - yPos[0]);
+        const deltaPitch = isomath.abs(currentRot.x - pPos[0]);
+        const deltaYaw = isomath.abs(currentRot.y - yPos[0]);
 
         dPitch.unshift(deltaPitch);
         dYaw.unshift(deltaYaw);

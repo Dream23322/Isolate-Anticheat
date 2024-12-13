@@ -3,7 +3,6 @@ import { getScore, setScore } from "../../../util";
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { arrayToList, getAverageDifference } from "../../../utils/maths/mathUtil.js";
-import { abs } from "../../../utils/maths/fastMath.js";
 import { amountDeltaPitch, amountDeltaYaw } from "./aimData.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import { abs } from "../../../utils/maths/standardMath.js";
