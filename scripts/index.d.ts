@@ -24,6 +24,18 @@ declare module "@minecraft/server" {
 		// Velocity Position Speed and a bunch of other stuff
 		velocity: Vector3
 		speed: number
+		sprintLastTick: boolean
+		blindnessLastTick: boolean
+
+		// Counters
+		ticksOffGround: number
+		ticksSinceJump: number
+
+		// Buffers
+		prediction_ogf_buffer: number
+		
+		// Check stuff
+		canFlagSprintA: boolean
 
 		// Arrays
 		entitiesHit: Array<String>
