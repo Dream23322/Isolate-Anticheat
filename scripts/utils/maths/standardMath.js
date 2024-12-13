@@ -71,21 +71,7 @@ export function hypot(x, y) {
 }
 
 export function exp(x) {
-    try {
-        const n = 20; // Number of terms in the Taylor series expansion
-        let result = 1;
-        let term = 1;
-        
-        for (let i = 1; i < n; i++) {
-            term *= x / i;
-            result += term;
-        }
-        
-        return result;
-    } catch (e) {
-        console.warn("[FastExp] Error: " + e);
-        return Math.exp(x);
-    }
+    return Math.exp(x);
 }
 
 export function pow(base, exponent) {

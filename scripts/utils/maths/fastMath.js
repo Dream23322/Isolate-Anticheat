@@ -106,13 +106,7 @@ export function countTrue(arr) {
 
 export function hypot(x, y) {
     try {
-        x = abs(x);
-        y = abs(y);
-        const max = Math.max(x, y);
-        const min = Math.min(x, y);
-        if (max === 0) return 0;
-        const ratio = min / max;
-        return max * sqrt(1 + ratio * ratio);
+        return pythag(x, y);
     } catch (e) {
         console.warn("[FastHypot] Error: " + e);
         return Math.hypot(x, y);
@@ -137,7 +131,7 @@ export function exp(x) {
     }
 }
 
-export function log(base, exponent) {
+export function pow(base, exponent) {
     try {
         // Handle special cases
         if (exponent === 0) return 1;
