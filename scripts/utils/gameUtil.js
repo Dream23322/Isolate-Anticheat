@@ -132,14 +132,9 @@ export function getBlock_two(player, pos1, pos2) {
  */
 export function getPressedKeys(player) {
     const keys = [];
-    /**
-     * W [0, 1]
-     * A [1, 0]
-     * S [0, -1]
-     * D [-1, 0]
-     */
+    
     const inputData = player.inputInfo.getMovementVector();
-
+    
     if(inputData.y > 0) keys.push("W");
     if(inputData.y < 0) keys.push("S");
     if(inputData.x > 0) keys.push("D");

@@ -840,7 +840,7 @@ export default
         "predictionA": {
             "enabled": true,
             "description": "Prediction Check",
-            "deviationOGF": 0.002,
+            "deviationOGF": 0.0001,
             "ogfBuffer": 5,
             "minOffGroundTicksOGF": 4,
             "punishment": "kick",

@@ -1,4 +1,5 @@
 import { Player } from "@minecraft/server";
+import { flag } from "../../../utils/anticheat/punishment/flag";
 /**
  * @param {Player} player 
  */

@@ -20,7 +20,7 @@ if(config.configID !== "a2231") {
 	config.modules.predictionA = {
 		enabled: true,
 		description: "Prediction Check",
-		deviationOGF: 0.002,
+		deviationOGF: 0.0001,
 		minOffGroundTicksOGF: 4,
 		ogfBuffer: 5,
 		punishment: "kick",
