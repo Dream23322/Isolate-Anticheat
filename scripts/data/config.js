@@ -717,12 +717,19 @@ export default
             "minVlbeforePunishment": 5,
             "AP": 3
         },
-        "invalidsprintA": {
+        "sprintA": {
             "enabled": true,
             "description": "Checks for sprinting with blindness",
             "punishment": "none",
             "minVlbeforePunishment": 0,
             "AP": 3
+        },
+        "sprintB": {
+            "enabled": true,
+            "description": "Checks for sprinting while not pressing correct movement keys",
+            "punishment": "kick",
+            "minVlbeforePunishment": 10,
+            "AP": 1
         },
         "speedA": {
             "enabled": true,

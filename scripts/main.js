@@ -93,6 +93,8 @@ import { aim_i } from "./checks/combat/aim/aimI.js";
 import { predictionEngine } from "./checks/movement/prediction/predictionEngine.js";
 import settings from "./data/settings.js";
 import { abs, sqrt } from "./utils/maths/isomath.js";
+import { sprint_a } from "./checks/movement/sprint/sprintA.js";
+import { sprint_b } from "./checks/movement/sprint/sprintB.js";
 
 const world = Minecraft.world;
 const system = Minecraft.system;
@@ -325,6 +327,9 @@ Minecraft.system.runInterval(() => {
 			noslow_a(player);
 			noslow_b(player);
 			predictionEngine(player);
+
+			sprint_a(player);
+			sprint_b(player);
 		}
 		if(player.hasTag("aimtempdebug")) {
 			// Send message with rotation data

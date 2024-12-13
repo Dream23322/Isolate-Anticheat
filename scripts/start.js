@@ -26,9 +26,26 @@ if(config.configID !== "a2231") {
 		punishment: "kick",
 		minVlbeforePunishment: 30,
 		AP: 3
-	}
+	};
+
+	config.modules.sprintA = {
+		enabled: true,
+		description: "Checks for sprinting with blindness",
+		punishment: "ban",
+		minVlbeforePunishment: 10,
+		AP: 3
+	};
+
+	config.modules.sprintB = {
+		enabled: true,
+		description: "Checks for sprinting while not pressing correct movement keys",
+		punishment: "ban",
+		minVlbeforePunishment: 10,
+		AP: 1
+	};
 
 	delete config.modules.motionC;
+	delete config.modules.invalidsprintA;
 
 	console.warn("[Isolate] >> Updated Config Correctly");
 }
