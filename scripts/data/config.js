@@ -845,8 +845,8 @@ export default
             "minOffGroundTicksOGF": 4,
             "deviationMain": 0.62,
             "lagback": false,
-            "correctVelocity": true,
-            "correctPosition": true,
+            "correctVelocity": false,
+            "correctPosition": false,
             "punishment": "kick",
             "minVlbeforePunishment": 30,
             "AP": 3

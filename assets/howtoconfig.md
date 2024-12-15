@@ -586,10 +586,13 @@ Checks which detect combat cheats such as an autoclicker
 
 ### Sprint
 
-- InvalidsprintA
+- SprintA
   
   > This check has no unique settings
-  
+
+- SprintB
+
+  > This check has no unique settings
 
 ### Speed
 
@@ -689,14 +692,33 @@ The prediction check tries to predict a players position and velocity.
 
 The check currently isnt too accurate so please, be careful when changing these settings
 
-- deviation
+- deviationOGF
   
-  > The maximum deviation from predicted velocity and position that the player can have before flagging
+  > The maximum deviation for the Off Ground Friction prediction check.
   
-- fastMaths
+- ogfBuffer
   
-  > Use faster maths, may be less accurate but is worth it when its not eating server performance.
+  > The amount of time the Off Ground Friction prediction check has to silent flag before it actually flags.
   
+- minOffGroundTicksOGF
+
+  > The minimum ticks the player has to be off ground before the Off Ground Friction prediction will work.
+
+- deviationMain
+
+  > The maximum deviation for the main prediction check.
+
+- lagback
+
+  > This currently doesnt do anything
+
+- correctPosition
+
+  > Bad lagback, dont use
+
+- correctVelocity
+
+  > Dont use.
 
 ## World Checks
 
