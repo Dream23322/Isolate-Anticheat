@@ -8,6 +8,7 @@ import * as isomath from "../../../utils/maths/isomath.js";
 import { offGroundFriction } from "./predictions/offGroundFriction.js";
 import { mainPrediction } from "./predictions/mainPrediction.js";
 import * as Minecraft from "@minecraft/server";
+import { getSpeed } from "../../../utils/maths/mathUtil.js";
 
 const badEffects = ["speed", "jump_boost", "slowness", "slow_falling", "levitation", "wind_charged"];
 const badTags = ["damaged", "slime", "elytra", "ice", "op", "flying", "teleport", "speedE_pass"];
@@ -67,13 +68,24 @@ export function predictionEngine(player) {
 
             if(offGroundFrictionCheck.flag && !pass) {
                 player.prediction_ogf_buffer++;
+                if(player.hasTag("debugogfbuffer")) player.sendMessage("§r§j[§uIsolate§j]§r §dOGF Buffer: §b" + player.prediction_ogf_buffer);
                 if(player.prediction_ogf_buffer > config.modules.predictionA.ogfBuffer) {
                     player.prediction_ogf_buffer = 0;
                     flag(player, "Prediction", "A", "Movement", "prediction", offGroundFrictionCheck.data[0].toFixed(6) + " | Diff: " + offGroundFrictionCheck.data[1], true);
                 }
             }
-            const doMainPrediction = mainPrediction(player, lastPositions, data2.get(player.name));
 
+            // Prediction/A3 = Main Prediction
+            const mainComplete = mainPrediction(player, lastPositions, data2.get(player.name));
+
+            if(mainComplete.dev > 0.58 && !pass) {
+                flag(player, "Prediction", "A", "Movement (BETA)", "prediction", mainComplete.dev.toFixed(6) + " | speed: " + getSpeed(player), true);   
+                handleCorrection(player, {
+                    posX: mainComplete.pos.x,
+                    posZ: mainComplete.pos.z,
+                    velo: mainComplete.velo
+                })
+            }
         }
     }
     
@@ -91,4 +103,18 @@ export function predictionEngine(player) {
             ground: player.isOnGround,
         }
     );
+}
+
+/**
+ * 
+ * @param {Minecraft.Player} player 
+ * @param {*} dat 
+ */
+function handleCorrection(player, dat) {
+    if(config.modules.predictionA.correctPosition) {
+        player.teleport({ x: dat.posX + -player.velocity.x, y: player.location.y, z: dat.posZ + -player.velocity.z });
+    }
+    if(config.modules.predictionA.correctVelocity) {
+        player.runCommandAsync("effect @s slowness 1 1");
+    }
 }

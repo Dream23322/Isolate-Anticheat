@@ -12,7 +12,7 @@ scoreboard players set @s[type=player,scores={crashervl=1..}] crashervl 0
 scoreboard players set @s[type=player,scores={fastusevl=1..}] fastusevl 0
 scoreboard players set @s[type=player,scores={flyvl=1..}] flyvl 0
 scoreboard players set @s[type=player,scores={illegalitemsvl=1..}] illegalitemsvl 0
-scoreboard players set @s[type=player,scores={invalidsprintvl=1..}] invalidsprintvl 0
+scoreboard players set @s[type=player,scores={sprintvl=1..}] sprintvl 0
 scoreboard players set @s[type=player,scores={invmovevl=1..}] invmovevl 0
 scoreboard players set @s[type=player,scores={killauravl=1..}] killauravl 0
 scoreboard players set @s[type=player,scores={namespoofvl=1..}] namespoofvl 0

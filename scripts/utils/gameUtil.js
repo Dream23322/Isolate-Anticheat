@@ -131,6 +131,7 @@ export function getBlock_two(player, pos1, pos2) {
  * @param {Player} player 
  */
 export function getPressedKeys(player) {
+    if(player.inputInfo.lastInputModeUsed !== "KeyboardAndMouse") return ["nokbm"];
     const keys = [];
     
     const inputData = player.inputInfo.getMovementVector();

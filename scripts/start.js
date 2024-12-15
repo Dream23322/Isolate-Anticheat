@@ -15,14 +15,18 @@ if(dpConfig) {
 	
 }
 console.warn("[Isolate] >> ConfigID: " + config.configID);
-if(config.configID !== "a2231") {
+if(config.configID !== "a3") {
 	console.warn("[Isolate] >> Config ID doesnt match latest! Attempting to update config...")
 	config.modules.predictionA = {
 		enabled: true,
 		description: "Prediction Check",
 		deviationOGF: 0.0001,
-		minOffGroundTicksOGF: 4,
 		ogfBuffer: 5,
+		minOffGroundTicksOGF: 4,
+		deviationMain: 0.62,
+		lagback: false,
+		correctVelocity: false,
+		correctPosition: false,
 		punishment: "kick",
 		minVlbeforePunishment: 30,
 		AP: 3
@@ -50,7 +54,7 @@ if(config.configID !== "a2231") {
 	console.warn("[Isolate] >> Updated Config Correctly");
 }
 
-config.configID = "a2";	
+config.configID = "a3";	
 
 const dpSettings = world.getDynamicProperty("settings"); // Object
 if(dpSettings) {

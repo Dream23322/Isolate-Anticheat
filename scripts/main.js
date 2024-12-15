@@ -388,7 +388,7 @@ Minecraft.system.runInterval(() => {
 			setScore(player, "tick_counter2", getScore(player, "tick_counter2", 0) + 1);
 			setScore(player, "tag_reset", tagReset + 1);
 			setScore(player, "aimc_reset", aimcReset + 1);
-
+			player.prediction_ogf_buffer = 0;
 			badpackets_e(player);
 			player.removeTag("speedE_pass");
 
@@ -579,6 +579,12 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	if(config.customcommands.report.enabled) player.reports = [];
 	if(config.modules.killauraC.enabled) player.entitiesHit = [];
 	player.lastGoodPosition = player.location;
+
+	player.prediction_ogf_buffer = 0;
+	player.ticksOffGround = 0;
+	player.ticksSinceJump = 0;
+
+
 	setScore(player, "tick_counter2", 0);
 	exploit_a(player);
 

@@ -56,7 +56,7 @@ export function aim_e(player) {
             const deltaPitchDuplicates = findNearDuplicates(dPitch, 0);
 
             if(deltaPitchAverage > 1 && deltaPitchDuplicates > 15 && (player.hasTag("attacking") || !config.modules.aimE.needHit)) flag(player, "Aim", "E", "Kuristosis (Beta)", "deltaPitchDuplicates", deltaPitchDuplicates, false);
-
+            
             const total = abs(deltaYawDuplicates + deltaPitchDuplicates);
 
             if(total > config.modules.aimE.total && (player.hasTag("attacking") || !config.modules.aimE.needHit)) flag(player, "Aim", "E", "Kuristosis (Beta)", "total", total, false);

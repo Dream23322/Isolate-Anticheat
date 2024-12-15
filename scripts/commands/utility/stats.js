@@ -32,6 +32,8 @@ export function stats(message, args) {
     // This is possible since the 1.21.4X update which again gives the scripting api access to players device information.
     const platform_type = member.clientSystemInfo.platformType;
 
+    const input_type = member.inputInfo.lastInputModeUsed;
+
     // Get the players gamemode
     const gamemode = player.hasTag("gmc") ? "Creative" :
                      player.hasTag("gms") ? "Survival" :
@@ -82,6 +84,7 @@ export function stats(message, args) {
 Stats for: ${member.name}
 
 Device: ${platform_type}
+Input: ${input_type}
 Gamemode: ${gamemode}
 Coords: ${coords.x.toFixed(2)}, ${coords.y.toFixed(2)}, ${coords.z.toFixed(2)}
 

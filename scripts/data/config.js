@@ -843,6 +843,10 @@ export default
             "deviationOGF": 0.0001,
             "ogfBuffer": 5,
             "minOffGroundTicksOGF": 4,
+            "deviationMain": 0.62,
+            "lagback": false,
+            "correctVelocity": true,
+            "correctPosition": true,
             "punishment": "kick",
             "minVlbeforePunishment": 30,
             "AP": 3
