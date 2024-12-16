@@ -66,3 +66,24 @@ export function reloadMath() {
     math = null;
     initializeMath();
 }
+
+// Any functions below this don't change with the fastMath toggle
+
+export function getStandardDeviation(values, average) {
+  const variance = values.reduce((acc, val) => { const diff = val - average; return acc + diff * diff; }, 0) / values.length; 
+  return Math.sqrt(variance);
+}
+
+export function getAverage(data) {
+  const values = Array.isArray(data) ? data : Array.from(data.values());
+
+  return values.reduce((acc, val) => acc + val, 0) / values.length;
+}
+
+export function max(...args) {
+  return args.reduce((max, val) => val > max ? val : max, -Infinity);
+}
+
+export function min(...args) {
+  return args.reduce((min, val) => val < min ? val : min, Infinity);
+}

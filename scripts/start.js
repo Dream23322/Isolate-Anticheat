@@ -15,37 +15,28 @@ if(dpConfig) {
 	
 }
 console.warn("[Isolate] >> ConfigID: " + config.configID);
-if(config.configID !== "a3") {
+if(config.configID !== "a4") {
 	console.warn("[Isolate] >> Config ID doesnt match latest! Attempting to update config...")
-	config.modules.predictionA = {
+	config.modules.aimH = {
 		enabled: true,
-		description: "Prediction Check",
-		deviationOGF: 0.0001,
-		ogfBuffer: 5,
-		minOffGroundTicksOGF: 4,
-		deviationMain: 0.62,
-		lagback: false,
-		correctVelocity: false,
-		correctPosition: false,
+		description: "Checks for low standard deviation in Pitch and Yaw",
+		needHit: true,
+		minAvg: 2.5,
+		maxStDev: 2,
 		punishment: "kick",
-		minVlbeforePunishment: 30,
-		AP: 3
-	};
-
-	config.modules.sprintA = {
-		enabled: true,
-		description: "Checks for sprinting with blindness",
-		punishment: "ban",
-		minVlbeforePunishment: 10,
-		AP: 3
-	};
-
-	config.modules.sprintB = {
-		enabled: true,
-		description: "Checks for sprinting while not pressing correct movement keys",
-		punishment: "ban",
-		minVlbeforePunishment: 10,
+		minVlbeforePunishment: 5,
 		AP: 1
+	};
+
+	config.modules.aimI = {
+		enabled: true,
+		description: "Checks for low difference in Pitch",
+		needHit: true,
+		minAvg: 2.5,
+		maxDiff: 0.1,
+		punishment: "kick",
+		minVlbeforePunishment: 5,
+		AP: 1      
 	};
 
 	delete config.modules.motionC;

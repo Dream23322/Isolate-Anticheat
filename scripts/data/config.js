@@ -558,17 +558,21 @@ export default
             "AP": 1
         },
         "aimH": {
-            "enabled": false,
-            "description": "Checks for Identical Aim",
+            "enabled": true,
+            "description": "Checks for low standard deviation in Pitch and Yaw",
             "needHit": true,
+            "minAvg": 2.5,
+            "maxStDev": 2,
             "punishment": "kick",
             "minVlbeforePunishment": 5,
             "AP": 1
         },
         "aimI": {
-            "enabled": false,
-            "description": "Checks for Identical Aim (DO NOT ENABLE)",
+            "enabled": true,
+            "description": "Checks for low difference in Pitch ",
             "needHit": true,
+            "minAvg": 2.5,
+            "maxDiff": 0.1,
             "punishment": "kick",
             "minVlbeforePunishment": 5,
             "AP": 1      
@@ -688,7 +692,7 @@ export default
             "AP": 2
         },
         "hitboxB": {
-            "enabled": true,
+            "enabled": false,
             "description": "Traditional hitbox check (Only for desktop and console players, though console is less strict)",
             "max_avg_angle": 50,
             "punishment": "none",
