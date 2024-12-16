@@ -1,74 +1,106 @@
-import { getScore, setScore } from "../../../util";
+import * as mc from "@minecraft/server";
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
-import config from "../../../data/config.js";
-import { getBlocksBetween, getDistanceY, getSpeed } from "../../../utils/maths/mathUtil.js";
-import { allowedPlatform } from "../../../utils/platformUtils.js";
 import * as isomath from "../../../utils/maths/isomath.js";
 
-export function reach_a(player, entity) {
-	if(!allowedPlatform(player, config.modules.reachA.AP)) return;
-	if(config.modules.reachA.enabled) {
-		if(player.hasTag("gmc") || player.hasTag("noreach")) return;
-		setScore(player, "reach_a_reset", getScore(player, "reach_a_reset", 0) + 1);
-		let xz_distance = isomath.sqrt(isomath.pow(entity.location.x - player.location.x, 2) + isomath.pow(entity.location.z - player.location.z, 2));
-		if(config.debug) console.warn(`${player.name} attacked ${entity.nameTag} with a distance of ${xz_distance}\nPlayer Tags: ${player.getTags()}`);
-		checkDistance(player, xz_distance, entity);
-		if(getScore(player, "reach_a_reset", 0) > 10) {
-			if(getScore(player, "reach_a_buffer", 0) > config.modules.reachA.buffer) {
-				flag(player, "Reach", "A", "Combat", "distance", `${xz_distance}, `, true);
-			}
-			setScore(player, "reach_a_buffer", 0);
-			setScore(player, "reach_a_reset", 0);
-		}
-	}
+/**
+ * @author jasonlaubb
+ * This code is from Matrix-Anticheat and I give full credit to them. The orginal version of this check can be found at:
+ * https://github.com/jasonlaubb/Matrix-AntiCheat/blob/rewrite/Matrix_BP/src/program/detection/reach.ts
+ */
+
+const MAX_REACH = 4.5;
+const MAX_ROTATION = 79;
+const TRACK_DURATION = 8000;
+
+const system = mc.system;
+
+/**
+ * @typedef {Object} TrackData
+ * @property {Vector3[]} locationData
+ * @property {number} lastValidTimeStamp
+ * @property {number} buffer
+ */
+let locationTrackData = {};
+
+/**
+ * 
+ * @param {mc.Player} player 
+ * @param {mc.Entity} entityHit 
+ */
+export function reach_a(player, entityHit) {
+	// if(entityHit.typeId !== "minecraft:player" && entityHit.typeId !== "minecraft:villager") return;
+    const playerLocationData = locationTrackData[player.id];
+    const targetLocationData = locationTrackData[entityHit.id];
+    const now = Date.now();
+    const playerLocationDataExists = locationTrackData[player.id] !== undefined;
+    const targetLocationDataExists = locationTrackData[entityHit.id] !== undefined;
+    const playerTrackInvalid = !playerLocationDataExists || now - locationTrackData[player.id].lastValidTimeStamp > TRACK_DURATION;
+    const targetTrackInvalid = !targetLocationDataExists || now - locationTrackData[entityHit.id].lastValidTimeStamp > TRACK_DURATION;
+    if (playerTrackInvalid) {
+        trackPlayer(player);
+        locationTrackData[player.id].buffer = 0;
+    }
+    if (targetTrackInvalid) {
+        trackPlayer(entityHit);
+    }
+
+    console.warn("[Isolate] >> Reach A");
+
+    locationTrackData[player.id].lastValidTimeStamp = now;
+    locationTrackData[entityHit.id].lastValidTimeStamp = now;
+    if (targetTrackInvalid || playerTrackInvalid) return;
+
+    const { x: pitch } = player.getRotation();
+
+    if(isomath.abs(pitch) < MAX_ROTATION) {
+
+        const distLimit = calculateDistLimit(pitch);
+        const distance = getMinimumDistance(playerLocationData.locationData, targetLocationData.locationData);
+
+        if(distance > distLimit + 1.2 && distance > 3.5) {
+            const buffer = ++locationTrackData[player.id].buffer;
+            if(buffer >= 4) {
+                locationTrackData[player.id].lastValidTimeStamp = 0;
+                locationTrackData[player.id].buffer = 0;
+                flag(player, "Reach", "A", "Combat", "distance", `${distance},buffer=${buffer}`, false);
+            }
+        }
+    }
 }
 
-function checkDistance(player, xy_distance, entity) {
-	const mx_reach = getMaxReach(player, entity);
-	if(xy_distance > mx_reach && !config.modules.reachA.entities_blacklist.includes(entity.typeId)) {
-		setScore(player, "reach_a_buffer", getScore(player, "reach_a_buffer", 0) + 1);
-	}
+function trackPlayer(player) {
+    const runId = system.runInterval(() => {
+        if(!player?.isValid()) {
+            system.clearRun(runId);
+            return;
+        }
+        if(!locationTrackData[player.id]) locationTrackData[player.id] = { locationData: [], lastValidTimeStamp: 0, buffer: 0 };
+        locationTrackData[player.id].locationData.push(player.location);
+        if(locationTrackData[player.id].locationData.length >= 5) {
+            locationTrackData[player.id].locationData.shift();
+        }
+        if(Date.now() - locationTrackData[player.id].lastValidTimeStamp > TRACK_DURATION) {
+            system.clearRun(runId);
+        }
+    });
 }
 
-function getMaxReach(player, entity) {
-	let max_reach = config.modules.reachA.reach;
+function getMinimumDistance(playerLoc, targetLoc) {
+    const playerX = playerLoc.map(({ x }) => x);
+    const playerZ = playerLoc.map(({ z }) => z);
+    const targetX = targetLoc.map(({ x }) => x);
+    const targetZ = targetLoc.map(({ z }) => z);
+    const xDiffs = playerX.map((x, i) => {
+        return isomath.abs(x - targetX[i]);
+    });
 
-	// Check if smart reach is enabled in the config
-	if(config.modules.reachA.smartReach) {
+    const zDiffs = playerZ.map((z, i) => {
+        return isomath.abs(z - targetZ[i]);
+    });
 
-		// Having high speed in PvP can cause BDS Prediction to correct your movement and mess with your reach
-		if(getSpeed(player) > 0.4) max_reach += 0.2;
+    return isomath.pythag(Math.min(...xDiffs), Math.min(...zDiffs));
+}
 
-		// Taking damage often will result in knockback so we account for that movement
-		if(player.hasTag("damaged")) max_reach += 0.04;
-
-		// If the player is sprinting then we can increase the reach
-		if(player.isSprinting) max_reach -= 0.2;
-
-		// Players who have been kicked before will have a higher chance of cheating.
-		if(player.hasTag("strict")) max_reach -= 0.2;
-		
-	}
-	// Dynamic reach checks for world conditions that can cause the players max reach to be lower than normal
-	if(config.modules.reachA.dynamicReach) {
- 
-		// Being in water can be funny for reach
-		if(getBlocksBetween(player.location, player.location) === "minecraft:water" || getBlocksBetween(player.location, player.location) === "minecraft:lava") {
-			max_reach -= 0.7;
-		}
-		// If the player is hitting an iron golem, the golem will have less reach and therefore your average reach will be less
-		if(entity.typeId.includes("iron")) max_reach -= 0.5;
-
-		// If the player isnt moving their max reach will decrease as BDS Prediction will not be correcting their movement.
-		if(!player.hasTag("moving")) max_reach -= 0.5;
-
-		// Using some basic maths, you can understand that if a player is above their opponent, the opponent will have an easier reach as reach is calculated from the players head.
-		// There is some technoblade (RIP) vs dream breakdown which explains it a bit more.
-		if(entity.location.y < player.location.y) max_reach -= 0.2;
-	}
-	// Make sure the reach value isnt below 3.1 blocks
-	if(max_reach < 3.1) return config.modules.reachA.reach;
-
-	// Return the final reach value.
-	return max_reach;
+function calculateDistLimit(pitch) {
+    return isomath.cos(isomath.abs(pitch)) * MAX_REACH;
 }

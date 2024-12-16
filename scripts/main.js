@@ -748,7 +748,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 	}
 
 	hitbox_a(player, entity);
-	hitbox_b(player, entity);
+	//hitbox_b(player, entity);
 	reach_a(player, entity);
 	reach_b(player, entity);
 	
