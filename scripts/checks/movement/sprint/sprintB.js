@@ -9,7 +9,11 @@ import { allowedPlatform } from "../../../utils/platformUtils";
  * @param {Player} player 
  */
 export function sprint_b(player) {
-    if(!player.isSprinting || !config.modules.sprintB.enabled || !allowedPlatform(player, config.modules.sprintB.AP) || player.inputInfo.lastInputModeUsed !== "KeyboardAndMouse" || !player.sprintLastTick) return;
+    try {
+        if(!player.isSprinting || !config.modules.sprintB.enabled || !allowedPlatform(player, config.modules.sprintB.AP) || player.inputInfo.lastInputModeUsed !== "KeyboardAndMouse" || !player.sprintLastTick) return;
+    } catch (error) {
+        return;
+    }
     const keys = getPressedKeys(player);
     // Check if x movement keys arent press or no keys are pressed
     if(
