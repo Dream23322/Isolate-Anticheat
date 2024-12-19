@@ -26,11 +26,5 @@ export function killaura_a(player, entity) {
             flag(player, "Killaura", "A", "Combat", "angle", `${rotation.x},distance=${distance}`, false);
         }
 
-        // Fix bypass which i made lol
-        const roundYaw = isomath.round(rot.y);
-        if(
-            (roundYaw === 0 || roundYaw === 90 || roundYaw === 180 || roundYaw === 270) &&
-            isomath.abs(roundYaw - rot.y) < 0.4
-        ) flag(player, "Killaura", "A", "Combat", "roundYaw", roundYaw + ", " + isomath.abs(roundYaw - rot.y), false);
     }
 }
