@@ -7,8 +7,8 @@ import * as isomath from "../../../../utils/maths/isomath.js";
  * @param {*} otherData 
  */
 export function mainPrediction(player, lastPositions, otherData) {
-    const basicPredictionPositions  = doPrediction(player, lastPositions, otherData);
-
+    const basicPredictionPositions = doPrediction(player, lastPositions[1], otherData);
+    
     const deviation = isomath.pythag(
         player.location.x - basicPredictionPositions.x,
         player.location.z - basicPredictionPositions.z
@@ -24,11 +24,11 @@ export function mainPrediction(player, lastPositions, otherData) {
  * @param {Minecraft.Player} player 
  * @param {*} lastPosition 
  */
-export function doPrediction(player, lastPositions, otherData) {
-    const predictedVelocity = doVelocityPrediction(player, lastPositions, otherData);
+export function doPrediction(player, lastPosition, otherData) {
+    const predictedVelocity = doVelocityPrediction(player, lastPosition, otherData);
 
-    const predictedX = player.location.x + predictedVelocity.x;
-    const predictedZ = player.location.z + predictedVelocity.z;
+    const predictedX = lastPosition.x + predictedVelocity.x;
+    const predictedZ = lastPosition.z + predictedVelocity.z;
 
     if(player.hasTag("debug_prediction")) player.runCommandAsync(`particle minecraft:blue_flame_particle ${predictedX} ${player.location.y} ${predictedZ}`);
     if(player.hasTag("debug_velo")) player.sendMessage("Velocity: " + predictedVelocity.x + ", " + predictedVelocity.z + " Actual: " + player.getVelocity().x + ", " + player.getVelocity().z);

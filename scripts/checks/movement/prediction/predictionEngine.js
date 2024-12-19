@@ -78,7 +78,7 @@ export function predictionEngine(player) {
             // Prediction/A3 = Main Prediction
             const mainComplete = mainPrediction(player, lastPositions, data2.get(player.name));
 
-            if(mainComplete.dev > 0.58 && !pass) {
+            if(mainComplete.dev > config.modules.predictionA.deviationMain && !pass) {
                 flag(player, "Prediction", "A", "Movement (BETA)", "prediction", mainComplete.dev.toFixed(6) + " | speed: " + getSpeed(player), true);   
                 handleCorrection(player, {
                     posX: mainComplete.pos.x,
