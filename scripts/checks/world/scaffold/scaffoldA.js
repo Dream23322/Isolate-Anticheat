@@ -39,7 +39,7 @@ function calculateDistance(origin, point) {
     const dx = point.x - origin.x;
     const dz = point.z - origin.z;
     
-    return isomath.hypot(dx, dz);
+    return isomath.pythag(dx, dz);
 }
 function isAirBelowAllBlocks(player, one, two, three) {
     const dimension = player.dimension;

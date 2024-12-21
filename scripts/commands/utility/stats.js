@@ -30,29 +30,37 @@ export function stats(message, args) {
 
     // Get platform type
     // This is possible since the 1.21.4X update which again gives the scripting api access to players device information.
-    const platform_type = member.clientSystemInfo.platformType;
-
-    const input_type = member.inputInfo.lastInputModeUsed;
-
+    let platform_type = "Failed-Get";
+    try {
+        platform_type = member.clientSystemInfo.platformType;
+    } catch(e) {
+        console.warn("[Isolate] >> Failed to get platform type: " + e);
+    }
+    let input_type = "Failed-Get";
+    try {
+        input_type = member.inputInfo.lastInputModeUsed;
+    } catch(e) {
+        console.warn("[Isolate] >> Failed to get input type: " + e);
+    }
     // Get the players gamemode
-    const gamemode = player.hasTag("gmc") ? "Creative" :
-                     player.hasTag("gms") ? "Survival" :
-                     player.hasTag("gma") ? "Adventure" : "Spectator";
+    const gamemode = member.hasTag("gmc") ? "Creative" :
+                     member.hasTag("gms") ? "Survival" :
+                     member.hasTag("gma") ? "Adventure" : "Spectator";
 
     // Get the players coords
-    const coords = player.location;
+    const coords = member.location;
 
     // Isolate Info
-    const isIcy = player.hasTag("freeze");
-    const isVanished = player.hasTag("vanish");
-    const kicks = getScore(player, "kickvl", 0);
-    const flying = player.hasTag("flying");
+    const isIcy = member.hasTag("freeze");
+    const isVanished = member.hasTag("vanish");
+    const kicks = getScore(member, "kickvl", 0);
+    const flying = member.hasTag("flying");
 
     const misc_checks = ["spammer", "namespoof", "autotool", "exploit", "crasher", "badpackets","timer"];
 
     const combat_checks = ["reach", "aim", "autoclicker", "killaura", "hitbox"];
 
-    const movement_checks = ["noslow", "invalidsprint", "speed", "fly", "motion", "strafe"];
+    const movement_checks = ["noslow", "sprint", "speed", "fly", "motion", "strafe", "prediction"];
 
     const world_checks = ["nuker", "scaffold", "tower"];
 
@@ -62,19 +70,19 @@ export function stats(message, args) {
     let world_VL = 0;
 
     for(const check of misc_checks) {
-        misc_VL += getScore(player, `${check}vl`, 0);
+        misc_VL += getScore(member, `${check}vl`, 0);
     }
 
     for(const check of combat_checks) {
-        combat_VL += getScore(player, `${check}vl`, 0);
+        combat_VL += getScore(member, `${check}vl`, 0);
     }
 
     for(const check of movement_checks) {
-        movement_VL += getScore(player, `${check}vl`, 0);
+        movement_VL += getScore(member, `${check}vl`, 0);
     }
 
     for(const check of world_checks) {
-        world_VL += getScore(player, `${check}vl`, 0);
+        world_VL += getScore(member, `${check}vl`, 0);
     }
 
     // Make a nice little layout for it all

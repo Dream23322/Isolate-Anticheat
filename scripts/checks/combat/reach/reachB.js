@@ -9,7 +9,7 @@ export function reach_b(player, entity) {
 	if(!allowedPlatform(player, config.modules.reachB.AP)) return;
 	if(config.modules.reachB.enabled) {
 		if(player.hasTag("gmc") || config.modules.reachB.entities_blacklist.includes(entity.typeId)) return;
-		let xz_distance = isomath.sqrt(isomath.pow(entity.location.x - player.location.x, 2) + isomath.pow(entity.location.z - player.location.z, 2));
+		let xz_distance = isomath.pythag(entity.location.x - player.location.x, entity.location.z - player.location.z);
 		const d = data.get(player.name) ?? (new Array(15)).fill(0);
 		if(d) {
 			const avg = isomath.abs((xz_distance + d[0] + d[1] + d[2] + d[3] + d[4] + d[5] + d[6] + d[7] + d[8] + d[9] + d[10] + d[11] + d[12] + d[13] + d[14]) / 15);
@@ -38,11 +38,9 @@ function getMaxReach(player, entity) {
 
 		// Taking damage often will result in knockback so we account for that movement
 		if(player.hasTag("damaged")) max_reach += 0.11;
-		else max_reach -=0.01;
 
 		// If the player is sprinting then we can increase the reach
-		if(player.isSprinting) max_reach += 0.15;
-		else max_reach -= 0.05;
+		if(player.isSprinting) max_reach += 0.2;
 
 		// Players who have been kicked before will have a higher chance of cheating.
 		if(player.hasTag("strict")) max_reach -= 0.2;

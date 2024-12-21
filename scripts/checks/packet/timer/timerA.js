@@ -14,8 +14,8 @@ export function timer_a(player, lastPosition, Value){
         const velocity = player.getVelocity();
         const calcVelocity = {x: player.location.x - lastPosition.x, y:player.location.y - lastPosition.y, z: player.location.z - lastPosition.z};
         if(!isMovingWithVelocity(velocity)) return;
-        const ServerSpeed = isomath.abs(isomath.hypot(isomath.hypot(calcVelocity.x, calcVelocity.z), calcVelocity.y));
-        const ClientSpeed = isomath.abs(isomath.hypot(isomath.hypot(velocity.x, velocity.z), velocity.y));
+        const ServerSpeed = isomath.pythag(calcVelocity.x, calcVelocity.z, calcVelocity.y);
+        const ClientSpeed = isomath.pythag(velocity.x, velocity.z, velocity.y);
         const duped = ServerSpeed / ClientSpeed;
         if(player.timerHold === null) player.timerHold = [];
         player.timerHold.push(duped * 20 / Value);
@@ -56,5 +56,5 @@ export function timer_a(player, lastPosition, Value){
     player.lastPosition = player.location;
 }
 function isMovingWithVelocity(velocity){
-	return isomath.abs(isomath.hypot(velocity.x, velocity.z)) > 0.01;
+	return isomath.abs(isomath.pythag(velocity.x, velocity.z)) > 0.01;
 }

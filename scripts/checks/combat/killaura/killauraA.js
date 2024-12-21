@@ -10,7 +10,7 @@ export function killaura_a(player, entity) {
         const rot = player.getRotation();
         // github.com/jasonlaubb/Matrix-Anticheat/
         // good anticheat tbh
-        if(!player.isGliding && isomath.hypot(playerVelocity.x, playerVelocity.z) > 0.2 && (rot.x % 5 === 0 || (rot.y % 5 === 0 && isomath.abs(rot.y) != 90)) && (rot.x != 0 || rot.y != 0)) {
+        if(!player.isGliding && isomath.pythag(playerVelocity.x, playerVelocity.z) > 0.2 && (rot.x % 5 === 0 || (rot.y % 5 === 0 && isomath.abs(rot.y) != 90)) && (rot.x != 0 || rot.y != 0)) {
             flag(player, "Killaura", "A", "Combat", "rotation-y%1", 0, false);
         }
 
@@ -21,7 +21,7 @@ export function killaura_a(player, entity) {
         }
         
         const rotation = player.getRotation()
-        const distance = isomath.sqrt(isomath.pow(entity.location.x - player.location.x, 2) + isomath.pow(entity.location.z - player.location.z, 2));
+        const distance = isomath.pythag(entity.location.x - player.location.x, entity.location.z - player.location.z);
         if(isomath.abs(rotation.x) > 79 && distance > 3.5 && !player.hasTag("trident") && !player.hasTag("bow")) {
             flag(player, "Killaura", "A", "Combat", "angle", `${rotation.x},distance=${distance}`, false);
         }

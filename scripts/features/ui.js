@@ -320,29 +320,17 @@ function generalSettingsMenu(player) {
     let optionsMap = [];
     const menu = new MinecraftUI.ModalFormData()
         .title("General Anticheat Settings");
-    console.warn("welp");
     menu.toggle("Auto Reset Warns", settingsData["autoReset"]);
-    console.warn("welp1");
     menu.toggle("Hive Regen System", settingsData["hiveRegen"]);
-    console.warn("welp2");
     menu.toggle("Smart Cheat Notifications", settingsData["smartNotify"]);
-    console.warn("welp3");
     menu.toggle("Smart Notifications Only", settingsData["smartOnly"]);
-    console.warn("welp4");
     menu.slider("Theme", 1, 3, 1, Number(settingsData["theme"]));
-    console.warn("welp5");
     menu.slider("Flag Theme", 1, 2, 1, Number(settingsData["flagstyle"]));
-    console.warn("welp6");
     menu.toggle("Debug Info On Flag", settingsData["debugflag"]);
-    console.warn("welp7");
     menu.textField("Command Prefix", "eg. !, >, -", settingsData["prefix"]);
-    console.warn("welp8");
     menu.toggle("Chat Ranks (Experimental)", settingsData["chatRanks"]);
-    console.warn("welp9");
     menu.toggle("Testing Mode", settingsData["testingmode"]);
-    console.warn("welp0");
     menu.toggle("Advanced CPS (Experimental)", settingsData["advancedCPS"]);
-    
     menu.show(player).then((response) => {
         if(response.canceled) return acSettingsMenu(player);
         // Yes its bad but I want it done today
@@ -371,6 +359,7 @@ function punishmentSettingsMenu(player) {
     menu.toggle("Auto Ban", settingsData["autoBan"]);
     menu.slider("Kicks Before Ban", 1, 50, 1, settingsData["kicksBeforeBan"]);
     menu.toggle("Only Auto-Punish Reported Players", settingsData["onlyReported"]);
+    menu.textField("Kick Message", "%check% %checkType% %playername% %vl%", settingsData["kickMessage"]);
     menu.show(player).then((response) => {
         if(response.canceled) return acSettingsMenu(player);
 
@@ -378,6 +367,7 @@ function punishmentSettingsMenu(player) {
         settings["punishment"]["autoBan"] = response.formValues[1];
         settings["punishment"]["kicksBeforeBan"] = response.formValues[2];
         settings["punishment"]["onlyReported"] = response.formValues[3];
+        settings["punishment"]["kickMessage"] = response.formValues[4];
 
         world.setDynamicProperty("settings", JSON.stringify(settings));
 
@@ -389,11 +379,8 @@ function lagbackSettingsMenu(player) {
     const settingsData = settings["lagbacks"];
     const menu = new MinecraftUI.ModalFormData()
         .title("Lagback Anticheat Settings");
-    console.warn("w1");
     menu.toggle("Disabled", settingsData["silent"]);
-    console.warn("w2");
     menu.slider("Percent Before Lagback", 0, 100, 1, settingsData["percentBeforeLagback"]);
-    console.warn("w3");
 
     menu.show(player).then((response) => {
         if(response.canceled) return acSettingsMenu(player);
@@ -412,13 +399,9 @@ function reportSettingsMenu(player) {
         .title("Report Anticheat Settings");
     
     menu.toggle("Enabled", settingsData["enabled"]);
-    console.warn("herro");
     menu.toggle("Info Check", settingsData["infoCheck"]);
-    console.warn("herro1");
     menu.toggle("Kick/Ban", settingsData["kickBan"]);
-    console.warn("herro2");
     menu.slider("Min Kicks", 1, 50, 1, settingsData["minKicks"]);
-    console.warn("herro3");
     menu.textField("Ban Length", "Enter a ban length (ex: 12d, 1d, 1m, 30s", settingsData["banLength"]);
     menu.show(player).then((response) => {
         if(response.canceled) return acSettingsMenu(player);

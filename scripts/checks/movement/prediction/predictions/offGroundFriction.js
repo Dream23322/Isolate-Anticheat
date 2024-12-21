@@ -18,8 +18,8 @@ export function offGroundFriction(player, lastPositions) {
     const lastMoveDelta = {x: lastPositions[2].x - lastPositions[1].x, y: lastPositions[2].y - lastPositions[1].y, z: lastPositions[2].z - lastPositions[1].z};
     const currentMoveDelta = {x: lastPositions[1].x - lastPositions[0].x, y: lastPositions[1].y - lastPositions[0].y, z: lastPositions[1].z - lastPositions[0].z};
 
-    const currentXZ = isomath.hypot(currentMoveDelta.x, currentMoveDelta.z);
-    const lastXZ = isomath.hypot(lastMoveDelta.x, lastMoveDelta.z);
+    const currentXZ = isomath.pythag(currentMoveDelta.x, currentMoveDelta.z);
+    const lastXZ = isomath.pythag(lastMoveDelta.x, lastMoveDelta.z);
 
     let prediction = lastXZ * 0.91 + jumpMovementFactor;
 

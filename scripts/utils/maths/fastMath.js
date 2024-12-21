@@ -278,7 +278,11 @@ export function tan(x) {
 }
 
 export function pythag(a, b) {
-    return sqrt(a * a + b * b);
+    return sqrt(a ** 2 + b ** 2);
+}
+
+export function pytahg3d(a, b, c) {
+    return sqrt(a ** 2 + b ** 2 + c ** 2);
 }
 
 

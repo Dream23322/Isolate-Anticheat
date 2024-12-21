@@ -11,7 +11,7 @@ export function scaffold_b(player, block) {
     const isValidRotation = config.modules.scaffoldB.enabled &&
         (rotation.x === 60 || rotation.x === -85);
     const isValidPlacement = !player.isGliding &&
-        isomath.hypot(velocity.x, velocity.z) > 0.2 &&
+        isomath.pythag(velocity.x, velocity.z) > 0.2 &&
         block.location.y < player.location.y &&
         ((rotation.x % 1 === 0 ||
         (rotation.y % 1 === 0 && isomath.abs(rotation.y) !== 90) ||

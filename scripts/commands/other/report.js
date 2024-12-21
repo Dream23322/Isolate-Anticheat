@@ -40,8 +40,8 @@ export function report(message, args) {
     
     member.addTag("strict");
     member.addTag("reported");
-    if(config.modules.smartReport.enabled && config.modules.smartReport.infoCheck) {
-        if(getScore(player, "kickvl", 0) > config.modules.smartReport.minKicks) {
+    if(settings.report.enabled && settings.report.enabled) {
+        if(getScore(player, "kickvl", 0) > settings.report.minKicks) {
             // Ban lel
             if(settings.general.theme === "1") {
                 player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r A player has been banned from your game for using an §6unfair advantage! (7-Day)"}]}`);
@@ -65,6 +65,6 @@ export function report(message, args) {
             player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been §cpunished§r (§cBan§r) for cheating (REPORTED)"}]}`);
         }
     }
-
+    // white people 
     player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has reported ${member.nameTag} for ${reason}"}]}`);
 }
