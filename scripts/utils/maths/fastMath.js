@@ -287,4 +287,4 @@ export function pytahg3d(a, b, c) {
 
 
 
-export const PI = 105414357.0 / 33554432.0 + 1.984187159361080883e-9;
+export const PI = 3.14159;
