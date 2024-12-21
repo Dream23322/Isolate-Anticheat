@@ -22,7 +22,7 @@ if(config.configID !== "a4") {
 		description: "Checks for low standard deviation in Pitch and Yaw",
 		needHit: true,
 		minAvg: 2.5,
-		maxStDev: 2,
+		maxStDev: 1,
 		punishment: "kick",
 		minVlbeforePunishment: 5,
 		AP: 1
@@ -39,13 +39,55 @@ if(config.configID !== "a4") {
 		AP: 1      
 	};
 
+	config.modules.reachA = {
+		enabled: true,
+		description: "Checks for invalid reach",
+		reach: 3.2,
+		predictionTicks: 4,
+		entitiesBlacklist: [
+			"minecraft:enderman",
+			"minecraft:fireball",
+			"minecraft:ender_dragon",
+			"minecraft:ghast"
+		],
+		punishment: "kick",
+		punishmentLength: "3m",
+		minVlbeforePunishment: 30,
+		AP: 3
+	};
+
+	// disable reach/B\
+	config.modules.reachB = {
+		enabled: false,
+		description: "Reach check based on reach over time",
+		reach: 5.9,
+		dynamicReach: true,
+		smartReach: true,
+		dynamicData: {
+			water: 3.5,
+			still: 3.5,
+			speed: 1.2
+		},
+		entitiesBlacklist: [
+			"minecraft:enderman",
+			"minecraft:fireball",
+			"minecraft:ender_dragon",
+			"minecraft:ghast"
+		],
+		punishment: "kick",
+		punishmentLength: "3m",
+		minVlbeforePunishment: 5,
+		AP: 3
+	};
+			
+
 	delete config.modules.motionC;
 	delete config.modules.invalidsprintA;
 
 	console.warn("[Isolate] >> Updated Config Correctly");
 }
 
-config.configID = "a3";	
+config.configID = "a4";	
 
 const dpSettings = world.getDynamicProperty("settings"); // Object
 if(dpSettings) {
@@ -56,8 +98,16 @@ if(dpSettings) {
 }
 console.warn("[Isolate] >> SettingsID: " + settings.id);
 
-if(settings.id !== "a2") {
+if(settings.id !== "a22") {
 	console.warn("[Isolate] >> Settings ID doesnt match latest! Attempting to update settings...")
+
+	settings.punishment = {
+		autoKick: true,
+		autoBan: true,
+		kicksBeforeBan: 7,
+		onlyReported: true,
+		kickMessage: "§r§j[§uIsolate§j]§r >> §6Unfair Advantage.§b §j[§n%check%§j]",
+	}
 	
 	console.warn("[Isolate] >> Updated Settings Correctly");
 }

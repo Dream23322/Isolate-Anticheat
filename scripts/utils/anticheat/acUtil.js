@@ -6,3 +6,10 @@ export function joinData(player) {
         }
     }   
 }
+
+export const findPlayer = (name) => {
+    const searchName = name.toLowerCase().replace(/["\\@]/g, "");
+    return world.getPlayers().find(player => 
+        player.name.toLowerCase().includes(searchName)
+    );
+};

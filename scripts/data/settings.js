@@ -18,7 +18,8 @@ export default
         "autoKick": true,
         "autoBan": true,
         "kicksBeforeBan": 7,
-        "onlyReported": false
+        "onlyReported": false,
+        "kickMessage": "§r§j[§uIsolate§j]§r >> §6Unfair Advantage.§b §j[§n%check%§j]"
     },
     "lagbacks": {
         "silent": true,

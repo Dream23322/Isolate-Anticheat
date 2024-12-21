@@ -448,14 +448,7 @@ export default
             "enabled": true,
             "description": "Checks for invalid reach",
             "reach": 6.2,
-            "dynamicReach": true,
-            "smartReach": true,
-            "buffer": 7,
-            "dynamicData": {
-                "water": 3.5,
-                "still": 3.5,
-                "speed": 5.4
-            },
+            "predictionTicks": 4,
             "entities_blacklist": [
                 "minecraft:enderman",
                 "minecraft:fireball",

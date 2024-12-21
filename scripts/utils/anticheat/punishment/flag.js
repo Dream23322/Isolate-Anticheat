@@ -5,7 +5,7 @@ import { world, getScore, setScore, parseTime } from "../../../util";
 import { setTitle } from "../../gameUtil";
 import { addLogs } from "../data/logs";
 import { banPlayer } from "./ban";
-import { kickPlayer } from "./kick";
+import { craftMessage, kickPlayer } from "./kick";
 import { round } from "../../maths/fastMath";
 import { banAnimation  } from "../../../util";
 import * as isomath from "../../../utils/maths/isomath.js";
@@ -227,13 +227,13 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
                     addLogs(`§u${player.name} §hwas §pbanned§h by §nIsolate Anticheat §j[§n${check}§j] | 7d`)
                     player.runCommandAsync(`kick "${player.name}"`);
                     return;
-                }
+                }   
                 player.runCommandAsync("function tools/resetwarns");
                 player.addTag("strict");
                 console.warn(`${new Date().toISOString()} |${player.name} was kicked by Isolate Anticheat for ${check}/${checkType}`);
                 addLogs(`§u${player.name} §hwas §pkicked §hby §nIsolate Anticheat §j[§n${check}§j]`)
                 player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been §cpunished§r (§cKick§r) for ${check}/${checkType}"}]}`);
-                kickPlayer(player, `§dUnfair Advantage §t(${check})`, `§r§j[§uIsolate§j]§r >> §6Unfair Advantage.§b §j[§n${check}§j]`);
+                kickPlayer(player, `§dUnfair Advantage §t(${check})`, craftMessage(player, check, checkType, hackType, currentVl));
             // incase /kick fails, we despawn them from the world
             } catch (error) {
                 player.triggerEvent("scythe:kick");

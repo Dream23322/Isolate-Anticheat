@@ -15,3 +15,23 @@ export function kickPlayer(player, reason, message) {
 
     player.runCommandAsync(`kick "${player.name}" ${message}`);
 }
+
+export function craftMessage(player, check, checkType, category, violations) {
+    /*
+    Key:
+    %playername% - player.name
+    %check% - check
+    %checktype% - checkType
+    %category% - category
+    %vl% - violations
+    */
+    const orginalMessage = settings.punishment.kickMessage;
+
+    return orginalMessage
+        .replace("%playername%", player.name)
+        .replace("%check%", check)
+        .replace("%checktype%", checkType)
+        .replace("%category%", category)
+        .replace("%vl%", violations);
+}
+
