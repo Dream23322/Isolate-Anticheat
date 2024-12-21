@@ -30,6 +30,7 @@ declare module "@minecraft/server" {
 		// Counters
 		ticksOffGround: number
 		ticksSinceJump: number
+		ticksSinceFly: number
 
 		// Buffers
 		prediction_ogf_buffer: number

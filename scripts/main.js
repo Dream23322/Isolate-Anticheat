@@ -228,6 +228,12 @@ Minecraft.system.runInterval(() => {
 			player.ticksSinceJump++;
 		}
 
+		if(player.isFlying) {
+			player.ticksSinceFly = 0;
+		} else {
+			player.ticksSinceFly++;
+		}
+
 
 		// anti-namespoof
 		// these values are set in the playerJoin event
