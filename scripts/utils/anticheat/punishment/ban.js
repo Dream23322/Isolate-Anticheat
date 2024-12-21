@@ -3,7 +3,7 @@ import * as Minecraft from "@minecraft/server";
 import settings from "../../../data/settings";
 import config from "../../../data/config";
 import data from "../../../data/data";
-
+lastNotify = 0;
 const world = Minecraft.world;
 export function banPlayer(player, reason, time, by) {
     // this removes old ban stuff
@@ -112,8 +112,10 @@ export function banMessage(player) {
         time = msToTime(Number(time));
         time = `${time.w} weeks, ${time.d} days, ${time.h} hours, ${time.m} minutes, ${time.s} seconds`;
     }
-
-    player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} was kicked for being banned. Ban Reason: ${reason || "You are banned!"}."}]}`);
+    if(Date.now() - lastNotify > 5000) {
+        player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} was kicked for being banned. Ban Reason: ${reason || "You are banned!"}."}]}`);
+        lastNotify = Date.now();
+    }
     try {
         player.runCommandAsync(`kick "${player.name}" §r\n§l§cYOU ARE BANNED!\n§mBanned By:§r ${by || "N/A"}\n§bReason:§r ${reason || "N/A"}\n§aBan Length:§r ${time || "Permanant"}`);
     } catch (error) {
