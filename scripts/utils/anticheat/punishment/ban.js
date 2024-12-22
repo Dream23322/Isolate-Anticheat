@@ -3,7 +3,7 @@ import * as Minecraft from "@minecraft/server";
 import settings from "../../../data/settings";
 import config from "../../../data/config";
 import data from "../../../data/data";
-lastNotify = 0;
+let lastNotify = 0;
 const world = Minecraft.world;
 export function banPlayer(player, reason, time, by) {
     // this removes old ban stuff
