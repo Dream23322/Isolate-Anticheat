@@ -98,7 +98,7 @@ if(dpSettings) {
 }
 console.warn("[Isolate] >> SettingsID: " + settings.id);
 
-if(settings.id !== "a22") {
+if(settings.id !== "a2") {
 	console.warn("[Isolate] >> Settings ID doesnt match latest! Attempting to update settings...")
 
 	settings.punishment = {

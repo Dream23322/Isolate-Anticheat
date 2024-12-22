@@ -130,9 +130,9 @@ world.beforeEvents.chatSend.subscribe((msg) => {
 
 	commandHandler(msg);
 
-	if(message.charAt(0) === "!" && msg.cancel === false) {
+	if(message.charAt(0) === settings.general.prefix && msg.cancel === false) {
         msg.cancel = true;
-		player.sendMessage("§r§j[§uIsolate§j]§r Unknown Command! Use !help for a list of commands.");
+		player.sendMessage(`§r§j[§uIsolate§j]§r Unknown Command (!${message}). Use !help for a list of commands.`);
     }
 
 	// add's user custom tags to their messages if it exists or we fall back
