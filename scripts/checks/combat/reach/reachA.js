@@ -5,9 +5,7 @@ import config from "../../../data/config.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 export function reach_a(player, target) {
-    if(!config.modules.reachA.enabled || !allowedPlatform(player, config.modules.reachA.AP)) return;
-
-    
+    if(!config.modules.reachA.enabled || !allowedPlatform(player, config.modules.reachA.AP) || player.hasTag("gmc")) return;
 
     const distance = isomath.pythag(
         target.location.x - player.location.x,
