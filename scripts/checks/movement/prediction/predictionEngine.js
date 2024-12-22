@@ -11,7 +11,7 @@ import * as Minecraft from "@minecraft/server";
 import { getSpeed } from "../../../utils/maths/mathUtil.js";
 
 const badEffects = ["speed", "jump_boost", "slowness", "slow_falling", "levitation", "wind_charged"];
-const badTags = ["damaged", "slime", "elytra", "ice", "op", "flying", "teleport", "speedE_pass"];
+const badTags = ["damaged", "slime", "elytra", "ice", "op", "flying", "teleport", "speedE_pass", "gmc"];
 const data = new Map();
 const data2 = new Map();
 export function predictionEngine(player) {
@@ -49,6 +49,7 @@ export function predictionEngine(player) {
             // While we don't handle these, don't run the checks as it may cause issues
             for (const tag of badTags) if (player.hasTag(tag)) pass = true;
             for (const effect of badEffects) if (player.getEffect(effect)) pass = true;
+            if(player.isFlying) pass = true;
 
             // if(player.hasTag("attacking")) max_deviation += 0.2;
             // if(player.hasTag("jump")) max_deviation += 0.1;
