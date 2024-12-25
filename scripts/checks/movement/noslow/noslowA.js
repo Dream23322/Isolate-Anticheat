@@ -8,7 +8,7 @@ export function noslow_a(player) {
     if(!allowedPlatform(player, config.modules.noslowA.AP) || !config.modules.noslowA.enabled) return;
 
     const playerSpeed = getSpeed(player);
-    let maxSpeed = player.hasTag("damaged") ? 0.35 : config.modules.noslowA.maxSpeed;
+    let maxSpeed = player.hasTag("damaged") ? 0.4 : config.modules.noslowA.maxSpeed;
 
     if(player.getEffect("speed")) {
         maxSpeed += 0.2 * player.getEffect("speed").amplifier;
