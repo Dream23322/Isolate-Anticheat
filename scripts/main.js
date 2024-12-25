@@ -234,6 +234,11 @@ Minecraft.system.runInterval(() => {
 			player.ticksSinceFly++;
 		}
 
+		if(player.hasTag("moving")) {
+			player.ticksSinceLastMove = 0;
+		} else {
+			player.ticksSinceLastMove++;	
+		}
 
 		// anti-namespoof
 		// these values are set in the playerJoin event
