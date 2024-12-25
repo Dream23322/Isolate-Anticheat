@@ -13,7 +13,7 @@ Fly/B Checks for patterns in a players y velocity
 */
 const fly_b_map = new Map();
 export function fly_b(player) {
-    if(!allowedPlatform(player, config.modules.flyB.AP)) return;
+    if(!allowedPlatform(player, config.modules.flyB.AP) || player.ticksSinceFly < 20) return;
     if(config.modules.flyB.enabled && aroundAir(player)) {
         const velocityY = player.getVelocity().y;
         if(fly_b_map.has(player)) {
