@@ -55,4 +55,6 @@ export function ban(message, args) {
     world.setDynamicProperty("banList", JSON.stringify(banList));
 
     player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has banned ${member.nameTag} for ${reason}"}]}`);
+
+    world.sendMessage(`\n\n§r§j[§uIsolate§j]§r ${player.nameTag} has banned ${member.nameTag} for ${reason} (Time: ${time || "Permanent"})\n\n`);
 }

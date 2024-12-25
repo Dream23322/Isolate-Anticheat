@@ -35,6 +35,6 @@ export function kick(message, args) {
     if(member.id === player.id) return player.sendMessage("§r§j[§uIsolate§j]§r You cannot kick yourself.");
 
     if(!isSilent) player.runCommandAsync(`kick "${member.name}" ${reason}`);
-    member.triggerEvent("scythe:kick");
     player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has kicked ${member.name} ${isSilent ? "(Silent) ": ""}for ${reason}"}]}`);
+    world.sendMessage(`\n\n§r§j[§uIsolate§j]§r ${player.nameTag} has kicked ${member.name} for ${reason}\n\n`);
 }

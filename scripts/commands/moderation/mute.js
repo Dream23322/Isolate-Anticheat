@@ -31,12 +31,22 @@ export function mute(message, args) {
     // make sure they dont mute themselves
     if(member.id === player.id) return player.sendMessage("§r§j[§uIsolate§j]§r You cannot mute yourself.");
 
+    if(member.hasTag("isMuted")) {
+        member.removeTag("isMuted");
+        member.sendMessage("§r§j[§uIsolate§j]§r You have been unmuted.");
+        player.sendMessage(`§r§j[§uIsolate§j]§r ${member.nameTag} has been unmuted.`);
+        // add chat ability
+        member.runCommandAsync("ability @s mute false");
+
+        return;
+    }
+
     member.addTag("isMuted");
     member.sendMessage(`§r§j[§uIsolate§j]§r You have been muted. Reason: ${reason}`);
 
     // remove chat ability
     member.runCommandAsync("ability @s mute true");
 
-    banAnimation(player, "type2");
+    banAnimation(member, "type2");
     player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.nameTag} has muted ${member.nameTag} for ${reason}"}]}`);
 }
