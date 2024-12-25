@@ -20,5 +20,5 @@ export function reach_a(player, target) {
 
     if(player.hasTag("debug_reach_a")) player.sendMessage(`dist: ${distance}, veloPlayer: ${isomath.pythag(player.getVelocity().x, player.getVelocity().z) * config.modules.reachA.predictionTicks}, veloTarget: ${isomath.pythag(target.getVelocity().x, target.getVelocity().z) * config.modules.reachA.predictionTicks}`);
 
-    if(distance > config.modules.reachA.reach) flag(player, "Reach", "A", "Combat", "distance", distance, false);
+    if(distance > config.modules.reachA.reach && distance < 10) flag(player, "Reach", "A", "Combat", "distance", distance, false);
 }
