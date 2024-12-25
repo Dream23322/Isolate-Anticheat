@@ -101,7 +101,7 @@ Isolate Stats
 Frozen: ${isIcy}
 Vanished: ${isVanished}
 Kicks: ${kicks}
-LastMove: ${player.ticksSinceLastMove}  
+LastMove: ${player.ticksSinceLastMove / 20}  
 Flying: ${flying}
 
 Misc Check flags: ${misc_VL}
