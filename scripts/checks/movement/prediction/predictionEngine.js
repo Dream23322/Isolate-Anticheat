@@ -11,7 +11,7 @@ import * as Minecraft from "@minecraft/server";
 import { getSpeed } from "../../../utils/maths/mathUtil.js";
 
 const badEffects = ["speed", "jump_boost", "slowness", "slow_falling", "levitation", "wind_charged"];
-const badTags = ["damaged", "slime", "elytra", "ice", "op", "flying", "teleport", "speedE_pass", "gmc"];
+const badTags = ["damaged", "slime", "elytra", "ice", "op", "flying", "teleport", "speedE_pass", "gmc", "water"];
 const data = new Map();
 const data2 = new Map();
 export function predictionEngine(player) {
@@ -79,8 +79,8 @@ export function predictionEngine(player) {
             // Prediction/A3 = Main Prediction
             const mainComplete = mainPrediction(player, lastPositions, data2.get(player.name));
 
-            if(mainComplete.dev > config.modules.predictionA.deviationMain && !pass) {
-                flag(player, "Prediction", "A", "Movement (BETA)", "prediction", mainComplete.dev.toFixed(6) + " | speed: " + getSpeed(player), true);   
+            if(mainComplete.dev > config.modules.predictionA.deviationMain && !pass && (mainComplete.dev < 8.5 || !player.hasTag("ender_pearl")) && getSpeed(player) > 1e-7) {
+                flag(player, "Prediction", "A", "Movement (BETA)", "deviation", mainComplete.dev.toFixed(6) + " | speed: " + getSpeed(player), true);   
                 handleCorrection(player, {
                     posX: mainComplete.pos.x,
                     posZ: mainComplete.pos.z,
