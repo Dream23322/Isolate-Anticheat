@@ -13,7 +13,7 @@ export function banPlayer(player, reason, time, by) {
 
     // Add ban tags
     player.addTag(`by:${by}`);
-    const banLength2 = parseTime("7d");
+    const banLength2 = parseTime(time);
     // @ts-ignore
     player.addTag(`time:${Date.now() + banLength2}`);
     player.addTag("isBanned");
@@ -28,7 +28,7 @@ export function banPlayer(player, reason, time, by) {
         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===========================================||"}]}`);
         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u§l Isolate Anticheat"}]}`);
         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u Player Banned:§t §n${player.name}"}]}`);
-        player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u Reason: ${reason} - By: ${by} - Time: {${time}}"}]}`);
+        player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§u Reason: §n${reason}\n§uBy: §n${by}\n§uTime:§n ${time}"}]}`);
         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c||===========================================||"}]}`);
         player.runCommandAsync(`tellraw @a[tag=!notify] {"rawtext":[{"text":"§r§c "}]}`);
     }
@@ -41,7 +41,6 @@ export function banPlayer(player, reason, time, by) {
 
 export function addBanList(player, reason, by) {
     const banList = JSON.parse(world.getDynamicProperty("banList"));
-    banList[player.name] = [player.nameTag, `Anticheat: ${check}/${checkType}`, "Isolate"];
     banList[player.name] = [player.nameTag, reason, by];
     world.setDynamicProperty("banList", JSON.stringify(banList));
 }
