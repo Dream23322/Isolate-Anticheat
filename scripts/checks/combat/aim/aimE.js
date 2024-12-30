@@ -62,9 +62,6 @@ export function aim_e(player) {
             if(total > config.modules.aimE.total && (player.hasTag("attacking") || !config.modules.aimE.needHit)) flag(player, "Aim", "E", "Kuristosis (Beta)", "total", total, false);
 
             if(config.modules.aimE.experimental) {
-                // const isRoundYaw = isomath.abs(deltaYaw - isomath.round(deltaYaw))
-                // const isRoundPitch = isomath.abs(deltaPitch - isomath.abs(deltaPitch))
-                // if(isRoundPitch < 0.01 || isRoundYaw < 0.01) flag(player, "Aim", "E", "Kuristosis (Beta)", "roundDiffA", `Pitch: ${isRoundPitch}, Yaw: ${isRoundYaw}`, false);
                 const pitchDeltaDelta = isomath.abs(deltaPitch - lastDeltaPitch);
                 const isRoundDiffPitch = isomath.abs(pitchDeltaDelta - isomath.round(pitchDeltaDelta));
 
