@@ -17,7 +17,8 @@ Commit where the check was added:
 */
 
 export function badpackets_k(player) {
-	if(!allowedPlatform(player, config.modules.badpacketsK.AP)) return;
+	// Dont give a shit abt allowed platform bc it allows for bypasses, ty ip_atomic
+	//if(!allowedPlatform(player, config.modules.badpacketsK.AP)) return;
 	if(
 		config.modules.badpacketsK.enabled &&
 		(player.clientSystemInfo.maxRenderDistance < 6 || player.clientSystemInfo.maxRenderDistance > 96)

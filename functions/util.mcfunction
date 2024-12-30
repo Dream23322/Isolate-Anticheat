@@ -18,6 +18,7 @@ tag @a remove elytra
 
 # add tags
 tag @a[hasitem={item=elytra}] add elytra
+tag @a[hasitem={item=wind_charge}] add wind_charge
 
 
 # scoreboard handling
