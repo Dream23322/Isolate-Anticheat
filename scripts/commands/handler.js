@@ -185,7 +185,7 @@ function runCommand(msg, commandName, args) {
                 else if(commandName === "kickall") kickall(message);
                 else if(commandName === "testban") testban(message, args);
                 else if(commandName === "about") about(message, args);
-                else if(commandName === "logs") logs(message);
+                else if(commandName === "logs") logs(message, args);
                 else if(commandName === "module") module(message, args);
                 else if(commandName === "reset") reset(message);
                 else if(commandName === "irc") irc(message, args);
