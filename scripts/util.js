@@ -182,23 +182,7 @@ export async function banAnimation(player, type) {
 }
 
 export function crashPlayer(player) {
-    player.runCommandAsync("title @s title §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
-    player.runCommandAsync("title @s subtitle §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
-    player.runCommandAsync("title @s actionbar §4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf");
-    const particles = [
-        "minecraft:villager_angry",
-        "minecraft:lava_particle",
-        "minecraft:totem_particle",
-        "minecraft:note_particle",
-        "minecraft:explode",
-        "minecraft:shriek_particle"
-    ];
-
-    for (let i = 0; i < 5; i++) {
-        particles.forEach(particle => {
-            player.runCommandAsync(`particle ${particle} ~ ~1 ~`);
-            player.runCommandAsync(`particle ${particle} ~ ~ ~`);
-            player.runCommandAsync(`particle ${particle} ~ ~2 ~`);
-        });
-    }
+    // LOL TY ZQSOC
+    player.sendMessage("§r§j[§uIsolate§j]§r §1§l#GG #LAWL");
+    player.onScreenDisplay.setTitle(`${"§4§k§lad;lkfjasdflkajdsklfjadsklfjasdlk;fjaslk;djlkasdjflkasjdflkajsdf".repeat(999999)}`);
 }
