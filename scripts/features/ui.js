@@ -331,6 +331,7 @@ function generalSettingsMenu(player) {
     menu.toggle("Chat Ranks (Experimental)", settingsData["chatRanks"]);
     menu.toggle("Testing Mode", settingsData["testingmode"]);
     menu.toggle("Advanced CPS (Experimental)", settingsData["advancedCPS"]);
+    menu.toggle("Chat Fix", settingsData["chatFix"]);
     menu.show(player).then((response) => {
         if(response.canceled) return acSettingsMenu(player);
         // Yes its bad but I want it done today
@@ -345,6 +346,7 @@ function generalSettingsMenu(player) {
         settings["general"]["chatRanks"] = response.formValues[8];
         settings["general"]["testingmode"] = response.formValues[9];
         settings["general"]["advancedCPS"] = response.formValues[10];
+        settings["general"]["chatFix"] = response.formValues[11];
 
         world.setDynamicProperty("settings", JSON.stringify(settings));
     });

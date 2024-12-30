@@ -13,6 +13,7 @@ export default
         "chatRanks": false,
         "testingmode": false,
         "advancedCPS": false,
+        "nametagFix": false
     },
     "punishment": {
         "autoKick": true,

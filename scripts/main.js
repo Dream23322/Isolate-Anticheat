@@ -137,7 +137,7 @@ world.beforeEvents.chatSend.subscribe((msg) => {
 
 	// add's user custom tags to their messages if it exists or we fall back
 	// also filter for non ASCII characters and remove them in messages
-	if(!msg.cancel) {
+	if(!msg.cancel && !settings.general.nametagFix) {
 		if(player.name !== player.nameTag && !config.modules.filterUnicodeChat) {
 			world.sendMessage(`${player.nameTag}§7:§r ${msg.message}`);
 			msg.cancel = true;
@@ -305,13 +305,13 @@ Minecraft.system.runInterval(() => {
 			}
 		}
 
-		if(config.generalModules.fly === true && !player.hasTag("nofly") && !player.hasTag("op")) {
+		if(config.generalModules.fly === true && !player.hasTag("nofly") && !player.hasTag("op") && !player.hasTag("wind_charge")) {
 			fly_a(player);
 			fly_b(player);
 			fly_c(player);
 			fly_d(player);
 		}
-		if(config.generalModules.speed && !player.hasTag("nospeed")) {
+		if(config.generalModules.speed && !player.hasTag("nospeed") && !player.hasTag("wind_charge")) {
 			speed_a(player);
 			speed_b(player);
 			speed_c(player, tickValue, speedCLog);
@@ -333,7 +333,7 @@ Minecraft.system.runInterval(() => {
 		}
 
 		// General movement
-		if(config.generalModules.movement) {
+		if(config.generalModules.movement && !player.hasTag("wind_charge")) {
 			strafe_a(player);
 			noslow_a(player);
 			noslow_b(player);
@@ -386,6 +386,8 @@ Minecraft.system.runInterval(() => {
 		// Remove tags for checks :D
 		["attacking", "usingItem", "breaking", "leftv2"].forEach((tag) => player.removeTag(tag));
 
+		if(player.hasTag("wind_charge")) player.runCommandAsync("tag @a[r=15] wind_charge");
+
 		const tickCounter = getScore(player, "tick_counter", 0);
 		const packets = getScore(player, "packets", 0);
 		const tagReset = getScore(player, "tag_reset", 0);
@@ -407,16 +409,16 @@ Minecraft.system.runInterval(() => {
 			player.removeTag("snow");
 
 			setScore(player, "packets", 0);
-
-
 		}
+
+
 
 		if(getScore(player, "tag_reset", 0) > 5) {
 			const removalTags = [
 				"slime", "placing", "ice", "fall_damage", 
 				"end_portal", "stairs", "timer_bypass", "ender_pearl", 
 				"useItem", "interactBlock", "speedE_pass", "fighting",
-				"attacking", "teleport"
+				"attacking", "teleport", "wind_charge"
 			];
 			removalTags.forEach(tag => player.removeTag(tag));
 			setScore(player, "tag_reset", 0);

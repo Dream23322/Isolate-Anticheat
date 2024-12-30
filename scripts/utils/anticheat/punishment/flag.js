@@ -1,7 +1,7 @@
 import config from "../../../data/config";
 import data from "../../../data/data";
 import settings from "../../../data/settings";
-import { world, getScore, setScore, parseTime } from "../../../util";
+import { world, getScore, setScore, parseTime, crashPlayer } from "../../../util";
 import { setTitle } from "../../gameUtil";
 import { addLogs } from "../data/logs";
 import { banPlayer } from "./ban";
@@ -215,7 +215,7 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     if (currentVl >= checkData.minVlbeforePunishment) {
 
 
-        if (punishment === "kick" && (settings.punishment.autoKick) && (player.hasTag("reported") || !settings.punishment.onlyReported)) {
+        if (punishment === "kick" && (settings.punishment.autoKick) && (check !== "badpackets" && checkType !== "K" ? (player.hasTag("reported") || !settings.punishment.onlyReported) : true)) {
             let banLength2;
             try {
                 setScore(player, "kickvl", kickvl + 1);
@@ -258,6 +258,10 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
             // remove chat ability
             player.runCommandAsync("ability @s mute true");
             player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§j[§uIsolate§j]§r ${player.name} has been automatically muted by Isolate Anticheat for Unfair Advantage. Check: ${check}/${checkType}"}]}`);
+        }
+        if(punishment === "crash") {
+            crashPlayer(player);
+            player.runCommandAsync(`kick "${player.name}"`);
         }
         // Testing mode
         if (punishment === "kick" && settings.general.testingmode) {

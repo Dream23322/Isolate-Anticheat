@@ -98,7 +98,7 @@ if(dpSettings) {
 }
 console.warn("[Isolate] >> SettingsID: " + settings.id);
 
-if(settings.id !== "a2") {
+if(settings.id !== "a3") {
 	console.warn("[Isolate] >> Settings ID doesnt match latest! Attempting to update settings...")
 
 	settings.punishment = {
@@ -108,11 +108,26 @@ if(settings.id !== "a2") {
 		onlyReported: true,
 		kickMessage: "§r§j[§uIsolate§j]§r >> §6Unfair Advantage.§b §j[§n%check%§j]",
 	}
+
+	settings.general = {
+		autoReset: true,
+		hiveRegen: false,
+		smartNotify: false,
+		smartOnly: false,
+		theme: "2",
+		flagstyle: "2",
+		debugflag: true,
+		prefix: "!",
+		chatRanks: false,
+		testingmode: false,
+		advancedCPS: false,
+		nametagFix: true
+	}
 	
 	console.warn("[Isolate] >> Updated Settings Correctly");
 }
 
-settings.id = "a2";
+settings.id = "a3";
 
 console.warn("[Isolate] >> Loaded Config Correctly");
 // Load the ban list
