@@ -1,7 +1,6 @@
-import { getScore, setScore } from "../../../util";
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
-import { amountDeltaPitch, amountDeltaYaw, getDeltaPitch, getDeltaYaw } from "./aimData.js";
+import { amountDeltaYaw } from "./aimData.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import * as isomath from "../../../utils/maths/isomath.js";
 
