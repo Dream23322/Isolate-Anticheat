@@ -447,8 +447,8 @@ export default
         "reachA": {
             "enabled": true,
             "description": "Checks for invalid reach",
-            "reach": 6.2,
-            "predictionTicks": 4,
+            "reach": 4.25,
+            "predictionTicks": 5,
             "entities_blacklist": [
                 "minecraft:enderman",
                 "minecraft:fireball",

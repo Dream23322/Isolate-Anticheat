@@ -1,9 +1,9 @@
 import * as isomath from "../../../utils/maths/isomath.js";
-import { Player } from "@minecraft/server";
 import { flag } from "../../../utils/anticheat/punishment/flag.js";
 import config from "../../../data/config.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 
+// Why does this not suck?
 export function reach_a(player, target) {
     if(!config.modules.reachA.enabled || !allowedPlatform(player, config.modules.reachA.AP) || player.hasTag("gmc")) return;
 
