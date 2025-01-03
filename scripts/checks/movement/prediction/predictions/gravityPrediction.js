@@ -1,7 +1,4 @@
 import { getScore } from "../../../../util.js";
-import { inAir } from "../../../../utils/gameUtil.js";
-import { getAverage } from "../../../../utils/maths/mathUtil.js";
-import * as isomath from "../../../../utils/maths/isomath.js";
 import { Player } from "@minecraft/server";
 
 /**
