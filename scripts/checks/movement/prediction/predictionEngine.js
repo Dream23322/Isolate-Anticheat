@@ -79,6 +79,8 @@ export function predictionEngine(player) {
             // Prediction/A3 = Main Prediction
             const mainComplete = mainPrediction(player, lastPositions, data2.get(player.name));
 
+            
+
             if(mainComplete.dev > config.modules.predictionA.deviationMain && !pass && (mainComplete.dev < 8.5 || !player.hasTag("ender_pearl")) && getSpeed(player) > 1e-7) {
                 flag(player, "Prediction", "A", "Movement (BETA)", "deviation", mainComplete.dev.toFixed(6) + " | speed: " + getSpeed(player), true);   
                 handleCorrection(player, {
