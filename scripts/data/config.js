@@ -826,21 +826,13 @@ export default
             "minVlbeforePunishment": 100,
             "AP": 3
         },
-        "strafeA": {
-            "enabled": false,
-            "description": "Checks for strafing mid-air",
-            "diff": 0.3,
-            "punishment": "none",
-            "minVlbeforePunishment": 10,
-            "AP": 3
-        },
         "predictionA": {
             "enabled": true,
             "description": "Prediction Check",
             "deviationOGF": 0.0001,
             "ogfBuffer": 5,
             "minOffGroundTicksOGF": 4,
-            "deviationMain": 0.62,
+            "deviationMain": 0.92,
             "lagback": false,
             "correctVelocity": false,
             "correctPosition": false,

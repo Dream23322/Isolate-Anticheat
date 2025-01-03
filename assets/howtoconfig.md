@@ -447,11 +447,17 @@ Checks which detect combat cheats such as an autoclicker
   
 - AimH
   
-  > This check has been force disabled
+  - minAvg
+
+    > The minimum average delta for the check to work
+
+  - maxStDev
+
+    > If the players standard deviation is below this amount, the check will flag.
   
 - AimI
   
-  > This check has been force disabled
+  > The unique settings in this check don't change anything!
   
 
 ### Autoclicker
@@ -679,12 +685,6 @@ Checks which detect combat cheats such as an autoclicker
   > This check has no unique settings
   
 
-### Strafe
-
-- StrafeA
-  
-  > Don't... use this check
-  
 
 ### Prediction
 
@@ -865,8 +865,6 @@ The check currently isnt too accurate so please, be careful when changing these 
   - [Fly](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#fly)
     
   - [Motion](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#motion)
-    
-  - [Strafe](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#strafe)
     
   - [Prediction](https://github.com/Dream23322/Isolate-Anticheat/blob/main/assets/howtoconfig.md#prediction)
     

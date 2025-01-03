@@ -308,8 +308,6 @@ function analyseData(player) {
     if (active) {
         config["modules"]["aimE"]["enabled"] = false;
         logs.push("Disabled Aim(E)");
-        config["modules"]["strafeA"]["punishment"] = "none";
-        logs.push("Punishment Set: Strafe(A) | None");
 
         // Update Dynamic Config
         world.setDynamicProperty("config", JSON.stringify(config));
@@ -330,8 +328,6 @@ function analyseData(player) {
         logs.push("PunishVL Set: Killaura(D) | 20");
         config["modules"]["speedE"]["bpt"] = 0.35
         logs.push("BPT Set: Speed(E) | 0.35");
-        config["modules"]["strafeA"]["punishment"] = "none";
-        logs.push("Punishment Set: Strafe(A) | None");
 
     } else if(strictlevel === 2) {
         config["modules"]["settings"]["autoBan"] = true;
@@ -346,8 +342,6 @@ function analyseData(player) {
         logs.push("PunishVL Set: Killaura(D) | 20");
         config["modules"]["speedE"]["bpt"] = 0.28
         logs.push("BPT Set: Speed(E) | 0.28");
-        config["modules"]["strafeA"]["punishment"] = "none";
-        logs.push("Punishment Set: Strafe(A) | None");
     } else if(strictlevel === 3) {
         config["modules"]["settings"]["autoBan"] = true;
         logs.push("AutoBan Enabled");

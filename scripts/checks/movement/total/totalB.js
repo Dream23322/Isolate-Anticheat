@@ -11,7 +11,6 @@ export function total_b(player) {
 
         let total = 0;
 
-        total += getScore(player, "strafevl", 0);
         total += getScore(player, "speedvl", 0);
         total += getScore(player, "flyvl", 0);
         total += getScore(player, "motionvl", 0);

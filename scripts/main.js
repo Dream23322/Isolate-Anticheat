@@ -37,7 +37,6 @@ import { exploit_a } from "./checks/packet/exploit/exploitA.js";
 import { timer_a } from './checks/packet/timer/timerA.js';
 import { fly_b } from "./checks/movement/fly/flyB.js";
 import { speed_d } from "./checks/movement/speed/speedD.js";
-import { strafe_a } from "./checks/movement/strafe/strafeA.js";
 import { fly_d } from "./checks/movement/fly/flyD.js";
 
 // Import World Checks
@@ -310,7 +309,6 @@ Minecraft.system.runInterval(() => {
 
 		// General movement
 		if(!player.hasTag("wind_charge")) {
-			strafe_a(player);
 			noslow_a(player);
 			noslow_b(player);
 			predictionEngine(player);

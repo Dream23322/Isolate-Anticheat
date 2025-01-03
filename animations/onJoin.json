@@ -30,7 +30,6 @@
 					"/scoreboard objectives add nofallvl dummy",
 					"/scoreboard objectives add breakervl dummy",
 					"/scoreboard objectives add clicks dummy",
-					"/scoreboard objectives add strafevl dummy",
 					"/scoreboard objectives add tick_counter dummy",
 					"/scoreboard objectives add tick_counter2 dummy",
 					"/scoreboard objectives add auraF_buffer dummy",

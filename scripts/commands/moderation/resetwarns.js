@@ -34,7 +34,7 @@ export function resetwarns(message, args) {
     const check_names = [
         "spammer", "namespoof", "autotool", "exploit", "crasher", "badpackets", "timer",
         "reach", "aim", "autoclicker", "killaura", "hitbox",
-        "noslow", "invalidsprint", "speed", "fly", "motion", "strafe",
+        "noslow", "invalidsprint", "speed", "fly", "motion",
         "nuker", "scaffold", "tower", "kick"
     ];
 

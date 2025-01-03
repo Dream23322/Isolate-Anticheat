@@ -60,7 +60,7 @@ export function stats(message, args) {
 
     const combat_checks = ["reach", "aim", "autoclicker", "killaura", "hitbox"];
 
-    const movement_checks = ["noslow", "sprint", "speed", "fly", "motion", "strafe", "prediction"];
+    const movement_checks = ["noslow", "sprint", "speed", "fly", "motion", "prediction"];
 
     const world_checks = ["nuker", "scaffold", "tower"];
 
