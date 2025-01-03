@@ -3,7 +3,6 @@ import config from "../../../data/config.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
 import { gravityCheck } from "./predictions/gravityPrediction.js";
 import { aroundAir, inAir } from "../../../utils/gameUtil.js";
-import { envrionmentAssist } from "./assist/environmentAssist.js";
 import * as isomath from "../../../utils/maths/isomath.js";
 import { offGroundFriction } from "./predictions/offGroundFriction.js";
 import { mainPrediction } from "./predictions/mainPrediction.js";
