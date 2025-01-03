@@ -371,27 +371,9 @@ Checks which detect combat cheats such as an autoclicker
     
     > The minimum reach for the check to flag.
     
-  - dynamicReach
-    
-    > In some envionmental cases, such as being in water, it can be benifital to change the max reach value
-    
-  - smartReach
-    
-    > Similar to dynamicReach, but is for stuff like sprinting, sneaking, effects, etc
-    
-  - dynamicData
-    
-    > Ignore this
-    
-  - entities_blacklist
-    
-    > If this check false flags when hitting a certain entity,
-    > 
-    > 1. Report it on the discord
-    >   
-    > 2. Add that entity to this list
-    >   
-    
+  - predictionTicks
+
+    > Basically, the higher this value is, the less likely the check is to false flag, but it is also less strict when higher, using the default amount is recommended.
 - ReachB
   
   > These are the same settings as ReachA
