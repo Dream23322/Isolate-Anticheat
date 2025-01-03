@@ -72,61 +72,41 @@ export function isAcceleratingUpwards(player, lastPositions) {
  * @returns 
  */
 export function gravityCheck(lastPositions, player) {
-    // Confirm that all lastPositions are inAir
-    for (const posDat of lastPositions) {
-        if(posDat.inair !== true) {
-            if(player.hasTag("invalidA")) player.sendMessage("invalidA");
-            return {x: false, y: null};
-        }
+    // Early return if any position is not in air
+    if (!lastPositions.every(pos => pos.inair === true)) {
+        if (player.hasTag("invalidA")) player.sendMessage("invalidA");
+        return { x: false, y: null };
     }
 
-    let skip_check_one = false;
-
-    // Confirm that the player hasn't jumped/acceled upwards
-    // To do this, we compare two position points that are next to each other and if the player has moved up, skip
-    for (let i = 0; i < lastPositions.length - 1; i++) {
-        const deltaY = lastPositions[i].y - lastPositions[i + 1].y;
-        if (player.hasTag("gravityA")) player.sendMessage("deltaY: " + deltaY);
-        if (deltaY >= 0) skip_check_one = true;
-    }
-
-    if (!skip_check_one) {
-        // This checks if the players downwards acceleration seems legitimate
-        const min_down_accel = -0.00655 * getScore(player, "airTime", 0);
-
-        for (let i = 0; i < lastPositions.length - 1; i++) {
-            const deltaY = lastPositions[i].y - lastPositions[i + 1].y;
-            // If the players fall rate isnt fast enough, return true and flag
-            if(player.hasTag("gravityB")) player.sendMessage("2deltaY: " + deltaY);
-            if (deltaY > min_down_accel) return {
-                x: true, 
-                y: "BadAccel.Type:Down, Data: " + 
-                deltaY.toFixed(6) + 
-                ", " + 
-                min_down_accel.toFixed(5)
-            };
-        }
-    }
-
+    const airTime = getScore(player, "airTime", 0);
+    const min_down_accel = -0.00655 * airTime;
+    let hasUpwardMovement = false;
     let lastDelta = 0;
-    // Checks if the player was going down then began to come back up
+
+    // Loop through all the data
     for (let i = 0; i < lastPositions.length - 1; i++) {
         const deltaY = lastPositions[i].y - lastPositions[i + 1].y;
-        if(player.hasTag("gravityC")) player.sendMessage("3deltaY: " + deltaY + " lastDelta: " + lastDelta);
-        if(deltaY < 0 && lastDelta > 1e-4) return {x: true, y: "BadAccel.Type:Reverse, Data: " + deltaY.toFixed(4) +  ", " + lastDelta.toFixed(4)};
+        
+        if (player.hasTag("gravityA")) player.sendMessage("deltaY: " + deltaY);
+        
+        // Check for upward movement
+        if (deltaY >= 0) hasUpwardMovement = true;
+    
+        // Check downward acceleration if no upward movement
+        if (!hasUpwardMovement && deltaY > min_down_accel) {
+            return { x: true, y: `BadAccel.Type:Down, Data: ${deltaY.toFixed(6)}, ${min_down_accel.toFixed(5)}` };
+        }
+        // Check reverse movement
+        if (deltaY < 0 && lastDelta > 1e-4) {
+            return { x: true, y: `BadAccel.Type:Reverse, Data: ${deltaY.toFixed(4)}, ${lastDelta.toFixed(4)}` };
+        }
+        // Check upward acceleration
+        if (hasUpwardMovement && deltaY >= lastDelta && 
+            lastDelta > 0.003 && deltaY > 0 && airTime > 8) {
+            return { x: true, y: `BadAccel.Type:Upwards, Data: ${deltaY.toFixed(4)}, ${lastDelta.toFixed(4)}`};
+        }
         lastDelta = deltaY;
     }
 
-    // Checks for accel upwards or constant upwards Y movement
-    lastDelta = 0;
-    if(skip_check_one) {
-        for (let i = 0; i < lastPositions.length - 1; i++) {
-            const deltaY = lastPositions[i].y - lastPositions[i + 1].y;
-            if(player.hasTag("gravityD")) player.sendMessage("4deltaY: " + deltaY + " lastDelta: " + lastDelta);
-            // If the player isnt decellerating, return true as this is impossible mid air (y movement only)
-            if(deltaY >= lastDelta && lastDelta > 0.003 && deltaY > 0 && getScore(player, "airTime", 0) > 8) return {x: true, y: "BadAccel.Type:Upwards, Data: " + deltaY.toFixed(4) +  ", " + lastDelta.toFixed(4)};
-            lastDelta = deltaY;
-        }
-    }
-    return {x: false};
+    return { x: false };
 }
