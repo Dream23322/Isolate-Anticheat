@@ -74,7 +74,6 @@ export function isAcceleratingUpwards(player, lastPositions) {
 export function gravityCheck(lastPositions, player) {
     // Early return if any position is not in air
     if (!lastPositions.every(pos => pos.inair === true)) {
-        if (player.hasTag("invalidA")) player.sendMessage("invalidA");
         return { x: false, y: null };
     }
 
@@ -86,8 +85,6 @@ export function gravityCheck(lastPositions, player) {
     // Loop through all the data
     for (let i = 0; i < lastPositions.length - 1; i++) {
         const deltaY = lastPositions[i].y - lastPositions[i + 1].y;
-        
-        if (player.hasTag("gravityA")) player.sendMessage("deltaY: " + deltaY);
         
         // Check for upward movement
         if (deltaY >= 0) hasUpwardMovement = true;
