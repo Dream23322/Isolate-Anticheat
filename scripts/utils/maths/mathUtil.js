@@ -39,7 +39,7 @@ export function angleCalc(player, entityHit) {
     const angleToEntity = Math.atan2(dz, dx) * 180 / PI;
     let angle = angleToEntity - player.getRotation().y - 90;
 
-    const angleToEntity2 = isomath.atan2(dz, dx) * 180 / isomath.pi;
+    const angleToEntity2 = Math.atan2(dz, dx) * 180 / isomath.pi;
     let angle2 = angleToEntity2 - player.getRotation().y - 90;
 
     if(angle2 <= -180) {
@@ -49,7 +49,6 @@ export function angleCalc(player, entityHit) {
     if (angle <= -180) {
         angle += 360;
     }
-    console.warn("Angle Calc -> Angle Normal: " + angle + " Angle Fast: " + angle2);
     return isomath.abs(angle);
 }
 
