@@ -232,6 +232,14 @@ Minecraft.system.runInterval(() => {
 		} else {
 			player.ticksSinceLastMove++;	
 		}
+
+		if(player.isJumping && player.isOnGround) {
+			player.ticksSinceTrueJump++;
+		} else if(!player.isOnGround && player.ticksSinceTrueJump > 0) {
+			player.ticksSinceTrueJump++;
+		} else {
+			player.ticksSinceTrueJump = 0;
+		}
 		
 		if(settings.general.autoReset && getScore(player, "tick_counter2", 0) > 300) {
 			if(!player.hasTag("reported") && player.hasTag("strict")) player.removeTag("strict");
