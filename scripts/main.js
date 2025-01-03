@@ -9,7 +9,6 @@ import { banMessage } from "./utils/anticheat/punishment/ban.js";
 import { flag } from "./utils/anticheat/punishment/flag.js";
 import { commandHandler } from "./commands/handler.js";
 import config from "./data/config.js";
-import { banList } from "./data/globalban.js";
 import data from "./data/data.js";
 import { mainGui } from "./features/ui.js";
 import { joinData } from "./utils/anticheat/acUtil.js";
@@ -196,11 +195,6 @@ Minecraft.system.runInterval(() => {
 		const playerVelocity = player.getVelocity();
 		const selectedSlot = player.selectedSlotIndex;
 
-		if(player.isGlobalBanned && config.modules.globalBan.enabled) {
-			player.addTag("by:Isolate Anticheat");
-			player.addTag("reason:You are in a hacker database!");
-			player.addTag("isBanned");
-		}
 
 		// sexy looking ban message
 		if(player.hasTag("isBanned")) banMessage(player);
@@ -238,24 +232,6 @@ Minecraft.system.runInterval(() => {
 			player.ticksSinceLastMove = 0;
 		} else {
 			player.ticksSinceLastMove++;	
-		}
-
-		// anti-namespoof
-		// these values are set in the playerJoin event
-		if(player.flagNamespoofA) {
-			flag(player, "Namespoof", "A", "Exploit", "nameLength", player.name.length);
-			player.flagNamespoofA = false;
-		}
-		if(player.flagNamespoofB) {
-			flag(player, "Namespoof", "B", "Exploit");
-			player.flagNamespoofB = false;
-		}
-
-		// player position shit
-		if(player.hasTag("moving")) {
-			player.runCommandAsync(`scoreboard players set @s xPos ${isomath.floor(player.location.x)}`);
-			player.runCommandAsync(`scoreboard players set @s yPos ${isomath.floor(player.location.y)}`);
-			player.runCommandAsync(`scoreboard players set @s zPos ${isomath.floor(player.location.z)}`);
 		}
 		
 		if(settings.general.autoReset && getScore(player, "tick_counter2", 0) > 300) {
@@ -305,48 +281,42 @@ Minecraft.system.runInterval(() => {
 			}
 		}
 
-		if(config.generalModules.fly === true && !player.hasTag("nofly") && !player.hasTag("op") && !player.hasTag("wind_charge")) {
+		if(!player.hasTag("nofly") && !player.hasTag("op") && !player.hasTag("wind_charge")) {
 			fly_a(player);
 			fly_b(player);
 			fly_c(player);
 			fly_d(player);
 		}
-		if(config.generalModules.speed && !player.hasTag("nospeed") && !player.hasTag("wind_charge")) {
+		if(!player.hasTag("nospeed") && !player.hasTag("wind_charge") && player.hasTag("moving")) {
 			speed_a(player);
 			speed_b(player);
 			speed_c(player, tickValue, speedCLog);
 			speed_d(player);
 			speed_e(player);
 		}
-		if(config.generalModules.motion && !player.hasTag("nomotion") && !player.hasTag("end_portal")) {
+		if(!player.hasTag("nomotion") && !player.hasTag("end_portal")) {
 			motion_a(player);
 			motion_b(player);
 		}
-		if(config.generalModules.packet && !player.hasTag("nobadpackets")) {
+		if(!player.hasTag("nobadpackets")) {
 			exploit_a(player);
 			exploit_b(player);
 			badpackets_f(player);
 			badpackets_g(player);
 			badpackets_h(player);
 			badpackets_i(player);
-			timer_a(player, player.lastPosition, lagValue);
+			//timer_a(player, player.lastPosition, lagValue);
 		}
 
 		// General movement
-		if(config.generalModules.movement && !player.hasTag("wind_charge")) {
+		if(!player.hasTag("wind_charge")) {
 			strafe_a(player);
 			noslow_a(player);
 			noslow_b(player);
 			predictionEngine(player);
-
 			sprint_a(player);
 			sprint_b(player);
 		}
-		if(player.hasTag("aimtempdebug")) {
-			// Send message with rotation data
-			player.sendMessage(`Rotation: ${rotation.x}, ${rotation.y}`);
-		}
-
 
 		if(config.generalModules.aim) {
 			run_aim_data(player);
@@ -404,7 +374,7 @@ Minecraft.system.runInterval(() => {
 			player.prediction_ogf_buffer = 0;
 			badpackets_e(player);
 			player.removeTag("speedE_pass");
-
+			player.removeTag("aim_hit");
 			if(player.hasTag("packetlogger")) player.runCommandAsync(`title @s actionbar packets:${packets}`);
 			player.removeTag("snow");
 
@@ -647,8 +617,7 @@ world.afterEvents.playerSpawn.subscribe((playerJoin) => {
 	badpackets_j(player);
 	player.addTag(player.clientSystemInfo.platformType);
 	badpackets_k(player);
-	// check if the player is in the global ban list
-	if(banList.includes(player.name.toLowerCase())) player.isGlobalBanned = true;
+
 });
 
 world.afterEvents.entitySpawn.subscribe((entityCreate) => {
@@ -748,6 +717,7 @@ world.afterEvents.entityHitEntity.subscribe(({ hitEntity: entity, damagingEntity
 	if(!player.hasTag("fighting")) {
 		player.addTag("fighting");
 	}
+	player.addTag("aim_hit");
 
 	aim_d(player);
 

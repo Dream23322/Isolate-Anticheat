@@ -30,11 +30,13 @@ declare module "@minecraft/server" {
 		// Counters
 		ticksOffGround: number
 		ticksSinceJump: number
+		ticksSinceTrueJump: number
 		ticksSinceFly: number
 		ticksSinceLastMove: number
 
 		// Buffers
 		prediction_ogf_buffer: number
+		aim_d_buffer: number
 		
 		// Check stuff
 		canFlagSprintA: boolean
