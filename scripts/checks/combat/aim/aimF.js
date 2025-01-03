@@ -1,77 +1,38 @@
-import { getScore, setScore } from "../../../util";
-import { flag } from "../../../utils/anticheat/punishment/flag.js";
-import config from "../../../data/config.js";
-import { arrayToList, getAverage, getStandardDeviationV2 } from "../../../utils/maths/mathUtil.js";
-import { allowedPlatform } from "../../../utils/platformUtils.js";
-import { abs } from "../../../utils/maths/isomath.js";
+import { flag } from "../../../utils/anticheat/punishment/flag";
+import config from "../../../data/config";
+import * as isomath from "../../../utils/maths/isomath";
+import { amountDeltaPitch } from "./aimData";
 
-const data = new Map();
-const yawAccelD = new Map();
-const pitchAccelD = new Map();
 export function aim_f(player) {
-    if(!allowedPlatform(player, config.modules.aimF.AP)) return;
-    if(config.modules.aimF.enabled) {
-        const rotation = player.getRotation();
-        const d = data.get(player.name) || null;
+    if(!allowedPlatform(player) || !config.modules.aimF.enabled) return;
 
-        const yawSamples = yawAccelD.get(player.name) || (new Array(20)).fill(0);
-        const pitchSamples = pitchAccelD.get(player.name) || (new Array(20)).fill(0);
-        if(d != null) {
-            const deltaPitch = abs(rotation.x - d.one);
-            const lastDeltaPitch = abs(d.one - d.two);
-            
-            const deltaYaw = abs(rotation.y - d.three);
-            const lastDeltaYaw = abs(d.three - d.four);
+    // Pitch
+    const dataPitch = amountDeltaPitch(player, 40);
 
-            const yawAccel = abs(deltaYaw - lastDeltaYaw);
-            const pitchAccel = abs(deltaPitch - lastDeltaPitch);
+    const dataPitchFirst = dataPitch.slice(0, 20);
+    const dataPitchSeond = dataPitch.slice(20, 40);
 
-            // Make sure there is enough data in the arrays
-            if(yawSamples.length >= 20) {
-                const yawAccelList = arrayToList(yawSamples);
-                const pitchAccelList = arrayToList(pitchSamples);
+    const averageDeltaPitchFirst = isomath.getAverage(dataPitchFirst);
+    const averageDeltaPitchSecond = isomath.getAverage(dataPitchSeond);
 
-                const yawAccelAverage = getAverage(yawAccelList);
-                const pitchAccelAverage = getAverage(pitchAccelList);
+    const stDevDPF = isomath.getStandardDeviation(dataPitchFirst, averageDeltaPitchFirst);
+    const stDevDPS = isomath.getStandardDeviation(dataPitchSeond, averageDeltaPitchSecond);
 
-                const yawAccelDeviation = getStandardDeviationV2(yawAccelList);
-                const pitchAccelDeviation = getStandardDeviationV2(pitchAccelList);
+    // Yaw
+    const dataYaw = amountDeltaYaw(player, 40);
 
-                const exemptRotation = deltaYaw < 1.5;
+    const dataYawFirst = dataYaw.slice(0, 20);
+    const dataYawSeond = dataYaw.slice(20, 40);
 
-                const averageInvalid = yawAccelAverage < 1 || pitchAccelAverage < 1 && !exemptRotation;
-                const deviationInvalid = yawAccelDeviation < 5 && pitchAccelDeviation > 5 && !exemptRotation;
+    const averageDeltaYawFirst = isomath.getAverage(dataYawFirst);
+    const averageDeltaYawSecond = isomath.getAverage(dataYawSeond);
 
-                // debug
-                if(player.hasTag("aimFDebug")) {
-                    player.runCommandAsync(`tell @a Yaw: ${yawAccelAverage} | Pitch: ${pitchAccelAverage} | YawDeviation: ${yawAccelDeviation} | PitchDeviation: ${pitchAccelDeviation}`);
-                }
+    const stDevDYF = isomath.getStandardDeviation(dataYawFirst, averageDeltaYawFirst);
+    const stDevDYS = isomath.getStandardDeviation(dataYawSeond, averageDeltaYawSecond);
 
-                if(averageInvalid && deviationInvalid && (player.hasTag("attacking") || !config.modules.aimF.needHit)) {
-                    setScore(player, "aimF_buffer", getScore(player, "aimF_buffer", 0) + 1);
-                    if(getScore(player, "aimF_buffer", 0) > config.modules.aimF.buffer) {
-                        flag(player, "Aim", "F", "Combat (Beta)", "aimF", "yaw: " + yawAccelAverage + " | pitch: " + pitchAccelAverage + " | yawDeviation: " + yawAccelDeviation + " | pitchDeviation: " + pitchAccelDeviation, false);
-                        setScore(player, "aimF_buffer", 0);
-                    }
-                }
+    // Get differences
+    const deltaStPitchDev = isomath.abs(stDevDPF - stDevDPS);
+    const deltaStYawDev = isomath.abs(stDevDYF - stDevDYS);
 
-            }
-
-            yawSamples.unshift(yawAccel);
-            yawSamples.pop();
-
-            pitchSamples.unshift(pitchAccel);
-            pitchSamples.pop();
-        }
-
-        data.set(player.name, {
-            one: rotation.x,
-            two: data.get(player.name)?.one || 0,
-            three: rotation.y,
-            four: data.get(player.name)?.three || 0
-        })
-
-        yawAccelD.set(player.name, yawSamples);
-        pitchAccelD.set(player.name, pitchSamples);
-    }
+    if(deltaStPitchDev < 0.1 && averageDeltaPitchFirst > 5 || deltaStYawDev < 0.1 && averageDeltaYawFirst > 5) flag(player, "Aim", "F", "Combat (BETA)", "stDev", `${deltaStPitchDev.toFixed(3)},${deltaStYawDev.toFixed(3)}`, true);
 }
