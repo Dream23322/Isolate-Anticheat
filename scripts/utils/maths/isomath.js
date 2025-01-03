@@ -80,10 +80,28 @@ export function getAverage(data) {
   return values.reduce((acc, val) => acc + val, 0) / values.length;
 }
 
-export function max(...args) {
-  return args.reduce((max, val) => val > max ? val : max, -Infinity);
+export function max(list) {
+  const values = Array.isArray(list) ? list : Array.from(list.values());
+  return values.reduce((max, val) => val > max ? val : max, -Infinity);
 }
 
-export function min(...args) {
-  return args.reduce((min, val) => val < min ? val : min, Infinity);
+export function min(list) {
+  const values = Array.isArray(list) ? list : Array.from(list.values());
+  return values.reduce((min, val) => val < min ? val : min, Infinity);
+}
+
+export function range(list) {
+  return max(list) - min(list);
+}
+
+export function lessThan(data, threshold) {
+  const values = Array.isArray(data) ? data : Array.from(data.values());
+
+  return values.reduce((count, val) => val < threshold ? count + 1 : count, 0);
+}
+
+export function greaterThan(data, threshold) {
+  const values = Array.isArray(data) ? data : Array.from(data.values());
+
+  return values.reduce((count, val) => val > threshold ? count + 1 : count, 0);
 }

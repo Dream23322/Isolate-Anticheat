@@ -7,6 +7,9 @@ const yawPositions = new Map();
 const deltaPitchData = new Map();
 const deltaYawData = new Map();
 
+const accelPitchData = new Map();
+const accelYawData = new Map();
+
 export let started = false;
 /*
 This handler is used to get rotation data across all aim checks.
@@ -20,6 +23,9 @@ export function run_aim_data(player) {
 
     const dPitch = deltaPitchData.get(player.name) ?? new Array(100).fill(0);
     const dYaw = deltaYawData.get(player.name) ?? new Array(100).fill(0);
+
+    const accelPitch = accelPitchData.get(player.name) ?? new Array(100).fill(0);
+    const accelYaw = accelYawData.get(player.name) ?? new Array(100).fill(0);
     if(pPos && yPos && dPitch && dYaw) {
         const deltaPitch = isomath.abs(currentRot.x - pPos[0]);
         const deltaYaw = isomath.abs(currentRot.y - yPos[0]);
@@ -35,8 +41,13 @@ export function run_aim_data(player) {
         if(pPos.length > 100) pPos.pop();
         if(yPos.length > 100) yPos.pop();
 
-        deltaPitchData.set(player.name, dPitch);
-        deltaYawData.set(player.name, dYaw);
+        const pitchAccel = isomath.abs(dPitch[0] - dPitch[1]);
+        const yawAccel = isomath.abs(dYaw[0] - dYaw[1]);
+
+        accelPitch.unshift(pitchAccel);
+        accelYaw.unshift(yawAccel);
+        if(accelPitch.length > 100) accelPitch.pop();
+        if(accelYaw.length > 100) accelYaw.pop();
     }   
 
     pitchPositions.set(player.name, pPos);
@@ -44,6 +55,8 @@ export function run_aim_data(player) {
 
     deltaPitchData.set(player.name, dPitch);
     deltaYawData.set(player.name, dYaw);
+
+
 
     started = true;
 }
@@ -95,8 +108,6 @@ export function amountDeltaPitch(player, amt) {
     }
 }
 
-
-
 export function getDeltaYawList(player) {
     return arrayToList(deltaYawData.get(player.name));
 }
@@ -122,4 +133,50 @@ export function getRotationPitches(player) {
 
 export function getRotationYaws(player) {
     return yawPositions.get(player.name);
+}
+
+export function getAccelPitch(player) {
+    return accelPitchData.get(player.name)[0];
+}
+
+export function getAccelYaw(player) {
+    return accelYawData.get(player.name)[0];
+}
+
+export function getAccelPitchList(player) {
+    return arrayToList(accelPitchData.get(player.name));
+}
+
+export function getAccelYawList(player) {
+    return arrayToList(accelYawData.get(player.name));
+}
+
+export function amountAccelPitch(player, amt) {
+    const pitchList = arrayToList(accelPitchData.get(player.name));
+    const amount = amt + 1;
+    let counter = 0;
+    const returnList = [];
+    for (let value of pitchList) {
+        if(counter < amount) {
+            returnList.push(value);
+            counter++;
+        } else {
+            return returnList;
+        }
+    }
+}
+
+export function amountAccelYaw(player, amt) {
+    const yawList = arrayToList(accelYawData.get(player.name));
+    const amount = amt + 1;
+    let counter = 0;
+    const returnList = [];
+    for (let value of yawList) {
+        if(counter < amount) {
+            returnList.push(value);
+            counter++;
+        } else {
+            return returnList;
+        }
+    }
 }

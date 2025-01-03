@@ -6,6 +6,7 @@ import { allowedPlatform } from "../../../utils/platformUtils.js";
 
 const data = new Map();
 export function killaura_e(player) {
+    return;
     if(!allowedPlatform(player, config.modules.killauraE.AP)) return;
     if (!config.modules.killauraE.enabled) return;
 

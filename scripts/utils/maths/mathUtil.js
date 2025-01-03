@@ -251,8 +251,19 @@ export function getSkewness(data) {
     return 3 * (mean - median) / isomath.sqrt(variance);
 }
 
+/**
+ * Calculates the average of an iterable of numbers.
+ * @param {Iterable<number>} data The iterable of numbers.
+ * @returns {number} The average of the numbers.
+ */
 export function getAverage(data) {
-    return data.reduce((acc, val) => acc + val, 0) / data.length;
+    let sum = 0;
+    let count = 0;
+    for (const value of data) {
+        sum += value;
+        ++count;
+    }
+    return sum / count;
 }
 
 export function getKurtosis(data) {

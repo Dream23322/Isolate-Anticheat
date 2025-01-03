@@ -1,16 +1,3 @@
-// Use pre computed lookup tables as it can be faster
-
-const SQRT_TABLE = new Float32Array(1024);
-for (let i = 0; i < 1024; i++) {
-    SQRT_TABLE[i] = Math.sqrt(i);
-}
-
-const POW_TABLE = new Float32Array(1024);
-for (let i = 0; i < 1024; i++) {
-    POW_TABLE[i] = Math.pow(2, i);
-}
-
-
 // Fast absolute value
 export function abs(x) {
     return x < 0 ? -x : x;
@@ -33,44 +20,15 @@ export function round(x) {
 
 // Fast square root (less accurate but faster)
 export function sqrt(x) {
-    try {
-        // Handle special cases
-        if (x < 0) return NaN;
-        if (x === 0 || x === 1) return x;
-        
-        // Use lookup table for small integers
-        if (x < 1024 && Number.isInteger(x)) {
-            return SQRT_TABLE[x];
-        }
-        
-        // Fast inverse square root approximation
-        const halfX = x * 0.5;
-        let i = new Float32Array(1);
-        i[0] = x;
-        let j = new Int32Array(i.buffer);
-        j[0] = 0x5f375a86 - (j[0] >> 1);
-        let y = new Float32Array(j.buffer)[0];
-        
-        // One Newton iteration for better accuracy
-        y = y * (1.5 - (halfX * y * y));
-        
-        return x * y;
-    } catch (e) {
-        console.warn("[FastSqrt] Error: " + e);
-        return Math.sqrt(x);
-    }
+    return x * 0.5 + (x / (x * 0.5));
 }
 
 // Fast inverse square root (Quake III Arena method)
 export function fastInvSqrt(x) {
-    const halfx = 0.5 * x;
-    let y = x;
-    let i = new Float32Array(1);
-    i[0] = x;
-    i = 0x5f3759df - (i[0] >> 1);
-    y = new Float32Array([i])[0];
-    y = y * (1.5 - halfx * y * y);
-    return y;
+    const xhalf = 0.5 * x;
+    const i = 0x5f3759df - (x >> 1);
+    const y = new Float32Array([i])[0];
+    return y * (1.5 - xhalf * y * y);
 }
 
 // Fast distance between two 3D points
@@ -139,28 +97,11 @@ export function pow(base, exponent) {
         if (base === 0) return 0;
         if (base === 1) return 1;
         
-        // Check if we can use the lookup table for powers of 2
-        if (base === 2 && exponent < 1024 && Number.isInteger(exponent)) {
-            return POW_TABLE[exponent];
-        }
-        
-        // For integer exponents, use binary exponentiation
-        if (Number.isInteger(exponent)) {
-            let result = 1;
-            let currentPower = base;
-            let exp = (exponent);
-            
-            while (exp > 0) {
-                if (exp & 1) result *= currentPower;
-                currentPower *= currentPower;
-                exp >>= 1;
-            }
-            
-            return exponent < 0 ? 1 / result : result;
-        }
-        
-        // For other cases, use exp(ln(x) * n)
-        return Math.exp(Math.log(Math.abs(base)) * exponent);
+        // For other cases, use exp and log
+        // This is faster than Math.pow for our precision needs
+        return exp(exponent * Math.log(abs(base))) * 
+            (base < 0 && exponent % 2 ? -1 : 1);
+
     } catch (e) {
         console.warn("[FastPow] Error: " + e);
         return Math.pow(base, exponent);
@@ -284,7 +225,5 @@ export function pythag(a, b) {
 export function pytahg3d(a, b, c) {
     return sqrt(a ** 2 + b ** 2 + c ** 2);
 }
-
-
 
 export const PI = 3.14159;

@@ -3,8 +3,7 @@ import config from "../../../data/config.js";
 import { getScore, setScore } from "../../../util";
 import { getSpeed } from "../../../utils/maths/mathUtil.js";
 import { allowedPlatform } from "../../../utils/platformUtils.js";
-
-const data = new Map();
+// Why do I still have this?
 export function killaura_f(player, value) {
     if(!allowedPlatform(player, config.modules.killauraF.AP)) return;
     if(config.modules.killauraF.enabled) {

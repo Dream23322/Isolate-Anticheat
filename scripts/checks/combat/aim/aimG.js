@@ -28,7 +28,7 @@ export function aim_g(player) {
                     setScore(player, "aimG_BUFFER", getScore(player, "aimG_BUFFER", 0) + 1);
 
                     if(getScore(player, "aimG_BUFFER", 0) > 15) {
-                        flag(player, "Aim", "G", "Kuristosis (Beta)", "outliers", `${outliers},deltaPitch=${deltaPitch},deltaYaw=${deltaYaw}`, false);
+                        flag(player, "Aim", "G", "Combat (BETA)", "outliers", `${outliers},deltaPitch=${deltaPitch},deltaYaw=${deltaYaw}`, false);
 
                         setScore(player, "aimG_BUFFER", 0);
                     }
